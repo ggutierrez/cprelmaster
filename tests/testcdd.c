@@ -170,16 +170,42 @@ DdNode* readBinRel(DdManager *dd, const char* fname) {
   return rel;
 }
 
+/// Creates a CDD representing the domain [glb,lub]
+DdNode* domain(DdManager *dd, DdNode *glb, DdNode *lub) {
+  DdNode *f, *g, *r;
+  Cudd_Ref(glb);
+  Cudd_Ref(lub);
+  f = Cudd_cddOr(dd, glb, CDD_UNK(dd));
+  Cudd_Ref(f);
+  Cudd_RecursiveDeref(dd, glb);
+
+  g = Cudd_cddAnd(dd, lub, CDD_UNK(dd));
+  Cudd_Ref(g);
+  Cudd_RecursiveDeref(dd, lub);
+  
+  r = Cudd_cddMerge(dd, f, g);
+  Cudd_RecursiveDeref(dd, f);
+  Cudd_RecursiveDeref(dd, g);
+
+  return r;
+}
+
 int main(void) {
   DdManager *dd = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);	
   
   DdNode *one, *unk, *zero;
-  one = Cudd_ReadOne(dd);
-  unk = Cudd_ReadZero(dd);
-  zero = Cudd_ReadLogicZero(dd);
+  one = CDD_ONE(dd);
+  unk = CDD_UNK(dd);
+  zero = CDD_ZERO(dd);
 
   DdNode *deps = readBinRel(dd, "deps.mat");
-  //printTuples(dd, deps, 2);
+  
+  DdNode *Deps = domain(dd, deps, CDD_ONE(dd));
+
+  DdNode *DepsUnk = Cudd_cddStatus(dd, Deps, Cudd_cddNot(dd, Deps));
+  //DdNode *DepsUnk = Cudd_cddStatus(dd, Deps, Deps);
+  printf("Cardinality: %f\n",card(dd, DepsUnk, 2));
+  //printTuples(dd, DepsUnk, 2);
   Cudd_RecursiveDeref(dd, deps);
   printf("This number should be zero: %d\n",Cudd_CheckZeroRef(dd));
   return 0;

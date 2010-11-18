@@ -19,4 +19,5 @@ DdNode * Cudd_cddOr(DdManager *dd, DdNode *f, DdNode *g);
 // Merge two Cdds \a f and \a g
 DdNode* Cudd_cddMerge(DdManager *dd, DdNode *f, DdNode *g);
 
+DdNode* Cudd_cddStatus(DdManager *dd, DdNode *f, DdNode *g);
 #endif

@@ -188,7 +188,6 @@ DdNode * cuddCddAndRecur(DdManager *dd, DdNode *f, DdNode *g) {
   return(r);
 }
 
-
 int isOne(DdManager *dd, DdNode *f) {
   assert(f);
   DdNode *one, *F;
@@ -201,8 +200,8 @@ int isOne(DdManager *dd, DdNode *f) {
 int isZero(DdManager *dd, DdNode *f) {
   assert(f);
   DdNode *one, *zero, *F;
-  one = Cudd_ReadOne(dd);
-  zero = Cudd_ReadLogicZero(dd);
+  one = CDD_ONE(dd);
+  zero = CDD_ZERO(dd);
   F = Cudd_Regular(f); assert(F);
   
   return(F == one && f == zero) ;
@@ -211,7 +210,7 @@ int isZero(DdManager *dd, DdNode *f) {
 int isUnk(DdManager *dd, DdNode *f) {
   assert(f);
   DdNode *unk, *F;
-  unk = CDD_ZERO(dd);
+  unk = CDD_UNK(dd);
   F = Cudd_Regular(f); assert(F);
   if (f == unk) {
     assert(F == unk);
@@ -219,7 +218,6 @@ int isUnk(DdManager *dd, DdNode *f) {
   }
   return 0;
 }
-
 
 DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   DdNode *F, *fv, *fnv, *G, *gv, *gnv;
@@ -286,6 +284,9 @@ DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   if (isUnk(dd,f)) return g;
   if (isUnk(dd,g)) return f;
   
+  assert(f != unk);
+  assert(g != unk);
+  
    /* normalize to try to increase cache efficiency. */
   if ( (g == one || g == zero) || f > g) {
     DdNode *tmp = f;
@@ -298,6 +299,7 @@ DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   }
   
   assert(g != one && g != unk && g != zero);
+  
   // at this point the possible cases are:
   // one \merge exp
   // zero \merge exp
@@ -409,7 +411,7 @@ DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   cuddDeref(e);
   cuddDeref(t);
   if (F->ref != 1 || G->ref != 1)
-    cuddCacheInsert2(dd,  Cudd_cddMerge, f, g, r);
+    cuddCacheInsert2(dd,Cudd_cddMerge, f, g, r);
   return(r);
 }
 
@@ -437,6 +439,162 @@ DdNode* Cudd_cddMerge(DdManager *dd, DdNode *f, DdNode *g) {
   do {
     dd->reordered = 0;
     res = cuddCddMergeRecur(dd,f,g);
+  } while (dd->reordered == 1);
+  return(res);  
+}
+
+
+DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
+  DdNode *F, *fv, *fnv, *G, *gv, *gnv;
+  DdNode *one, *zero, *unk, *r, *t, *e;
+  unsigned int topf, topg, index;
+  
+  statLine(dd);
+  one = CDD_ONE(dd);
+  unk = CDD_UNK(dd);
+  zero = CDD_ZERO(dd);
+  
+  /* Terminal cases. */
+  F = Cudd_Regular(f); assert(F);
+  G = Cudd_Regular(g); assert(G);
+  
+  if (F == G)
+    if (f == g) return(one); // f \status f = true
+
+  if (isOne(dd,f)) {
+    if (isOne(dd, g)) return one;
+    if (isUnk(dd, g) || isZero(dd, g)) return zero;
+  }
+  
+  if (isUnk(dd,f)) {
+    if (isUnk(dd, g)) return one;
+    if (isOne(dd, g) || isZero(dd, g)) return zero;
+  }
+  
+  if (isZero(dd,f)) {
+    if (isZero(dd, g)) return one;
+    if (isOne(dd, g) || isUnk(dd, g)) return zero;
+  }
+  
+  assert(f != one && f != unk && f != zero);
+  assert(g != one && g != unk && g != zero);
+  
+  /* normalize to try to increase cache efficiency. */
+  if (f > g) {
+    DdNode *tmp = f;
+    f = g;
+    g = tmp;
+    assert(f);
+    assert(g);
+    F = Cudd_Regular(f); assert(F);
+    G = Cudd_Regular(g); assert(G);
+  }
+  
+  // at this point therer are no constants
+  
+  /* Check cache. */
+  
+  if (F->ref != 1 || G->ref != 1) {
+    r = cuddCacheLookup2(dd, Cudd_cddStatus, f, g);
+    if (r != NULL) return(r);
+  }
+  
+  /* Here we can skip the use of cuddI, because the operands are known
+   ** to be non-constant.
+   */
+  topf = dd->perm[F->index];
+  topg = dd->perm[G->index];
+  
+  /* Compute cofactors. */
+  if (topf <= topg) {
+    index = F->index;
+    fv = cuddT(F);
+    fnv = cuddE(F);
+    assert(fv);
+    assert(fnv);
+    if (Cudd_IsComplement(f)) {
+      fv = Cudd_cddNot(dd,fv);
+      fnv = Cudd_cddNot(dd,fnv);
+    }
+  } else {
+    index = G->index;
+    fv = fnv = f;
+  }
+    
+  if (topg <= topf) {
+    gv = cuddT(G);
+    gnv = cuddE(G);
+    assert(gv);
+    assert(gnv);
+    if (Cudd_IsComplement(g)) {
+      gv = Cudd_cddNot(dd,gv);
+      gnv = Cudd_cddNot(dd,gnv);
+    }
+  } else {
+    gv = gnv = g;
+  } 
+  
+  // Compute the 'then'
+  t = cuddCddStatusRecur(dd, fv, gv);
+  assert(t);
+  if (t == NULL)  return(NULL);
+  cuddRef(t);
+  
+  // Compute the 'else'
+  e = cuddCddStatusRecur(dd, fnv, gnv);
+  assert(e);
+  if (e == NULL) {
+    Cudd_IterDerefBdd(dd, t);
+    return(NULL);
+  }
+  cuddRef(e);
+  
+  // Reduce the result if possible
+  if (t == e) {
+    r = t;
+  } else {
+    if (Cudd_IsComplement(t)) {
+      r = cuddUniqueInter(dd,(int)index,Cudd_cddNot(dd,t),Cudd_cddNot(dd,e));
+      if (r == NULL) {
+        assert(r);
+        Cudd_IterDerefBdd(dd, t);
+        Cudd_IterDerefBdd(dd, e);
+        return(NULL);
+      }
+      r = Cudd_cddNot(dd,r);
+    } else {
+      if (t == unk && Cudd_IsComplement(e)) {
+        r = cuddUniqueInter(dd,(int)index,unk,Cudd_cddNot(dd,e));
+        if (r == NULL) {
+          assert(r);
+          Cudd_IterDerefBdd(dd,e);
+          return(NULL);
+        }
+        r = Cudd_cddNot(dd,r);
+      } else {
+        r = cuddUniqueInter(dd,(int)index,t,e);
+        if (r == NULL) {
+          assert(r);
+          Cudd_IterDerefBdd(dd, t);
+          Cudd_IterDerefBdd(dd, e);
+          return(NULL);
+        }
+      }
+    }
+  }
+  cuddDeref(e);
+  cuddDeref(t);
+  if (F->ref != 1 || G->ref != 1)
+    cuddCacheInsert2(dd,Cudd_cddStatus, f, g, r);
+  assert(r);
+  return(r);
+}
+
+DdNode* Cudd_cddStatus(DdManager *dd, DdNode *f, DdNode *g) {
+  DdNode *res;
+  do {
+    dd->reordered = 0;
+    res = cuddCddStatusRecur(dd,f,g);
   } while (dd->reordered == 1);
   return(res);  
 }
