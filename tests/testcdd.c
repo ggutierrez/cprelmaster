@@ -35,8 +35,7 @@ DdNode* path(DdManager *manager, int p, int a) {
   f = Cudd_ReadOne(manager);
   Cudd_Ref(f);
   for (i = BV; i--;) {
-    //printf("current i[%d] = %d\n",BV+1-i,p&1);
-    tmp = Cudd_bddAnd(manager,getVar(manager,(i<<BA)+a,p&1),f);
+    tmp = Cudd_cddAnd(manager,getVar(manager,(i<<BA)+a,p&1),f);
     Cudd_Ref(tmp);
     Cudd_RecursiveDeref(manager,f);    
     f = tmp;
@@ -77,9 +76,13 @@ void printTuples(DdManager* dd, DdNode* f, int a){
   }
 }
 
+/// Returns the number of tuples of width \a a represented in \a f
+double card(DdManager *dd, DdNode *f, int a) {
+  return Cudd_CountMinterm(dd,f,a<<BBV);
+}
+
 /// creates the pair (p,q) in the cdd
 DdNode* pair(DdManager *manager, int p, int q) {
-  //printf("called pair\n");
   DdNode *pr = path(manager,p,0);
   DdNode *qr = path(manager,q,1);
   DdNode *r = Cudd_cddAnd(manager,pr,qr);
@@ -131,10 +134,10 @@ DdNode* var(DdManager *manager) {
 }
 
 DdNode* readBinRel(DdManager *dd, const char* fname) {
-  int err; // error code for file handling
-  int u, v; // every node read from the input
+  int err;
+  int u, v;
   int edges = 0;
-  DdNode *ur, *vr, *t, *rel, *tmp;
+  DdNode *t, *rel, *tmp;
   FILE *fp = fopen(fname,"r");
   if (!fp) {
     return NULL;
@@ -150,14 +153,8 @@ DdNode* readBinRel(DdManager *dd, const char* fname) {
       fclose(fp);
       break;
     }
-    ur = path(dd,u,0); assert(ur);
-    vr = path(dd,v,1); assert(vr);
-    t = Cudd_bddAnd(dd,ur,vr); assert(t);
-    Cudd_Ref(t);
-    Cudd_RecursiveDeref(dd,ur);
-    Cudd_RecursiveDeref(dd,vr);
-
-    tmp = Cudd_bddOr(dd,rel,t);
+    t = pair(dd,u,v); assert(t);
+    tmp = Cudd_cddOr(dd,rel,t);
     Cudd_Ref(tmp);
     Cudd_RecursiveDeref(dd,t);
     Cudd_RecursiveDeref(dd,rel);
@@ -165,7 +162,7 @@ DdNode* readBinRel(DdManager *dd, const char* fname) {
     edges++;
   } while (1);
 
-  printf("Edges: %d\n",edges);
+  printf("Edges: %d card: %f\n",edges,card(dd,rel,2));
   fclose(fp);
   return rel;
 }
@@ -178,67 +175,8 @@ int main(void) {
   unk = Cudd_ReadZero(manager);
   zero = Cudd_ReadLogicZero(manager);
 
-  //DdNode *deps = readBinRel(manager,"deps.mat");
-  //printf("Cardinality: %f\n", Cudd_CountMinterm(manager,deps,2<<BBV));
-
-  // upper bound
-  /* DdNode *ub = Cudd_cddAnd(manager,deps,unk); */
-  /*   Cudd_Ref(ub); */
-
-  /*   DdNode *lb = Cudd_cddOr(manager,deps,unk); */
-  /*   Cudd_Ref(lb); */
-
-//  todot(manager,deps,"deps.dot");
-  
-  DdNode *v = var(manager);
-  Cudd_RecursiveDeref(manager,v);
-  /* Cudd_RecursiveDeref(manager,ub); */
-  /* Cudd_RecursiveDeref(manager,lb); */
-  /* Cudd_RecursiveDeref(manager,deps); */
-  /*
-    DdNode *r = pair(manager,3,2);
-    DdNode *s = pair(manager,1,2);
-  DdNode *q = pair(manager,5,3);
-
-  DdNode *t = Cudd_cddOr(manager,r,s);
-  Cudd_Ref(t);
-  DdNode *u = Cudd_cddOr(manager,t,q);
-  Cudd_Ref(u);
-  printTuples(manager,u,2);
-  */
-  //printf("Result %d\n", Cudd_cddMerge(manager,zero,one) == NULL && Cudd_ReadErrorCode(manager) == CDD_FAIL);
-  //printf("Result %d\n", Cudd_cddMerge(manager,zero,unk) == zero);
-  //  printf("Result %d\n", Cudd_cddMerge(manager,zero,zero) == zero); //NULL && Cudd_ReadErrorCode(manager) == CDD_FAIL);
-
-
-  //printf("Result %d\n", Cudd_cddMerge(manager,r,Cudd_cddNot(manager,r)) == NULL && Cudd_ReadErrorCode(manager) == CDD_FAIL);
-  //printf("Result %d\n", Cudd_cddMerge(manager,unk,r) == r);
-
-
-  //  printf("Result %d\n", Cudd_cddMerge(manager,one,one) == one);
-
-  /*
-  todot(manager,p,"normal.dot");
-  printf("Paths to one in p: %f from a total of %f\n",
-	 Cudd_CountPathsToNonZero(p),
-	 Cudd_CountPath(p));
-
-  DdNode *q = Cudd_cddAnd(manager,p,unk);
-  Cudd_Ref(q);
-  Cudd_RecursiveDeref(manager,p);
-  todot(manager,q,"unknown.dot");
-  */
-  
-  //printf("Is the new path an evaluation of the bdd? %d\n",Cudd_Eval(manager,p,p1) == DD_ONE(manager));
-  /*
-  //todot(manager,t,"pair.dot");
-  Cudd_RecursiveDeref(manager,r);
-  Cudd_RecursiveDeref(manager,s);
-
-  Cudd_RecursiveDeref(manager,t);
-  Cudd_RecursiveDeref(manager,q);
-  Cudd_RecursiveDeref(manager,u);
-  */
+  DdNode *deps = readBinRel(manager, "deps.mat");
+  Cudd_RecursiveDeref(manager, deps);
   printf("This number should be zero: %d\n",Cudd_CheckZeroRef(manager));
   return 0;
 }
