@@ -14,30 +14,31 @@
 #define BV 1<<BBV
 
 // Output in dot format
-void todot(DdManager *manager, DdNode *f, const char * fname) {
+void todot(DdManager *dd, DdNode *f, const char * fname) {
   FILE *out = fopen(fname,"w");
   DdNode *outputs[] = {f};
   char *names[] = {"f"};
-  Cudd_DumpDot(manager,1,outputs,NULL,names,out);
+  Cudd_DumpDot(dd,1,outputs,NULL,names,out);
   fclose(out);
 }
 
 // Returns the variable v. if b is 0 it will be negated
-DdNode* getVar(DdManager *manager, int v, int b) {
+inline
+DdNode* getVar(DdManager *dd, int v, int b) {
   return b ?
-    Cudd_bddIthVar(manager,v) :
-    Cudd_Not(Cudd_bddIthVar(manager,v));
+    Cudd_bddIthVar(dd,v) :
+    Cudd_Not(Cudd_bddIthVar(dd,v));
 }
-
-DdNode* path(DdManager *manager, int p, int a) {
+inline
+DdNode* path(DdManager *dd, int p, int a) {
   DdNode *tmp, *f;
   int i;
-  f = Cudd_ReadOne(manager);
+  f = Cudd_ReadOne(dd);
   Cudd_Ref(f);
   for (i = BV; i--;) {
-    tmp = Cudd_cddAnd(manager,getVar(manager,(i<<BA)+a,p&1),f);
+    tmp = Cudd_cddAnd(dd,getVar(dd,(i<<BA)+a,p&1),f);
     Cudd_Ref(tmp);
-    Cudd_RecursiveDeref(manager,f);    
+    Cudd_RecursiveDeref(dd,f);    
     f = tmp;
     p >>= 1; 
   }
@@ -77,58 +78,60 @@ void printTuples(DdManager* dd, DdNode* f, int a){
 }
 
 /// Returns the number of tuples of width \a a represented in \a f
+inline
 double card(DdManager *dd, DdNode *f, int a) {
   return Cudd_CountMinterm(dd,f,a<<BBV);
 }
 
 /// creates the pair (p,q) in the cdd
-DdNode* pair(DdManager *manager, int p, int q) {
-  DdNode *pr = path(manager,p,0);
-  DdNode *qr = path(manager,q,1);
-  DdNode *r = Cudd_cddAnd(manager,pr,qr);
+inline
+DdNode* pair(DdManager *dd, int p, int q) {
+  DdNode *pr = path(dd,p,0);
+  DdNode *qr = path(dd,q,1);
+  DdNode *r = Cudd_cddAnd(dd,pr,qr);
   Cudd_Ref(r);
-  Cudd_RecursiveDeref(manager,pr);
-  Cudd_RecursiveDeref(manager,qr);
+  Cudd_RecursiveDeref(dd,pr);
+  Cudd_RecursiveDeref(dd,qr);
   return r;
 }
 
-DdNode* var(DdManager *manager) {
+DdNode* var(DdManager *dd) {
   DdNode *one, *unk, *zero;
-  one = Cudd_ReadOne(manager);
-  unk = Cudd_ReadZero(manager);
-  zero = Cudd_ReadLogicZero(manager);
+  one = Cudd_ReadOne(dd);
+  unk = Cudd_ReadZero(dd);
+  zero = Cudd_ReadLogicZero(dd);
   
   // will create the relation domain: {s}..{r,s,q}
   
-  DdNode *r = pair(manager,3,2);
-  DdNode *s = pair(manager,1,2);
-  DdNode *q = pair(manager,5,3);
+  DdNode *r = pair(dd,3,2);
+  DdNode *s = pair(dd,1,2);
+  DdNode *q = pair(dd,5,3);
  
-  DdNode *rq = Cudd_cddOr(manager,r,q);
+  DdNode *rq = Cudd_cddOr(dd,r,q);
   Cudd_Ref(rq);
-  DdNode *rsq = Cudd_cddOr(manager,rq,s);
+  DdNode *rsq = Cudd_cddOr(dd,rq,s);
   Cudd_Ref(rsq);
-  Cudd_RecursiveDeref(manager,rq);
+  Cudd_RecursiveDeref(dd,rq);
 
-  Cudd_RecursiveDeref(manager,r);
-  Cudd_RecursiveDeref(manager,q);
+  Cudd_RecursiveDeref(dd,r);
+  Cudd_RecursiveDeref(dd,q);
 
-  DdNode *ub = Cudd_cddAnd(manager,rsq,unk);
+  DdNode *ub = Cudd_cddAnd(dd,rsq,unk);
   Cudd_Ref(ub);
-  Cudd_RecursiveDeref(manager,rsq);
+  Cudd_RecursiveDeref(dd,rsq);
   
-  DdNode *lb = Cudd_cddOr(manager,s,unk);
+  DdNode *lb = Cudd_cddOr(dd,s,unk);
   Cudd_Ref(lb);
-  Cudd_RecursiveDeref(manager,s);
+  Cudd_RecursiveDeref(dd,s);
   
-  DdNode *v = Cudd_cddMerge(manager,lb,ub);
+  DdNode *v = Cudd_cddMerge(dd,lb,ub);
   Cudd_Ref(v);
   
-  printTuples(manager,v,2);
-  todot(manager,v,"var.dot");
+  printTuples(dd,v,2);
+  todot(dd,v,"var.dot");
 
-  Cudd_RecursiveDeref(manager,ub);
-  Cudd_RecursiveDeref(manager,lb);
+  Cudd_RecursiveDeref(dd,ub);
+  Cudd_RecursiveDeref(dd,lb);
 
   return v;
 }
@@ -154,7 +157,7 @@ DdNode* readBinRel(DdManager *dd, const char* fname) {
       break;
     }
     t = pair(dd,u,v); assert(t);
-    tmp = Cudd_cddOr(dd,rel,t);
+    tmp = Cudd_cddOr(dd,rel,t); assert(tmp);
     Cudd_Ref(tmp);
     Cudd_RecursiveDeref(dd,t);
     Cudd_RecursiveDeref(dd,rel);
@@ -168,15 +171,16 @@ DdNode* readBinRel(DdManager *dd, const char* fname) {
 }
 
 int main(void) {
-  DdManager *manager = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);	
+  DdManager *dd = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);	
   
   DdNode *one, *unk, *zero;
-  one = Cudd_ReadOne(manager);
-  unk = Cudd_ReadZero(manager);
-  zero = Cudd_ReadLogicZero(manager);
+  one = Cudd_ReadOne(dd);
+  unk = Cudd_ReadZero(dd);
+  zero = Cudd_ReadLogicZero(dd);
 
-  DdNode *deps = readBinRel(manager, "deps.mat");
-  Cudd_RecursiveDeref(manager, deps);
-  printf("This number should be zero: %d\n",Cudd_CheckZeroRef(manager));
+  DdNode *deps = readBinRel(dd, "deps.mat");
+  //printTuples(dd, deps, 2);
+  Cudd_RecursiveDeref(dd, deps);
+  printf("This number should be zero: %d\n",Cudd_CheckZeroRef(dd));
   return 0;
 }

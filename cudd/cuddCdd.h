@@ -4,10 +4,14 @@
 #include "util.h"
 #include "cuddInt.h"
 
+#define CDD_ONE(dd)  DD_ONE((dd))
+#define CDD_UNK(dd)  DD_ZERO((dd))
+#define CDD_ZERO(dd) Cudd_Not(CDD_ONE((dd)))
+
 // Computes the negation of the CDD represented by \a f
-DdNode* Cudd_cddNot(DdManager *manager, DdNode *f);
+DdNode* Cudd_cddNot(DdManager *dd, DdNode *f);
 // Compute the complement of \a f if \a c is not zero
-DdNode* Cudd_cddNotCond(DdManager *manager, DdNode *f, int c);
+DdNode* Cudd_cddNotCond(DdManager *dd, DdNode *f, int c);
 /// Compute the conjunction of two CDDs \a f and \a g
 DdNode* Cudd_cddAnd(DdManager * dd, DdNode * f, DdNode * g);
 /// Compute the disjuntion of two CDDs \a f and \a g
