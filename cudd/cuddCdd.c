@@ -1,12 +1,38 @@
 #include "cuddCdd.h"
 
+
+/* Inline function definition */
+inline
 DdNode* Cudd_cddNot(DdManager *dd, DdNode *f) {
   if (f == CDD_UNK(dd)) return f;
   return Cudd_Not(f);
 }
 
+inline
 DdNode* Cudd_cddNotCond(DdManager *dd, DdNode *f, int c) {
   return c ? Cudd_cddNot(dd,f) : f;
+}
+
+int isOne(DdManager *dd, DdNode *f) {
+  assert(f);
+  DdNode * F = Cudd_Regular(f); assert(F);
+  return(F == CDD_ONE(dd) && f == CDD_ONE(dd));
+}
+
+int isZero(DdManager *dd, DdNode *f) {
+  assert(f);
+  DdNode *F = Cudd_Regular(f); assert(F);
+  return(F == CDD_ONE(dd) && f == CDD_ZERO(dd));
+}
+
+int isUnk(DdManager *dd, DdNode *f) {
+  assert(f);
+  DdNode *F = Cudd_Regular(f); assert(F);
+  if (f == CDD_UNK(dd)) {
+    assert(F == CDD_UNK(dd));
+    return 1;
+  }
+  return 0;
 }
 
 DdNode * cuddCddAndRecur(DdManager *dd, DdNode *f, DdNode *g) {
@@ -186,37 +212,6 @@ DdNode * cuddCddAndRecur(DdManager *dd, DdNode *f, DdNode *g) {
   if (F->ref != 1 || G->ref != 1)
     cuddCacheInsert2(dd, Cudd_bddAnd, f, g, r);
   return(r);
-}
-
-int isOne(DdManager *dd, DdNode *f) {
-  assert(f);
-  DdNode *one, *F;
-  one = CDD_ONE(dd);
-  F = Cudd_Regular(f); assert(F);
-  
-  return(F == one && f == one) ;
-}
-
-int isZero(DdManager *dd, DdNode *f) {
-  assert(f);
-  DdNode *one, *zero, *F;
-  one = CDD_ONE(dd);
-  zero = CDD_ZERO(dd);
-  F = Cudd_Regular(f); assert(F);
-  
-  return(F == one && f == zero) ;
-}
-
-int isUnk(DdManager *dd, DdNode *f) {
-  assert(f);
-  DdNode *unk, *F;
-  unk = CDD_UNK(dd);
-  F = Cudd_Regular(f); assert(F);
-  if (f == unk) {
-    assert(F == unk);
-    return 1;
-  }
-  return 0;
 }
 
 DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
