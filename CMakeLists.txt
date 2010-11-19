@@ -128,11 +128,27 @@ CREATE_LIB(epd ${LIB_TYPE} ${_EPDSRC}  HEADERS ${_EPDHDR}
     OUTPUT_NAME "epd" COMPONENT devel)
 
 ##########################################################################
+# C++ interface for cdds
+##########################################################################	
+include_directories("${CMAKE_SOURCE_DIR}/cdd-obj")
+set(CDDCPPSRCS cdd.cc)
+set(CDDCPPHDRS cdd.hh)
+ADDPREFIX(FILES ${CDDCPPSRCS} PREFIX "cdd-obj/" RESULT _CDDCPPSRC)
+ADDPREFIX(FILES ${CDDCPPHDRS} PREFIX "cdd-obj/" RESULT _CDDCPPHDR)
+CREATE_LIB(cddcpp ${LIB_TYPE} ${_CDDCPPSRC}  HEADERS ${_CDDCPPHDR}  
+    OUTPUT_NAME "cddcpp" COMPONENT devel)
+
+
+##########################################################################
 # Cdds examples
 ##########################################################################	
+set(EXLIBS cudd-static epd-static mtr-static st-static util-static cddcpp-static)
+
 add_executable(testcdd tests/testcdd.c)
-target_link_libraries(testcdd cudd-static epd-static mtr-static
-st-static util-static)
+target_link_libraries(testcdd ${EXLIBS})
+
+add_executable(testobj tests/testcdd.cpp)
+target_link_libraries(testobj ${EXLIBS})
 
 ##########################################################################
 # Test

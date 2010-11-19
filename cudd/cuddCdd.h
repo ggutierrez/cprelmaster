@@ -4,6 +4,10 @@
 #include "util.h"
 #include "cuddInt.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CDD_ONE(dd)  DD_ONE((dd))
 #define CDD_UNK(dd)  DD_ZERO((dd))
 #define CDD_ZERO(dd) Cudd_Not(CDD_ONE((dd)))
@@ -20,4 +24,10 @@ DdNode * Cudd_cddOr(DdManager *dd, DdNode *f, DdNode *g);
 DdNode* Cudd_cddMerge(DdManager *dd, DdNode *f, DdNode *g);
 // Returns a relation representing the agreement between \a f and \a g
 DdNode* Cudd_cddStatus(DdManager *dd, DdNode *f, DdNode *g);
+
+
+#ifdef __cplusplus
+} /* end of extern "C" */
+#endif
+
 #endif
