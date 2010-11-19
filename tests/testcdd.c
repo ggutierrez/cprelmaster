@@ -1,6 +1,6 @@
 #include "cuddCdd.h"
 
-// 32 bits integers max 8ary 
+// 32 bits integers max 8ary
 #define BBV 5
 #define BA 3
 
@@ -13,23 +13,18 @@
 
 #define BV 1<<BBV
 
-// Output in dot format
-void todot(DdManager *dd, DdNode *f, const char * fname) {
-  FILE *out = fopen(fname,"w");
-  DdNode *outputs[] = {f};
-  char *names[] = {"f"};
-  Cudd_DumpDot(dd,1,outputs,NULL,names,out);
-  fclose(out);
-}
+/*
+ * Internal functions used to represent relations in a CDD
+ */
 
-// Returns the variable v. if b is 0 it will be negated
-inline
+// Returns the variable \a v of the CDD. if b is 0 the variable will be negated.
 DdNode* getVar(DdManager *dd, int v, int b) {
   return b ?
-    Cudd_bddIthVar(dd,v) :
-    Cudd_Not(Cudd_bddIthVar(dd,v));
+  Cudd_bddIthVar(dd,v) :
+  Cudd_Not(Cudd_bddIthVar(dd,v));
 }
-inline
+// Returns a CDD with the encoding of \a p. The arity \a a is needed because of 
+// the way \a p is encoded.
 DdNode* path(DdManager *dd, int p, int a) {
   DdNode *tmp, *f;
   int i;
@@ -38,13 +33,50 @@ DdNode* path(DdManager *dd, int p, int a) {
   for (i = BV; i--;) {
     tmp = Cudd_cddAnd(dd,getVar(dd,(i<<BA)+a,p&1),f);
     Cudd_Ref(tmp);
-    Cudd_RecursiveDeref(dd,f);    
+    Cudd_RecursiveDeref(dd,f);
     f = tmp;
-    p >>= 1; 
+    p >>= 1;
   }
   return f;
 }
 
+/// Returns the number of tuples of width \a a represented in \a f
+double card(DdManager *dd, DdNode *f, int a) {
+  return Cudd_CountMinterm(dd,f,a<<BBV);
+}
+
+/// Creates a CDD representing the domain [glb,lub]
+DdNode* domain(DdManager *dd, DdNode *glb, DdNode *lub) {
+  DdNode *f, *g, *r;
+  Cudd_Ref(glb);
+  Cudd_Ref(lub);
+  f = Cudd_cddOr(dd, glb, CDD_UNK(dd));
+  Cudd_Ref(f);
+  Cudd_RecursiveDeref(dd, glb);
+  
+  g = Cudd_cddAnd(dd, lub, CDD_UNK(dd));
+  Cudd_Ref(g);
+  Cudd_RecursiveDeref(dd, lub);
+  
+  r = Cudd_cddMerge(dd, f, g);
+  Cudd_RecursiveDeref(dd, f);
+  Cudd_RecursiveDeref(dd, g);
+  
+  return r;
+}
+
+/*
+ * Output of CDDs
+ */
+// Output in dot format
+void todot(DdManager *dd, DdNode *f, const char * fname) {
+  FILE *out = fopen(fname,"w");
+  DdNode *outputs[] = {f};
+  char *names[] = {"f"};
+  Cudd_DumpDot(dd,1,outputs,NULL,names,out);
+  fclose(out);
+}
+// Prints all the tuples of arity \a a in the CDD \a f
 void printTuples(DdManager* dd, DdNode* f, int a){
   DdGen* gen;
   int *cube = (int*)malloc(sizeof(int)*(1<<(BBV+BA)));
@@ -77,14 +109,11 @@ void printTuples(DdManager* dd, DdNode* f, int a){
   }
 }
 
-/// Returns the number of tuples of width \a a represented in \a f
-inline
-double card(DdManager *dd, DdNode *f, int a) {
-  return Cudd_CountMinterm(dd,f,a<<BBV);
-}
 
+/*
+ * Utility functions to manipulate binary relations represented in a CDD
+ */
 /// creates the pair (p,q) in the cdd
-inline
 DdNode* pair(DdManager *dd, int p, int q) {
   DdNode *pr = path(dd,p,0);
   DdNode *qr = path(dd,q,1);
@@ -95,47 +124,8 @@ DdNode* pair(DdManager *dd, int p, int q) {
   return r;
 }
 
-DdNode* var(DdManager *dd) {
-  DdNode *one, *unk, *zero;
-  one = Cudd_ReadOne(dd);
-  unk = Cudd_ReadZero(dd);
-  zero = Cudd_ReadLogicZero(dd);
-  
-  // will create the relation domain: {s}..{r,s,q}
-  
-  DdNode *r = pair(dd,3,2);
-  DdNode *s = pair(dd,1,2);
-  DdNode *q = pair(dd,5,3);
- 
-  DdNode *rq = Cudd_cddOr(dd,r,q);
-  Cudd_Ref(rq);
-  DdNode *rsq = Cudd_cddOr(dd,rq,s);
-  Cudd_Ref(rsq);
-  Cudd_RecursiveDeref(dd,rq);
-
-  Cudd_RecursiveDeref(dd,r);
-  Cudd_RecursiveDeref(dd,q);
-
-  DdNode *ub = Cudd_cddAnd(dd,rsq,unk);
-  Cudd_Ref(ub);
-  Cudd_RecursiveDeref(dd,rsq);
-  
-  DdNode *lb = Cudd_cddOr(dd,s,unk);
-  Cudd_Ref(lb);
-  Cudd_RecursiveDeref(dd,s);
-  
-  DdNode *v = Cudd_cddMerge(dd,lb,ub);
-  Cudd_Ref(v);
-  
-  printTuples(dd,v,2);
-  todot(dd,v,"var.dot");
-
-  Cudd_RecursiveDeref(dd,ub);
-  Cudd_RecursiveDeref(dd,lb);
-
-  return v;
-}
-
+/// Returns a CDD representing the binary relation stored in the file \a fname.
+/// The relation has to be specified one pair per line
 DdNode* readBinRel(DdManager *dd, const char* fname) {
   int err;
   int u, v;
@@ -170,43 +160,65 @@ DdNode* readBinRel(DdManager *dd, const char* fname) {
   return rel;
 }
 
-/// Creates a CDD representing the domain [glb,lub]
-DdNode* domain(DdManager *dd, DdNode *glb, DdNode *lub) {
-  DdNode *f, *g, *r;
-  Cudd_Ref(glb);
-  Cudd_Ref(lub);
-  f = Cudd_cddOr(dd, glb, CDD_UNK(dd));
-  Cudd_Ref(f);
-  Cudd_RecursiveDeref(dd, glb);
 
-  g = Cudd_cddAnd(dd, lub, CDD_UNK(dd));
-  Cudd_Ref(g);
-  Cudd_RecursiveDeref(dd, lub);
-  
-  r = Cudd_cddMerge(dd, f, g);
-  Cudd_RecursiveDeref(dd, f);
-  Cudd_RecursiveDeref(dd, g);
-
-  return r;
+DdNode * small(DdManager *dd) {
+  int d[] = {3, 3, 3, 3, 3, 3, 3};
+  int r[] = {89572, 71799, 81066, 81183, 116335, 131302, 131591};
+  int c = 7;
+  int i;
+  DdNode *rel = CDD_ZERO(dd);
+  Cudd_Ref(rel);
+  DdNode *p, *tmp;
+  for (i = 0; i < c; i++) {
+    p = pair(dd, d[i], r[i]);
+    tmp = Cudd_cddOr(dd, p, rel);
+    Cudd_Ref(tmp);
+    Cudd_RecursiveDeref(dd, p);
+    Cudd_RecursiveDeref(dd, rel);
+    rel = tmp;
+  }
+  assert(card(dd, rel, 2) == (double)c);
+  return rel;
 }
 
 int main(void) {
-  DdManager *dd = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);	
-  
+  DdManager *dd = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);
+
   DdNode *one, *unk, *zero;
   one = CDD_ONE(dd);
   unk = CDD_UNK(dd);
   zero = CDD_ZERO(dd);
 
   DdNode *deps = readBinRel(dd, "deps.mat");
-  
   DdNode *Deps = domain(dd, deps, CDD_ONE(dd));
 
-  DdNode *DepsUnk = Cudd_cddStatus(dd, Deps, Cudd_cddNot(dd, Deps));
-  //DdNode *DepsUnk = Cudd_cddStatus(dd, Deps, Deps);
-  printf("Cardinality: %f\n",card(dd, DepsUnk, 2));
-  //printTuples(dd, DepsUnk, 2);
+  DdNode *conf = readBinRel(dd, "conf.mat");
+  DdNode *Conf = domain(dd, conf, CDD_ONE(dd));
+
+  DdNode *prov = readBinRel(dd, "pro.mat");
+  DdNode *Prov = domain(dd, CDD_ZERO(dd), prov);
+  
+  DdNode *rels[] = {deps, conf, prov};
+  
+
+  int ds = Cudd_DagSize(deps); double dm = card(dd, deps, 2);
+  int cs = Cudd_DagSize(conf); double cm = card(dd, conf, 2);
+  int ps = Cudd_DagSize(prov); double pm = card(dd, prov, 2);
+  
+  printf("Statistics:\n");
+  printf("\tdependencies: Dagsize: %d Minterms: %f\n", ds, dm);
+  printf("\tconflicts: Dagsize: %d Minterms: %f\n", cs, cm);
+  printf("\tprovides: Dagsize: %d Minterms: %f\n", ps, pm);
+  printf("\ttotal minterms: %f\n", dm + cm + pm);
+  printf("\ttotal number of nodes: %d\n", ds + cs + ps);
+  printf("\tsharing (among vars) %d\n",Cudd_SharingSize(rels, 3));
+  
   Cudd_RecursiveDeref(dd, deps);
+  Cudd_RecursiveDeref(dd, Deps);
+  Cudd_RecursiveDeref(dd, conf);
+  Cudd_RecursiveDeref(dd, Conf);
+  Cudd_RecursiveDeref(dd, prov);
+  Cudd_RecursiveDeref(dd, Prov);
   printf("This number should be zero: %d\n",Cudd_CheckZeroRef(dd));
   return 0;
 }
