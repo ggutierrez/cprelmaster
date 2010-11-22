@@ -16,12 +16,14 @@ int main(void) {
 		BDD ub = Cudd::zero();
 		
 		lb |= r.repr(t0);
+    
 		ub |= r.repr(t0);
 		ub |= r.repr(t1);
 		ub |= r.repr(t2);
 
+    BDD x = lb && ub;
 		
-		//lb.printTuples(2);
+		x.printTuples(2);
 		//ub.printTuples(2);
 		
 		//r.init(lb, ub);

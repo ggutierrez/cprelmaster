@@ -85,7 +85,7 @@ namespace Cdd {
 		DdNode *r = Cudd_cddMerge(Cudd::dd, node, other.node);
 		if (r == NULL) {
 			if (Cudd::dd->errorCode = CDD_FAIL)
-				throw failedOperation();
+				throw failedMerge();
 			else {
 				assert(r);
 			}
@@ -209,7 +209,15 @@ namespace Cdd {
 	void Relation::init(const BDD& lb, const BDD& ub) {
 		BDD l = lb || Cudd::unk();
 		BDD u = ub && Cudd::unk();
-		r = (l << u);
+		try {
+      r = (l << u);
+    }
+    catch (failedMerge& e) {
+      std::cerr << "Failed merge operation" << std::endl;
+      
+      throw;
+    }
+
 	}
 	
 }

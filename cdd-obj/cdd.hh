@@ -14,11 +14,16 @@
 
 
 namespace Cdd {
-  class failedOperation : public std::exception {
+  class failedMerge : public std::exception {
 		virtual const char* what(void) const throw() {
 			return "Failed operation on CDD";
 		}
 	};
+  class malformedDomain : public std::exception {
+		virtual const char* what(void) const throw() {
+			return "Malformed bounds in definition";
+		}    
+  };
   /**
    * \brief BDD abstraction
    */

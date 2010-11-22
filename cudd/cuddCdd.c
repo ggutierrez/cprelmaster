@@ -357,12 +357,14 @@ DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   
   // Compute the 'then'
   t = cuddCddMergeRecur(dd, fv, gv);
+  if (t == NULL && dd->errorCode == CDD_FAIL) return NULL;
   assert(t);
   if (t == NULL)  return(NULL);
   cuddRef(t);
   
   // Compute the 'else'
   e = cuddCddMergeRecur(dd, fnv, gnv);
+  if (e == NULL && dd->errorCode == CDD_FAIL) return NULL;
   assert(e);
   if (e == NULL) {
     Cudd_IterDerefBdd(dd, t);
