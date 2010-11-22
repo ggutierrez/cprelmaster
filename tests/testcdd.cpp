@@ -26,10 +26,7 @@ int main(void) {
     
     BDD glb = r.glb();
     BDD unk = r.unk();
-		unk.printTuples(2);
-		//ub.printTuples(2);
-		
-		
+		//unk.printTuples(2);
 		
 		cout << "Minterms in glb " << lb.minterms(2) << " Nodes: " << lb.numNodes() << endl;
 		cout << "Minterms in lub " << ub.minterms(2) << " Nodes: " << ub.numNodes() << endl;		
