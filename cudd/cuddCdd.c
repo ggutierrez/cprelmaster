@@ -472,12 +472,11 @@ DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
     if (isZero(dd, g)) return one;
     if (isOne(dd, g) || isUnk(dd, g)) return zero;
   }
-  
-  assert(f != one && f != unk && f != zero);
-  assert(g != one && g != unk && g != zero);
+
+
   
   /* normalize to try to increase cache efficiency. */
-  if (f > g) {
+  if (f > g || g == one || g == unk || g == zero) {
     DdNode *tmp = f;
     f = g;
     g = tmp;
@@ -486,6 +485,7 @@ DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
     F = Cudd_Regular(f); assert(F);
     G = Cudd_Regular(g); assert(G);
   }
+  
   
   // at this point therer are no constants
   
@@ -496,41 +496,55 @@ DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
     if (r != NULL) return(r);
   }
   
-  /* Here we can skip the use of cuddI, because the operands are known
-   ** to be non-constant.
-   */
-  topf = dd->perm[F->index];
-  topg = dd->perm[G->index];
-  
-  /* Compute cofactors. */
-  if (topf <= topg) {
-    index = F->index;
-    fv = cuddT(F);
-    fnv = cuddE(F);
-    assert(fv);
-    assert(fnv);
-    if (Cudd_IsComplement(f)) {
-      fv = Cudd_cddNot(dd,fv);
-      fnv = Cudd_cddNot(dd,fnv);
-    }
-  } else {
+  if (f == one || f == zero || f == unk) {
+    // only g contains a non terminal expression
+    topg = dd->perm[G->index];
     index = G->index;
-    fv = fnv = f;
-  }
-    
-  if (topg <= topf) {
-    gv = cuddT(G);
-    gnv = cuddE(G);
-    assert(gv);
-    assert(gnv);
+    gv = cuddT(G); assert(gv);
+    gnv = cuddE(G); assert(gnv);
     if (Cudd_IsComplement(g)) {
       gv = Cudd_cddNot(dd,gv);
       gnv = Cudd_cddNot(dd,gnv);
     }
+    fv = fnv = f;
   } else {
-    gv = gnv = g;
-  } 
-  
+    /* Here we can skip the use of cuddI, because the operands are known
+     ** to be non-constant.
+     */
+    assert(f != one && f != unk && f != zero);
+    
+    topf = dd->perm[F->index];
+    topg = dd->perm[G->index];
+    
+    /* Compute cofactors. */
+    if (topf <= topg) {
+      index = F->index;
+      fv = cuddT(F);
+      fnv = cuddE(F);
+      assert(fv);
+      assert(fnv);
+      if (Cudd_IsComplement(f)) {
+        fv = Cudd_cddNot(dd,fv);
+        fnv = Cudd_cddNot(dd,fnv);
+      }
+    } else {
+      index = G->index;
+      fv = fnv = f;
+    }
+    
+    if (topg <= topf) {
+      gv = cuddT(G);
+      gnv = cuddE(G);
+      assert(gv);
+      assert(gnv);
+      if (Cudd_IsComplement(g)) {
+        gv = Cudd_cddNot(dd,gv);
+        gnv = Cudd_cddNot(dd,gnv);
+      }
+    } else {
+      gv = gnv = g;
+    } 
+  }
   // Compute the 'then'
   t = cuddCddStatusRecur(dd, fv, gv);
   assert(t);

@@ -101,6 +101,12 @@ namespace Cdd {
 		assert(r);
 		return BDD(r);
 	}
+  
+  BDD BDD::status(const BDD& r) const {
+    DdNode *s = Cudd_cddStatus(Cudd::dd, node, r.node);
+		assert(s);
+		return BDD(s);
+  }
 	
 	BDD BDD::operator || (const BDD& other) const {
 		
@@ -217,7 +223,18 @@ namespace Cdd {
       
       throw;
     }
-
 	}
-	
+  
+  const BDD Relation::glb(void) const {
+    return r.status(Cudd::one());
+  }
+
+  const BDD Relation::oob(void) const {
+    return r.status(Cudd::zero());
+  }
+
+  const BDD Relation::unk(void) const {
+    return r.status(Cudd::unk());
+  }
+  
 }

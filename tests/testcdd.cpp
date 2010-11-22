@@ -21,12 +21,15 @@ int main(void) {
 		ub |= r.repr(t1);
 		ub |= r.repr(t2);
 
-    BDD x = lb && ub;
-		
-		x.printTuples(2);
+		// initialize r = [lb,ub]
+    r.init(lb, ub);
+    
+    BDD glb = r.glb();
+    BDD unk = r.unk();
+		unk.printTuples(2);
 		//ub.printTuples(2);
 		
-		//r.init(lb, ub);
+		
 		
 		cout << "Minterms in glb " << lb.minterms(2) << " Nodes: " << lb.numNodes() << endl;
 		cout << "Minterms in lub " << ub.minterms(2) << " Nodes: " << ub.numNodes() << endl;		

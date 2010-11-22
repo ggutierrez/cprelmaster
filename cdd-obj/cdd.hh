@@ -67,6 +67,8 @@ namespace Cdd {
 		BDD operator && (const BDD& other) const;
 		/// CDD union
 		BDD operator || (const BDD& other) const;
+    /// Status operation
+    BDD status(const BDD& r) const;
 		//@}
 		/// \name BDD information and statistics
 		//@{
@@ -123,7 +125,12 @@ namespace Cdd {
 		BDD repr(int *t) const;
 		/// Cardinality (number of tuples represented by the BDD \a b for a relation of this cardinality)
 		double cardinality(const BDD& b) const;
-
+    /// Return the lower bound of the relation (do not us this in propagation)
+    const BDD glb(void) const;
+    /// Return the upper bound of the relation (do not us this in propagation)
+    const BDD oob(void) const;
+    /// Return the unknow of the relation (do not us this in propagation)
+    const BDD unk(void) const;
 	};
 }
 
