@@ -282,7 +282,7 @@ DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   assert(f != unk);
   assert(g != unk);
   
-   /* normalize to try to increase cache efficiency. */
+  /* normalize to try to increase cache efficiency. */
   if ( (g == one || g == zero) || f > g) {
     DdNode *tmp = f;
     f = g;
@@ -457,7 +457,7 @@ DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
   
   if (F == G)
     if (f == g) return(one); // f \status f = true
-
+  
   if (isOne(dd,f)) {
     if (isOne(dd, g)) return one;
     if (isUnk(dd, g) || isZero(dd, g)) return zero;
@@ -472,8 +472,8 @@ DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
     if (isZero(dd, g)) return one;
     if (isOne(dd, g) || isUnk(dd, g)) return zero;
   }
-
-
+  
+  
   
   /* normalize to try to increase cache efficiency. */
   if (f > g || g == one || g == unk || g == zero) {
@@ -610,3 +610,169 @@ DdNode* Cudd_cddStatus(DdManager *dd, DdNode *f, DdNode *g) {
   return(res);  
 }
 
+// gg: I had to copy and paste this function because it is not visible from other
+//     modules in cudd.
+static int
+bddCheckPositiveCube(DdManager * manager, DdNode * cube) {
+  if (Cudd_IsComplement(cube)) return(0);
+  if (cube == DD_ONE(manager)) return(1);
+  if (cuddIsConstant(cube)) return(0);
+  if (cuddE(cube) == Cudd_Not(DD_ONE(manager))) {
+    return(bddCheckPositiveCube(manager, cuddT(cube)));
+  }
+  return(0);
+  
+}
+
+DdNode* CuddCddExistAbstractRecur(DdManager *dd, DdNode *f, DdNode *cube) {
+  DdNode *one, *unk, *F, *T, *E, *res1, *res2, *res;
+  statLine(dd);
+  
+  one = CDD_ONE(dd);
+  unk = CDD_UNK(dd);
+  F = Cudd_Regular(f);
+  
+  if (cube == one || F == one) {
+    // cube == one: to quantify on no variable, in this case f is unchanged
+    // F == one: there are 2 possibilities:
+    //   - f == F == one   : there are no variables to quant. the result is f 
+    //   - f != F == one   : there are no variables to quant. the result is f
+    return f;
+  }
+  
+  if (F == unk) {
+    // The quantification of the unk is the same unk. This is because an unk can
+    // become after one or zero so is not possible to decide.
+    assert(f == unk);
+    return f;
+  }
+  
+  assert(f != one && f != CDD_ZERO(dd) && f != unk);
+  
+  /* Abstract a variable that does not appear in f. */
+  while (dd->perm[F->index] > dd->perm[cube->index]) {
+    cube = cuddT(cube);
+    if (cube == one) return(f);
+  }
+  
+  /* Check the cache. */
+  if (F->ref != 1 &&
+      (res = cuddCacheLookup2(dd, Cudd_cddExistAbstract, f, cube)) != NULL) {
+    return(res);
+  }
+  
+  /* Compute the cofactors of f. */
+  T = cuddT(F); E = cuddE(F);
+  if (f != F) {
+    T = Cudd_cddNot(dd,T); E = Cudd_cddNot(dd,E);
+  }
+  
+  // At this point there are two possibilities with respect to the two top 
+  // variables in F and in the cube. If the top of the cube is not part of F then
+  // it does not make any sense to abstract it, it is removed from the cube. This
+  // procedure is applied until either:
+  //   1 reaching a variable in the cube that is the top of F
+  //   2 reaching a variable in the cube that is below the top of F
+  if (F->index == cube->index) { // 1
+    if (T == one || E == one || T == Cudd_cddNot(dd,E)) {
+	    return(one);
+    }
+    res1 = CuddCddExistAbstractRecur(dd, T, cuddT(cube));
+    if (res1 == NULL) return(NULL);
+    if (res1 == one) {
+	    if (F->ref != 1)
+        cuddCacheInsert2(dd, Cudd_cddExistAbstract, f, cube, one);
+	    return(one);
+    }
+    cuddRef(res1);
+    res2 = CuddCddExistAbstractRecur(dd, E, cuddT(cube));
+    if (res2 == NULL) {
+	    Cudd_IterDerefBdd(dd,res1);
+	    return(NULL);
+    }
+    cuddRef(res2);
+    res = cuddCddAndRecur(dd, Cudd_cddNot(dd,res1), Cudd_cddNot(dd,res2));
+    if (res == NULL) {
+	    Cudd_IterDerefBdd(dd, res1);
+	    Cudd_IterDerefBdd(dd, res2);
+	    return(NULL);
+    }
+    res = Cudd_cddNot(dd,res);
+    cuddRef(res);
+    Cudd_IterDerefBdd(dd, res1);
+    Cudd_IterDerefBdd(dd, res2);
+    if (F->ref != 1)
+	    cuddCacheInsert2(dd, Cudd_cddExistAbstract, f, cube, res);
+    cuddDeref(res);
+    return(res);
+  } else { // 2
+    res1 = CuddCddExistAbstractRecur(dd, T, cube);
+    if (res1 == NULL) return(NULL);
+    cuddRef(res1);
+    res2 = CuddCddExistAbstractRecur(dd, E, cube);
+    if (res2 == NULL) {
+	    Cudd_IterDerefBdd(dd, res1);
+	    return(NULL);
+    }
+    cuddRef(res2);
+    
+    if (res1 == res2) {
+      res = res1;
+    } else {
+      if (Cudd_IsComplement(res1)) {
+        res = cuddUniqueInter(dd,(int)F->index,
+                              Cudd_cddNot(dd,res1),
+                              Cudd_cddNot(dd,res2));
+        if (res == NULL) {
+          assert(res);
+          Cudd_IterDerefBdd(dd, res1);
+          Cudd_IterDerefBdd(dd, res2);
+          return(NULL);
+        }
+        res = Cudd_cddNot(dd,res);
+      } else {
+        if (res1 == unk && Cudd_IsComplement(res2)) {
+          //printf("This is an special case\n");
+          res = cuddUniqueInter(dd,(int)F->index,unk,Cudd_cddNot(dd,res2));
+          if (res == NULL) {
+            assert(res);
+            Cudd_IterDerefBdd(dd,res2);
+            return(NULL);
+          }
+          res = Cudd_cddNot(dd,res);
+        } else {
+          res = cuddUniqueInter(dd,(int)F->index,res1,res2);
+          if (res == NULL) {
+            assert(res);
+            Cudd_IterDerefBdd(dd, res1);
+            Cudd_IterDerefBdd(dd, res2);
+            return(NULL);
+          }
+        }
+      }
+    }
+    //
+    cuddDeref(res1);
+    cuddDeref(res2);
+    if (F->ref != 1)
+	    cuddCacheInsert2(dd, Cudd_cddExistAbstract, f, cube, res);
+    return(res);
+  }
+}
+
+DdNode* Cudd_cddExistAbstract(DdManager *dd, DdNode *f, DdNode *cube) {
+  DdNode *res;
+  
+  // cube must represent all the variables in their positive form
+  if (bddCheckPositiveCube(dd, cube) == 0) {
+    dd->errorCode = CUDD_INVALID_ARG;
+    return NULL;
+  }
+  
+  do {
+    dd->reordered = 0;
+    res = CuddCddExistAbstractRecur(dd,f,cube);
+  } while (dd->reordered == 1);
+  
+  return res;
+}
