@@ -35,6 +35,104 @@ int isUnk(DdManager *dd, DdNode *f) {
   return 0;
 }
 
+DdNode * cuddCddDeltaRecur(DdManager *dd, DdNode *f) {
+  DdNode  *one, *zero, *unk;
+  DdNode *F, *fv, *fnv, *t, *e, *r;
+  unsigned int topf, index;
+  
+  statLine(dd);
+  one = CDD_ONE(dd);
+  unk = CDD_UNK(dd);
+  zero = CDD_ZERO(dd);
+  
+  F = Cudd_Regular(f); assert(F);
+  
+  /* Terminal cases */
+  if (f == one || f == zero) // delta(one) = one
+    return one;
+  if (f == unk) { // delta(unk) = unk
+    assert(F == unk);
+    return unk;
+  }
+
+  /* Check cache. */  
+  if (F->ref != 1) {
+    r = cuddCacheLookup1(dd, Cudd_cddDelta, f);
+    if (r != NULL) return(r);
+  }
+  
+  /* A this point f is known to be non constant */
+  assert(f != one && f != zero  && f != unk);
+  topf = dd->perm[F->index];
+  index = F->index;
+  fv = cuddT(F); assert(fv);
+  fnv = cuddE(F); assert(fnv);
+  if (Cudd_IsComplement(f)) {
+    fv = Cudd_cddNot(dd, fv);
+    fnv = Cudd_cddNot(dd, fnv);
+  }
+  
+  //
+  // Compute the 'then'
+  t = cuddCddDeltaRecur(dd,fv);
+  assert(t);
+  if (t == NULL)  return(NULL);
+  cuddRef(t);
+  
+  // Compute the 'else'
+  e = cuddCddDeltaRecur(dd,fnv);
+  assert(e);
+  if (e == NULL) {
+    Cudd_IterDerefBdd(dd, t);
+    return(NULL);
+  }
+  cuddRef(e);
+  
+  // assert that the result of both recursive call must not contain complemented edges.
+  assert(!Cudd_IsComplement(t) && !Cudd_IsComplement(e));
+  // Reduce the result if possible
+  if (t == e) {
+    r = t;
+  } else {
+    if (Cudd_IsComplement(t)) {
+      r = cuddUniqueInter(dd,(int)index,
+                          Cudd_cddNot(dd,t),
+                          Cudd_cddNot(dd,e));
+      if (r == NULL) {
+        assert(r);
+        Cudd_IterDerefBdd(dd, t);
+        Cudd_IterDerefBdd(dd, e);
+        return(NULL);
+      }
+      r = Cudd_cddNot(dd,r);
+    } else {
+      if (t == unk && Cudd_IsComplement(e)) {
+        //printf("This is an special case\n");
+        r = cuddUniqueInter(dd,(int)index,unk,Cudd_cddNot(dd,e));
+        if (r == NULL) {
+          assert(r);
+          Cudd_IterDerefBdd(dd,e);
+          return(NULL);
+        }
+        r = Cudd_cddNot(dd,r);
+      } else {
+        r = cuddUniqueInter(dd,(int)index,t,e);
+        if (r == NULL) {
+          assert(r);
+          Cudd_IterDerefBdd(dd, t);
+          Cudd_IterDerefBdd(dd, e);
+          return(NULL);
+        }
+      }
+    }
+  }
+  cuddDeref(e);
+  cuddDeref(t);
+  if (F->ref != 1)
+    cuddCacheInsert1(dd, Cudd_cddDelta, f, r);
+  return(r);
+}
+
 DdNode * cuddCddAndRecur(DdManager *dd, DdNode *f, DdNode *g) {
   DdNode *F, *fv, *fnv, *G, *gv, *gnv;
   DdNode *one, *zero, *unk, *r, *t, *e;
@@ -213,6 +311,11 @@ DdNode * cuddCddAndRecur(DdManager *dd, DdNode *f, DdNode *g) {
     cuddCacheInsert2(dd, Cudd_bddAnd, f, g, r);
   return(r);
 }
+
+DdNode * cuddCddXorRecur(DdManager *dd, DdNode *f, DdNode *g) {
+  
+}
+
 
 DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   DdNode *F, *fv, *fnv, *G, *gv, *gnv;
@@ -412,35 +515,6 @@ DdNode* cuddCddMergeRecur(DdManager * dd, DdNode * f, DdNode * g) {
   return(r);
 }
 
-DdNode* Cudd_cddAnd(DdManager * dd, DdNode * f, DdNode * g) {
-  DdNode *res;
-  do {
-    dd->reordered = 0;
-    res = cuddCddAndRecur(dd,f,g);
-  } while (dd->reordered == 1);
-  return(res);
-}
-
-DdNode * Cudd_cddOr(DdManager *dd, DdNode *f, DdNode *g) {
-  DdNode *res;
-  do {
-    dd->reordered = 0;
-    res = cuddCddAndRecur(dd,Cudd_cddNot(dd,f),Cudd_cddNot(dd,g));
-  } while (dd->reordered == 1);
-  res = Cudd_cddNotCond(dd,res,res != NULL);
-  return(res);
-}
-
-DdNode* Cudd_cddMerge(DdManager *dd, DdNode *f, DdNode *g) {
-  DdNode *res;
-  do {
-    dd->reordered = 0;
-    res = cuddCddMergeRecur(dd,f,g);
-  } while (dd->reordered == 1);
-  return(res);  
-}
-
-
 DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
   DdNode *F, *fv, *fnv, *G, *gv, *gnv;
   DdNode *one, *zero, *unk, *r, *t, *e;
@@ -601,6 +675,44 @@ DdNode* cuddCddStatusRecur(DdManager *dd, DdNode *f, DdNode *g) {
   return(r);
 }
 
+
+DdNode* Cudd_cddAnd(DdManager * dd, DdNode * f, DdNode * g) {
+  DdNode *res;
+  do {
+    dd->reordered = 0;
+    res = cuddCddAndRecur(dd,f,g);
+  } while (dd->reordered == 1);
+  return(res);
+}
+
+DdNode* Cudd_cddDelta(DdManager * dd, DdNode * f) {
+  DdNode *res;
+  do {
+    dd->reordered = 0;
+    res = cuddCddDeltaRecur(dd,f);
+  } while (dd->reordered == 1);
+  return(res);
+}
+
+DdNode * Cudd_cddOr(DdManager *dd, DdNode *f, DdNode *g) {
+  DdNode *res;
+  do {
+    dd->reordered = 0;
+    res = cuddCddAndRecur(dd,Cudd_cddNot(dd,f),Cudd_cddNot(dd,g));
+  } while (dd->reordered == 1);
+  res = Cudd_cddNotCond(dd,res,res != NULL);
+  return(res);
+}
+
+DdNode* Cudd_cddMerge(DdManager *dd, DdNode *f, DdNode *g) {
+  DdNode *res;
+  do {
+    dd->reordered = 0;
+    res = cuddCddMergeRecur(dd,f,g);
+  } while (dd->reordered == 1);
+  return(res);  
+}
+
 DdNode* Cudd_cddStatus(DdManager *dd, DdNode *f, DdNode *g) {
   DdNode *res;
   do {
@@ -621,7 +733,6 @@ bddCheckPositiveCube(DdManager * manager, DdNode * cube) {
     return(bddCheckPositiveCube(manager, cuddT(cube)));
   }
   return(0);
-  
 }
 
 DdNode* CuddCddExistAbstractRecur(DdManager *dd, DdNode *f, DdNode *cube) {

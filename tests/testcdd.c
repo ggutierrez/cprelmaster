@@ -181,7 +181,7 @@ DdNode * small(DdManager *dd) {
   return rel;
 }
 
-int main(void) {
+int ex1(void) {
   DdManager *dd = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);
 
   DdNode *one, *unk, *zero;
@@ -219,6 +219,71 @@ int main(void) {
   Cudd_RecursiveDeref(dd, Conf);
   Cudd_RecursiveDeref(dd, prov);
   Cudd_RecursiveDeref(dd, Prov);
+  printf("This number should be zero: %d\n",Cudd_CheckZeroRef(dd));
+  return 0;
+}
+
+
+int main(void) {
+  DdManager *dd = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);
+    
+  DdNode *one, *unk, *zero;
+  one = CDD_ONE(dd);
+  unk = CDD_UNK(dd);
+  zero = CDD_ZERO(dd);
+
+  // f(x,y,z) = x'y'z + xz' + xy
+  DdNode *x = Cudd_bddIthVar(dd,0);
+  DdNode *y = Cudd_bddIthVar(dd,1);
+  DdNode *z = Cudd_bddIthVar(dd,2);
+  
+  //Cudd_Ref(x);Cudd_Ref(y);Cudd_Ref(z);
+  
+  //tmp = xy
+  DdNode *tmp = Cudd_bddAnd(dd, x, y);
+  Cudd_Ref(tmp);
+  
+  //tmp2 = xz'
+  DdNode *tmp2 = Cudd_bddAnd(dd, x,Cudd_Not(z));
+  Cudd_Ref(tmp2);
+  
+  // tmp3 = x'y'
+  DdNode *tmp3 = Cudd_bddAnd(dd, Cudd_Not(x), Cudd_Not(y));
+  Cudd_Ref(tmp3);
+  
+  // tmp4 = tmp3 z
+  DdNode *tmp4 = Cudd_bddAnd(dd, tmp3, z);
+  Cudd_Ref(tmp4);
+  
+  Cudd_RecursiveDeref(dd, tmp3);
+  
+  DdNode *f = Cudd_bddOr(dd, tmp, tmp2);
+  Cudd_Ref(f);
+  Cudd_RecursiveDeref(dd, tmp);
+  Cudd_RecursiveDeref(dd, tmp2);  
+  
+  tmp = Cudd_bddOr(dd, f, tmp4);
+  Cudd_Ref(tmp);
+  Cudd_RecursiveDeref(dd, f);
+  Cudd_RecursiveDeref(dd, tmp4);
+  
+  f = tmp;
+  Cudd_Ref(f);
+  
+  // create a cube containing z
+  DdNode *cube = Cudd_bddAnd(dd, z, one);
+  Cudd_Ref(cube);
+  
+  //DdNode *abse = Cudd_bddExistAbstract(dd, f, cube);
+  DdNode *abse = Cudd_cddExistAbstract(dd, f, cube);
+  Cudd_Ref(abse);
+  
+  todot(dd, abse, "cdd-abstract-exist.dot");
+  
+  Cudd_RecursiveDeref(dd, tmp);
+  Cudd_RecursiveDeref(dd, abse);
+  Cudd_RecursiveDeref(dd, cube);
+  Cudd_RecursiveDeref(dd, f);
   printf("This number should be zero: %d\n",Cudd_CheckZeroRef(dd));
   return 0;
 }

@@ -107,6 +107,12 @@ namespace Cdd {
 		assert(s);
 		return BDD(s);
   }
+  
+  BDD BDD::delta(void) const {
+    DdNode *s = Cudd_cddDelta(Cudd::dd, node);
+    assert(s);
+    return BDD(s);
+  }
 	
 	BDD BDD::operator || (const BDD& other) const {
 		
@@ -123,14 +129,24 @@ namespace Cdd {
 		return Cudd_DagSize(node);
 	}
 	
-	void BDD::printTuples(int a) const {
+	void BDD::printTuples(int a, std::ostream& os) const {
+    if (node ==CDD_ONE(Cudd::dd)) {
+      os << "Universe";
+      return;
+    }
+    if (node == CDD_ZERO(Cudd::dd)) {
+      os << "Empty";
+      return;
+    }
+    
 		DdGen* gen;
 		int *cube = (int*)malloc(sizeof(int)*(1<<(BBV+BA)));
 		int tuple[1<<BA];
 		CUDD_VALUE_TYPE val;
 		int done;
 		int i,k,j;
-		printf("Cardinality: %f\n", Cudd_CountMinterm(Cudd::dd,node,a<<BBV));
+    os << "#(" << Cudd_CountMinterm(Cudd::dd,node,a<<BBV) << "){";
+		//printf("Cardinality: %f\n", Cudd_CountMinterm(Cudd::dd,node,a<<BBV));
 		for(k=0;k<1<<BA;k++)tuple[k]=0;
 		Cudd_ForeachCube(Cudd::dd,node,gen,cube,val){
 			done=0;
@@ -146,13 +162,15 @@ namespace Cdd {
 						}
 					}
 				}
-				printf("<");
+				os << "<";
 				for(j = 0; j < a; j++) {
-					printf("%d,",tuple[j]);
+					os << tuple[j] << ",";//printf("%d,",tuple[j]);
 				}
-				printf(">\n");
+				//printf(">\n");
+        os << ">, ";
 			}
 		}		
+    os << "}";
 	}
 	
 	void BDD::dot(const char* fname) const {
@@ -235,6 +253,10 @@ namespace Cdd {
 
   const BDD Relation::unk(void) const {
     return r.status(Cudd::unk());
+  }
+
+  const BDD Relation::dom(void) const {
+    return r;
   }
   
 }

@@ -6,11 +6,11 @@
 #include "cuddCDD.h" 
 
 // 32 bits integers max 8ary
-#define BBV 5
-#define BA 3
+//#define BBV 5
+//#define BA 3
 
-//#define BBV 2
-//#define BA 1
+#define BBV 2
+#define BA 1
 
 
 namespace Cdd {
@@ -69,6 +69,8 @@ namespace Cdd {
 		BDD operator || (const BDD& other) const;
     /// Status operation
     BDD status(const BDD& r) const;
+    /// Delta operation
+    BDD delta(void) const;
 		//@}
 		/// \name BDD information and statistics
 		//@{
@@ -77,7 +79,7 @@ namespace Cdd {
 		/// Return the number of nodes in the BDD
 		int numNodes(void) const;
 		/// Print the tuples represented in the BDD for a relation with arity a
-		void printTuples(int a) const;
+		void printTuples(int a, std::ostream& os) const;
 		//@}
 		/// \name BDD output
 		//{@
@@ -131,6 +133,8 @@ namespace Cdd {
     const BDD oob(void) const;
     /// Return the unknow of the relation (do not us this in propagation)
     const BDD unk(void) const;
+    /// Return the CDD representing the domain
+    const BDD dom(void) const;
 	};
 }
 
