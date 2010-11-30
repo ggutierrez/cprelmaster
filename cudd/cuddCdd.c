@@ -72,7 +72,6 @@ DdNode * cuddCddDeltaRecur(DdManager *dd, DdNode *f) {
     fnv = Cudd_cddNot(dd, fnv);
   }
   
-  //
   // Compute the 'then'
   t = cuddCddDeltaRecur(dd,fv);
   assert(t);
@@ -87,45 +86,25 @@ DdNode * cuddCddDeltaRecur(DdManager *dd, DdNode *f) {
     return(NULL);
   }
   cuddRef(e);
-  
-  // assert that the result of both recursive call must not contain complemented edges.
+  // The base cases never return zero so at this point we do not need to handle
+  // complemented edges.
   assert(!Cudd_IsComplement(t) && !Cudd_IsComplement(e));
   // Reduce the result if possible
   if (t == e) {
     r = t;
   } else {
-    if (Cudd_IsComplement(t)) {
-      r = cuddUniqueInter(dd,(int)index,
-                          Cudd_cddNot(dd,t),
-                          Cudd_cddNot(dd,e));
-      if (r == NULL) {
-        assert(r);
-        Cudd_IterDerefBdd(dd, t);
-        Cudd_IterDerefBdd(dd, e);
-        return(NULL);
-      }
-      r = Cudd_cddNot(dd,r);
-    } else {
-      if (t == unk && Cudd_IsComplement(e)) {
-        //printf("This is an special case\n");
-        r = cuddUniqueInter(dd,(int)index,unk,Cudd_cddNot(dd,e));
-        if (r == NULL) {
-          assert(r);
-          Cudd_IterDerefBdd(dd,e);
-          return(NULL);
-        }
-        r = Cudd_cddNot(dd,r);
-      } else {
-        r = cuddUniqueInter(dd,(int)index,t,e);
-        if (r == NULL) {
-          assert(r);
-          Cudd_IterDerefBdd(dd, t);
-          Cudd_IterDerefBdd(dd, e);
-          return(NULL);
-        }
-      }
+    assert(!Cudd_IsComplement(t));
+    assert(!Cudd_IsComplement(e));
+  
+    r = cuddUniqueInter(dd,(int)index,t,e);
+    if (r == NULL) {
+      assert(r);
+      Cudd_IterDerefBdd(dd, t);
+      Cudd_IterDerefBdd(dd, e);
+      return(NULL);
     }
   }
+  
   cuddDeref(e);
   cuddDeref(t);
   if (F->ref != 1)
@@ -313,6 +292,150 @@ DdNode * cuddCddAndRecur(DdManager *dd, DdNode *f, DdNode *g) {
 }
 
 DdNode * cuddCddXorRecur(DdManager *dd, DdNode *f, DdNode *g) {
+  DdNode *F, *fv, *fnv, *G, *gv, *gnv;
+  DdNode *one, *zero, *unk, *r, *t, *e;
+  unsigned int topf, topg, index;
+  
+  statLine(dd);
+  one = CDD_ONE(dd);
+  unk = CDD_UNK(dd);
+  zero = CDD_ZERO(dd);
+
+  /* Terminal cases. */
+  if (f == unk || g == unk) {
+    // in all the cases an xor with unk is unk
+    return unk;
+  }
+  
+  assert(f != unk && g != unk);
+  
+  if (f == g) { 
+    r = cuddCddDeltaRecur(dd, f);
+    assert(r);
+    return Cudd_cddNot(dd, r);
+  }
+  
+  if (f == Cudd_cddNot(dd, g)) {
+    r = cuddCddDeltaRecur(dd, f);
+    assert(r);
+    return r;
+  }
+  
+  if (f > g) { /* Try to increase cache efficiency and simplify tests. */
+    DdNode *tmp = f;
+    f = g;
+    g = tmp;
+  }
+  
+  if (g == zero) return(f);
+  if (g == one) return(Cudd_cddNot(dd,f));
+  if (Cudd_IsComplement(f)) {
+    f = Cudd_cddNot(dd,f);
+    g = Cudd_cddNot(dd,g);
+  }
+  /* Now the first argument is regular. */
+  if (f == one) return(Cudd_cddNot(dd,g));
+  
+  assert (f != one && f != zero && f != unk);
+  assert (g != one && g != zero && g != unk);
+  
+  /* At this point f and g are not constant. */
+  
+  /* Check cache. */
+  r = cuddCacheLookup2(dd, Cudd_cddXor, f, g);
+  if (r != NULL) return(r);
+  
+  /* Here we can skip the use of cuddI, because the operands are known
+   ** to be non-constant.
+   */
+  topf = dd->perm[F->index];
+  topg = dd->perm[G->index];
+  
+  /* Compute cofactors. */
+  if (topf <= topg) {
+    index = F->index;
+    fv = cuddT(F);
+    fnv = cuddE(F);
+    assert(fv);
+    assert(fnv);
+    if (Cudd_IsComplement(f)) {
+      fv = Cudd_cddNot(dd,fv);
+      fnv = Cudd_cddNot(dd,fnv);
+    }
+  } else {
+    index = G->index;
+    fv = fnv = f;
+  }
+  
+  if (topg <= topf) {
+    gv = cuddT(G);
+    gnv = cuddE(G);
+    assert(gv);
+    assert(gnv);
+    if (Cudd_IsComplement(g)) {
+      gv = Cudd_cddNot(dd,gv);
+      gnv = Cudd_cddNot(dd,gnv);
+    }
+  } else {
+    gv = gnv = g;
+  } 
+
+  // Compute the 'then'
+  t = cuddCddXorRecur(dd, fv, gv);
+  assert(t);
+  if (t == NULL)  return(NULL);
+  cuddRef(t);
+  
+  // Compute the 'else'
+  e = cuddCddXorRecur(dd, fnv, gnv);
+  assert(e);
+  if (e == NULL) {
+    Cudd_IterDerefBdd(dd, t);
+    return(NULL);
+  }
+  cuddRef(e);
+  
+  // Reduce the result if possible
+  if (t == e) {
+    r = t;
+  } else {
+    if (Cudd_IsComplement(t)) {
+      r = cuddUniqueInter(dd,(int)index,
+                          Cudd_cddNot(dd,t),
+                          Cudd_cddNot(dd,e));
+      if (r == NULL) {
+        assert(r);
+        Cudd_IterDerefBdd(dd, t);
+        Cudd_IterDerefBdd(dd, e);
+        return(NULL);
+      }
+      r = Cudd_cddNot(dd,r);
+    } else {
+      if (t == unk && Cudd_IsComplement(e)) {
+        //printf("This is an special case\n");
+        r = cuddUniqueInter(dd,(int)index,unk,Cudd_cddNot(dd,e));
+        if (r == NULL) {
+          assert(r);
+          Cudd_IterDerefBdd(dd,e);
+          return(NULL);
+        }
+        r = Cudd_cddNot(dd,r);
+      } else {
+        r = cuddUniqueInter(dd,(int)index,t,e);
+        if (r == NULL) {
+          assert(r);
+          Cudd_IterDerefBdd(dd, t);
+          Cudd_IterDerefBdd(dd, e);
+          return(NULL);
+        }
+      }
+    }
+  }
+  cuddDeref(e);
+  cuddDeref(t);
+  if (F->ref != 1 || G->ref != 1)
+    cuddCacheInsert2(dd, Cudd_cddXor, f, g, r);
+  return(r);
   
 }
 
@@ -681,6 +804,15 @@ DdNode* Cudd_cddAnd(DdManager * dd, DdNode * f, DdNode * g) {
   do {
     dd->reordered = 0;
     res = cuddCddAndRecur(dd,f,g);
+  } while (dd->reordered == 1);
+  return(res);
+}
+
+DdNode* Cudd_cddXor(DdManager * dd, DdNode * f, DdNode * g) {
+  DdNode *res;
+  do {
+    dd->reordered = 0;
+    res = cuddCddXorRecur(dd,f,g);
   } while (dd->reordered == 1);
   return(res);
 }

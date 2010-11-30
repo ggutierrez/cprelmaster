@@ -29,7 +29,7 @@ Relation var_test(void) {
   //BDD glb = r.glb();
 
   
-  //BDD dom = r.dom();
+  BDD dom = r.dom();
 /*
   dom.dot("dom.dot");
   cout << "Tuples in the lower bound: " << endl;
