@@ -238,10 +238,27 @@ namespace Cdd {
     }
     catch (failedMerge& e) {
       std::cerr << "Failed merge operation" << std::endl;
-      
       throw;
     }
 	}
+  
+  void Relation::exclude(const BDD& g) {
+    r = r << (!g && Cudd::unk()); 
+  }
+
+  Relation& Relation::operator >>= (const BDD& g) {
+    (*this).exclude(g);
+    return *this;
+  }
+  
+  void Relation::include(const BDD& g) {
+    r = r << (g || Cudd::unk()); 
+  }
+
+  Relation& Relation::operator <<= (const BDD& g) {
+    (*this).include(g);
+    return *this;    
+  }
   
   const BDD Relation::glb(void) const {
     return r.status(Cudd::one());
@@ -259,4 +276,12 @@ namespace Cdd {
     return r;
   }
   
+  std::ostream& operator << (std::ostream& os, const Relation& r) {
+    os << "<glb: ";
+    r.glb().printTuples(2,os);
+    os << std::endl << "unk: ";
+    r.unk().printTuples(2,os);
+    os << ">";
+    return os;
+  }
 }

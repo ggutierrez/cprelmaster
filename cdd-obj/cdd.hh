@@ -109,11 +109,10 @@ namespace Cdd {
 	
 	class Relation {
   private:
-    /// Representation
+    /// Domain representation
 		BDD r;
 		/// Arity
     int arity;
-	public:
 		/// Returns a BDD with a path representing \a v
 		BDD path(int p, int a) const;
 	public:
@@ -123,8 +122,25 @@ namespace Cdd {
 		void init(const BDD& lb, const BDD& ub);
 		/// Destructor
 		~Relation(void);
-		/// Return a BDD representing the tuple \a t. \a t has to have \a arity elements
+		/**
+     * \brief Return a BDD representing the tuple \a t.
+     *
+     * The length of \a t is assumed to be equal to the arity of the relation.
+     */
 		BDD repr(int *t) const;
+    /**
+     * \brief Exclude the relation represented by \a g from the domain of this
+     * variable.
+     *
+     * \warning It is assumed that \a g has the same cardinality of this.
+     * \warning An exception is triggered if the operation fails (e.g. tries to
+     * remove elements already in the lower bound)
+     */
+    void exclude(const BDD& g); 
+    Relation& operator >>= (const BDD& g);
+    
+    void include(const BDD& g);
+    Relation& operator <<= (const BDD& g);
 		/// Cardinality (number of tuples represented by the BDD \a b for a relation of this cardinality)
 		double cardinality(const BDD& b) const;
     /// Return the lower bound of the relation (do not us this in propagation)
@@ -136,6 +152,9 @@ namespace Cdd {
     /// Return the CDD representing the domain
     const BDD dom(void) const;
 	};
+  
+  /// Output relation \a r to \a os
+  std::ostream& operator << (std::ostream& os, const Relation& r); 
 }
 
 #endif

@@ -23,38 +23,28 @@ Relation var_test(void) {
   ub |= r.repr(t1);
   ub |= r.repr(t2);
   
+  
   // initialize r = [lb,ub]
   r.init(lb, ub);
   
   //BDD glb = r.glb();
 
   
-  BDD dom = r.dom();
-/*
-  dom.dot("dom.dot");
-  cout << "Tuples in the lower bound: " << endl;
-  dom.status(Cudd::one()).printTuples(2);
-  cout << "Tuples in the unknown : " << endl;
-  dom.status(Cudd::unk()).printTuples(2);
-  */
+  //BDD dom = r.dom();
+  //dom.dot("dom.dot");
+  cout << r << endl;
   
+  // include glb in r
+  
+  
+  BDD g = Cudd::zero();
+  g |= r.repr(t1);
+  
+  //r <<= ub;
+  //r >>= g;
+  
+  cout << "after " << r << endl;
 
-  //dom.delta().printTuples(2);
-  
-  
-  BDD ground = dom.delta();
-  if (ground == Cudd::one()) {
-    cout << "Variable is ground" << endl;
-  } else {
-    ground.status(Cudd::unk()).dot("ground-st-unk.dot");
-    cout << "Tuples in the ground-st-unk: " << endl;
-    ground.status(Cudd::unk()).printTuples(2,cout);
-    //ground.dot("ground.dot");
-  }
-  
-  
-  //ground.printTuples(2);
-  //cout << "should be one " << (ground == Cudd::one()) << endl;
   return r;
 }
 
