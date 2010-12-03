@@ -50,13 +50,12 @@ Relation xor_test(void) {
   BDD doms = s.dom();
   BDD domr = r.dom();
   
-  BDD x = doms ^ domr;
+//  BDD t = 
+  Relation x(doms ^ domr, 2);
   cout << "The lower bound" << endl;
-  x.status(Cudd::one()).printTuples(2,cout);
+  x.glb().printTuples(2,cout);
   cout << "the unkown" << endl;
-  x.status(Cudd::unk()).printTuples(2,cout);
-  
-  
+  x.unk().printTuples(2,cout);
   
 }
 

@@ -23,6 +23,8 @@ extern "C" {
   DdNode * Cudd_cddOr(DdManager *dd, DdNode *f, DdNode *g);
   /// Compute the xor  of the CDDs \a f and \a g
   DdNode * Cudd_cddXor(DdManager *dd, DdNode *f, DdNode *g);
+  /// If-then-else operator on CDDs
+  DdNode * Cudd_cddIte(DdManager* dd, DdNode *c, DdNode *t, DdNode *e);
   // Merge two Cdds \a f and \a g
   DdNode* Cudd_cddMerge(DdManager *dd, DdNode *f, DdNode *g);
   // Returns a relation representing the agreement between \a f and \a g
