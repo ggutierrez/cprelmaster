@@ -1,6 +1,8 @@
 #include <cdd.hh>
 
 namespace Cdd {
+  using namespace std;
+  using namespace tr1;
   /*
    * BDD
    */
@@ -34,6 +36,10 @@ namespace Cdd {
 		Cudd_Ref(node);
 	}
 	
+  BDD BDD::create(tuple<int,int> t) {
+    return path(get<0>(t), 0) && path(get<1>(t), 1);
+  }
+  
 	bool BDD::operator == (const BDD& b) const {
 		return node == b.node;
 	}
@@ -121,6 +127,12 @@ namespace Cdd {
 		return BDD(r);
 	}
 	
+  BDD BDD::operator ^ (const BDD& other) const {
+    DdNode *r = Cudd_cddXor(Cudd::dd, node, other.node);
+    assert(r);
+    return BDD(r);
+  }
+  
 	double BDD::minterms(int nvars) const {
 		return Cudd_CountMinterm(Cudd::dd, node, nvars<<BBV);
 	}
@@ -128,7 +140,26 @@ namespace Cdd {
 	int BDD::numNodes(void) const {
 		return Cudd_DagSize(node);
 	}
-	
+
+  
+	void BDD::dot(const char* fname) const {
+		FILE *out = fopen(fname,"w");
+		DdNode *outputs[] = {node};
+		char *names[] = {"f"};
+		Cudd_DumpDot(Cudd::dd,1,outputs,NULL,names,out);
+		fclose(out);
+	}
+  
+  // encoding specific bdd operations
+  BDD BDD::path(int p, int a) {
+		BDD f = Cudd::one();
+		for (int i = (1<<BBV); i--;) {
+			f &= BDD((i<<BA)+a,p&1);
+			p >>= 1;
+		}
+		return f;
+	}
+  
 	void BDD::printTuples(int a, std::ostream& os) const {
     if (node ==CDD_ONE(Cudd::dd)) {
       os << "Universe";
@@ -172,14 +203,6 @@ namespace Cdd {
 		}		
     os << "}";
 	}
-	
-	void BDD::dot(const char* fname) const {
-		FILE *out = fopen(fname,"w");
-		DdNode *outputs[] = {node};
-		char *names[] = {"f"};
-		Cudd_DumpDot(Cudd::dd,1,outputs,NULL,names,out);
-		fclose(out);
-	}
 	/*
 	 * Cudd
 	 */
@@ -211,24 +234,14 @@ namespace Cdd {
 	
   Relation::Relation(int a) : r(Cudd::zero()), arity(a) {}
 	
+  Relation::Relation(const BDD& lb, const BDD& ub, int a)
+  : arity(a) {
+    init(lb, ub);
+  }
+  
+  Relation::Relation(const BDD& d, int a): r(d), arity(a) {}
+  
 	Relation::~Relation(void) {}
-	
-	BDD Relation::path(int p, int a) const {
-		BDD f = Cudd::one();
-		for (int i = (1<<BBV); i--;) {
-			f &= BDD((i<<BA)+a,p&1);
-			p >>= 1;
-		}
-		return f;
-	}
-	
-	BDD Relation::repr(int *t) const {
-		BDD f = Cudd::one();
-		for (int i = 0; i < arity; i++) {
-			f &= path(t[i],i);
-		}
-		return f;
-	}
 	
 	void Relation::init(const BDD& lb, const BDD& ub) {
 		BDD l = lb || Cudd::unk();
@@ -241,6 +254,10 @@ namespace Cdd {
       throw;
     }
 	}
+  
+  void Relation::init(const BDD& d) {
+    r = d;
+  }
   
   void Relation::exclude(const BDD& g) {
     r = r << (!g && Cudd::unk()); 

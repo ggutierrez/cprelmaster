@@ -1,44 +1,89 @@
 #include <iostream>
+#include <tr1/tuple>
+#include <list>
+
 #include "cdd.hh"
 
 using namespace std;
+using namespace tr1;
 using namespace Cdd;
 
-Relation var_test(void) {
-  int t0[] = {1,2};
-  int t1[] = {2,3};
-  int t2[] = {0,0};
+Relation xor_test(void) {
   
-  Relation r(2);
+  BDD lbr = Cudd::zero();
+  BDD ubr = Cudd::zero();
+    
+  lbr |= 
+    BDD::create(make_tuple(5,5)) ||
+    BDD::create(make_tuple(5,6)) ||
+    BDD::create(make_tuple(1,0));
+
+  ubr |= 
+    BDD::create(make_tuple(5,5)) ||
+    BDD::create(make_tuple(5,6)) ||
+    BDD::create(make_tuple(1,0)) || 
+    BDD::create(make_tuple(2,3)) ||
+    BDD::create(make_tuple(3,1)) ||
+    BDD::create(make_tuple(1,1));
+
+  Relation r(lbr, ubr, 2);
+  
+  
+  BDD lbs = Cudd::zero();
+  BDD ubs = Cudd::zero();
+
+  lbs |=
+    BDD::create(make_tuple(2,0)) ||
+    BDD::create(make_tuple(3,1));
+  
+  ubs |=
+    BDD::create(make_tuple(2,0)) ||
+    BDD::create(make_tuple(3,1)) ||
+    BDD::create(make_tuple(5,5));
+
+  Relation s(lbs, ubs, 2);
+  
+  cout << s << endl;
+  cout << "r" << endl;
+  cout << r <<endl;
+  
+  BDD doms = s.dom();
+  BDD domr = r.dom();
+  
+  BDD x = doms ^ domr;
+  cout << "The lower bound" << endl;
+  x.status(Cudd::one()).printTuples(2,cout);
+  cout << "the unkown" << endl;
+  x.status(Cudd::unk()).printTuples(2,cout);
+  
+  
+  
+}
+
+Relation var_test(void) {
+  
   
   BDD lb = Cudd::zero();
   BDD ub = Cudd::zero();
   
   //{(1,2)}..{(1,2),(2,3),(0,0)}
-  lb |= r.repr(t0);
-  //lb |= r.repr(t1);
-  //lb |= r.repr(t2);
-  
-  ub |= r.repr(t0);
-  ub |= r.repr(t1);
-  ub |= r.repr(t2);
-  
+  lb |= BDD::create(make_tuple(1,2));
+  ub |= BDD::create(make_tuple(1,2));
+  ub |= BDD::create(make_tuple(2,3));
+  ub |= BDD::create(make_tuple(0,0));
   
   // initialize r = [lb,ub]
-  r.init(lb, ub);
+  Relation r(lb, ub, 2);
   
   //BDD glb = r.glb();
-
-  
   //BDD dom = r.dom();
   //dom.dot("dom.dot");
   cout << r << endl;
   
   // include glb in r
   
-  
   BDD g = Cudd::zero();
-  g |= r.repr(t1);
+  g |= BDD::create(make_tuple(2,3));
   
   //r <<= ub;
   //r >>= g;
@@ -49,7 +94,7 @@ Relation var_test(void) {
 }
 
 void rel_test(void) {
-  Relation r = var_test();
+  Relation r = xor_test();
   
 }
 

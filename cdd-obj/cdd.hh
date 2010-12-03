@@ -2,6 +2,8 @@
 #define __CDD__HH__
 
 #include <iostream>
+#include <list>
+#include <tr1/tuple>
 #include <exception>
 #include "cuddCDD.h" 
 
@@ -31,6 +33,8 @@ namespace Cdd {
 	private:
 		/// Function pointer
 		DdNode *node;
+    /// Create a BDD to representing \a p for a column \a a
+    static BDD path(int p, int a);
   public:
     /// Constructor
     BDD(void);
@@ -40,8 +44,12 @@ namespace Cdd {
 		BDD(const BDD& from);
 		/// Returns the variable at possition \a v with a value of \a b
 		BDD(int v, bool b);
+    /// Constructs a BDD with the binary encoding of the elementes in [\a b, \a e]
+    template <class I>
+    BDD(I& b, I& e);
     /// Destructor
     ~BDD(void);
+    static BDD create(std::tr1::tuple<int,int> t);
 		/// \name Test operations
 		//@{
 		/// BDD equality
@@ -67,6 +75,8 @@ namespace Cdd {
 		BDD operator && (const BDD& other) const;
 		/// CDD union
 		BDD operator || (const BDD& other) const;
+    /// CDD xor
+    BDD operator ^ (const BDD& other) const;
     /// Status operation
     BDD status(const BDD& r) const;
     /// Delta operation
@@ -87,7 +97,7 @@ namespace Cdd {
 		void dot(const char* fname) const;
 		//@}
   };
-	
+	  
 	class Cudd {
 		friend class BDD;
 	private:
@@ -113,21 +123,35 @@ namespace Cdd {
 		BDD r;
 		/// Arity
     int arity;
-		/// Returns a BDD with a path representing \a v
-		BDD path(int p, int a) const;
+		/**
+     * \brief Initialization of a constraint domain with \a lb and \a ub as the
+     * lower and upper bound resp.
+     *
+     * \warning \a lb and \a ub are assumed to be ground relations
+     */    
+		void init(const BDD& lb, const BDD& ub);    
 	public:
 		/// Constructor for an empty relation of arity \a a
 		Relation(int a);
-		/// Initialization of a constraint domain with \a lb and \a ub as the bounds
-		void init(const BDD& lb, const BDD& ub);
+    /**
+     * Constructor for the relation domain [\a lb, \a ub]
+     *
+     * \warning raises an exception if \a lb is not a subset of \a ub
+     */
+    Relation(const BDD& lb, const BDD& ub, int a);
+    /**
+     * Constructor for a relation domain described by \a dom
+     */
+    Relation(const BDD& dom, int a);
+    /**
+     * \brief Initialization of a constraint domain with the relation represented 
+     * by \a d.
+     *
+     * \warning \a d is assumed to be a domain representation: CDD or BDD
+     */
+    void init(const BDD& d);
 		/// Destructor
 		~Relation(void);
-		/**
-     * \brief Return a BDD representing the tuple \a t.
-     *
-     * The length of \a t is assumed to be equal to the arity of the relation.
-     */
-		BDD repr(int *t) const;
     /**
      * \brief Exclude the relation represented by \a g from the domain of this
      * variable.
@@ -155,6 +179,15 @@ namespace Cdd {
   
   /// Output relation \a r to \a os
   std::ostream& operator << (std::ostream& os, const Relation& r); 
+  
+  template <class I>
+  BDD::BDD(I& b, I& e) {
+    node = Cudd::one();
+    int i = 0;
+    for (; b != e; ++b, i++) {
+      node &= BDD::path(*b, i);
+    }
+  }
 }
 
 #endif

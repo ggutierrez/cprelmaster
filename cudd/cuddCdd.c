@@ -292,7 +292,7 @@ DdNode * cuddCddAndRecur(DdManager *dd, DdNode *f, DdNode *g) {
 }
 
 DdNode * cuddCddXorRecur(DdManager *dd, DdNode *f, DdNode *g) {
-  DdNode *F, *fv, *fnv, *G, *gv, *gnv;
+  DdNode  *fv, *fnv, *G, *gv, *gnv;
   DdNode *one, *zero, *unk, *r, *t, *e;
   unsigned int topf, topg, index;
   
@@ -348,14 +348,15 @@ DdNode * cuddCddXorRecur(DdManager *dd, DdNode *f, DdNode *g) {
   /* Here we can skip the use of cuddI, because the operands are known
    ** to be non-constant.
    */
-  topf = dd->perm[F->index];
+  topf = dd->perm[f->index];
+  G = Cudd_Regular(g);
   topg = dd->perm[G->index];
   
   /* Compute cofactors. */
   if (topf <= topg) {
-    index = F->index;
-    fv = cuddT(F);
-    fnv = cuddE(F);
+    index = f->index;
+    fv = cuddT(f);
+    fnv = cuddE(f);
     assert(fv);
     assert(fnv);
     if (Cudd_IsComplement(f)) {
@@ -433,8 +434,7 @@ DdNode * cuddCddXorRecur(DdManager *dd, DdNode *f, DdNode *g) {
   }
   cuddDeref(e);
   cuddDeref(t);
-  if (F->ref != 1 || G->ref != 1)
-    cuddCacheInsert2(dd, Cudd_cddXor, f, g, r);
+  cuddCacheInsert2(dd, Cudd_cddXor, f, g, r);
   return(r);
   
 }
