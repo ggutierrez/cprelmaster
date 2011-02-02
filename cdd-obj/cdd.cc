@@ -226,6 +226,10 @@ namespace Cdd {
 	int Cudd::references(void) {
 		return Cudd_CheckZeroRef(Cudd::dd);
 	}
+  
+  void Cudd::stats(void) {
+    Cudd_PrintInfo(Cudd::dd, stdout);
+  }
 #endif
 	
   /*

@@ -8,11 +8,11 @@
 #include "cuddCDD.h" 
 
 // 32 bits integers max 8ary
-//#define BBV 5
-//#define BA 3
+#define BBV 5
+#define BA 3
 
-#define BBV 2
-#define BA 1
+//#define BBV 2
+//#define BA 1
 
 
 namespace Cdd {
@@ -114,6 +114,8 @@ namespace Cdd {
 #ifndef NDEBUG
 		/// Return the number of referenced nodes in the manager
 		static int references(void);
+    /// Print statistics about CUDD
+    static void stats(void);
 #endif
 	};
 	

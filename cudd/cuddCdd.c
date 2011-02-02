@@ -821,7 +821,7 @@ DdNode * Cudd_cddIte(DdManager* dd, DdNode *c, DdNode *t, DdNode *e) {
   DdNode *res;
   do {
     dd->reordered = 0;
-    res = cuddCddIteRecur(dd,c,t,e);
+    res = NULL; //cuddCddIteRecur(dd,c,t,e);
   } while (dd->reordered == 1);
   return(res);  
 }

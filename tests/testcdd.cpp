@@ -1,5 +1,9 @@
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 #include <tr1/tuple>
+#include <tr1/unordered_map>
 #include <list>
 
 #include "cdd.hh"
@@ -8,6 +12,37 @@ using namespace std;
 using namespace tr1;
 using namespace Cdd;
 
+void encode(unordered_map<int,int>& s, int v) {
+  s[v] = s.size();
+}
+/** 
+  Reads a file containing a binary relation. One pair per line.
+ */
+void read_binrel(const char* fname) {
+  unordered_map<int,int> normalize;
+  
+  string line;
+  ifstream input(fname);
+  if (input.is_open()) {
+    BDD br = Cudd::zero();
+    while (input.good()) {
+      getline(input,line);
+      stringstream ss(line);
+      int first, second;
+      ss >> first; ss >> second;
+      
+      encode(normalize,first);
+      encode(normalize, second);
+      br |= BDD::create(make_tuple(first,second));
+    }
+    input.close();
+    normalize.clear();
+    cout << "Pairs in the relation: " << br.minterms(2) << endl;
+    Cudd::stats();
+  } else {
+    cerr << "Unable to open file: " << fname << endl;
+  }
+}
 Relation xor_test(void) {
   
   BDD lbr = Cudd::zero();
@@ -125,13 +160,15 @@ BDD delta_test() {
 }
 
 int main(void) {
+  cout << "Start of the test" << endl;
+  read_binrel("deps-guake.txt");
   /*
    Relation r = var_test();
    BDD glb = r.glb();
    BDD unk = r.unk();
    */
   //BDD r = delta_test();
-  rel_test();
+  //rel_test();
   //unk.printTuples(2);
   
   //cout << "Minterms in glb " << lb.minterms(2) << " Nodes: " << lb.numNodes() << endl;
