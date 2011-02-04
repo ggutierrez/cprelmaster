@@ -1,0 +1,36 @@
+[General]
+Name:		Rel
+Namespace: 	MPG::Rel
+Dispose:	true
+
+[ModEvent]
+Name:		FAILED=FAILED
+[ModEvent]
+Name:		NONE=NONE
+[ModEvent]
+Name:		VAL=ASSIGNED
+Combine:	VAL=VAL, GLB=VAL, LUB=VAL, BND=VAL
+[ModEvent]
+Name:		BND=SUBSCRIBE
+Combine:	VAL=VAL, GLB=BND, LUB=BND, BND=BND
+[ModEvent]
+Name:		GLB
+Combine:	VAL=VAL, GLB=GLB, LUB=BND, BND=BND
+[ModEvent]
+Name:		LUB
+Combine:	VAL=VAL, GLB=BND, LUB=LUB, BND=BND
+[PropCond]
+Name:		NONE=NONE
+[PropCond]
+Name:		VAL=ASSIGNED
+ScheduledBy:	VAL
+[PropCond]
+Name:		BND
+ScheduledBy:	VAL, BND, GLB, LUB
+[PropCond]
+Name:		GLB
+ScheduledBy:	VAL, BND, GLB
+[PropCond]
+Name:		LUB
+ScheduledBy:	VAL, BND, LUB
+[End]

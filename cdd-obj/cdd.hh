@@ -183,7 +183,7 @@ namespace Cdd {
 
   template <class I>
   BDD::BDD(I& b, I& e) {
-    node = Cudd::one();
+    BDD node = Cudd::one();
     int i = 0;
     for (; b != e; ++b, i++) {
       node &= BDD::path(*b, i);

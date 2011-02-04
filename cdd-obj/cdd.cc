@@ -91,7 +91,7 @@ namespace Cdd {
 
     DdNode *r = Cudd_cddMerge(Cudd::dd, node, other.node);
     if (r == NULL) {
-      if (Cudd::dd->errorCode = CDD_FAIL)
+      if (Cudd::dd->errorCode == CDD_FAIL)
         throw failedMerge();
       else {
         assert(r);

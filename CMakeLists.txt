@@ -1,8 +1,15 @@
 cmake_minimum_required (VERSION 2.8)
 
-project (cudd-cp)
+project(CUDDCP)
 
 include("${CMAKE_SOURCE_DIR}/cmake-support/util.cmake")
+
+##########################################################################
+# Compiler support
+##########################################################################
+#set(CMAKE_C_COMPILER "/Users/ggutierrez/Work/clang-build/bin/clang")
+#set(CMAKE_CXX_COMPILER "/Users/ggutierrez/Work/clang-build/bin/clang++")
+
 ##########################################################################
 # Version information
 ##########################################################################
@@ -25,6 +32,8 @@ if (APPLE)
    # TODO: perform the check between 32 or 64 bits
    add_definitions( "-mtune=native -DHAVE_IEEE_754")
    add_definitions("-DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8" )
+   ## prevent clang from generating warning messages when building cudd
+   add_definitions("-Wno-unused-value")
 else(APPLE)
   message(STATUS "Non tested on this architecture!")
    add_definitions( "-mtune=native -DHAVE_IEEE_754")
@@ -40,7 +49,7 @@ endif()
 
 ##########################################################################
 # Main library
-##########################################################################	
+##########################################################################
 # NOTE: cudd sources is split in several folders, this build system
 # will respect that and will try to resemble the original one as close
 # as possible.
@@ -100,48 +109,48 @@ set(LIB_TYPE STATIC)
 # libraries: util
 ADDPREFIX(FILES ${UTILSRC} PREFIX "util/" RESULT _UTILSRC)
 ADDPREFIX(FILES ${UTILHDR} PREFIX "util/" RESULT _UTILHDR)
-CREATE_LIB(util ${LIB_TYPE} ${_UTILSRC}  HEADERS ${_UTILHDR}  
+CREATE_LIB(util ${LIB_TYPE} ${_UTILSRC}  HEADERS ${_UTILHDR}
     OUTPUT_NAME "util" COMPONENT devel)
 
 # libraries: st
 ADDPREFIX(FILES ${STSRC} PREFIX "st/" RESULT _STSRC)
 ADDPREFIX(FILES ${STHDR} PREFIX "st/" RESULT _STHDR)
-CREATE_LIB(st ${LIB_TYPE} ${_STSRC}  HEADERS ${_STHDR}  
+CREATE_LIB(st ${LIB_TYPE} ${_STSRC}  HEADERS ${_STHDR}
     OUTPUT_NAME "st" COMPONENT devel)
 
 # libraries: cudd
 ADDPREFIX(FILES ${CUDDSRC} PREFIX "cudd/" RESULT _CUDDSRC)
 ADDPREFIX(FILES ${CUDDHDR} PREFIX "cudd/" RESULT _CUDDHDR)
-CREATE_LIB(cudd ${LIB_TYPE} ${_CUDDSRC}  HEADERS ${_CUDDHDR}  
+CREATE_LIB(cudd ${LIB_TYPE} ${_CUDDSRC}  HEADERS ${_CUDDHDR}
     OUTPUT_NAME "cudd" COMPONENT devel)
 
 # libraries: mtr
 ADDPREFIX(FILES ${MTRSRC} PREFIX "mtr/" RESULT _MTRSRC)
 ADDPREFIX(FILES ${MTRHDR} PREFIX "mtr/" RESULT _MTRHDR)
-CREATE_LIB(mtr ${LIB_TYPE} ${_MTRSRC}  HEADERS ${_MTRHDR}  
+CREATE_LIB(mtr ${LIB_TYPE} ${_MTRSRC}  HEADERS ${_MTRHDR}
     OUTPUT_NAME "mtr" COMPONENT devel)
 
 # libraries: epd
 ADDPREFIX(FILES ${EPDSRC} PREFIX "epd/" RESULT _EPDSRC)
 ADDPREFIX(FILES ${EPDHDR} PREFIX "epd/" RESULT _EPDHDR)
-CREATE_LIB(epd ${LIB_TYPE} ${_EPDSRC}  HEADERS ${_EPDHDR}  
+CREATE_LIB(epd ${LIB_TYPE} ${_EPDSRC}  HEADERS ${_EPDHDR}
     OUTPUT_NAME "epd" COMPONENT devel)
 
 ##########################################################################
 # C++ interface for cdds
-##########################################################################	
+##########################################################################
 include_directories("${CMAKE_SOURCE_DIR}/cdd-obj")
 set(CDDCPPSRCS cdd.cc)
 set(CDDCPPHDRS cdd.hh)
 ADDPREFIX(FILES ${CDDCPPSRCS} PREFIX "cdd-obj/" RESULT _CDDCPPSRC)
 ADDPREFIX(FILES ${CDDCPPHDRS} PREFIX "cdd-obj/" RESULT _CDDCPPHDR)
-CREATE_LIB(cddcpp ${LIB_TYPE} ${_CDDCPPSRC}  HEADERS ${_CDDCPPHDR}  
+CREATE_LIB(cddcpp ${LIB_TYPE} ${_CDDCPPSRC}  HEADERS ${_CDDCPPHDR}
     OUTPUT_NAME "cddcpp" COMPONENT devel)
 
 
 ##########################################################################
 # Cdds examples
-##########################################################################	
+##########################################################################
 set(EXLIBS cudd-static epd-static mtr-static st-static util-static cddcpp-static)
 
 add_executable(testcdd tests/testcdd.c)
@@ -156,6 +165,11 @@ target_link_libraries(testobj ${EXLIBS})
 add_executable(testcudd cudd/testcudd.c)
 target_link_libraries(testcudd cudd-static epd-static mtr-static
 st-static util-static)
+
+##########################################################################
+# Cprel
+##########################################################################
+add_subdirectory(cprel)
 
 #if(BUILD_TEST)
 #  add_subdirectory(tests)
