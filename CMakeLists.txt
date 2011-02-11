@@ -167,9 +167,48 @@ target_link_libraries(testcudd cudd-static epd-static mtr-static
 st-static util-static)
 
 ##########################################################################
-# Cprel
+#
+#                   Cprel configuration starts here!
+#
 ##########################################################################
-add_subdirectory(cprel)
+
+##########################################################################
+## Gecode detection (only works with source installation no frameworks)
+##########################################################################
+find_library(GKERNEL gecodekernel)
+message(STATUS "gecode kernel: ${GKERNEL}")
+find_library(GSUPPORT gecodesupport)
+message(STATUS "gecode support: ${GSUPPORT}")
+find_library(GDRIVER gecodedriver)
+message(STATUS "gecode driver: ${GDRIVER}")
+find_library(GINT gecodeint)
+message(STATUS "gecode int: ${GINT}")
+find_library(GSET gecodeset)
+message(STATUS "gecode set: ${GSET}")
+find_library(GSEARCH gecodesearch)
+message(STATUS "gecode search: ${GSEARCH}")
+find_library(GMINM gecodeminimodel)
+message(STATUS "gecode minimodel: ${GMINM}")
+find_path(GKERNELHH gecode/kernel.hh)
+message(STATUS "gecode headers: ${GKERNELHH}")
+
+set(GECLIBS)
+if (GKERNEL AND GKERNELHH AND GSUPPORT AND GDRIVER AND GINT AND GSET AND
+    GSEARCH AND GMINM)
+  include_directories(${GKERNELHH})
+  set(GECLIBS ${GKERNEL} ${GSUPPORT} ${GDRIVER} ${GINT} ${GSET} ${GSEARCH}
+      ${GMINM})
+else()
+  message(FATAL_ERROR "Missing gecode files")
+endif()
+
+##########################################################################
+## Relation constraint system
+##########################################################################
+include_directories("${CMAKE_SOURCE_DIR}/cprel")
+
+add_executable(queens cprel/queens.cpp)
+target_link_libraries(queens ${GECLIBS})
 
 #if(BUILD_TEST)
 #  add_subdirectory(tests)
