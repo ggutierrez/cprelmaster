@@ -5,7 +5,7 @@
 #include <list>
 #include <tr1/tuple>
 #include <exception>
-#include "cuddCDD.h"
+#include <cuddCdd.h>
 
 // 32 bits integers max 8ary
 #define BBV 5
