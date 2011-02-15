@@ -1,7 +1,6 @@
 [General]
 Name:		Rel
 Namespace: 	MPG::Rel
-Dispose:	true
 
 [ModEvent]
 Name:		FAILED=FAILED

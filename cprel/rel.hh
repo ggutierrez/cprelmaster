@@ -37,6 +37,12 @@ namespace MPG { namespace Rel {
       else
         return new (home) RelVarImp(home,share,*this);
     }
+    /// \name Disposal
+    void dispose(Gecode::Space& home) {
+      // TODO: this is not working for the moment.
+      std::cout << "Disposed variable" << std::endl;
+    }
+
     /// \name Access operations
     int min(void) const { return l; }
     int max(void) const { return u; }
@@ -49,6 +55,12 @@ namespace MPG { namespace Rel {
       RelDelta d;
       u = n;
       return notify(home, assigned() ? ME_REL_VAL : ME_REL_LUB, d);
+    }
+    Gecode::ModEvent gq(Gecode::Space& home, int n) {
+      if (n <= l) return ME_REL_NONE;
+      if (n > u) return ME_REL_FAILED;
+      RelDelta d; l = n;
+      return notify(home, assigned() ? ME_REL_VAL : ME_REL_GLB, d);
     }
     /// Propagators events
     void subscribe(Gecode::Space& home, Gecode::Propagator& p, Gecode::PropCond pc,
@@ -88,8 +100,27 @@ namespace MPG {
     int min(void) const {
       return x->min();
     }
+    int max(void) const {
+    return x->max();
+    }
   };
 
+  template<class Char, class Traits>
+  std::basic_ostream<Char,Traits>&
+  operator <<(std::basic_ostream<Char,Traits>& os, const RelVar& x) {
+    std::basic_ostringstream<Char,Traits> s;
+    s.copyfmt(os); s.width(0);
+    if (x.assigned())
+      s << x.min();
+    else
+      s << '[' << x.min() << ".." << x.max() << ']';
+    return os << s.str();
+    }
+
+}
+
+// array traits
+namespace MPG {
   class RelVarArgs;
   class RelVarArray;
 }
@@ -153,4 +184,107 @@ namespace MPG {
         (*this)[i] = RelVar(home,min,max);
     }
   };
+}
+
+namespace MPG {
+  namespace Rel {
+    class RelView : public Gecode::VarImpView<RelVar> {
+    protected:
+      using VarImpView<RelVar>::x;
+    public:
+      /// Constructors
+      RelView(void) {}
+      RelView(const RelVar& y)
+        : VarImpView<RelVar>(y.varimp()) {}
+      RelView(RelVarImp* y)
+        : VarImpView<RelVar>(y) {}
+      /// Access operations
+      int min(void) const { return x->min(); }
+      int max(void) const { return x->max(); }
+      /// Modification operations
+      Gecode::ModEvent lq(Gecode::Space& home, int n) { return x->lq(home,n); }
+      Gecode::ModEvent gq(Gecode::Space& home, int n) { return x->gq(home,n); }
+    };
+
+    template<class Char, class Traits>
+    std::basic_ostream<Char,Traits>&
+    operator << (std::basic_ostream<Char,Traits>& os, const RelView& x) {
+      std::basic_ostringstream<Char,Traits> s;
+      s.copyfmt(os); s.width(0);
+      if (x.assigned())
+        s << x.min();
+      else
+        s << '[' << x.min() << ".." << x.max() << ']';
+      return os << s.str();
+    }
+  }
+}
+
+namespace MPG {
+  class NoneAny : public Gecode::Brancher {
+  protected:
+    Gecode::ViewArray<Rel::RelView> x;
+    class PosVal : public Gecode::Choice {
+    public:
+      int pos; int val;
+      PosVal(const NoneAny& b, int p, int v)
+        : Choice(b,2), pos(p), val(v) {}
+      virtual size_t size(void) const { return sizeof(*this); }
+    };
+  public:
+  NoneAny(Gecode::Home home, Gecode::ViewArray<Rel::RelView>& x0)
+    : Brancher(home), x(x0) {}
+    static void post(Gecode::Home home, Gecode::ViewArray<Rel::RelView>& x) {
+      (void) new (home) NoneAny(home,x);
+    }
+
+    virtual bool status(const Gecode::Space& home) const {
+      for (int i=0; i<x.size();i++)
+        if (!x[i].assigned())
+          return true;
+      return false;
+    }
+
+    virtual Gecode::Choice* choice(Gecode::Space& home) {
+      for (int i=0; true; i++)
+        if (!x[i].assigned())
+          return new PosVal(*this,i,x[i].min());
+      GECODE_NEVER;
+      return NULL;
+    }
+
+    virtual Gecode::ExecStatus commit(Gecode::Space& home,
+                                      const Gecode::Choice& c,
+                                      unsigned int a) {
+      using namespace Gecode;
+      const PosVal& pv = static_cast<const PosVal&>(c);
+      int pos = pv.pos, val = pv.val;
+      if (a == 0)
+        return Gecode::me_failed(x[pos].lq(home,val)) ? ES_FAILED : ES_OK;
+      else
+        return me_failed(x[pos].gq(home,val+1)) ? ES_FAILED : ES_OK;
+    }
+
+  };
+
+  class ValAny : public Gecode::ValSelBase<Rel::RelView,int> {
+  public:
+    ValAny(void) {}
+    ValAny(Gecode::Space& home, const Gecode::ValBranchOptions& vbo)
+      : Gecode::ValSelBase<Rel::RelView,int>(home,vbo) {}
+    int val(Gecode::Space& home, View x) const {
+      return x.min();
+    }
+    Gecode::ModEvent tell(Gecode::Space& home, unsigned int a, Rel::RelView x, int n) {
+      return (a == 0) ? x.lq(home,n) : x.gq(home,n+1);
+    }
+  };
+
+  void branch(Gecode::Home home, const RelVarArgs& x) {
+    if (home.failed()) return;
+    Gecode::ViewArray<Rel::RelView> y(home,x);
+    Gecode::ViewSelNone<Rel::RelView> sn; ValAny vm;
+    Gecode::ViewValBrancher<Gecode::ViewSelNone<Rel::RelView>,ValAny>::post(home,y,sn,vm);
+  }
+
 }

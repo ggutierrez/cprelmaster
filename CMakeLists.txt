@@ -207,7 +207,7 @@ endif()
 ##########################################################################
 include_directories("${CMAKE_SOURCE_DIR}/cprel")
 
-add_executable(queens cprel/queens.cpp)
+add_executable(queens cprel/queens.cpp cprel/rel.hh)
 target_link_libraries(queens ${GECLIBS})
 
 #if(BUILD_TEST)

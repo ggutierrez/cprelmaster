@@ -14,6 +14,12 @@ public:
   /// The actual problem
   Queens(const SizeOptions& opt)
     : q(*this,opt.size(),0,opt.size()-1) {
+    //----
+    MPG::RelVar r(*this,1,3);
+
+    std::cout << r << std::endl;
+    //----
+    /*
     const int n = q.size();
     for (int i = 0; i<n; i++)
       for (int j = i+1; j<n; j++) {
@@ -21,7 +27,8 @@ public:
         rel(*this, q[i]+i != q[j]+j);
         rel(*this, q[i]-i != q[j]-j);
       }
-    branch(*this, q, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+    //branch(*this, q, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+    */
   }
 
   /// Constructor for cloning \a s
