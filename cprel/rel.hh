@@ -1,6 +1,20 @@
 #include <gecode/kernel.hh>
 #include <gecode/int.hh>
 
+using Gecode::Space;
+using Gecode::Home;
+using Gecode::Brancher;
+using Gecode::Choice;
+using Gecode::ExecStatus;
+using Gecode::PropCond;
+using Gecode::Advisor;
+using Gecode::VarImpVar;
+using Gecode::VarArgArray;
+using Gecode::VarArray;
+using Gecode::ViewArray;
+using Gecode::VarImpView;
+using Gecode::ModEvent;
+
 namespace MPG { namespace Rel {
 
   namespace Limits {
@@ -26,22 +40,19 @@ namespace MPG { namespace Rel {
     int l, u;
   public:
     /// \name Constructors
-    RelVarImp(Gecode::Space& home, int min, int max)
+    RelVarImp(Space& home, int min, int max)
       : RelVarImpBase(home), l(min), u(max) {}
     /// \name Copying
-    RelVarImp(Gecode::Space& home, bool share, RelVarImp& y)
+    RelVarImp(Space& home, bool share, RelVarImp& y)
       : RelVarImpBase(home, share, y), l(y.l), u(y.u) {}
-    RelVarImp* copy(Gecode::Space& home, bool share) {
+    RelVarImp* copy(Space& home, bool share) {
       if (copied())
         return static_cast<RelVarImp*>(forward());
       else
         return new (home) RelVarImp(home,share,*this);
     }
     /// \name Disposal
-    void dispose(Gecode::Space& home) {
-      // TODO: this is not working for the moment.
-      std::cout << "Disposed variable" << std::endl;
-    }
+    void dispose(Space&) {}
 
     /// \name Access operations
     int min(void) const { return l; }
@@ -49,32 +60,32 @@ namespace MPG { namespace Rel {
     /// Assignment test
     bool assigned(void) const { return l == u; }
     /// Modification operations
-    Gecode::ModEvent lq(Gecode::Space& home, int n) {
+    Gecode::ModEvent lq(Space& home, int n) {
       if (n >= u) return ME_REL_NONE;
       if (n < l) return ME_REL_FAILED;
       RelDelta d;
       u = n;
       return notify(home, assigned() ? ME_REL_VAL : ME_REL_LUB, d);
     }
-    Gecode::ModEvent gq(Gecode::Space& home, int n) {
+    Gecode::ModEvent gq(Space& home, int n) {
       if (n <= l) return ME_REL_NONE;
       if (n > u) return ME_REL_FAILED;
       RelDelta d; l = n;
       return notify(home, assigned() ? ME_REL_VAL : ME_REL_GLB, d);
     }
     /// Propagators events
-    void subscribe(Gecode::Space& home, Gecode::Propagator& p, Gecode::PropCond pc,
+    void subscribe(Space& home, Gecode::Propagator& p, Gecode::PropCond pc,
                    bool schedule=true) {
       RelVarImpBase::subscribe(home,p,pc,assigned(),schedule);
     }
-    void cancel(Gecode::Space& home, Gecode::Propagator& p, Gecode::PropCond pc) {
+    void cancel(Space& home, Gecode::Propagator& p, PropCond pc) {
       RelVarImpBase::cancel(home,p,pc,assigned());
     }
     /// Advaisor events
-    void subscribe(Gecode::Space& home, Gecode::Advisor& a) {
+    void subscribe(Space& home, Advisor& a) {
       RelVarImpBase::subscribe(home,a,assigned());
     }
-    void cancel(Gecode::Space& home, Gecode::Advisor& a) {
+    void cancel(Space& home, Advisor& a) {
       RelVarImpBase::cancel(home,a,assigned());
     }
     /// Delta information
@@ -82,19 +93,19 @@ namespace MPG { namespace Rel {
 }}
 
 namespace MPG {
-  class RelVar : public Gecode::VarImpVar<Rel::RelVarImp> {
+  class RelVar : public VarImpVar<Rel::RelVarImp> {
   protected:
-    using Gecode::VarImpVar<Rel::RelVarImp>::x;
+    using VarImpVar<Rel::RelVarImp>::x;
   public:
     /// Constructors
     RelVar(void) {}
     /// Copy constructor
     RelVar(const RelVar& y)
-    : Gecode::VarImpVar<Rel::RelVarImp>(y.varimp()) {}
+    : VarImpVar<Rel::RelVarImp>(y.varimp()) {}
     /// Variable creation
-    RelVar(Gecode::Space& home, int min, int max)
-      : Gecode::VarImpVar<Rel::RelVarImp>(new (home) Rel::RelVarImp(home,min,max)) {
-      std::cout << "Created variable " << min << " to " << max << std::endl;
+    RelVar(Space& home, int min, int max)
+      : VarImpVar<Rel::RelVarImp>(new (home) Rel::RelVarImp(home,min,max)) {
+      //std::cout << "Created variable " << min << " to " << max << std::endl;
     }
     /// Access operations
     int min(void) const {
@@ -116,7 +127,6 @@ namespace MPG {
       s << '[' << x.min() << ".." << x.max() << ']';
     return os << s.str();
     }
-
 }
 
 // array traits
@@ -127,7 +137,7 @@ namespace MPG {
 
 namespace Gecode {
   template<>
-  class ArrayTraits<Gecode::VarArray<MPG::RelVar> > {
+  class ArrayTraits<VarArray<MPG::RelVar> > {
   public:
     typedef MPG::RelVarArray StorageType;
     typedef MPG::RelVar ValueType;
@@ -143,7 +153,7 @@ namespace Gecode {
   };
 
   template<>
-  class ArrayTraits<Gecode::VarArgArray<MPG::RelVar> > {
+  class ArrayTraits<VarArgArray<MPG::RelVar> > {
   public:
     typedef MPG::RelVarArgs StorageType;
     typedef MPG::RelVar ValueType;
@@ -160,26 +170,26 @@ namespace Gecode {
 }
 
 namespace MPG {
-  class RelVarArgs : public Gecode::VarArgArray<RelVar> {
+  class RelVarArgs : public VarArgArray<RelVar> {
   public:
     RelVarArgs(void) {}
-    explicit RelVarArgs(int n) : Gecode::VarArgArray<RelVar>(n) {}
-    RelVarArgs(const RelVarArgs& a) : Gecode::VarArgArray<RelVar>(a) {}
-    RelVarArgs(const Gecode::VarArray<RelVar>& a) : Gecode::VarArgArray<RelVar>(a) {}
-    RelVarArgs(Gecode::Space& home, int n, int min, int max)
-      : Gecode::VarArgArray<RelVar>(n) {
+    explicit RelVarArgs(int n) : VarArgArray<RelVar>(n) {}
+    RelVarArgs(const RelVarArgs& a) : VarArgArray<RelVar>(a) {}
+    RelVarArgs(const VarArray<RelVar>& a) : VarArgArray<RelVar>(a) {}
+    RelVarArgs(Space& home, int n, int min, int max)
+      : VarArgArray<RelVar>(n) {
       for (int i=0; i<n; i++)
         (*this)[i] = RelVar(home,min,max);
     }
   };
 
-  class RelVarArray : public Gecode::VarArray<RelVar> {
+  class RelVarArray : public VarArray<RelVar> {
   public:
     RelVarArray(void) {}
     RelVarArray(const RelVarArray& a)
-      : Gecode::VarArray<RelVar>(a) {}
-    RelVarArray(Gecode::Space& home, int n, int min, int max)
-      : Gecode::VarArray<RelVar>(home,n) {
+      : VarArray<RelVar>(a) {}
+    RelVarArray(Space& home, int n, int min, int max)
+      : VarArray<RelVar>(home,n) {
       for (int i=0; i<n; i++)
         (*this)[i] = RelVar(home,min,max);
     }
@@ -188,7 +198,7 @@ namespace MPG {
 
 namespace MPG {
   namespace Rel {
-    class RelView : public Gecode::VarImpView<RelVar> {
+    class RelView : public VarImpView<RelVar> {
     protected:
       using VarImpView<RelVar>::x;
     public:
@@ -202,8 +212,8 @@ namespace MPG {
       int min(void) const { return x->min(); }
       int max(void) const { return x->max(); }
       /// Modification operations
-      Gecode::ModEvent lq(Gecode::Space& home, int n) { return x->lq(home,n); }
-      Gecode::ModEvent gq(Gecode::Space& home, int n) { return x->gq(home,n); }
+      ModEvent lq(Space& home, int n) { return x->lq(home,n); }
+      ModEvent gq(Space& home, int n) { return x->gq(home,n); }
     };
 
     template<class Char, class Traits>
@@ -221,10 +231,10 @@ namespace MPG {
 }
 
 namespace MPG {
-  class NoneAny : public Gecode::Brancher {
+  class NoneAny : public Brancher {
   protected:
-    Gecode::ViewArray<Rel::RelView> x;
-    class PosVal : public Gecode::Choice {
+    ViewArray<Rel::RelView> x;
+    class PosVal : public Choice {
     public:
       int pos; int val;
       PosVal(const NoneAny& b, int p, int v)
@@ -232,59 +242,64 @@ namespace MPG {
       virtual size_t size(void) const { return sizeof(*this); }
     };
   public:
-  NoneAny(Gecode::Home home, Gecode::ViewArray<Rel::RelView>& x0)
-    : Brancher(home), x(x0) {}
-    static void post(Gecode::Home home, Gecode::ViewArray<Rel::RelView>& x) {
+    /// \name Brancher creation
+    //@{
+    /// Constructor
+    NoneAny(Home home, ViewArray<Rel::RelView>& x0)
+      : Brancher(home), x(x0) {}
+    /// Creates a branch on the variables in x
+    static void post(Home home, ViewArray<Rel::RelView>& x) {
       (void) new (home) NoneAny(home,x);
+      }
+    //@}
+    /// \name Cloning
+    //@{
+    /// Copy constructor
+    NoneAny(Space& home, bool share, NoneAny& b)
+      : Brancher(home,share,b) {
+      x.update(home,share,b.x);
     }
-
-    virtual bool status(const Gecode::Space& home) const {
+    /// Copy
+    virtual Brancher* copy(Space& home, bool share) {
+      return new (home) NoneAny(home,share,*this);
+    }
+    //@}
+    /// \name Branching
+    //@{
+    /// Tests if there are more variables in \a x to branch on
+    virtual bool status(const Space& home) const {
       for (int i=0; i<x.size();i++)
         if (!x[i].assigned())
           return true;
       return false;
     }
-
-    virtual Gecode::Choice* choice(Gecode::Space& home) {
+    /// Choice point creation
+    virtual Choice* choice(Space& home) {
       for (int i=0; true; i++)
         if (!x[i].assigned())
           return new PosVal(*this,i,x[i].min());
       GECODE_NEVER;
       return NULL;
     }
-
-    virtual Gecode::ExecStatus commit(Gecode::Space& home,
-                                      const Gecode::Choice& c,
+    /// Choice application
+    virtual ExecStatus commit(Space& home,
+                                      const Choice& c,
                                       unsigned int a) {
       using namespace Gecode;
       const PosVal& pv = static_cast<const PosVal&>(c);
       int pos = pv.pos, val = pv.val;
       if (a == 0)
-        return Gecode::me_failed(x[pos].lq(home,val)) ? ES_FAILED : ES_OK;
+        return me_failed(x[pos].lq(home,val)) ? ES_FAILED : ES_OK;
       else
         return me_failed(x[pos].gq(home,val+1)) ? ES_FAILED : ES_OK;
     }
-
+    //@}
   };
 
-  class ValAny : public Gecode::ValSelBase<Rel::RelView,int> {
-  public:
-    ValAny(void) {}
-    ValAny(Gecode::Space& home, const Gecode::ValBranchOptions& vbo)
-      : Gecode::ValSelBase<Rel::RelView,int>(home,vbo) {}
-    int val(Gecode::Space& home, View x) const {
-      return x.min();
-    }
-    Gecode::ModEvent tell(Gecode::Space& home, unsigned int a, Rel::RelView x, int n) {
-      return (a == 0) ? x.lq(home,n) : x.gq(home,n+1);
-    }
-  };
-
-  void branch(Gecode::Home home, const RelVarArgs& x) {
+  void branch(Home home, const RelVarArgs& x) {
     if (home.failed()) return;
-    Gecode::ViewArray<Rel::RelView> y(home,x);
-    Gecode::ViewSelNone<Rel::RelView> sn; ValAny vm;
-    Gecode::ViewValBrancher<Gecode::ViewSelNone<Rel::RelView>,ValAny>::post(home,y,sn,vm);
+    ViewArray<Rel::RelView> y(home,x);
+    NoneAny::post(home,y);
   }
 
 }

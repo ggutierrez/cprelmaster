@@ -6,34 +6,22 @@
 
 
 using namespace Gecode;
+using namespace MPG;
+
+VarImpDisposer<MPG::Rel::RelVarImp> disp;
 
 class Queens : public Script {
 public:
-  /// Position of queens on boards
-  IntVarArray q;
+  RelVarArray a;
   /// The actual problem
-  Queens(const SizeOptions& opt)
-    : q(*this,opt.size(),0,opt.size()-1) {
-    //----
-    MPG::RelVar r(*this,1,3);
-
-    std::cout << r << std::endl;
-    //----
-    /*
-    const int n = q.size();
-    for (int i = 0; i<n; i++)
-      for (int j = i+1; j<n; j++) {
-        rel(*this, q[i] != q[j]);
-        rel(*this, q[i]+i != q[j]+j);
-        rel(*this, q[i]-i != q[j]-j);
-      }
-    //branch(*this, q, INT_VAR_SIZE_MIN, INT_VAL_MIN);
-    */
+  Queens(const SizeOptions& opt) : a(*this,2,1,3) {
+    std::cout << a[0] << std::endl;
+    branch(*this,a);
   }
 
   /// Constructor for cloning \a s
   Queens(bool share, Queens& s) : Script(share,s) {
-    q.update(*this, share, s.q);
+    a.update(*this,share,s.a);
   }
 
   /// Perform copying during cloning
@@ -46,10 +34,8 @@ public:
   virtual void
   print(std::ostream& os) const {
     os << "queens\t";
-    for (int i = 0; i < q.size(); i++) {
-      os << q[i] << ", ";
-      if ((i+1) % 10 == 0)
-        os << std::endl << "\t";
+    for (int i = 0; i < a.size(); i++) {
+      os << a[i] << ", ";
     }
     os << std::endl;
   }
@@ -61,12 +47,8 @@ public:
 int
 main(int argc, char* argv[]) {
   SizeOptions opt("Queens");
-  opt.iterations(500);
-  opt.size(100);
+  opt.solutions(0);
   opt.parse(argc,argv);
   Script::run<Queens,DFS,SizeOptions>(opt);
   return 0;
 }
-
-// STATISTICS: example-any
-

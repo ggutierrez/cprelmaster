@@ -189,8 +189,11 @@ find_library(GSEARCH gecodesearch)
 message(STATUS "gecode search: ${GSEARCH}")
 find_library(GMINM gecodeminimodel)
 message(STATUS "gecode minimodel: ${GMINM}")
+find_library(GGIST gecodegist)
+message(STATUS "gecode gist: ${GGIST}")
 find_path(GKERNELHH gecode/kernel.hh)
 message(STATUS "gecode headers: ${GKERNELHH}")
+
 
 set(GECLIBS)
 if (GKERNEL AND GKERNELHH AND GSUPPORT AND GDRIVER AND GINT AND GSET AND
@@ -198,6 +201,10 @@ if (GKERNEL AND GKERNELHH AND GSUPPORT AND GDRIVER AND GINT AND GSET AND
   include_directories(${GKERNELHH})
   set(GECLIBS ${GKERNEL} ${GSUPPORT} ${GDRIVER} ${GINT} ${GSET} ${GSEARCH}
       ${GMINM})
+  if (GGIST)
+    find_package(Qt4 4.7 COMPONENTS QtCore QtGui REQUIRED)
+    list(APPEND GECLIBS ${GGIST} ${QT_LIBRARIES})
+  endif()
 else()
   message(FATAL_ERROR "Missing gecode files")
 endif()
@@ -207,7 +214,7 @@ endif()
 ##########################################################################
 include_directories("${CMAKE_SOURCE_DIR}/cprel")
 
-add_executable(queens cprel/queens.cpp cprel/rel.hh)
+add_executable(queens cprel/queens.cpp cprel/rel.hh cprel/rel.vis)
 target_link_libraries(queens ${GECLIBS})
 
 #if(BUILD_TEST)
