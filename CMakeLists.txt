@@ -212,10 +212,19 @@ endif()
 ##########################################################################
 ## Relation constraint system
 ##########################################################################
-include_directories("${CMAKE_SOURCE_DIR}/cprel")
+include_directories("${CMAKE_SOURCE_DIR}")
 
-add_executable(queens cprel/queens.cpp cprel/rel.hh cprel/rel.vis)
-target_link_libraries(queens ${GECLIBS})
+add_library(gecoderel
+  cprel/rel.vis
+  cprel/rel.hh
+
+ ## Variable implementation
+  cprel/var-imp.hpp
+  cprel/var-imp/rel.hpp
+  cprel/var-imp/rel.cpp)
+
+add_executable(queens cprel/queens.cpp)
+target_link_libraries(queens gecoderel ${GECLIBS})
 
 #if(BUILD_TEST)
 #  add_subdirectory(tests)

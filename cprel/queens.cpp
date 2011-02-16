@@ -1,5 +1,5 @@
 
-#include <rel.hh>
+#include <cprel/rel.hh>
 #include <gecode/driver.hh>
 #include <gecode/int.hh>
 #include <gecode/minimodel.hh>

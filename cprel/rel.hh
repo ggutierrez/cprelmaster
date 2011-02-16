@@ -1,3 +1,6 @@
+#ifndef __GECODE_CPREL__
+#define __GECODE_CPREL__
+
 #include <gecode/kernel.hh>
 #include <gecode/int.hh>
 
@@ -7,6 +10,7 @@ using Gecode::Brancher;
 using Gecode::Choice;
 using Gecode::ExecStatus;
 using Gecode::PropCond;
+using Gecode::Propagator;
 using Gecode::Advisor;
 using Gecode::VarImpVar;
 using Gecode::VarArgArray;
@@ -33,64 +37,9 @@ namespace MPG { namespace Rel {
   public:
     RelDelta(void) {}
   };
-
-  /// Variable implementation
-  class RelVarImp : public RelVarImpBase {
-  protected:
-    int l, u;
-  public:
-    /// \name Constructors
-    RelVarImp(Space& home, int min, int max)
-      : RelVarImpBase(home), l(min), u(max) {}
-    /// \name Copying
-    RelVarImp(Space& home, bool share, RelVarImp& y)
-      : RelVarImpBase(home, share, y), l(y.l), u(y.u) {}
-    RelVarImp* copy(Space& home, bool share) {
-      if (copied())
-        return static_cast<RelVarImp*>(forward());
-      else
-        return new (home) RelVarImp(home,share,*this);
-    }
-    /// \name Disposal
-    void dispose(Space&) {}
-
-    /// \name Access operations
-    int min(void) const { return l; }
-    int max(void) const { return u; }
-    /// Assignment test
-    bool assigned(void) const { return l == u; }
-    /// Modification operations
-    Gecode::ModEvent lq(Space& home, int n) {
-      if (n >= u) return ME_REL_NONE;
-      if (n < l) return ME_REL_FAILED;
-      RelDelta d;
-      u = n;
-      return notify(home, assigned() ? ME_REL_VAL : ME_REL_LUB, d);
-    }
-    Gecode::ModEvent gq(Space& home, int n) {
-      if (n <= l) return ME_REL_NONE;
-      if (n > u) return ME_REL_FAILED;
-      RelDelta d; l = n;
-      return notify(home, assigned() ? ME_REL_VAL : ME_REL_GLB, d);
-    }
-    /// Propagators events
-    void subscribe(Space& home, Gecode::Propagator& p, Gecode::PropCond pc,
-                   bool schedule=true) {
-      RelVarImpBase::subscribe(home,p,pc,assigned(),schedule);
-    }
-    void cancel(Space& home, Gecode::Propagator& p, PropCond pc) {
-      RelVarImpBase::cancel(home,p,pc,assigned());
-    }
-    /// Advaisor events
-    void subscribe(Space& home, Advisor& a) {
-      RelVarImpBase::subscribe(home,a,assigned());
-    }
-    void cancel(Space& home, Advisor& a) {
-      RelVarImpBase::cancel(home,a,assigned());
-    }
-    /// Delta information
-  };
 }}
+
+#include <cprel/var-imp.hpp>
 
 namespace MPG {
   class RelVar : public VarImpVar<Rel::RelVarImp> {
@@ -296,6 +245,7 @@ namespace MPG {
     //@}
   };
 
+  inline
   void branch(Home home, const RelVarArgs& x) {
     if (home.failed()) return;
     ViewArray<Rel::RelView> y(home,x);
@@ -303,3 +253,5 @@ namespace MPG {
   }
 
 }
+
+#endif
