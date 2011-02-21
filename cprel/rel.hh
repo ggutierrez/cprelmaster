@@ -47,36 +47,22 @@ namespace MPG {
     using VarImpVar<Rel::RelVarImp>::x;
   public:
     /// Constructors
-    RelVar(void) {}
+    RelVar(void);
     /// Copy constructor
-    RelVar(const RelVar& y)
-    : VarImpVar<Rel::RelVarImp>(y.varimp()) {}
+    RelVar(const RelVar& y);
     /// Variable creation
-    RelVar(Space& home, int min, int max)
-      : VarImpVar<Rel::RelVarImp>(new (home) Rel::RelVarImp(home,min,max)) {
-      //std::cout << "Created variable " << min << " to " << max << std::endl;
-    }
+    RelVar(Space& home, int min, int max);
     /// Access operations
-    int min(void) const {
-      return x->min();
-    }
-    int max(void) const {
-    return x->max();
-    }
+    int min(void) const;
+    int max(void) const;
   };
 
   template<class Char, class Traits>
   std::basic_ostream<Char,Traits>&
-  operator <<(std::basic_ostream<Char,Traits>& os, const RelVar& x) {
-    std::basic_ostringstream<Char,Traits> s;
-    s.copyfmt(os); s.width(0);
-    if (x.assigned())
-      s << x.min();
-    else
-      s << '[' << x.min() << ".." << x.max() << ']';
-    return os << s.str();
-    }
+  operator <<(std::basic_ostream<Char,Traits>& os, const RelVar& x);
 }
+
+#include <cprel/var/rel.hpp>
 
 // array traits
 namespace MPG {
@@ -179,79 +165,6 @@ namespace MPG {
   }
 }
 
-namespace MPG {
-  class NoneAny : public Brancher {
-  protected:
-    ViewArray<Rel::RelView> x;
-    class PosVal : public Choice {
-    public:
-      int pos; int val;
-      PosVal(const NoneAny& b, int p, int v)
-        : Choice(b,2), pos(p), val(v) {}
-      virtual size_t size(void) const { return sizeof(*this); }
-    };
-  public:
-    /// \name Brancher creation
-    //@{
-    /// Constructor
-    NoneAny(Home home, ViewArray<Rel::RelView>& x0)
-      : Brancher(home), x(x0) {}
-    /// Creates a branch on the variables in x
-    static void post(Home home, ViewArray<Rel::RelView>& x) {
-      (void) new (home) NoneAny(home,x);
-      }
-    //@}
-    /// \name Cloning
-    //@{
-    /// Copy constructor
-    NoneAny(Space& home, bool share, NoneAny& b)
-      : Brancher(home,share,b) {
-      x.update(home,share,b.x);
-    }
-    /// Copy
-    virtual Brancher* copy(Space& home, bool share) {
-      return new (home) NoneAny(home,share,*this);
-    }
-    //@}
-    /// \name Branching
-    //@{
-    /// Tests if there are more variables in \a x to branch on
-    virtual bool status(const Space& home) const {
-      for (int i=0; i<x.size();i++)
-        if (!x[i].assigned())
-          return true;
-      return false;
-    }
-    /// Choice point creation
-    virtual Choice* choice(Space& home) {
-      for (int i=0; true; i++)
-        if (!x[i].assigned())
-          return new PosVal(*this,i,x[i].min());
-      GECODE_NEVER;
-      return NULL;
-    }
-    /// Choice application
-    virtual ExecStatus commit(Space& home,
-                                      const Choice& c,
-                                      unsigned int a) {
-      using namespace Gecode;
-      const PosVal& pv = static_cast<const PosVal&>(c);
-      int pos = pv.pos, val = pv.val;
-      if (a == 0)
-        return me_failed(x[pos].lq(home,val)) ? ES_FAILED : ES_OK;
-      else
-        return me_failed(x[pos].gq(home,val+1)) ? ES_FAILED : ES_OK;
-    }
-    //@}
-  };
-
-  inline
-  void branch(Home home, const RelVarArgs& x) {
-    if (home.failed()) return;
-    ViewArray<Rel::RelView> y(home,x);
-    NoneAny::post(home,y);
-  }
-
-}
+#include <cprel/branch.hpp>
 
 #endif

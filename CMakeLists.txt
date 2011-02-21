@@ -221,7 +221,16 @@ add_library(gecoderel
  ## Variable implementation
   cprel/var-imp.hpp
   cprel/var-imp/rel.hpp
-  cprel/var-imp/rel.cpp)
+  cprel/var-imp/rel.cpp
+
+ ## Variable
+  cprel/var/rel.hpp
+  cprel/var/rel.cpp
+
+ #branch
+  cprel/branch.hpp
+  cprel/branch/none-any.hpp
+  )
 
 add_executable(queens cprel/queens.cpp)
 target_link_libraries(queens gecoderel ${GECLIBS})
