@@ -1,286 +1,174 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required(VERSION 2.8)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-support")
 
-project(CUDDCP)
+project(cuddcp)
 
-include("${CMAKE_SOURCE_DIR}/cmake-support/util.cmake")
-
-##########################################################################
-# Compiler support
-##########################################################################
-#set(CMAKE_C_COMPILER "/Users/ggutierrez/Work/clang-build/bin/clang")
-#set(CMAKE_CXX_COMPILER "/Users/ggutierrez/Work/clang-build/bin/clang++")
 
 ##########################################################################
-# Version information
+# System information
 ##########################################################################
-set(CUDDCP_VERSION_MAJOR 1)
-set(CUDDCP_VERSION_MINOR 0)
-set(CUDDCP_VERSION "${CUDDCP_VERSION_MAJOR}.${CUDDCP_VERSION_MINOR}")
+message(STATUS "Building for architecture: ${CMAKE_SYSTEM_PROCESSOR}")
 ##########################################################################
-
+# Cuddy flags
 ##########################################################################
-## user configurable options
-##########################################################################
-#option(BUILD_SHARED_LIB "Build as a shared library" ON)
-
-##########################################################################
-## C compiler definitions
-##########################################################################
-# NOTE: this new build system only takes into account the architecture
-# i am able to test it on: Mac os x 64 bits
-if (APPLE)
-   # TODO: perform the check between 32 or 64 bits
-   add_definitions( "-mtune=native -DHAVE_IEEE_754")
-   add_definitions("-DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8" )
-   ## prevent clang from generating warning messages when building cudd
-   add_definitions("-Wno-unused-value")
-else(APPLE)
-  message(STATUS "Non tested on this architecture!")
-   add_definitions( "-mtune=native -DHAVE_IEEE_754")
-   add_definitions("-DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8" )
+if (CMAKE_SYSTEM_PROCESSOR MATCHES x86_64)
+  add_definitions("-mtune=native -DHAVE_IEEE_754")
+  add_definitions("-DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+else()
+  message(STATUS "This has not been built in any other architecture than x86_64")
 endif()
 ##########################################################################
-# Mac OS X
+# Additional compiler flags
 ##########################################################################
-#if (APPLE)
-#  message("-- Apple found, building for: x86_64")
-#  set(CMAKE_OSX_ARCHITECTURES i386)
-#endif(APPLE)
-
+add_definitions("-Wall -Wextra")
 ##########################################################################
-# Main library
+# Cudd library
 ##########################################################################
-# NOTE: cudd sources is split in several folders, this build system
-# will respect that and will try to resemble the original one as close
-# as possible.
-
-# cudd
-set(CUDDSRC
-  cuddAPI.c cuddAddAbs.c cuddAddApply.c cuddAddFind.c cuddAddIte.c
-  cuddAddInv.c cuddAddNeg.c cuddAddWalsh.c cuddAndAbs.c
-  cuddAnneal.c cuddApa.c cuddApprox.c cuddBddAbs.c cuddBddCorr.c
-  cuddBddIte.c cuddBridge.c cuddCache.c cuddCheck.c cuddClip.c
-  cuddCof.c cuddCompose.c cuddDecomp.c cuddEssent.c
-  cuddExact.c cuddExport.c cuddGenCof.c cuddGenetic.c
-  cuddGroup.c cuddHarwell.c cuddInit.c cuddInteract.c
-  cuddLCache.c cuddLevelQ.c
-  cuddLinear.c cuddLiteral.c cuddMatMult.c cuddPriority.c
-  cuddRead.c cuddRef.c cuddReorder.c cuddSat.c cuddSign.c
-  cuddSolve.c cuddSplit.c cuddSubsetHB.c cuddSubsetSP.c cuddSymmetry.c
-  cuddTable.c cuddUtil.c cuddWindow.c cuddZddCount.c cuddZddFuncs.c
-  cuddZddGroup.c cuddZddIsop.c cuddZddLin.c cuddZddMisc.c
-  cuddZddPort.c cuddZddReord.c cuddZddSetop.c cuddZddSymm.c
-  cuddZddUtil.c
-  cuddCdd.c
-)
-
-set(CUDDHDR cudd.h cuddInt.h cuddCdd.h)
-
-# mtr
-set(MTRSRC mtrBasic.c mtrGroup.c)
-set(MTRHDR mtr.h)
-
-# st
-set(STSRC st.c)
-set(STHDR st.h)
-
-# epd
-set(EPDSRC epd.c)
-set(EPDHDR epd.h)
-
-# util
-set(UTILSRC
-  cpu_time.c cpu_stats.c getopt.c safe_mem.c strsav.c texpand.c
-  ptime.c prtime.c pipefork.c pathsearch.c stub.c
-  tmpfile.c datalimit.c)
-
-set(UTILHDR util.h)
-
-# headers
 include_directories("${CMAKE_SOURCE_DIR}/mtr")
 include_directories("${CMAKE_SOURCE_DIR}/epd")
 include_directories("${CMAKE_SOURCE_DIR}/st")
 include_directories("${CMAKE_SOURCE_DIR}/util")
 include_directories("${CMAKE_SOURCE_DIR}/cudd")
 
-set(LIB_TYPE STATIC)
-#set(LIB_TYPE SHARED)
+set(CUDD_SRCS
+  cudd/cuddAddAbs.c
+  cudd/cuddAddApply.c
+  cudd/cuddAddFind.c
+  cudd/cuddAddInv.c
+  cudd/cuddAddIte.c
+  cudd/cuddAddNeg.c
+  cudd/cuddAddWalsh.c
+  cudd/cuddAndAbs.c
+  cudd/cuddAnneal.c
+  cudd/cuddApa.c
+  cudd/cuddAPI.c
+  cudd/cuddApprox.c
+  cudd/cuddBddAbs.c
+  cudd/cuddBddCorr.c
+  cudd/cuddBddIte.c
+  cudd/cuddBridge.c
+  cudd/cuddCache.c
+  cudd/cuddCdd.c
+  cudd/cuddCheck.c
+  cudd/cuddClip.c
+  cudd/cuddCof.c
+  cudd/cuddCompose.c
+  cudd/cuddDecomp.c
+  cudd/cuddEssent.c
+  cudd/cuddExact.c
+  cudd/cuddExport.c
+  cudd/cuddGenCof.c
+  cudd/cuddGenetic.c
+  cudd/cuddGroup.c
+  cudd/cuddHarwell.c
+  cudd/cuddInit.c
+  cudd/cuddInteract.c
+  cudd/cuddLCache.c
+  cudd/cuddLevelQ.c
+  cudd/cuddLinear.c
+  cudd/cuddLiteral.c
+  cudd/cuddMatMult.c
+  cudd/cuddPriority.c
+  cudd/cuddRead.c
+  cudd/cuddRef.c
+  cudd/cuddReorder.c
+  cudd/cuddSat.c
+  cudd/cuddSign.c
+  cudd/cuddSolve.c
+  cudd/cuddSplit.c
+  cudd/cuddSubsetHB.c
+  cudd/cuddSubsetSP.c
+  cudd/cuddSymmetry.c
+  cudd/cuddTable.c
+  cudd/cuddUtil.c
+  cudd/cuddWindow.c
+  cudd/cuddZddCount.c
+  cudd/cuddZddFuncs.c
+  cudd/cuddZddGroup.c
+  cudd/cuddZddIsop.c
+  cudd/cuddZddLin.c
+  cudd/cuddZddMisc.c
+  cudd/cuddZddPort.c
+  cudd/cuddZddReord.c
+  cudd/cuddZddSetop.c
+  cudd/cuddZddSymm.c
+  cudd/cuddZddUtil.c
 
-# libraries: util
-ADDPREFIX(FILES ${UTILSRC} PREFIX "util/" RESULT _UTILSRC)
-ADDPREFIX(FILES ${UTILHDR} PREFIX "util/" RESULT _UTILHDR)
-CREATE_LIB(util ${LIB_TYPE} ${_UTILSRC}  HEADERS ${_UTILHDR}
-    OUTPUT_NAME "util" COMPONENT devel)
+#Headers:
+  cudd/cuddCdd.h
+  cudd/cudd.h
+  cudd/cuddInt.h
+)
 
-# libraries: st
-ADDPREFIX(FILES ${STSRC} PREFIX "st/" RESULT _STSRC)
-ADDPREFIX(FILES ${STHDR} PREFIX "st/" RESULT _STHDR)
-CREATE_LIB(st ${LIB_TYPE} ${_STSRC}  HEADERS ${_STHDR}
-    OUTPUT_NAME "st" COMPONENT devel)
+set(MTR_SRCS
+  mtr/mtrBasic.c
+  mtr/mtrGroup.c
+#Headers:
+  mtr/mtr.h
+)
 
-# libraries: cudd
-ADDPREFIX(FILES ${CUDDSRC} PREFIX "cudd/" RESULT _CUDDSRC)
-ADDPREFIX(FILES ${CUDDHDR} PREFIX "cudd/" RESULT _CUDDHDR)
-CREATE_LIB(cudd ${LIB_TYPE} ${_CUDDSRC}  HEADERS ${_CUDDHDR}
-    OUTPUT_NAME "cudd" COMPONENT devel)
+set(ST_SRCS
+  st/st.c
+#Headers:
+  st/st.h
+)
 
-# libraries: mtr
-ADDPREFIX(FILES ${MTRSRC} PREFIX "mtr/" RESULT _MTRSRC)
-ADDPREFIX(FILES ${MTRHDR} PREFIX "mtr/" RESULT _MTRHDR)
-CREATE_LIB(mtr ${LIB_TYPE} ${_MTRSRC}  HEADERS ${_MTRHDR}
-    OUTPUT_NAME "mtr" COMPONENT devel)
+set(EPD_SRCS
+  epd/epd.c
+#Headers:
+  epd/epd.h
+)
 
-# libraries: epd
-ADDPREFIX(FILES ${EPDSRC} PREFIX "epd/" RESULT _EPDSRC)
-ADDPREFIX(FILES ${EPDHDR} PREFIX "epd/" RESULT _EPDHDR)
-CREATE_LIB(epd ${LIB_TYPE} ${_EPDSRC}  HEADERS ${_EPDHDR}
-    OUTPUT_NAME "epd" COMPONENT devel)
+set(UTIL_SRCS
+  util/cpu_time.c
+  util/cpu_stats.c
+  util/getopt.c
+  util/safe_mem.c
+  util/strsav.c
+  util/texpand.c
+  util/ptime.c
+  util/prtime.c
+  util/pipefork.c
+  util/pathsearch.c
+  util/stub.c
+  util/tmpfile.c
+  util/datalimit.c
+#Headers
+  util/util.h
+)
 
-##########################################################################
-# C++ interface for cdds
-##########################################################################
-include_directories("${CMAKE_SOURCE_DIR}/cdd-obj")
-set(CDDCPPSRCS cdd.cc)
-set(CDDCPPHDRS cdd.hh)
-ADDPREFIX(FILES ${CDDCPPSRCS} PREFIX "cdd-obj/" RESULT _CDDCPPSRC)
-ADDPREFIX(FILES ${CDDCPPHDRS} PREFIX "cdd-obj/" RESULT _CDDCPPHDR)
-CREATE_LIB(cddcpp ${LIB_TYPE} ${_CDDCPPSRC}  HEADERS ${_CDDCPPHDR}
-    OUTPUT_NAME "cddcpp" COMPONENT devel)
+add_library(cudd ${CUDD_SRCS})
+add_library(util ${UTIL_SRCS})
+add_library(st ${ST_SRCS})
+add_library(mpr ${MTR_SRCS})
+add_library(epd ${EPD_SRCS})
 
-
+set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
 # Cdds examples
 ##########################################################################
-set(EXLIBS cudd-static epd-static mtr-static st-static util-static cddcpp-static)
-
-add_executable(testcdd tests/testcdd.c)
-target_link_libraries(testcdd ${EXLIBS})
-
-add_executable(testobj tests/testcdd.cpp)
-target_link_libraries(testobj ${EXLIBS})
-
-##########################################################################
-# Test
-##########################################################################
-add_executable(testcudd cudd/testcudd.c)
-target_link_libraries(testcudd cudd-static epd-static mtr-static
-st-static util-static)
-
-##########################################################################
-#
-#                   Cprel configuration starts here!
-#
-##########################################################################
-
-##########################################################################
-## Gecode detection (only works with source installation no frameworks)
-##########################################################################
-find_library(GKERNEL gecodekernel)
-message(STATUS "gecode kernel: ${GKERNEL}")
-find_library(GSUPPORT gecodesupport)
-message(STATUS "gecode support: ${GSUPPORT}")
-find_library(GDRIVER gecodedriver)
-message(STATUS "gecode driver: ${GDRIVER}")
-find_library(GINT gecodeint)
-message(STATUS "gecode int: ${GINT}")
-find_library(GSET gecodeset)
-message(STATUS "gecode set: ${GSET}")
-find_library(GSEARCH gecodesearch)
-message(STATUS "gecode search: ${GSEARCH}")
-find_library(GMINM gecodeminimodel)
-message(STATUS "gecode minimodel: ${GMINM}")
-find_library(GGIST gecodegist)
-message(STATUS "gecode gist: ${GGIST}")
-find_path(GKERNELHH gecode/kernel.hh)
-message(STATUS "gecode headers: ${GKERNELHH}")
-
-
-set(GECLIBS)
-if (GKERNEL AND GKERNELHH AND GSUPPORT AND GDRIVER AND GINT AND GSET AND
-    GSEARCH AND GMINM)
-  include_directories(${GKERNELHH})
-  set(GECLIBS ${GKERNEL} ${GSUPPORT} ${GDRIVER} ${GINT} ${GSET} ${GSEARCH}
-      ${GMINM})
-  if (GGIST)
-    find_package(Qt4 4.7 COMPONENTS QtCore QtGui REQUIRED)
-    list(APPEND GECLIBS ${GGIST} ${QT_LIBRARIES})
-  endif()
-else()
-  message(FATAL_ERROR "Missing gecode files")
-endif()
-
-##########################################################################
-## Relation constraint system
-##########################################################################
 include_directories("${CMAKE_SOURCE_DIR}")
+add_executable(testcdd tests/testcdd.c)
+target_link_libraries(testcdd m ${CUDD_LIBS})
 
-add_library(gecoderel
-  cprel/rel.vis
-  cprel/rel.hh
-
- ## Variable implementation
-  cprel/var-imp.hpp
-  cprel/var-imp/rel.hpp
-  cprel/var-imp/rel.cpp
-
- ## Variable
-  cprel/var/rel.hpp
-  cprel/var/rel.cpp
-
- #branch
-  cprel/branch.hpp
-  cprel/branch/none-any.hpp
-  )
-
-add_executable(queens cprel/queens.cpp)
-target_link_libraries(queens gecoderel ${GECLIBS})
-
-#if(BUILD_TEST)
-#  add_subdirectory(tests)
-#endif(BUILD_TEST)
-
+add_executable(testobj
+  tests/testcdd.cpp
+  cdd-obj/cdd.cpp
+  cdd-obj/cdd.hh
+)
+target_link_libraries(testobj ${CUDD_LIBS})
 ##########################################################################
-# Uninstall
+# Gecode
 ##########################################################################
-#CONFIGURE_FILE(
-#  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-#  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-#  IMMEDIATE @ONLY)
-
-#ADD_CUSTOM_TARGET(uninstall
-#  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
-
+find_package(Gecode REQUIRED)
+message("Using gecode version: ${GECODE_VERSION}")
 ##########################################################################
-# Binary packages
+# Detect if gecode was build to support the BRel variable type
 ##########################################################################
-set(CPACK_PACKAGE_NAME "CuddCP")
-set(CPACK_PACKAGE_VENDOR "info.ucl.ac.be")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "CuddCP ${CPBINREL_VERSION}")
-
-set(CPACK_PACKAGE_VERSION "${CUDDCP_VERSION}")
-set(CPACK_PACKAGE_VERSION_MAJOR "${CUDDCP_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${CUDDCP_VERSION_MINOR}")
-
-#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
-#set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/BUILD")
-
-if (APPLE)
-  set(CPACK_GENERATOR "PackageMaker")
-endif (APPLE)
-
-if (UNIX)
-  list(APPEND CPACK_GENERATOR  "DEB")
-endif (UNIX)
-
-set(CPACK_SOURCE_GENERATOR "TGZ")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "cuddcp-${CUDDCP_VERSION}-src")
-set(CPACK_PACKAGE_FILE_NAME "cuddcp-${CUDDCP_VERSION}")
-
-#set(CPACK_COMPONENTS_ALL devel)
-
-#set(CPACK_COMPONENT_DEVEL_DISPLAY_NAME "Library and header files")
-
-
-set(CPACK_PACKAGE_CONTACT "Gustavo Gutierrez <gutierrez.gustavo@uclouvain.be>")
-
-include(CPack)
+find_file(GECODE_VIMP gecode/kernel/var-imp.hpp)
+file(STRINGS ${GECODE_VIMP} GECODE_LINE_BREL_CLASS
+     REGEX "^.*class GraphVarImpBase .*")
+list(LENGTH GECODE_LINE_BREL_CLASS GECODE_BREL_SUPPORT)
+if( NOT GECODE_BREL_SUPPORT)
+  message("Gecode was not built with support for the BRel type of variable.")
+endif()

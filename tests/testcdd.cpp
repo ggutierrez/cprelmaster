@@ -6,7 +6,7 @@
 #include <tr1/unordered_map>
 #include <list>
 
-#include "cdd.hh"
+#include <cdd-obj/cdd.hh>
 
 using namespace std;
 using namespace tr1;

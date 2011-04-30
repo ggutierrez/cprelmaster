@@ -1,5 +1,5 @@
-#include <cdd.hh>
-#include <cudd.h>
+#include <cdd-obj/cdd.hh>
+#include <cudd/cudd.h>
 
 namespace Cdd {
   using namespace std;
