@@ -3,6 +3,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-support")
 
 project(cuddcp)
 
+##########################################################################
+# Command line options
+##########################################################################
 
 ##########################################################################
 # System information
@@ -160,20 +163,57 @@ target_link_libraries(testobj ${CUDD_LIBS})
 ##########################################################################
 # Gecode
 ##########################################################################
-find_package(Gecode REQUIRED)
+find_package(Gecode)
+set(WORKING_GECODE No)
 set(MIN_GECODE_REQUIRED 3.5.0)
-message("Using gecode version: ${GECODE_VERSION}")
-if ((${GECODE_VERSION} VERSION_EQUAL ${MIN_GECODE_REQUIRED}) OR
-    (${GECODE_VERSION} VERSION_GREATER ${MIN_GECODE_REQUIRED}))
-  message("Using the right gecode")
+set(GECODE_KERNEL_CLASS "CPRelVarImpBase")
+if (GECODE_FOUND)
+  message(STATUS "Using gecode version: ${GECODE_VERSION}")
+  if ((${GECODE_VERSION} VERSION_EQUAL ${MIN_GECODE_REQUIRED}) OR
+      (${GECODE_VERSION} VERSION_GREATER ${MIN_GECODE_REQUIRED}))
+    message(STATUS "  Found compatible gecode version")
+    # Detect if gecode was build to support the CPRel variable type
+    find_file(GECODE_VIMP gecode/kernel/var-imp.hpp)
+    file(STRINGS ${GECODE_VIMP} GECODE_LINE_BREL_CLASS
+         REGEX "^.*class ${GECODE_KERNEL_CLASS} .*")
+    list(LENGTH GECODE_LINE_BREL_CLASS GECODE_BREL_SUPPORT)
+    if(GECODE_BREL_SUPPORT)
+      message(STATUS "  Gecode was built with support for the BRel type of variable.")
+      set(WORKING_GECODE Yes)
+    endif()
+  endif()
+endif()
+if(NOT WORKING_GECODE)
+  message(STATUS "No compatible version of gecode was found.")
+  message(STATUS "  To build this library Gecode you need at least version ${MIN_GECODE_REQUIRED}")
+  message(STATUS "  and built with support for the relational constraint system.")
+  message(STATUS "  To build the gecode you need please execute make GECODE.")
+  message(STATUS "  and reconfigure with option -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}")
+  include(ExternalProject)
+  message("Gecode was not found...")
+  ExternalProject_Add(GECODE
+    URL "/home/gg/Work/gecode-3.5.0.tar.gz"
+    CONFIGURE_COMMAND ./configure --with-vis=/home/gg/Work/cudd-cp/cprel/cprel.vis --disable-examples --prefix=${CMAKE_INSTALL_PREFIX}
+    BUILD_IN_SOURCE Yes
+    INSTALL_COMMAND make -j3 install
+    LOG_CONFIGURE Yes
+    LOG_BUILD Yes
+  )
 endif()
 ##########################################################################
-# Detect if gecode was build to support the BRel variable type
+# Gecode includes
 ##########################################################################
-find_file(GECODE_VIMP gecode/kernel/var-imp.hpp)
-file(STRINGS ${GECODE_VIMP} GECODE_LINE_BREL_CLASS
-     REGEX "^.*class GraphVarImpBase .*")
-list(LENGTH GECODE_LINE_BREL_CLASS GECODE_BREL_SUPPORT)
-if( NOT GECODE_BREL_SUPPORT)
-  message("Gecode was not built with support for the BRel type of variable.")
-endif()
+include_directories(${Gecode_INCLUDE_DIRS})
+message("${Gecode_INCLUDE_DIRS}")
+##########################################################################
+# Relation constraint system
+##########################################################################
+set(CPREL_SRCS
+  cprel/cprel.hh
+  cprel/main.cpp
+)
+add_library(rel ${CPREL_SRCS})
+target_link_libraries(rel ${Gecode_LIBRARIES})
+
+add_executable(minimal tests/minimal.cpp)
+target_link_libraries(minimal rel ${Gecode_LIBRARIES})
