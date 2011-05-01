@@ -217,3 +217,6 @@ target_link_libraries(rel ${Gecode_LIBRARIES})
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal rel ${Gecode_LIBRARIES})
+
+add_executable(bdd tests/bdd.cpp)
+target_link_libraries(bdd ${CUDD_LIBS})

@@ -1,4 +1,7 @@
+//#pragma warning(push)
+//#pragma warning(disable:)
 #include "cuddCdd.h"
+//#pragma warning(pop)
 
 // 32 bits integers max 8ary
 #define BBV 5
@@ -23,7 +26,7 @@ DdNode* getVar(DdManager *dd, int v, int b) {
   Cudd_bddIthVar(dd,v) :
   Cudd_Not(Cudd_bddIthVar(dd,v));
 }
-// Returns a CDD with the encoding of \a p. The arity \a a is needed because of 
+// Returns a CDD with the encoding of \a p. The arity \a a is needed because of
 // the way \a p is encoded.
 DdNode* path(DdManager *dd, int p, int a) {
   DdNode *tmp, *f;
@@ -53,15 +56,15 @@ DdNode* domain(DdManager *dd, DdNode *glb, DdNode *lub) {
   f = Cudd_cddOr(dd, glb, CDD_UNK(dd));
   Cudd_Ref(f);
   Cudd_RecursiveDeref(dd, glb);
-  
+
   g = Cudd_cddAnd(dd, lub, CDD_UNK(dd));
   Cudd_Ref(g);
   Cudd_RecursiveDeref(dd, lub);
-  
+
   r = Cudd_cddMerge(dd, f, g);
   Cudd_RecursiveDeref(dd, f);
   Cudd_RecursiveDeref(dd, g);
-  
+
   return r;
 }
 
@@ -197,14 +200,14 @@ int ex1(void) {
 
   DdNode *prov = readBinRel(dd, "pro.mat");
   DdNode *Prov = domain(dd, CDD_ZERO(dd), prov);
-  
+
   DdNode *rels[] = {deps, conf, prov};
-  
+
 
   int ds = Cudd_DagSize(deps); double dm = card(dd, deps, 2);
   int cs = Cudd_DagSize(conf); double cm = card(dd, conf, 2);
   int ps = Cudd_DagSize(prov); double pm = card(dd, prov, 2);
-  
+
   printf("Statistics:\n");
   printf("\tdependencies: Dagsize: %d Minterms: %f\n", ds, dm);
   printf("\tconflicts: Dagsize: %d Minterms: %f\n", cs, cm);
@@ -212,7 +215,7 @@ int ex1(void) {
   printf("\ttotal minterms: %f\n", dm + cm + pm);
   printf("\ttotal number of nodes: %d\n", ds + cs + ps);
   printf("\tsharing (among vars) %d\n",Cudd_SharingSize(rels, 3));
-  
+
   Cudd_RecursiveDeref(dd, deps);
   Cudd_RecursiveDeref(dd, Deps);
   Cudd_RecursiveDeref(dd, conf);
@@ -226,7 +229,7 @@ int ex1(void) {
 
 int main(void) {
   DdManager *dd = Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0);
-    
+
   DdNode *one, *unk, *zero;
   one = CDD_ONE(dd);
   unk = CDD_UNK(dd);
@@ -236,50 +239,50 @@ int main(void) {
   DdNode *x = Cudd_bddIthVar(dd,0);
   DdNode *y = Cudd_bddIthVar(dd,1);
   DdNode *z = Cudd_bddIthVar(dd,2);
-  
+
   //Cudd_Ref(x);Cudd_Ref(y);Cudd_Ref(z);
-  
+
   //tmp = xy
   DdNode *tmp = Cudd_bddAnd(dd, x, y);
   Cudd_Ref(tmp);
-  
+
   //tmp2 = xz'
   DdNode *tmp2 = Cudd_bddAnd(dd, x,Cudd_Not(z));
   Cudd_Ref(tmp2);
-  
+
   // tmp3 = x'y'
   DdNode *tmp3 = Cudd_bddAnd(dd, Cudd_Not(x), Cudd_Not(y));
   Cudd_Ref(tmp3);
-  
+
   // tmp4 = tmp3 z
   DdNode *tmp4 = Cudd_bddAnd(dd, tmp3, z);
   Cudd_Ref(tmp4);
-  
+
   Cudd_RecursiveDeref(dd, tmp3);
-  
+
   DdNode *f = Cudd_bddOr(dd, tmp, tmp2);
   Cudd_Ref(f);
   Cudd_RecursiveDeref(dd, tmp);
-  Cudd_RecursiveDeref(dd, tmp2);  
-  
+  Cudd_RecursiveDeref(dd, tmp2);
+
   tmp = Cudd_bddOr(dd, f, tmp4);
   Cudd_Ref(tmp);
   Cudd_RecursiveDeref(dd, f);
   Cudd_RecursiveDeref(dd, tmp4);
-  
+
   f = tmp;
   Cudd_Ref(f);
-  
+
   // create a cube containing z
   DdNode *cube = Cudd_bddAnd(dd, z, one);
   Cudd_Ref(cube);
-  
+
   //DdNode *abse = Cudd_bddExistAbstract(dd, f, cube);
   DdNode *abse = Cudd_cddExistAbstract(dd, f, cube);
   Cudd_Ref(abse);
-  
+
   todot(dd, abse, "cdd-abstract-exist.dot");
-  
+
   Cudd_RecursiveDeref(dd, tmp);
   Cudd_RecursiveDeref(dd, abse);
   Cudd_RecursiveDeref(dd, cube);

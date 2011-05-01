@@ -1,8 +1,8 @@
 #ifndef __CUDD_CDD_H_
 #define __CUDD_CDD_H_
 
-#include "util.h"
-#include "cuddInt.h"
+#include <util/util.h>
+#include <cudd/cuddInt.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,7 +11,7 @@ extern "C" {
 #define CDD_ONE(dd)  DD_ONE((dd))
 #define CDD_UNK(dd)  DD_ZERO((dd))
 #define CDD_ZERO(dd) Cudd_Not(CDD_ONE((dd)))
-  
+
   // Computes the negation of the CDD represented by \a f
   DdNode* Cudd_cddNot(DdManager *dd, DdNode *f);
   // Compute the complement of \a f if \a c is not zero
@@ -32,7 +32,7 @@ extern "C" {
   // Returns the relation resulting by quantifying the variables represented in
   // \a cube in \a f
   DdNode* Cudd_cddExistAbstract(DdManager *dd, DdNode *f, DdNode *cube);
-  
+
 #ifdef __cplusplus
 } /* end of extern "C" */
 #endif

@@ -1,5 +1,5 @@
-#ifndef __CDD_HH__
-#define __CDD__HH__
+#ifndef __CDDOBJ_CDD_HH__
+#define __CDDOBJ_CDD_HH__
 
 #include <iostream>
 #include <list>

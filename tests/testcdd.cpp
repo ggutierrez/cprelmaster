@@ -172,6 +172,6 @@ int main(void) {
   Relation Prov(Cudd::zero(),provs,2);
 
   //cout << "elements in all " << all.size() << endl;
-  //cout << "This number should be zero: " << Cudd::references() << endl;
+  cout << "This number should be zero: " << Cudd::references() << endl;
   return 0;
 }
