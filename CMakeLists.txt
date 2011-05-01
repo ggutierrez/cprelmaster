@@ -161,7 +161,12 @@ target_link_libraries(testobj ${CUDD_LIBS})
 # Gecode
 ##########################################################################
 find_package(Gecode REQUIRED)
+set(MIN_GECODE_REQUIRED 3.5.0)
 message("Using gecode version: ${GECODE_VERSION}")
+if ((${GECODE_VERSION} VERSION_EQUAL ${MIN_GECODE_REQUIRED}) OR
+    (${GECODE_VERSION} VERSION_GREATER ${MIN_GECODE_REQUIRED}))
+  message("Using the right gecode")
+endif()
 ##########################################################################
 # Detect if gecode was build to support the BRel variable type
 ##########################################################################
