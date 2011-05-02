@@ -4,10 +4,10 @@
 
 #include <iostream>
 #include <vector>
-#include <gecode/kernel.hh>
+/*#include <gecode/kernel.hh>
 #include <gecode/int.hh>
 #include <gecode/set.hh>
-
+*/
 //#include <binrel/graph.hh>
 //#include <binrel/branch.hh>
 //#include <binrel/and.hh>
@@ -15,59 +15,59 @@
 
 namespace GeLisp {
 
-  class GlIntVar;
-  class GlBoolVar;
-  class GlSetVar;
-  //class GlGraphVar;
+  // class GlIntVar;
+  // class GlBoolVar;
+  // class GlSetVar;
+  // //class GlGraphVar;
 	
-  class GlSpace : public Gecode::Space {
-    GlSpace(bool share, GlSpace&);
-  public:
-    /// The integer variables
-    std::vector<GlIntVar> iv;
-    /// The Boolean variables
-    std::vector<GlBoolVar> bv;
-    /// The set variables
-    std::vector<GlSetVar> sv;
-    /// The graph variables
-    //std::vector<GlGraphVar> gv;
-    /// Construct an empty space
-    GlSpace(void);
-    /// Destructor
-    ~GlSpace(void);
+  // class GlSpace : public Gecode::Space {
+  //   GlSpace(bool share, GlSpace&);
+  // public:
+  //   /// The integer variables
+  //   std::vector<GlIntVar> iv;
+  //   /// The Boolean variables
+  //   std::vector<GlBoolVar> bv;
+  //   /// The set variables
+  //   std::vector<GlSetVar> sv;
+  //   /// The graph variables
+  //   //std::vector<GlGraphVar> gv;
+  //   /// Construct an empty space
+  //   GlSpace(void);
+  //   /// Destructor
+  //   ~GlSpace(void);
     
 
-    /// Create a new integer variable with domain [lb,ub]
-    GlIntVar& newIntVar(int lb, int ub);
-    /// Create a new integer variable from IntSet is
-    GlIntVar& newIntVar(const Gecode::IntSet &d);
+  //   /// Create a new integer variable with domain [lb,ub]
+  //   GlIntVar& newIntVar(int lb, int ub);
+  //   /// Create a new integer variable from IntSet is
+  //   GlIntVar& newIntVar(const Gecode::IntSet &d);
     
-    /// Create a new boolean variable with domain [lb,ub]
-    GlBoolVar& newBoolVar(int lb, int ub);
+  //   /// Create a new boolean variable with domain [lb,ub]
+  //   GlBoolVar& newBoolVar(int lb, int ub);
     
-    /// Create a new set variable from home
-    GlSetVar& newSetVar();
+  //   /// Create a new set variable from home
+  //   GlSetVar& newSetVar();
     
-    /// Create a new set variable with bounds and cardinality
-    GlSetVar& newSetVar(int glbMin,int glbMax,int lubMin,int lubMax, 
-			unsigned int cardMin = 0, unsigned int cardMax = Gecode::Set::Limits::card);
+  //   /// Create a new set variable with bounds and cardinality
+  //   GlSetVar& newSetVar(int glbMin,int glbMax,int lubMin,int lubMax, 
+  // 			unsigned int cardMin = 0, unsigned int cardMax = Gecode::Set::Limits::card);
            
-    /// Create a new set variable with bounds(lower bound is an IntSet) and cardinality
-    GlSetVar& newSetVar(const Gecode::IntSet& glbD,int lubMin,int lubMax,
-			unsigned int cardMin = 0,
-			unsigned int cardMax = Gecode::Set::Limits::card);       
+  //   /// Create a new set variable with bounds(lower bound is an IntSet) and cardinality
+  //   GlSetVar& newSetVar(const Gecode::IntSet& glbD,int lubMin,int lubMax,
+  // 			unsigned int cardMin = 0,
+  // 			unsigned int cardMax = Gecode::Set::Limits::card);       
     
-    /// Create a new set variable with bounds(upper bound is an IntSet) and cardinality
-    GlSetVar&
-    newSetVar(int glbMin,int glbMax,const Gecode::IntSet& lubD,
-	      unsigned int cardMin = 0,
-	      unsigned int cardMax = Gecode::Set::Limits::card);
+  //   /// Create a new set variable with bounds(upper bound is an IntSet) and cardinality
+  //   GlSetVar&
+  //   newSetVar(int glbMin,int glbMax,const Gecode::IntSet& lubD,
+  // 	      unsigned int cardMin = 0,
+  // 	      unsigned int cardMax = Gecode::Set::Limits::card);
            
-    /// Create a new set variable with bounds(lower and upper bound is an IntSet) and cardinality       
-    GlSetVar&
-    newSetVar(const Gecode::IntSet& glbD,const Gecode::IntSet& lubD,
-	      unsigned int cardMin = 0,
-	      unsigned int cardMax = Gecode::Set::Limits::card);
+  //   /// Create a new set variable with bounds(lower and upper bound is an IntSet) and cardinality       
+  //   GlSetVar&
+  //   newSetVar(const Gecode::IntSet& glbD,const Gecode::IntSet& lubD,
+  // 	      unsigned int cardMin = 0,
+  // 	      unsigned int cardMax = Gecode::Set::Limits::card);
 	      
 	/// Create a new graph variable with an empty lower bound and a full upper bound. n is the maximum value of a node.       
     //GlGraphVar&
@@ -81,41 +81,41 @@ namespace GeLisp {
     //PAS OUBLIE DE RENOMMER LA DERNIERE FONCTION DE CONSTRUCTION DE GLGRAPH (si on en a besoin)
      
     
-    /// Perform propagation
-    const char* status(void);
-    /// Print space information
-    void print(std::ostream& os) const;
-    /// Debug 
-    const char* debug(void) const;
-    /// Post the branchings
-    void branch(void);
-    /// Run the search for nbSolutions, returns the number of solutions. if nbSolutions = 0, search on all the space.
-    template<template<class> class Engine>
-    unsigned int runEngine(std::ostream& os, int nbSolutions, std::vector<GlSpace*>& solutionsVector);
-    /// Returns the number of solutions to the problem
-    const char* run(int nbSolutions, std::vector<GlSpace*>& solutionsVector);
-    /// Implement optimization
-    //virtual void constrain(const Space& s);
-    /// Copy function
-    virtual Gecode::Space* copy(bool share);
+    // /// Perform propagation
+    // const char* status(void);
+    // /// Print space information
+    // void print(std::ostream& os) const;
+    // /// Debug 
+    // const char* debug(void) const;
+    // /// Post the branchings
+    // void branch(void);
+    // /// Run the search for nbSolutions, returns the number of solutions. if nbSolutions = 0, search on all the space.
+    // template<template<class> class Engine>
+    // unsigned int runEngine(std::ostream& os, int nbSolutions, std::vector<GlSpace*>& solutionsVector);
+    // /// Returns the number of solutions to the problem
+    // const char* run(int nbSolutions, std::vector<GlSpace*>& solutionsVector);
+    // /// Implement optimization
+    // //virtual void constrain(const Space& s);
+    // /// Copy function
+    // virtual Gecode::Space* copy(bool share);
     
-    //get the variable reference from the index of iv
-    GlIntVar& getIntVar(int indexInVector);
+    // //get the variable reference from the index of iv
+    // GlIntVar& getIntVar(int indexInVector);
     
-    //get the variable reference from the index of bv
-    GlBoolVar& getBoolVar(int indexInVector);
+    // //get the variable reference from the index of bv
+    // GlBoolVar& getBoolVar(int indexInVector);
     
-    //get the variable reference from the index of sv
-    GlSetVar& getSetVar(int indexInVector);
+    // //get the variable reference from the index of sv
+    // GlSetVar& getSetVar(int indexInVector);
     
     //get the variable reference from the index of gv
     //GlGraphVar& getGraphVar(int indexInVector);
     
     //create a vector of GlSpace and return a reference on it
-    std::vector<GlSpace*> createGlSpaceVector(void);
+    // std::vector<GlSpace*> createGlSpaceVector(void);
     
     //gives access to an element of a vector of GlSpace at a given index
-    GlSpace* getGlSpaceFromVector(std::vector<GlSpace*>& vec, int index);
+    // GlSpace* getGlSpaceFromVector(std::vector<GlSpace*>& vec, int index);
     
     //allow to check if a pointer to a GlSpace is NULL (1 if yes, 0 if not)
     //int isNull(GlSpace* toCheck);

@@ -632,9 +632,9 @@
 
 
 %{
-#include <gecode/kernel.hh>
-#include <gecode/int.hh>
-#include <gecode/set.hh>
+  //#include <gecode/kernel.hh>
+  //#include <gecode/int.hh>
+  //#include <gecode/set.hh>
 
   //#include <binrel/graph.hh>
   //#include <binrel/branch.hh>
@@ -643,12 +643,12 @@
 //#include <binrel/follow.hh>
 
 //#include <gecode/minimodel.hh> //D'ABORD LE LOW LEVEL	
-#include <gelisp/gelisp.hpp>
+#include <gelisp/gelisp.hh>
 
-  using namespace Gecode;
+  using namespace GeLisp;
 %}
 
-
+/*
 %exception {
 try {
   $action
@@ -663,8 +663,8 @@ try {
  }
  }
 
-
-%include <gelisp/gelisp.hpp>
+*/
+%include <gelisp/gelisp.hh>
  //%include <gelisp/gecheader.hpp>
 
 

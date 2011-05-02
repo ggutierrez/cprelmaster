@@ -1,13 +1,20 @@
 ;; Load the foreign function interface
 (require :cffi)
 ;; Register the library
-(cffi:define-foreign-library lisptest
-  (:unix (:or "liblisptest.so"))
-  (t (:default "liblisptest")))
-(cffi:use-foreign-library lisptest)
+(cffi:define-foreign-library libgelisp
+  (:unix (:or "libgelisp.so"))
+  (t (:default "libgelisp")))
+(cffi:use-foreign-library libgelisp)
 ;; Load the swig generated file
-(load "lisptest.lisp")
+(load "gelisp.lisp")
 
-;; Work with the functions defined by the library
-(Test_out (new_Test "mundo"))
+(test)
+(printIntSet (intSet 1 4))
+
+(defvar sp (new_GlSpace))
+(defvar i (intVar sp (intSet 1 5)))
+(GlSpace_intbranch sp)
+(searchAll sp)
+
+;(GlSpace_info sp)
 (write-line "end of execution!")

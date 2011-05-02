@@ -15,6 +15,7 @@ message(STATUS "Building for architecture: ${CMAKE_SYSTEM_PROCESSOR}")
 # Cuddy flags
 ##########################################################################
 if (CMAKE_SYSTEM_PROCESSOR MATCHES x86_64)
+  add_definitions("-fPIC")
   add_definitions("-mtune=native -DHAVE_IEEE_754")
   add_definitions("-DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
 else()
@@ -175,7 +176,8 @@ if(GECODE_FOUND)
     # Detect if gecode was build to support the CPRel variable type
     find_file(GECODE_VIMP gecode/kernel/var-imp.hpp)
     file(STRINGS ${GECODE_VIMP} GECODE_LINE_BREL_CLASS
-         REGEX "^.*class ${GECODE_KERNEL_CLASS} .*")
+      REGEX "^.*class ${GECODE_KERNEL_CLASS} .*")
+    message(STATUS "Gecode class: ${GECODE_LINE_BREL_CLASS}")
     list(LENGTH GECODE_LINE_BREL_CLASS GECODE_BREL_SUPPORT)
     if(GECODE_BREL_SUPPORT)
       message(STATUS "  Gecode was built with support for the BRel type of variable.")
@@ -246,12 +248,12 @@ swig_link_libraries(lisptest test)
 # Gelisp
 ##########################################################################
 ## The foreign library
-add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hpp)
+add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hh)
 ## The swig part
 set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
 #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
 swig_add_module(gelisp cffi gelisp.i)
-swig_link_libraries(gelisp cxxgelisp)
+swig_link_libraries(gelisp cxxgelisp ${Gecode_LIBRARIES})
 
 
 ##########################################################################
