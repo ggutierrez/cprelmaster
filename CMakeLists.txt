@@ -213,6 +213,37 @@ set(CPREL_SRCS
 add_library(rel ${CPREL_SRCS})
 target_link_libraries(rel ${Gecode_LIBRARIES})
 ##########################################################################
+# Swig
+##########################################################################
+find_package(SWIG 1.3.40)
+if (NOT SWIG_FOUND)
+  message(FATAL_ERROR "Swig executable not found.")
+else()
+  include(${SWIG_USE_FILE})
+  message(STATUS "Swig information:")
+  message(STATUS "   program: ${SWIG_EXECUTABLE}")
+endif()
+##########################################################################
+# Lisp
+##########################################################################
+find_program(LISPINT sbcl)
+if (NOT LISPINT)
+  message(FATAL_ERROR "Lisp interpreter not found")
+else()
+  message(STATUS "Lisp interpreter: ${LISPINT}")
+endif()
+##########################################################################
+# Test
+##########################################################################
+## The foreign library
+add_library(test gelisp/test.cpp gelisp/test.hh)
+## The swig part
+set_source_files_properties(test.i PROPERTIES CPLUSPLUS ON)
+#set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
+swig_add_module(lisptest cffi test.i)
+swig_link_libraries(lisptest test)
+
+##########################################################################
 # Executables
 ##########################################################################
 
