@@ -242,6 +242,17 @@ set_source_files_properties(test.i PROPERTIES CPLUSPLUS ON)
 #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
 swig_add_module(lisptest cffi test.i)
 swig_link_libraries(lisptest test)
+##########################################################################
+# Gelisp
+##########################################################################
+## The foreign library
+add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hpp)
+## The swig part
+set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
+#set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
+swig_add_module(gelisp cffi gelisp.i)
+swig_link_libraries(gelisp cxxgelisp)
+
 
 ##########################################################################
 # Executables
