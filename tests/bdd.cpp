@@ -90,6 +90,7 @@ public:
     // TODO: this has to change for CDDs
     return Bdd(Cudd_Not(node_));
   }
+  /// Assignement operator
   Bdd& operator = (const Bdd& right) {
     if (this == &right) return *this;
     if (right.node_ != NULL) Cudd_Ref(right.node_);
@@ -97,10 +98,30 @@ public:
     node_ = right.node_;
     return *this;
   }
+  ///Computes the logic and between this representation and \a r.
+  void intersectAssign(const Bdd& r) {
+    Bdd tmp = intersect(r);
+    this->operator=(tmp);
+  }
+  Bdd intersect(const Bdd& r) const {
+    DdNode *i = Cudd_bddAnd(BDDConfig::dd,node_,r.node_);
+    assert(i);
+    return Bdd(i);
+  }
+  Bdd Union(const Bdd& r) const {
+    DdNode *i = Cudd_bddOr(BDDConfig::dd,node_,r.node_);
+    assert(i);
+    return Bdd(i);
+  }
+  ///Computes the logic or between this representation and \a r.
+  void unionAssign(const Bdd& r) {
+    Bdd tmp = Union(r);
+    this->operator=(tmp);
+  }
 };
 
-Bdd Bdd::one = Bdd(Bdd::Bdd_One);
-Bdd Bdd::zero = Bdd(Bdd::Bdd_Zero);
+  Bdd Bdd::one = Bdd(Bdd::Bdd_One);
+  Bdd Bdd::zero = Bdd(Bdd::Bdd_Zero);
 
 }
 
@@ -109,8 +130,14 @@ int main(void) {
   cout << "Bdd package configuration "
        << BDDConfig::BBV
        << endl;
-
-
+  {
+    Bdd r = Bdd::one;
+    Bdd s = Bdd::zero;
+    Bdd t(r.intersect(s)); 
+    r.intersectAssign(s);
+    cout << "Equal? " << r.eq(t) << endl;
+    cout << "References in the Bdd manager (before): " << BDDConfig::references() << endl;
+  }
   cout << "References in the Bdd manager: " << BDDConfig::references() << endl;
           return 0;
 }
