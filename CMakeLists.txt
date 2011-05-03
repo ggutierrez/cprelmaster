@@ -229,11 +229,11 @@ endif()
 # Lisp
 ##########################################################################
 find_program(LISPINT sbcl)
-if (NOT LISPINT)
-  message(FATAL_ERROR "Lisp interpreter not found")
-else()
-  message(STATUS "Lisp interpreter: ${LISPINT}")
-endif()
+#if (NOT LISPINT)
+#  message(FATAL_ERROR "Lisp interpreter not found")
+#else()
+#  message(STATUS "Lisp interpreter: ${LISPINT}")
+#endif()
 ##########################################################################
 # Test
 ##########################################################################
