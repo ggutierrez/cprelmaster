@@ -19,7 +19,7 @@ namespace MPG { namespace CPRel {
       ModEvent tell(Gecode::Space& home, unsigned int a, CPRel::CPRelView x, int n) {
 	return (a == 0) ? x.lq(home,n) : x.gq(home,n+1);
       }
-};
+    };
   }
   
   /*
