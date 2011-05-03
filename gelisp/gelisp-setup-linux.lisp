@@ -13,7 +13,9 @@
 
 (defvar sp (new_GlSpace))
 (defvar i (intVar sp (intSet 1 5)))
-(GlSpace_intbranch sp)
+(defvar r (relVar sp 2 5))
+(GlSpace_intBranch sp)
+(GlSpace_relBranch sp)
 (searchAll sp)
 
 ;(GlSpace_info sp)
