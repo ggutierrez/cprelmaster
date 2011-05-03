@@ -38,3 +38,5 @@ namespace MPG { namespace CPRel {
       Gecode::ViewSelNone<CPRel::CPRelView>,ValMin>::post(home,y,sn,vm);
   }
 }
+
+Gecode::VarImpDisposer<MPG::CPRel::CPRelVarImp> d;

@@ -191,11 +191,18 @@ else()
   message(STATUS "  To build the gecode you need please execute make GECODE_INSTALL.")
   message(STATUS "  and reconfigure with option -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}")
   include(ExternalProject)
+  set(CONFIGURE_OPTIONS)
+  list(APPEND CONFIGURE_OPTIONS "CXXFLAGS=-DGECODE_HAS_VAR_DISPOSE")
+  list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_VAR_DISPOSE")
+  list(APPEND CONFIGURE_OPTIONS "--with-vis=${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
+  list(APPEND CONFIGURE_OPTIONS "--disable-examples")
+  list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
+    LIST_SEPARATOR " "
     SVN_REPOSITORY https://svn.gecode.org/svn/gecode/tags/release-3.5.0
     SVN_USERNAME anonymous
     SVN_PASSWORD user@gmail.com
-    CONFIGURE_COMMAND ./configure --with-vis=${CMAKE_SOURCE_DIR}/cprel/cprel.vis --disable-examples --prefix=${CMAKE_INSTALL_PREFIX}
+    CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
     BUILD_COMMAND make -j3
     INSTALL_COMMAND make install

@@ -67,6 +67,10 @@ protected:
 public:
   CPRelVarImp(Space& home, int min, int max)
     : CPRelVarImpBase(home), l(min), u(max) {}
+  /// Dispose
+  void dispose(Space&) {
+    std::cout << "Disposer was called" << std::endl;
+  }
   // access operations
   int min(void) const {
     return l;
