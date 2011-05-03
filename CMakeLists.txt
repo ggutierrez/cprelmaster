@@ -253,7 +253,7 @@ add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hh)
 set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
 #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
 swig_add_module(gelisp cffi gelisp.i)
-swig_link_libraries(gelisp cxxgelisp ${Gecode_LIBRARIES})
+swig_link_libraries(gelisp cxxgelisp rel ${Gecode_LIBRARIES})
 
 
 ##########################################################################
