@@ -9,6 +9,8 @@ using std::endl;
 
 namespace GeLisp {
   void test(void) {
+    freopen ("/tmp/mystdout_minimal.txt","w",stdout);
+    freopen ("/tmp/mystderr_minimal.txt","w",stderr);
     cerr << "This is a test" << endl;
   }
 
