@@ -5,6 +5,7 @@
 
 
 using std::cout;
+using std::cerr;
 using std::endl;
 using std::vector;
 using std::pair;
@@ -121,6 +122,51 @@ public:
     Bdd tmp = Union(r);
     this->operator=(tmp);
   }
+  // Print: temporal
+  void print(int a) const {
+    if (node_ == CDD_ONE(BDDConfig::dd)) {
+      cerr << "Universe";
+      return;
+    }
+    if (node_ == CDD_ZERO(BDDConfig::dd)) {
+      cerr << "Empty";
+      return;
+    }
+
+    DdGen* gen;
+    int *cube = (int*)malloc(sizeof(int)*(1<<(BDDConfig::BBV+BDDConfig::BA)));
+    int tuple[1<<BDDConfig::BA];
+    CUDD_VALUE_TYPE val;
+    int done;
+    int i,k,j;
+    cerr << "#(" << Cudd_CountMinterm(BDDConfig::dd,node_,a<<BDDConfig::BBV) << "){";
+    //printf("Cardinality: %f\n", Cudd_CountMinterm(Cudd::dd,node,a<<BBV));
+    for(k=0;k<1<<BDDConfig::BA;k++)tuple[k]=0;
+    Cudd_ForeachCube(BDDConfig::dd,node_,gen,cube,val){
+      done=0;
+      while(!done){
+        done=1;
+        for(i=(1<<(BDDConfig::BBV+BDDConfig::BA))-1;i>=0;i--){
+          if((i&((1<<BDDConfig::BA)-1))<a){
+            tuple[i&((1<<BDDConfig::BA)-1)]&=~(1<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA)));
+            tuple[i&((1<<BDDConfig::BA)-1)]|=(cube[i]&1)<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA));
+            if((cube[i]&2)&&done){
+              done&=cube[i]&1;
+              cube[i]^=1;
+            }
+          }
+        }
+        cerr << "<";
+        for(j = 0; j < a; j++) {
+          cerr << tuple[j] << ",";//printf("%d,",tuple[j]);
+        }
+        //printf(">\n");
+        cerr << ">, ";
+      }
+    }
+    cerr << "}";
+    
+  }
 };
   Bdd Bdd::one = Bdd(Bdd::Bdd_One);
   Bdd Bdd::zero = Bdd(Bdd::Bdd_Zero);
@@ -149,14 +195,20 @@ public:
     int arity_;
   public:
     GRelation(int arity,const vector<pair<int,int> >& data) 
-      : representation_(Bdd::one), arity_(arity) {
+      : representation_(Bdd::zero), arity_(arity) {
+      cout << "References in the Bdd manager (before): " << BDDConfig::references() << endl;
       for (unsigned int i = 0; i < data.size(); i++) {
-	std::cout << "Should add " << data[i].first << ", " << data[i].second << endl;
-	representation_.intersectAssign(createPath(data[i].first,0));
-	representation_.intersectAssign(createPath(data[i].second,1));
+	Bdd r(Bdd::one);
+	r.intersectAssign(createPath(data[i].first,0));
+	r.intersectAssign(createPath(data[i].second,1));
+	representation_.unionAssign(r);
       }
+      cout << "References in the Bdd manager: " << BDDConfig::references() << endl;
     }
     ~GRelation(void) {}
+    void print(void) {
+      representation_.print(arity_);
+    }
   };
 }
 
@@ -166,22 +218,42 @@ int main(void) {
        << BDDConfig::BBV
        << endl;
   {
-    Bdd r = Bdd::one;
-    Bdd s = Bdd::zero;
-    Bdd t(r.intersect(s)); 
-    r.intersectAssign(s);
-    cout << "Equal? " << r.eq(t) << endl;
+    /*
+    Bdd r(Bdd::one);
+    // add 0,1
+    Bdd f(createPath(0,0));
+    r.intersectAssign(f);
+    
+    f = createPath(1,1);
+    r.intersectAssign(f);
+    r.print(2);
+    
+    Bdd s(Bdd::one);
+    // add 1, 2
+    Bdd t(createPath(1,0));
+    s.intersectAssign(t);
+    t = createPath(2,1);
+    s.intersectAssign(t);
+    
+    cerr << endl;
+    s.print(2);
 
-    vector<pair<int,int> > data;
+    cerr << endl;
+    r.unionAssign(s);
+    r.print(2);
+    */
+
+    vector<pair<int,int> > data(4);
     data.push_back(make_pair(0,0));
     data.push_back(make_pair(0,1));
     data.push_back(make_pair(1,0));
     data.push_back(make_pair(1,1));
-    
+      
     GRelation rr(2,data);
-
+    rr.print();
+   
     cout << "References in the Bdd manager (before): " << BDDConfig::references() << endl;
   }
-  cout << "References in the Bdd manager: " << BDDConfig::references() << endl;
-          return 0;
+  cout << "References before exit: " << BDDConfig::references() << endl;
+  return 0;
 }
