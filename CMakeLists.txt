@@ -198,7 +198,6 @@ else()
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
-    LIST_SEPARATOR " "
     SVN_REPOSITORY https://svn.gecode.org/svn/gecode/tags/release-3.5.0
     SVN_USERNAME anonymous
     SVN_PASSWORD user@gmail.com
@@ -219,8 +218,27 @@ set(CPREL_SRCS
   cprel/cprel.hh
   cprel/main.cpp
 )
-add_library(rel ${CPREL_SRCS})
-target_link_libraries(rel ${Gecode_LIBRARIES})
+add_library(gecodecprel ${CPREL_SRCS})
+target_link_libraries(gecodecprel ${Gecode_LIBRARIES})
+##########################################################################
+# Installation                                                           #
+##########################################################################
+#install(FILES ${BINREL_HDRS} DESTINATION include/binrel COMPONENT devel)
+install(TARGETS gecodecprel
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+install(DIRECTORY cprel/ DESTINATION include/cprel
+          FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
+##########################################################################
+# Uninstall
+##########################################################################
+CONFIGURE_FILE(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+  IMMEDIATE @ONLY)
+
+ADD_CUSTOM_TARGET(uninstall
+  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 ##########################################################################
 # Swig
 ##########################################################################
@@ -260,7 +278,7 @@ add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hh)
 set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
 #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
 swig_add_module(gelisp cffi gelisp.i)
-swig_link_libraries(gelisp cxxgelisp rel ${Gecode_LIBRARIES})
+swig_link_libraries(gelisp cxxgelisp gecodecprel ${Gecode_LIBRARIES})
 
 
 ##########################################################################
@@ -268,7 +286,7 @@ swig_link_libraries(gelisp cxxgelisp rel ${Gecode_LIBRARIES})
 ##########################################################################
 
 add_executable(minimal tests/minimal.cpp)
-target_link_libraries(minimal rel ${Gecode_LIBRARIES})
+target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
 
 
 add_executable(bdd tests/bdd.cpp)

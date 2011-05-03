@@ -26,7 +26,6 @@ namespace MPG { namespace CPRel {
    * Branching post function
    *
    */
-  
   // Branch by selecting the first unassigned variable, assigning its
   // smallest value first
   void branch(Gecode::Home home, const CPRelVarArgs& x) {
@@ -39,4 +38,5 @@ namespace MPG { namespace CPRel {
   }
 }
 
+// Register a disposer for variable implementations
 Gecode::VarImpDisposer<MPG::CPRel::CPRelVarImp> d;

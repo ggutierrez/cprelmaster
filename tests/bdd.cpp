@@ -1,11 +1,14 @@
 #include <iostream>
-
+#include <vector>
 #include <cuddCdd.h>
 #include <cudd/cuddInt.h>
 
 
 using std::cout;
 using std::endl;
+using std::vector;
+using std::pair;
+using std::make_pair;
 
 namespace BDDImpl {
 
@@ -119,10 +122,42 @@ public:
     this->operator=(tmp);
   }
 };
-
   Bdd Bdd::one = Bdd(Bdd::Bdd_One);
   Bdd Bdd::zero = Bdd(Bdd::Bdd_Zero);
 
+  /**
+   * \brief Path creation in BDD
+   *
+   * Creates a BDD to represent \a p (encoded as sequence of bits)
+   * for a column \a a.
+   */
+  Bdd createPath(int p, int a) {
+    Bdd f(Bdd::one);
+    for (int i = (1 << BDDConfig::BBV); i--;) {
+      f.intersectAssign(Bdd((i << BDDConfig::BA)+a, p&1));
+      p >>= 1;
+    }
+    return f;
+  }
+  
+  /// Definition for ground relations
+  class GRelation {
+  private:
+    /// Relation storage
+    Bdd representation_;
+    /// Arity
+    int arity_;
+  public:
+    GRelation(int arity,const vector<pair<int,int> >& data) 
+      : representation_(Bdd::one), arity_(arity) {
+      for (unsigned int i = 0; i < data.size(); i++) {
+	std::cout << "Should add " << data[i].first << ", " << data[i].second << endl;
+	representation_.intersectAssign(createPath(data[i].first,0));
+	representation_.intersectAssign(createPath(data[i].second,1));
+      }
+    }
+    ~GRelation(void) {}
+  };
 }
 
 int main(void) {
@@ -136,6 +171,15 @@ int main(void) {
     Bdd t(r.intersect(s)); 
     r.intersectAssign(s);
     cout << "Equal? " << r.eq(t) << endl;
+
+    vector<pair<int,int> > data;
+    data.push_back(make_pair(0,0));
+    data.push_back(make_pair(0,1));
+    data.push_back(make_pair(1,0));
+    data.push_back(make_pair(1,1));
+    
+    GRelation rr(2,data);
+
     cout << "References in the Bdd manager (before): " << BDDConfig::references() << endl;
   }
   cout << "References in the Bdd manager: " << BDDConfig::references() << endl;
