@@ -78,7 +78,7 @@ public:
   }
   /// Destructor
   ~Bdd(void) {
-    if (node_)
+    if (node_ != NULL)
       Cudd_RecursiveDeref(BDDConfig::dd, node_);
   }
   /// Constant true
@@ -86,7 +86,7 @@ public:
   /// Constant false
   static Bdd zero;
   /// Tests if this representation is equal to \a r
-  bool eq(const Bdd& r) { return node_ == r.node_; }
+  bool eq(const Bdd& r) const { return node_ == r.node_; }
   /// Tests if this representation is different from \a r
   bool diff(const Bdd& r) { return !eq(r); }
   /// Compute the complement of this representation
@@ -122,6 +122,15 @@ public:
     Bdd tmp = Union(r);
     this->operator=(tmp);
   }
+  /// Computes the difference between this and \a r
+  Bdd difference(const Bdd& r) const {
+    return intersect(r.complement());
+  }
+  /// Computes the difference between this representation and \a r
+  void differenceAssign(const Bdd& r) {
+    Bdd tmp = difference(r);
+    this->operator=(tmp);
+  }
   // Print: temporal
   void print(int a) const {
     if (node_ == CDD_ONE(BDDConfig::dd)) {
@@ -139,7 +148,9 @@ public:
     CUDD_VALUE_TYPE val;
     int done;
     int i,k,j;
-    cerr << "#(" << Cudd_CountMinterm(BDDConfig::dd,node_,a<<BDDConfig::BBV) << "){";
+    cerr << "#(" 
+	 << Cudd_CountMinterm(BDDConfig::dd,node_,a<<BDDConfig::BBV)
+	 << "){";
     //printf("Cardinality: %f\n", Cudd_CountMinterm(Cudd::dd,node,a<<BBV));
     for(k=0;k<1<<BDDConfig::BA;k++)tuple[k]=0;
     Cudd_ForeachCube(BDDConfig::dd,node_,gen,cube,val){
@@ -148,8 +159,10 @@ public:
         done=1;
         for(i=(1<<(BDDConfig::BBV+BDDConfig::BA))-1;i>=0;i--){
           if((i&((1<<BDDConfig::BA)-1))<a){
-            tuple[i&((1<<BDDConfig::BA)-1)]&=~(1<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA)));
-            tuple[i&((1<<BDDConfig::BA)-1)]|=(cube[i]&1)<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA));
+            tuple[i&((1<<BDDConfig::BA)-1)] &= 
+	      ~(1<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA)));
+            tuple[i&((1<<BDDConfig::BA)-1)] |= 
+	      (cube[i]&1)<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA));
             if((cube[i]&2)&&done){
               done&=cube[i]&1;
               cube[i]^=1;
@@ -193,20 +206,75 @@ public:
     Bdd representation_;
     /// Arity
     int arity_;
+    /// Maximum element of the relation
+    int maximum_;
+    /// Add the pair \a p to the relation
+    Bdd addPair(const pair<int,int>& p) const {
+      Bdd r(Bdd::one);
+      r.intersectAssign(createPath(p.first,0));
+      r.intersectAssign(createPath(p.second,1));
+      return r;
+    }
   public:
+    /// Constructor from a representation
+    GRelation(Bdd& representation, int arity, int maximum)
+      : representation_(representation), arity_(arity)
+      , maximum_(maximum){}
+    /// Constructor of a ground relation from a set of tuples
     GRelation(int arity,const vector<pair<int,int> >& data) 
       : representation_(Bdd::zero), arity_(arity) {
-      cout << "References in the Bdd manager (before): " << BDDConfig::references() << endl;
-      for (unsigned int i = 0; i < data.size(); i++) {
-	Bdd r(Bdd::one);
-	r.intersectAssign(createPath(data[i].first,0));
-	r.intersectAssign(createPath(data[i].second,1));
-	representation_.unionAssign(r);
-      }
-      cout << "References in the Bdd manager: " << BDDConfig::references() << endl;
+      for (unsigned int i = 0; i < data.size(); i++)
+	representation_.unionAssign(addPair(data[i]));
+      // TODO: compute the max_
     }
+    /// Constructor for a full ground relation of arity \a arity and
+    /// maximum element \a maximum
+    GRelation(int arity, int maximum) 
+      : representation_(Bdd::zero), arity_(arity), maximum_(maximum)
+    {
+      // TODO: for now only binary (arity = 2) is supported
+      assert(arity == 2);
+      pair<int,int> x;
+      for (int i = 0; i <= maximum_; i++)
+	for (int j = 0; j <= maximum_; j++) {
+	  x = make_pair(i,j);
+	  addPair(x);
+	}
+    }
+    /// Copy constructor
+    GRelation(const GRelation& r) 
+      : representation_(r.representation_), arity_(r.arity_)
+      , maximum_(r.maximum_){}
+    /// Destructor
     ~GRelation(void) {}
-    void print(void) {
+    /// Tests if this represents the empty relation
+    bool empty(void) const {
+      return representation_.eq(Bdd::zero);
+    }
+    bool full(void) const {
+      return representation_.eq(Bdd::one);
+    }
+    /// Complement
+    GRelation complement(void) const {
+      Bdd c = representation_.complement();
+      return GRelation(c,arity_,maximum_);
+    }
+    /// Relation intersection
+    GRelation intersect(const GRelation& r) const {
+      assert(arity_ == r.arity_);
+      assert(maximum_ == r.maximum_);
+      Bdd t(representation_.intersect(r.representation_));
+      return 
+	GRelation(t,arity_,maximum_);
+    }
+    /// Tests if tuple \a t is present in the relation
+    bool in(const pair<int,int>& t) const {
+      Bdd r(addPair(t));
+      Bdd inter(r.intersect(representation_));
+      return !inter.eq(Bdd::zero);
+    }
+    /// Print a relation as a set of tuples
+    void print(void) const {
       representation_.print(arity_);
     }
   };
@@ -214,9 +282,6 @@ public:
 
 int main(void) {
   using namespace BDDImpl;
-  cout << "Bdd package configuration "
-       << BDDConfig::BBV
-       << endl;
   {
     /*
     Bdd r(Bdd::one);
@@ -226,7 +291,7 @@ int main(void) {
     
     f = createPath(1,1);
     r.intersectAssign(f);
-    r.print(2);
+    //r.print(2);
     
     Bdd s(Bdd::one);
     // add 1, 2
@@ -236,24 +301,33 @@ int main(void) {
     s.intersectAssign(t);
     
     cerr << endl;
-    s.print(2);
-
-    cerr << endl;
     r.unionAssign(s);
     r.print(2);
+    
+    //r.intersectAssign(s.complement());
+    r.differenceAssign(s);
+    cerr << endl;
+    r.print(2);
     */
-
+    
     vector<pair<int,int> > data(4);
     data.push_back(make_pair(0,0));
     data.push_back(make_pair(0,1));
     data.push_back(make_pair(1,0));
     data.push_back(make_pair(1,1));
-      
+    
     GRelation rr(2,data);
-    rr.print();
-   
-    cout << "References in the Bdd manager (before): " << BDDConfig::references() << endl;
+    GRelation ss(2,4);
+    
+    rr.print(); cerr << endl;
+    for (unsigned int i = 0; i < data.size(); i++)
+      assert(rr.in(data[i]));
+    assert(rr.in(make_pair(2,3)));
+    ss.print();
+    //cout << "References in the Bdd manager (before): "
+    //	 << BDDConfig::references() << endl;
   }
   cout << "References before exit: " << BDDConfig::references() << endl;
+  //Cudd_Quit(BDDConfig::dd);
   return 0;
 }
