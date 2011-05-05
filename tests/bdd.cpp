@@ -36,6 +36,35 @@ DdNode* BDDConfig::zero = CDD_ZERO(BDDConfig::dd);
 int BDDConfig::BBV = 5;
 int BDDConfig::BA = 3;
 
+  DdNode* encode(int p, int a) {
+    DdNode *f = BDDConfig::one;
+    DdNode *v, *tmp;
+    Cudd_Ref(f);
+    for (int i = (1 << BDDConfig::BBV); i--;) {
+      v = Cudd_bddIthVar(BDDConfig::dd,(i << BDDConfig::BA)+a);
+      tmp = Cudd_bddAnd(BDDConfig::dd, p&1 ? v : Cudd_Not(v),f);
+      Cudd_Ref(tmp);
+      Cudd_RecursiveDeref(BDDConfig::dd,f);
+      f = tmp;
+      p >>= 1;
+    }
+    return f;
+  } 
+  DdNode* encode(const vector<int>& tuple) {
+    DdNode *f = BDDConfig::one;
+    DdNode *t, *tmp;
+    Cudd_Ref(f);
+    for (unsigned int i = 0; i < tuple.size(); i++) {
+      t = encode(tuple[i],i);
+      tmp = Cudd_bddAnd(BDDConfig::dd,f,t);
+      Cudd_Ref(tmp);
+      Cudd_RecursiveDeref(BDDConfig::dd,t);
+      Cudd_RecursiveDeref(BDDConfig::dd,f);
+      f = tmp;
+    }
+    return f;
+  }
+
   /// Iterator on a Bdd representation
   class BddIter {
   private:
@@ -60,15 +89,13 @@ int BDDConfig::BA = 3;
     BddIter(const BddIter& i) : relation_(i.relation_), arity_(i.arity_) {}
     ~BddIter(void) {
       assert(relation_ != NULL);
-      if (relation_ != BDDConfig::one &&
-	  relation_ != BDDConfig::zero)
-	Cudd_RecursiveDeref(BDDConfig::dd, relation_);
+      Cudd_RecursiveDeref(BDDConfig::dd, relation_);
     }
     bool operator()(void) const {
       return relation_ != BDDConfig::zero;
     }
     /// This is asingle pass iterator
-    pair<int,int> val(void) {
+    vector<int> val(void) {
       DdGen* gen;
       const int cube_size = 1<<(BDDConfig::BBV+BDDConfig::BA);
       const int tuple_size = 1<<BDDConfig::BA;
@@ -90,13 +117,24 @@ int BDDConfig::BA = 3;
 	}
       }
       /// Prepare the output
-      for(int j = 0; j < arity_; j++) {
+      vector<int> out;
+      out.resize(arity_);
+      copy(tuple,tuple+arity_,out.begin());
+      
+      /// print out
+      for(unsigned int j = 0; j < out.size(); j++) {
 	cerr << tuple[j] << ",";
       }
       /// Affect the state of the iterator
+      DdNode *i = Cudd_Not(encode(out));
+      DdNode *tmp = Cudd_bddAnd(BDDConfig::dd,relation_,i);
+      Cudd_Ref(tmp);
+      Cudd_RecursiveDeref(BDDConfig::dd,i);
+      Cudd_RecursiveDeref(BDDConfig::dd,relation_);
+      relation_ = tmp;
       
       /// return t
-      return make_pair(1,1);
+      return out;
     }
     void operator++(void) {
       assert(false);
@@ -110,10 +148,12 @@ private:
   enum BddTerm { Bdd_Zero, Bdd_One, Bdd_Unk};
   /// Root node of the representation
   DdNode *node_;
+public:
   /// Constructor from an existing node
   explicit Bdd(DdNode *n) : node_(n) {
     if (node_ != NULL) Cudd_Ref(node_);
   }
+private:
   /// Construcotr for terminal \a t
   explicit Bdd(BddTerm t) {
     // This initialization cannot be done with the previous constructor because
@@ -204,7 +244,7 @@ public:
     return 
       Cudd_CountMinterm(BDDConfig::dd,node_,a<<BDDConfig::BBV);
   }
-  BddIter begin(int a) {
+  BddIter tuples(int a) {
     return BddIter(node_,a);
   }
   // Print: temporal
@@ -329,6 +369,10 @@ public:
       , maximum_(r.maximum_){}
     /// Destructor
     ~GRelation(void) {}
+    /// Iterator
+    BddIter tuples(void) {
+      return representation_.tuples(arity_);
+    }
     /// Tests if this represents the empty relation
     bool empty(void) const {
       return representation_.eq(Bdd::zero);
@@ -365,36 +409,6 @@ public:
 int main(void) {
   using namespace BDDImpl;
   {
-    
-    Bdd r(Bdd::one);
-    // add 0,1
-    Bdd f(createPath(0,0));
-    r.intersectAssign(f);
-    
-    f = createPath(1,1);
-    r.intersectAssign(f);
-    //r.print(2);
-    
-    Bdd s(Bdd::one);
-    // add 1, 2
-    Bdd t(createPath(1,0));
-    s.intersectAssign(t);
-    t = createPath(2,1);
-    s.intersectAssign(t);
-    
-    cerr << endl;
-    r.unionAssign(s);
-    r.print(2);
-    
-    cerr << endl;
-    BddIter it = r.begin(2);
-    it.val();
-    //r.intersectAssign(s.complement());
-    //r.differenceAssign(s);
-    //cerr << endl;
-    //r.print(2);
-    
-    /*    
     vector<pair<int,int> > data(4);
     data.push_back(make_pair(0,0));
     data.push_back(make_pair(0,1));
@@ -402,16 +416,12 @@ int main(void) {
     data.push_back(make_pair(1,1));
     
     GRelation rr(2,data);
-    GRelation ss(2,4);
-    
-    rr.print(); cerr << endl;
-    for (unsigned int i = 0; i < data.size(); i++)
-      assert(rr.in(data[i]));
-    //assert(rr.in(make_pair(2,3)));
-    ss.print();
-    //cout << "References in the Bdd manager (before): "
-    //	 << BDDConfig::references() << endl;
-    */
+    BddIter it(rr.tuples());
+    it.val();
+    it.val();
+    it.val();
+    it.val();
+    cout << "Valid? " << it() << endl;
   }
   cout << "References before exit: " << BDDConfig::references() << endl;
   //Cudd_Quit(BDDConfig::dd);
