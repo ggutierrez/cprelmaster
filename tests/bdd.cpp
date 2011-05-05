@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <cuddCdd.h>
@@ -35,19 +36,86 @@ DdNode* BDDConfig::zero = CDD_ZERO(BDDConfig::dd);
 int BDDConfig::BBV = 5;
 int BDDConfig::BA = 3;
 
+  /// Iterator on a Bdd representation
+  class BddIter {
+  private:
+    /// The represented relation
+    DdNode *relation_;
+    /// Arity of the encoded relation
+    int arity_;
+    /// Undefined default constructor
+    BddIter(void);
+  public:
+    BddIter(DdNode *relation, int arity)
+      : relation_(relation), arity_(arity) {
+      assert(relation != NULL);
+      if (relation_ == BDDConfig::one || 
+	  relation_ == BDDConfig::zero) {
+	cout << "Creating iterator on empty or full" << endl;
+      } else {
+	Cudd_Ref(relation_);
+      }
+    }
+    /// Copy constructor
+    BddIter(const BddIter& i) : relation_(i.relation_), arity_(i.arity_) {}
+    ~BddIter(void) {
+      assert(relation_ != NULL);
+      if (relation_ != BDDConfig::one &&
+	  relation_ != BDDConfig::zero)
+	Cudd_RecursiveDeref(BDDConfig::dd, relation_);
+    }
+    bool operator()(void) const {
+      return relation_ != BDDConfig::zero;
+    }
+    /// This is asingle pass iterator
+    pair<int,int> val(void) {
+      DdGen* gen;
+      const int cube_size = 1<<(BDDConfig::BBV+BDDConfig::BA);
+      const int tuple_size = 1<<BDDConfig::BA;
+      int *cube = (int*)malloc(sizeof(int) * cube_size);
+      int tuple[tuple_size];
+      CUDD_VALUE_TYPE val;
+     
+      
+      for(int k = 0; k < tuple_size; k++) tuple[k] = 0;
+
+      gen = Cudd_FirstCube(BDDConfig::dd,relation_,&cube,&val);
+      //Cudd_ForeachCube(BDDConfig::dd,relation_,gen,cube,val){
+      for(int i = cube_size -1; i>=0; i--){
+	if( (i & (tuple_size-1))<arity_){
+	  tuple[i&(tuple_size-1)] &=  
+	    ~(1<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA)));
+	  tuple[i&(tuple_size-1)] |= 
+	    (cube[i]&1)<<((1<<BDDConfig::BBV)-1-(i>>BDDConfig::BA));
+	}
+      }
+      /// Prepare the output
+      for(int j = 0; j < arity_; j++) {
+	cerr << tuple[j] << ",";
+      }
+      /// Affect the state of the iterator
+      
+      /// return t
+      return make_pair(1,1);
+    }
+    void operator++(void) {
+      assert(false);
+    }
+  };
 
 /// Class for Binary Decision Diagrams
 class Bdd {
 private:
+  friend class BddIter;
   enum BddTerm { Bdd_Zero, Bdd_One, Bdd_Unk};
   /// Root node of the representation
   DdNode *node_;
   /// Constructor from an existing node
-  Bdd(DdNode *n) : node_(n) {
+  explicit Bdd(DdNode *n) : node_(n) {
     if (node_ != NULL) Cudd_Ref(node_);
   }
   /// Construcotr for terminal \a t
-  Bdd(BddTerm t) {
+  explicit Bdd(BddTerm t) {
     // This initialization cannot be done with the previous constructor because
     // when terminal are created they cannot be referenced, otherwise it will
     // report referenced nodes before finishing the program.
@@ -131,6 +199,14 @@ public:
     Bdd tmp = difference(r);
     this->operator=(tmp);
   }
+  /// Return the number of minterms represented
+  int minterms(int a) const {
+    return 
+      Cudd_CountMinterm(BDDConfig::dd,node_,a<<BDDConfig::BBV);
+  }
+  BddIter begin(int a) {
+    return BddIter(node_,a);
+  }
   // Print: temporal
   void print(int a) const {
     if (node_ == CDD_ONE(BDDConfig::dd)) {
@@ -177,8 +253,7 @@ public:
         cerr << ">, ";
       }
     }
-    cerr << "}";
-    
+    cerr << "}"; 
   }
 };
   Bdd Bdd::one = Bdd(Bdd::Bdd_One);
@@ -198,6 +273,7 @@ public:
     }
     return f;
   }
+  
   
   /// Definition for ground relations
   class GRelation {
@@ -222,10 +298,16 @@ public:
       , maximum_(maximum){}
     /// Constructor of a ground relation from a set of tuples
     GRelation(int arity,const vector<pair<int,int> >& data) 
-      : representation_(Bdd::zero), arity_(arity) {
-      for (unsigned int i = 0; i < data.size(); i++)
+      : representation_(Bdd::zero), arity_(arity) 
+    {
+      int max = 0;
+      for (unsigned int i = 0; i < data.size(); i++) {
+	assert(data[i].first >= 0 && data[i].second >= 0);
 	representation_.unionAssign(addPair(data[i]));
-      // TODO: compute the max_
+	if (data[i].first > max) max = data[i].first;
+	if (data[i].second > max) max = data[i].second;
+      }
+      maximum_ = max;
     }
     /// Constructor for a full ground relation of arity \a arity and
     /// maximum element \a maximum
@@ -283,7 +365,7 @@ public:
 int main(void) {
   using namespace BDDImpl;
   {
-    /*
+    
     Bdd r(Bdd::one);
     // add 0,1
     Bdd f(createPath(0,0));
@@ -304,12 +386,15 @@ int main(void) {
     r.unionAssign(s);
     r.print(2);
     
-    //r.intersectAssign(s.complement());
-    r.differenceAssign(s);
     cerr << endl;
-    r.print(2);
-    */
+    BddIter it = r.begin(2);
+    it.val();
+    //r.intersectAssign(s.complement());
+    //r.differenceAssign(s);
+    //cerr << endl;
+    //r.print(2);
     
+    /*    
     vector<pair<int,int> > data(4);
     data.push_back(make_pair(0,0));
     data.push_back(make_pair(0,1));
@@ -322,10 +407,11 @@ int main(void) {
     rr.print(); cerr << endl;
     for (unsigned int i = 0; i < data.size(); i++)
       assert(rr.in(data[i]));
-    assert(rr.in(make_pair(2,3)));
+    //assert(rr.in(make_pair(2,3)));
     ss.print();
     //cout << "References in the Bdd manager (before): "
     //	 << BDDConfig::references() << endl;
+    */
   }
   cout << "References before exit: " << BDDConfig::references() << endl;
   //Cudd_Quit(BDDConfig::dd);
