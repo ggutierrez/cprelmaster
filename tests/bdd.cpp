@@ -74,6 +74,15 @@ int BDDConfig::BA = 3;
     int arity_;
     /// Undefined default constructor
     BddIter(void);
+    /// Removes a tuple from the iterated relation
+    void remove(const vector<int>& tuple) {
+      DdNode *i = Cudd_Not(encode(tuple));
+      DdNode *tmp = Cudd_bddAnd(BDDConfig::dd,relation_,i);
+      Cudd_Ref(tmp);
+      Cudd_RecursiveDeref(BDDConfig::dd,i);
+      Cudd_RecursiveDeref(BDDConfig::dd,relation_);
+      relation_ = tmp;
+    }
   public:
     BddIter(DdNode *relation, int arity)
       : relation_(relation), arity_(arity) {
@@ -126,13 +135,7 @@ int BDDConfig::BA = 3;
 	cerr << tuple[j] << ",";
       }
       /// Affect the state of the iterator
-      DdNode *i = Cudd_Not(encode(out));
-      DdNode *tmp = Cudd_bddAnd(BDDConfig::dd,relation_,i);
-      Cudd_Ref(tmp);
-      Cudd_RecursiveDeref(BDDConfig::dd,i);
-      Cudd_RecursiveDeref(BDDConfig::dd,relation_);
-      relation_ = tmp;
-      
+      remove(out);
       /// return t
       return out;
     }
@@ -148,7 +151,6 @@ private:
   enum BddTerm { Bdd_Zero, Bdd_One, Bdd_Unk};
   /// Root node of the representation
   DdNode *node_;
-public:
   /// Constructor from an existing node
   explicit Bdd(DdNode *n) : node_(n) {
     if (node_ != NULL) Cudd_Ref(node_);
@@ -165,6 +167,7 @@ private:
     default:
       assert(false); break;
     }
+    //Cudd_Ref(node_);
   }
 
 public:
@@ -417,11 +420,15 @@ int main(void) {
     
     GRelation rr(2,data);
     BddIter it(rr.tuples());
+    BddIter it2(rr.tuples());
+
     it.val();
     it.val();
     it.val();
     it.val();
     cout << "Valid? " << it() << endl;
+    it2.val();
+    cout << "Valid? " << it2() << endl;
   }
   cout << "References before exit: " << BDDConfig::references() << endl;
   //Cudd_Quit(BDDConfig::dd);
