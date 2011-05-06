@@ -25,7 +25,7 @@ endif()
 # Additional compiler flags
 ##########################################################################
 add_definitions("-Wall -Wextra")
-add_definitions("-O0 -g")
+#add_definitions("-O0 -g")
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -149,6 +149,22 @@ add_library(mpr ${MTR_SRCS})
 add_library(epd ${EPD_SRCS})
 
 set(CUDD_LIBS cudd util st mpr epd)
+##########################################################################
+# Domain representation using BDDs
+##########################################################################
+set(BDDDOMAIN_SRCS 
+  bdddomain/relation.cpp
+)
+add_library(bdddomain ${BDDDOMAIN_SRCS})
+target_link_libraries(bdddomain ${CUDD_LIBS})
+##########################################################################
+# BDDDomain Installation
+##########################################################################
+install(TARGETS bdddomain
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
 ##########################################################################
 # Cdds examples
 ##########################################################################
@@ -289,6 +305,5 @@ swig_link_libraries(gelisp cxxgelisp gecodecprel ${Gecode_LIBRARIES})
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
 
-
-add_executable(bdd tests/bdd.cpp)
-target_link_libraries(bdd ${CUDD_LIBS})
+add_executable(domain-test tests/domain-test.cc)
+target_link_libraries(domain-test bdddomain)
