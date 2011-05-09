@@ -6,7 +6,7 @@
 #include <cuddCdd.h>
 #include <cprel/tuple.hh>
 
-namespace CPRel { namespace VarImpl {
+namespace MPG { namespace CPRel { namespace VarImpl {
 
 class BddManager;
 typedef boost::shared_ptr<BddManager> PManager;
@@ -105,7 +105,7 @@ public:
   /// \name Constructors, destructor and assignement
   //@{
   /// Default constructor for an empty relation of arity \a a
-  RelationImpl(int a);
+  explicit RelationImpl(int a);
   /// Copy constructor
   RelationImpl(const RelationImpl& r);
   /// Asignement operator
@@ -239,6 +239,6 @@ std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
   os << "}";
   return os;
 }
-}}
+}}}
 
 #endif

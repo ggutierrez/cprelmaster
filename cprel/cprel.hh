@@ -1,10 +1,12 @@
-#ifndef __MPG_INT_HH__
-#define __MPG_INT_HH__
+#ifndef __CPREL_CPREL_HH__
+#define __CPREL_CPREL_HH__
+
 #include <iostream>
 #include <sstream>
 #include <climits>
 
 #include <gecode/kernel.hh>
+#include <cprel/grelation.hh>
 
 using Gecode::Advisor;
 using Gecode::ConstView;
@@ -61,38 +63,55 @@ public:
   }
 };
 
+/**
+ * \brief Relation domain.
+ *
+ * A relation domain is approximated by means of a greatest lower
+ * bound \c glb and a least upper bound \c lub.
+ */
 class CPRelVarImp : public CPRelVarImpBase {
 protected:
-  int l, u;
+  /// Greatest lower bound
+  GRelation glb_;
+  /// Least upper bound
+  GRelation lub_;
 public:
-  CPRelVarImp(Space& home, int min, int max)
-    : CPRelVarImpBase(home), l(min), u(max) {}
+  /// \a Constructors and disposer
+  //@{
+  /// Constructor for a variable with empty lower bound and
+  CPRelVarImp(Space& home, const GRelation& l, const GRelation& u)
+    : CPRelVarImpBase(home), glb_(l), lub_(u) {
+    /// assert throw an exception if glb \notin lub
+  }
   /// Dispose
   void dispose(Space&) {
-    std::cout << "Disposer was called" << std::endl;
+    glb_.~GRelation();
+    lub_.~GRelation();
   }
   // access operations
-  int min(void) const {
-    return l;
+  GRelation glb(void) const {
+    return glb_;
   }
-  int max(void) const {
-    return u;
+  GRelation lub(void) const {
+    return lub_;
   }
   // assignment test
   bool assigned(void) const {
-    return l == u;
+    return glb_.eq(lub_);
   }
   // modification operations
-  ModEvent lq(Space& home, int n) {
-    if (n >= u) return ME_CPREL_NONE;
-    if (n < l) return ME_CPREL_FAILED;
-    CPRelDelta d(n+1,u); u = n;
+  ModEvent include(Space& home, const GRelation& r) {
+    assert(false);
+//    if (n >= u) return ME_CPREL_NONE;
+//    if (n < l) return ME_CPREL_FAILED;
+    CPRelDelta d(1,2);
     return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MAX, d);
   }
-  ModEvent gq(Space& home, int n) {
-    if (n <= l) return ME_CPREL_NONE;
-    if (n > u) return ME_CPREL_FAILED;
-    CPRelDelta d(l,n-1); l = n;
+  ModEvent exclude(Space& home, const GRelation& r) {
+    assert(false);
+//    if (n <= l) return ME_CPREL_NONE;
+//    if (n > u) return ME_CPREL_FAILED;
+    CPRelDelta d(1,2);
     return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MIN, d);
   }
   // subscriptions
@@ -111,7 +130,8 @@ public:
   }
   // copying
   CPRelVarImp(Space& home, bool share, CPRelVarImp& y)
-    : CPRelVarImpBase(home,share,y), l(y.l), u(y.u) {}
+    : CPRelVarImpBase(home,share,y), glb_(y.glb_), lub_(y.lub_) {}
+
   CPRelVarImp* copy(Space& home, bool share) {
     if (copied())
       return static_cast<CPRelVarImp*>(forward());
@@ -143,20 +163,20 @@ public:
     : VarImpVar<CPRel::CPRelVarImp>(y) {}
 
   // variable creation
-  CPRelVar(Space& home, int min, int max)
+  CPRelVar(Space& home, const CPRel::GRelation& l, const CPRel::GRelation& u)
     : VarImpVar<CPRel::CPRelVarImp>
-      (new (home) CPRel::CPRelVarImp(home,min,max)) {
-    if ((min < CPRel::Limits::min) || (max > CPRel::Limits::max))
-      throw CPRel::OutOfLimits("CPRelVar::CPRelVar");
-    if (min > max)
-      throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
+      (new (home) CPRel::CPRelVarImp(home,l,u)) {
+//    if ((min < CPRel::Limits::min) || (max > CPRel::Limits::max))
+//      throw CPRel::OutOfLimits("CPRelVar::CPRelVar");
+//    if (min > max)
+//      throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }
   // access operations
-  int min(void) const {
-    return x->min();
+  CPRel::GRelation glb(void) const {
+    return x->glb();
   }
-  int max(void) const {
-    return x->max();
+  CPRel::GRelation lub(void) const {
+    return x->lub();
   }
 };
 
@@ -166,9 +186,10 @@ operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& x) {
   std::basic_ostringstream<Char,Traits> s;
   s.copyfmt(os); s.width(0);
   if (x.assigned())
-    s << x.min();
+    s << "is assigned "; // x.min();
   else
-    s << '[' << x.min() << ".." << x.max() << ']';
+    s << "is not assigned ";
+    //s << '[' << x.min() << ".." << x.max() << ']';
   return os << s.str();
 }
 
@@ -219,10 +240,11 @@ public:
   explicit CPRelVarArgs(int n) : VarArgArray<CPRelVar>(n) {}
   CPRelVarArgs(const CPRelVarArgs& a) : VarArgArray<CPRelVar>(a) {}
   CPRelVarArgs(const VarArray<CPRelVar>& a) : VarArgArray<CPRelVar>(a) {}
-  CPRelVarArgs(Space& home, int n, int min, int max)
+  CPRelVarArgs(Space& home, int n,
+               const CPRel::GRelation& l, const CPRel::GRelation& u)
     : VarArgArray<CPRelVar>(n) {
     for (int i=0; i<n; i++)
-      (*this)[i] = CPRelVar(home,min,max);
+      (*this)[i] = CPRelVar(home,l,u);
   }
 };
 
@@ -231,10 +253,11 @@ public:
   CPRelVarArray(void) {}
   CPRelVarArray(const CPRelVarArray& a)
     : VarArray<CPRelVar>(a) {}
-  CPRelVarArray(Space& home, int n, int min, int max)
+  CPRelVarArray(Space& home, int n,
+                const CPRel::GRelation& l, const CPRel::GRelation& u)
     : VarArray<CPRelVar>(home,n) {
     for (int i=0; i<n; i++)
-      (*this)[i] = CPRelVar(home,min,max);
+      (*this)[i] = CPRelVar(home,l,u);
   }
 };
 
@@ -253,18 +276,18 @@ public:
   CPRelView(CPRelVarImp* y)
     : VarImpView<CPRelVar>(y) {}
   // access operations
-  int min(void) const {
-    return x->min();
+  GRelation glb(void) const {
+    return x->glb();
   }
-  int max(void) const {
-    return x->max();
+  GRelation lub(void) const {
+    return x->lub();
   }
   // modification operations
-  ModEvent lq(Space& home, int n) {
-    return x->lq(home,n);
+  ModEvent include(Space& home, const GRelation& r) {
+    return x->include(home,r);
   }
-  ModEvent gq(Space& home, int n) {
-    return x->gq(home,n);
+  ModEvent exclude(Space& home, const GRelation& r) {
+    return x->exclude(home,r);
   }
   // delta information
   int min(const Delta& d) const {
@@ -281,9 +304,10 @@ operator<<(std::basic_ostream<Char,Traits>& os, const CPRelView& x) {
   std::basic_ostringstream<Char,Traits> s;
   s.copyfmt(os); s.width(0);
   if (x.assigned())
-    s << x.min();
+    s << " is assigned view "; //s << x.min();
   else
-    s << '[' << x.min() << ".." << x.max() << ']';
+    s << " not assigned view ";
+    //s << '[' << x.min() << ".." << x.max() << ']';
   return os << s.str();
 }
 

@@ -2,7 +2,7 @@
 #include <bdddomain/rel-impl.hh>
 
 
-namespace CPRel { namespace VarImpl {
+namespace MPG { namespace CPRel { namespace VarImpl {
 PManager BddManager::_instance;
 
 /// Function to return the manager
@@ -236,6 +236,6 @@ void RelationImplIter::remove(const Tuple& t) {
   relation_ = tmp;
 }
 
-}}
+}}}
 
 

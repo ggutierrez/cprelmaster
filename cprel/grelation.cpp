@@ -1,7 +1,7 @@
 #include <cprel/grelation.hh>
 #include <bdddomain/rel-impl.hh>
 
-namespace CPRel {
+namespace MPG { namespace CPRel {
 
 using namespace VarImpl;
 
@@ -35,12 +35,21 @@ double GRelation::cardinality(void) const {
   return pimpl_->cardinality();
 }
 
+bool GRelation::eq(const GRelation& r) const {
+  return *pimpl_ == *(r.pimpl_);
+}
+
 bool GRelation::unionAssign(const GRelation &r) {
   RelationImpl old = *pimpl_;
   pimpl_->add(*(r.pimpl_));
   return old != *pimpl_;
 }
 
+bool GRelation::differenceAssign(const GRelation &r) {
+  RelationImpl old = *pimpl_;
+  pimpl_->remove(*(r.pimpl_));
+  return old != *pimpl_;
+}
 
 GRelation create(const std::vector<Tuple>& dom) {
   std::vector<Tuple>::const_iterator c = dom.begin();
@@ -48,4 +57,4 @@ GRelation create(const std::vector<Tuple>& dom) {
   for (; c != dom.end(); ++c) r.add(*c);
   return r;
 }
-}
+}}

@@ -252,7 +252,7 @@ set(CPREL_SRCS
   cprel/main.cpp
 )
 add_library(gecodecprel ${CPREL_SRCS})
-target_link_libraries(gecodecprel ${Gecode_LIBRARIES})
+target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
 ##########################################################################
 # Installation                                                           #
 ##########################################################################
@@ -337,4 +337,4 @@ add_executable(domain-test tests/domain-test.cc)
 target_link_libraries(domain-test bdddomain)
 
 add_executable(grel-test tests/grel-test.cpp)
-target_link_libraries(grel-test bdddomain gecodecprel)
+target_link_libraries(grel-test gecodecprel)

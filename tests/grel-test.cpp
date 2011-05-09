@@ -8,7 +8,7 @@ using std::endl;
 using std::vector;
 
 int main(void) {
-  using namespace CPRel;
+  using namespace MPG::CPRel;
   vector<Tuple> x0;
   x0.reserve(4);
   x0.push_back(Tuple(2,3));
@@ -27,7 +27,7 @@ int main(void) {
   GRelation r(create(x0));
   GRelation s(create(y0));
 
-  cout << r.unionAssign(s) << endl;
+  cout << r.differenceAssign(s) << endl;
   cout << "new card " << r.cardinality() << endl;
 
 

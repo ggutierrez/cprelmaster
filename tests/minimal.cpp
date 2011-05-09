@@ -1,35 +1,40 @@
 #include <gecode/search.hh>
 #include <cprel/cprel.hh>
-
-/*
- * The Golomb ruler script
- *
- */
+#include <vector>
 
 using namespace Gecode;
 
 using namespace MPG;
-using namespace CPRel;
+using namespace MPG::CPRel;
 
 class GolombRuler : public Gecode::Space {
 protected:
-  static const int n = 2;
-  CPRelVarArray m;
+  //static const int n = 2;
+  //CPRelVarArray m;
+  CPRelVar r;
 public:
-  GolombRuler(void)
-    : m(*this,n,0,5) {
+  GolombRuler(void)  {
+    vector<Tuple> rl;
+    rl.reserve(4);
+    rl.push_back(Tuple(2,3)); rl.push_back(Tuple(0,0));
+    rl.push_back(Tuple(2,1)); rl.push_back(Tuple(1,1));
 
-    branch(*this, m);
+    CPRel::GRelation lb(2); lb.add(Tuple(0,0));
+    CPRel::GRelation ub(CPRel::create(rl));
+
+    r = CPRelVar(*this,lb,ub);
+
+    //branch(*this, m);
   }
   virtual void constrain(const Gecode::Space&) {
 
   }
   void print(void) const {
-    std::cout << "\tm[" << m.size() << "] = " << m << std::endl;
+    std::cout << "\tm[] = " << std::endl;
   }
   GolombRuler(bool share, GolombRuler& s)
     : Gecode::Space(share,s) {
-    m.update(*this, share, s.m);
+    r.update(*this, share, s.r);
   }
   virtual Space* copy(bool share) {
     return new GolombRuler(share,*this);

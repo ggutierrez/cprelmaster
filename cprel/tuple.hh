@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 
-namespace CPRel {
+namespace MPG { namespace CPRel {
 
 using std::vector;
 
@@ -74,5 +74,5 @@ std::ostream& operator << (std::ostream& os, const Tuple& t) {
   return os;
 }
 
-}
+}}
 #endif
