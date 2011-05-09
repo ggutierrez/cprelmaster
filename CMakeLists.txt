@@ -150,10 +150,23 @@ add_library(epd ${EPD_SRCS})
 
 set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
+# Boost
+##########################################################################
+find_package( Boost 1.36.0)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+else()
+  message(FATAL_ERROR "Boost is needed to build this application")
+endif()
+##########################################################################
 # Domain representation using BDDs
 ##########################################################################
-set(BDDDOMAIN_SRCS 
+set(BDDDOMAIN_SRCS
   bdddomain/relation.cpp
+  bdddomain/rel-impl.cpp
+  bdddomain/rel-impl.hh
+
+  cprel/tuple.hh
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
