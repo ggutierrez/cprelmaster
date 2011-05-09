@@ -245,6 +245,9 @@ include_directories(${Gecode_INCLUDE_DIRS})
 # Relation constraint system
 ##########################################################################
 set(CPREL_SRCS
+  cprel/tuple.hh
+  cprel/grelation.cpp
+  cprel/grelation.hh
   cprel/cprel.hh
   cprel/main.cpp
 )
