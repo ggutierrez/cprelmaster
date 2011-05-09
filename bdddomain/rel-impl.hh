@@ -7,16 +7,17 @@
 #include <cprel/tuple.hh>
 
 namespace CPRel { namespace VarImpl {
+
+class BddManager;
+typedef boost::shared_ptr<BddManager> PManager;
 /**
  * \brief Class to handle the creation and destruction of Cudd related objects.
  *
  * The idea of having this class is to create a global object that
- * is in charge of the resource deallocation of Cudd entities.
+ * is in charge of the resource deallocation of Cudd entities. For
+ * this reason only one manager is used and this class implements the
+ * singleton pattern.
  */
-
-class BddManager;
-typedef boost::shared_ptr<BddManager> PManager;
-
 class BddManager : private boost::noncopyable {
 private:
   /// Only one single instance of this class is allowed at run time
@@ -29,6 +30,8 @@ private:
   DdNode *zero_;
   int BBV_;
   int  BA_;
+  /// \name Constructors and destructor
+  //@{
   /// Constructor that initializes the BDD manager of CUDD
   BddManager (void)
     : dd(Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
@@ -38,33 +41,42 @@ private:
   {
     std::cout << "Created bdd manager" << std::endl;
   }
+  /// Creates an instace of this object
+  static void create() {
+    _instance.reset( new BddManager, &deleter );
+  }
   /// Destructor that releases the BDD manager of CUDD
   ~BddManager (void) {
     std::cout << "Called destructor: " << references() << std::endl;
     Cudd_Quit(dd);
   }
+  //@}
+  /// Method called by the managed pointer when destructed
   static void deleter(BddManager *ptr) {
     delete ptr;
-  }
-  static void create() {
-    _instance.reset( new BddManager, &deleter );
   }
   int references(void) {
     return Cudd_CheckZeroRef(dd);
   }
 public:
+  /// Returns an instance of the manager
   static PManager instance(void) {
     if (_instance.get() != NULL)
       return _instance;
     create();
     return _instance;
   }
+  /// \name Access
+  //@{
+  /// Returns the bdd manager
   DdManager* manager(void) {
     return dd;
   }
+  /// Returns the constant \c true
   DdNode* one(void) {
     return one_;
   }
+  /// Returns the constant \c false
   DdNode* zero(void) {
     return zero_;
   }
@@ -74,6 +86,7 @@ public:
   int ba(void) {
     return BA_;
   }
+  //@}
 };
 
 class RelationImplIter;
@@ -89,6 +102,8 @@ private:
   /// Constructor from anexisting bdd
   RelationImpl(DdNode *n, int a);
 public:
+  /// \name Constructors, destructor and assignement
+  //@{
   /// Default constructor for an empty relation of arity \a a
   RelationImpl(int a);
   /// Copy constructor
@@ -97,8 +112,13 @@ public:
   RelationImpl& operator=(const RelationImpl& right);
   /// Swap
   void swap(const RelationImpl& r);
+  /// Create a full relation of arity \a a
+  static RelationImpl create_full(int a);
   /// Destructor
   ~RelationImpl(void);
+  //@}
+  /// \name Modification
+  //@{
   /// Adds tuple \a t to the relation.
   void add(const Tuple& t);
   /// Removes tuple \a t from the relation
@@ -109,10 +129,13 @@ public:
   void remove(const RelationImpl& r);
   /// Intersects the relation with relation \a r
   void intersect(const RelationImpl& r);
-  /// Tests if relation \a r represents the same elements
-  bool equal(const RelationImpl& r) const;
   /// Complement the represented relation
   void complement(void);
+  //@}
+  /// \name Information
+  //@{
+  /// Tests if relation \a r represents the same elements
+  bool equal(const RelationImpl& r) const;
   /// Returns the current cardinality of the relation
   double cardinality(void) const;
   /// Returns the arity of the relation
@@ -121,10 +144,12 @@ public:
   bool empty(void) const;
   /// Tests if the represented relation is the universe
   bool universe(void) const;
+  //@}
+  /// \name Iteration
+  //@{
   /// Returns an iterator on the tuples of the relation
   RelationImplIter tuples(void) const;
-  /// Create a full relation of arity \a a
-  static RelationImpl create_full(int a);
+  //@}
 };
 
 /// Tests whether two relations are the same

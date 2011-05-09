@@ -18,6 +18,8 @@ private:
   /// Avoid default construction
   GRelation(void);
 public:
+  /// \name Constructors, destructors and assignment
+  //@{
   /// Constructor for an empty relation of arity \a a
   GRelation(int a);
   /// Copy constructor
@@ -26,6 +28,7 @@ public:
   GRelation& operator=(GRelation& right);
   /// Destructor
   ~GRelation(void);
+  //@}
   /// Adds a tuple \a t to the relation
   bool add(const Tuple& t);
   /// Returns the arity of the relation
