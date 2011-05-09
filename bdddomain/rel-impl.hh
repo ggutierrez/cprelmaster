@@ -76,6 +76,7 @@ public:
   }
 };
 
+class RelationImplIter;
 /// Stores the representation of a relation using BDDs
 class RelationImpl {
 private:
@@ -92,6 +93,8 @@ public:
   RelationImpl(const RelationImpl& r);
   /// Asignement operator
   RelationImpl& operator=(const RelationImpl& right);
+  /// Swap
+  void swap(const RelationImpl& r);
   /// Destructor
   ~RelationImpl(void);
   /// Adds tuple \a t to the relation.
@@ -110,6 +113,8 @@ public:
   double cardinality(void) const;
   /// Returns the arity of the relation
   int arity(void) const;
+  /// Returns an iterator on the tuples of the relation
+  RelationImplIter tuples(void) const;
 };
 
 /// Returns the union of relations \a r and \a s
@@ -138,6 +143,38 @@ RelationImpl intersect(const RelationImpl& r, const RelationImpl& s) {
   i.intersect(s);
   return i;
 }
+
+/// Returns the complement of relation \a r
+inline
+RelationImpl complement(const RelationImpl& r) {
+  RelationImpl c(r);
+  c.complement();
+  return c;
+}
+
+/// Class to iterate in tuples of a relation implementation
+class RelationImplIter {
+private:
+  /// The BDD with the representation of the relation being iterated
+  DdNode *relation_;
+  /// The arity of the relation
+  int arity_;
+  /// Avoid default construction
+  RelationImplIter(void);
+  /// Removes \a t from the iterated relation
+  void remove(const Tuple& t);
+public:
+  /// Constructor
+  RelationImplIter(DdNode *rel, int a);
+  /// Copy constructor
+  RelationImplIter(const RelationImplIter&);
+  /// Destructor
+  ~RelationImplIter(void);
+  /// Return a current tuple
+  Tuple val(void);
+  /// Tests whether the iterator is still valid
+  bool operator()(void) const;
+};
 
 }}
 
