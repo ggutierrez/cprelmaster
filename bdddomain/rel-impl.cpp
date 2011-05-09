@@ -166,7 +166,7 @@ void RelationImpl::intersect(const RelationImpl& r) {
 
 bool RelationImpl::equal(const RelationImpl& r) const {
   if (arity_ != r.arity_) return false;
-  return bdd_ != r.bdd_;
+  return bdd_ == r.bdd_;
 }
 
 void RelationImpl::complement(void) {

@@ -127,6 +127,18 @@ public:
   static RelationImpl create_full(int a);
 };
 
+/// Tests whether two relations are the same
+inline
+bool operator==(const RelationImpl& r, const RelationImpl& s) {
+  return r.equal(s);
+}
+
+/// Tests whether two relations are different
+inline
+bool operator!=(const RelationImpl& r, const RelationImpl& s) {
+  return !r.equal(s);
+}
+
 /// Returns the union of relations \a r and \a s
 inline
 RelationImpl Union(const RelationImpl& r, const RelationImpl& s) {
@@ -152,6 +164,13 @@ RelationImpl intersect(const RelationImpl& r, const RelationImpl& s) {
   RelationImpl i(r);
   i.intersect(s);
   return i;
+}
+
+/// Tests if relation \a r is a subset of relation \a s
+inline
+bool subset(const RelationImpl& r, const RelationImpl& s) {
+  assert(r.arity() == s.arity());
+  return intersect(r,s) == r;
 }
 
 /// Returns the complement of relation \a r

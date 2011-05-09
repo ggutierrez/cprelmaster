@@ -5,19 +5,6 @@
 
 using std::cout;
 using std::endl;
-//using std::ostream;
-//using std::vector;
-
-//ostream& operator<<(ostream& os, const vector<int>& tuple) {
-//  os << "<";
-//  for (unsigned int i = 0; i < tuple.size(); i++) {
-//    os << tuple[i];
-//    if (i != tuple.size()-1)
-//      os << ",";
-//  }
-//  os << ">";
-//  return os;
-//}
 
 int main(void) {
   using namespace CPRel;
@@ -25,65 +12,61 @@ int main(void) {
 
   {
 
-    Tuple a(2,3);
-    Tuple b(0,0);
     RelationImpl r(2);
-    r.add(a);
-    r.add(b);
+    RelationImpl empty(2);
 
-    Tuple c(5,4);
-    Tuple d(0,0);
+    assert(r == empty);
+
+    RelationImpl x = intersect(empty,r);
+    assert(x==empty);
+    assert(x.cardinality()==0);
+
+    RelationImpl full = RelationImpl::create_full(2);
+    assert(complement(full)==empty);
+
+    r.add(Tuple(2,3));
+    assert(r.cardinality()==1);
+
+    assert(subset(empty,r));
+    assert(!subset(r,empty));
+
     RelationImpl s(2);
-    s.add(c);
-    s.add(d);
+    s.add(Tuple(0,0));
+    assert(intersect(r,s)==empty);
+    s.add(r);
+    assert(s.arity()==2);
+    assert(intersect(s,r).cardinality()==1);
+    assert(intersect(s,r)==r);
+    assert(subset(r,s));
+    assert(r!=s);
+/*
+    RelationImpl inter(intersect(s,r));
+    for (RelationImplIter it = inter.tuples(); it();) {
+      cout << "Tuple " << it.val() << endl;
+    }
+*/
 
-    cout << "Cardinality r" << r.cardinality() << endl;
-    cout << "Cardinality s " << s.cardinality() << endl;
-    //s.remove(r);
-    RelationImpl t = Union(r,s);
-    t.complement();
-    cout << "Cardinality t " << t.cardinality() << endl;
-    //r.remove(a);
-    //cout << "Cardinality " << r.cardinality() << endl;
+    //    cout << " Card inter " << x.cardinality() << endl;
 
-//    DdNode *f = one();
-    //DdNode * x = encode(3,0);
-    //DdNode * y = encode(2,1);
-//    DdNode *xy = encode(a);
-//    Cudd_RecursiveDeref(dd(),xy);
+//    cout << "Intersect card " << intersect(s,r).cardinality() << endl;
+//
+//    cout << "Cardinality of full " << full.cardinality() << endl;
+    //cout << "Subset empty of r? " << subset(empty,r) << endl;
+//    cout << "Subset r of empty? " << subset(r,empty) << endl;
 
+    //cout << "Is really empty? " << empty.empty() << endl;
+//    RelationImplIter it(empty.tuples());
+//    cout << "Valid? " << it() << endl;
 
-    //  BddManager::instance();
+//    RelationImplIter it2(r.tuples());
+//    cout << "Valid 2 ? " << it2() << endl;
+//    cout << "it2 " << it2.val() << endl;
+//    cout << "Valid 2 ? " << it2() << endl;
+//    cout << "it2 " << it2.val() << endl;
+//    cout << "Valid 2 ? " << it2() << endl;
+    //cout << a << endl;
+
   }
-//  CPRel::BDDImpl::BDDConfig::manager();
-//  CPRel::BDDImpl::BDDConfig::manager();
-  /*
-    vector<pair<int,int> > data(4);
-    data.push_back(make_pair(0,0));
-    data.push_back(make_pair(0,1));
-    data.push_back(make_pair(1,0));
-    data.push_back(make_pair(1,1));
-
-    GRelation rr(2,data);
-    rr.print(cerr);
-
-    BddIter it(rr.tuples());
-    for (; it(); )
-      cout << it.val() << endl;
-    */
-    /*
-    BddIter it2(rr.tuples());
-
-
-    it.val();
-    it.val();
-    it.val();
-    cout << "Valid? " << it() << endl;
-    it2.val();
-    cout << "Valid? " << it2() << endl;
-    */
-//}
-
 
   return 0;
 }
