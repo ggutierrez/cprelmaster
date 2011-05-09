@@ -66,6 +66,11 @@ DdNode* encode(const Tuple& tuple) {
   return f;
 }
 
+RelationImpl::RelationImpl(DdNode *n, int a)
+  : bdd_(n), arity_(a) {
+  Cudd_Ref(bdd_);
+}
+
 RelationImpl::RelationImpl(int a)
   : bdd_(zero()), arity_(a) {
   Cudd_Ref(bdd_);
@@ -82,6 +87,10 @@ RelationImpl& RelationImpl::operator=(const RelationImpl& right) {
   return *this;
 }
 
+RelationImpl RelationImpl::create_full(int a) {
+  return RelationImpl(one(),a);
+}
+
 void RelationImpl::swap(const RelationImpl& r) {
   Cudd_RecursiveDeref(dd(),bdd_);
   bdd_ = r.bdd_;
@@ -95,6 +104,14 @@ RelationImpl::~RelationImpl(void) {
 
 int RelationImpl::arity(void) const {
   return arity_;
+}
+
+bool RelationImpl::empty(void) const {
+  return bdd_ == zero();
+}
+
+bool RelationImpl::universe(void) const {
+  return bdd_ == one();
 }
 
 void RelationImpl::add(const Tuple& t) {
@@ -145,6 +162,11 @@ void RelationImpl::intersect(const RelationImpl& r) {
   Cudd_Ref(tmp);
   Cudd_RecursiveDeref(dd(),bdd_);
   bdd_=tmp;
+}
+
+bool RelationImpl::equal(const RelationImpl& r) const {
+  if (arity_ != r.arity_) return false;
+  return bdd_ != r.bdd_;
 }
 
 void RelationImpl::complement(void) {

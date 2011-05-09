@@ -86,6 +86,8 @@ private:
   int arity_;
   /// Avoid default construction
   RelationImpl(void);
+  /// Constructor from anexisting bdd
+  RelationImpl(DdNode *n, int a);
 public:
   /// Default constructor for an empty relation of arity \a a
   RelationImpl(int a);
@@ -107,14 +109,22 @@ public:
   void remove(const RelationImpl& r);
   /// Intersects the relation with relation \a r
   void intersect(const RelationImpl& r);
+  /// Tests if relation \a r represents the same elements
+  bool equal(const RelationImpl& r) const;
   /// Complement the represented relation
   void complement(void);
   /// Returns the current cardinality of the relation
   double cardinality(void) const;
   /// Returns the arity of the relation
   int arity(void) const;
+  /// Tests if the represented relation is empty
+  bool empty(void) const;
+  /// Tests if the represented relation is the universe
+  bool universe(void) const;
   /// Returns an iterator on the tuples of the relation
   RelationImplIter tuples(void) const;
+  /// Create a full relation of arity \a a
+  static RelationImpl create_full(int a);
 };
 
 /// Returns the union of relations \a r and \a s
