@@ -205,6 +205,15 @@ public:
   bool operator()(void) const;
 };
 
+inline
+std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
+  os << "{";
+  for (RelationImplIter it = r.tuples(); it();)
+    os << it.val() << " ";
+
+  os << "}";
+  return os;
+}
 }}
 
 #endif

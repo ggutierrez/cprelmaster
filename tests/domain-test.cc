@@ -39,33 +39,17 @@ int main(void) {
     assert(intersect(s,r)==r);
     assert(subset(r,s));
     assert(r!=s);
+
+    assert(subset(r,full));
+
+    cout << "Relation s " << s << endl;
+    cout << "Relation empty " << empty << endl;
 /*
-    RelationImpl inter(intersect(s,r));
+    RelationImpl inter(full);
     for (RelationImplIter it = inter.tuples(); it();) {
       cout << "Tuple " << it.val() << endl;
     }
 */
-
-    //    cout << " Card inter " << x.cardinality() << endl;
-
-//    cout << "Intersect card " << intersect(s,r).cardinality() << endl;
-//
-//    cout << "Cardinality of full " << full.cardinality() << endl;
-    //cout << "Subset empty of r? " << subset(empty,r) << endl;
-//    cout << "Subset r of empty? " << subset(r,empty) << endl;
-
-    //cout << "Is really empty? " << empty.empty() << endl;
-//    RelationImplIter it(empty.tuples());
-//    cout << "Valid? " << it() << endl;
-
-//    RelationImplIter it2(r.tuples());
-//    cout << "Valid 2 ? " << it2() << endl;
-//    cout << "it2 " << it2.val() << endl;
-//    cout << "Valid 2 ? " << it2() << endl;
-//    cout << "it2 " << it2.val() << endl;
-//    cout << "Valid 2 ? " << it2() << endl;
-    //cout << a << endl;
-
   }
 
   return 0;
