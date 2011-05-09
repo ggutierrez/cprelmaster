@@ -6,7 +6,7 @@
 #include <cuddCdd.h>
 #include <cprel/tuple.hh>
 
-namespace CPRel { namespace BDDImpl {
+namespace CPRel { namespace VarImpl {
 /**
  * \brief Class to handle the creation and destruction of Cudd related objects.
  *

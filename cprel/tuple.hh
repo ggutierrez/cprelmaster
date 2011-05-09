@@ -22,21 +22,21 @@ public:
   Tuple(void);
   /// Constructor for an empty tuple of \a k elements
   Tuple(int k) {
-    data_.resize(k);
+    data_.reserve(k);
     arity_ = k;
     // initialize all the elements to -1
-    for(int i = 0; i < arity_; i++) data_[i] = -1;
+    for(int i = 0; i < arity_; i++)
+      data_.push_back(-1);
   }
   /// Constructor for a binary tuple
-  Tuple(int a, int b) {
-    data_.resize(2);
-    data_[0] = a;
-    data_[1] = b;
-    arity_ = 2;
+  Tuple(int a, int b) : arity_(2) {
+    data_.reserve(2);
+    data_.push_back(a);
+    data_.push_back(b);
   }
   /// Copy constructor
   Tuple(const Tuple& t)
-    : data_(t.data_) {}
+    : data_(t.data_), arity_(t.arity_) {}
   /// Destructor
   ~Tuple(void) {}
   /// Access to the \a i element of the tuple
@@ -44,10 +44,10 @@ public:
     assert(i>=0 && i<arity_);
     return data_[i];
   }
-
-  int operator[](int i) const {
+  /// Access to the \a i element of the tuple
+  int at(int i) const {
     assert(i>=0 && i<arity_);
-    return data_[i];
+    return data_.at(i);
   }
 
   /// Arity of the tuple
@@ -66,7 +66,7 @@ inline
 std::ostream& operator << (std::ostream& os, const Tuple& t) {
   os << "[";
   for (int i = 0; i < t.arity(); i++) {
-    os << t[i];
+    os << t.at(i);
     if (i < t.arity()-1)
       os << ",";
   }

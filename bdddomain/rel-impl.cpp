@@ -1,9 +1,8 @@
 #include <iostream>
-#include <memory>
 #include <bdddomain/rel-impl.hh>
 
 
-namespace CPRel { namespace BDDImpl {
+namespace CPRel { namespace VarImpl {
 PManager BddManager::_instance;
 
 /// Function to return the manager
