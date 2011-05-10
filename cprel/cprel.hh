@@ -80,11 +80,7 @@ public:
   //@{
   /// Constructor for a variable with empty lower bound and
   CPRelVarImp(Space& home, const GRelation& l, const GRelation& u)
-    : CPRelVarImpBase(home), glb_(l), lub_(u) {
-
-    std::cout << "Created variable implementation" << std::endl;
-    /// assert throw an exception if glb \notin lub
-  }
+    : CPRelVarImpBase(home), glb_(l), lub_(u) {}
   /// Resources disposal
   void dispose(Space&) {
 //    std::cout << "Starting disposal" << std::endl;
@@ -114,9 +110,7 @@ public:
   ModEvent include(Space& home, const GRelation& r) {
     if (r.superset(lub_)) return ME_CPREL_FAILED;
     if (r.subsetEq(glb_)) return ME_CPREL_NONE;
-    std::cout << "Modification will take place" << std::endl;
     glb_.unionAssign(r);
-
     CPRelDelta d(1,2);
     return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MIN, d);
   }
@@ -128,7 +122,6 @@ public:
     if (!r.disjoint(glb_)) return ME_CPREL_FAILED;
     if (r.disjoint(lub_)) return ME_CPREL_NONE;
     lub_.differenceAssign(r);
-
     CPRelDelta d(1,2);
     return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MAX, d);
   }
@@ -197,7 +190,6 @@ public:
   CPRelVar(Space& home, const CPRel::GRelation& l, const CPRel::GRelation& u)
     : VarImpVar<CPRel::CPRelVarImp>
       (new (home) CPRel::CPRelVarImp(home,l,u)) {
-    std::cout << "Created variable" << std::endl;
     if (!l.subsetEq(u))
       throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }

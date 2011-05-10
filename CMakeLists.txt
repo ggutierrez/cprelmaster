@@ -256,6 +256,7 @@ else()
   #list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_GRAPH_VARS  -DGECODE_HAS_VAR_DISPOSE")
   #list(APPEND CONFIGURE_OPTIONS "--with-vis=/home/gg1/Work/temp-build/graph-vars/graph.vis")
 
+  list(APPEND CONFIGURE_OPTIONS "--disable-gist")
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
@@ -264,7 +265,7 @@ else()
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j3
+    BUILD_COMMAND make -j4
     INSTALL_COMMAND make install
   )
 endif()

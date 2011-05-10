@@ -47,13 +47,13 @@ public:
     return new (home) NoneMin(home,share,*this);
   }
   // status
-  virtual bool status(const Space& home) const {
+  virtual bool status(const Space&) const {
     if (!x_.assigned())
       return true;
     return false;
   }
   // choice
-  virtual Choice* choice(Space& home) {
+  virtual Choice* choice(Space&) {
     GRelationIter it(x_.lub().difference(x_.glb()));
     assert(it());
     return new RelChoice(*this,it.val());

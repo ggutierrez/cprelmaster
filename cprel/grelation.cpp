@@ -8,9 +8,9 @@ using namespace VarImpl;
 GRelation::GRelation(Impl impl)
   : pimpl_(impl) {}
 
-GRelation::GRelation(int a) {
-  pimpl_ = boost::shared_ptr<RelationImpl>(new RelationImpl(a));
-}
+GRelation::GRelation(int a)
+  : pimpl_(Impl(new RelationImpl(a)))
+{}
 
 GRelation::GRelation(const GRelation &r)
   : pimpl_(new RelationImpl(*(r.pimpl_))) { }
@@ -21,9 +21,9 @@ GRelation& GRelation::operator =(GRelation& right) {
 }
 
 GRelation::~GRelation(void) {
-//  std::cerr << "Disposing grelation" << std::endl;
-  pimpl_.reset();
-//  std::cerr << "--Disposing grelation" << std::endl;
+//  std::cout << "Disposing grelation" << std::endl;
+  //pimpl_->~RelationImpl();
+//  std::cout << "--Disposing grelation" << std::endl;
 }
 
 bool GRelation::add(const Tuple &t) {

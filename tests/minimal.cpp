@@ -33,7 +33,6 @@ public:
   GolombRuler(bool share, GolombRuler& s)
     : Gecode::Space(share,s) {
     r.update(*this, share, s.r);
-    std::cerr << "Updated variable " << r << std::endl;
   }
   virtual Space* copy(bool share) {
     return new GolombRuler(share,*this);
@@ -42,20 +41,21 @@ public:
 
 int main(int, char**) {
   GolombRuler* g = new GolombRuler();
-  /*
+
   Gecode::BAB<GolombRuler> e(g);
   delete g;
   std::cout << "Search will start" << std::endl;
   while (Gecode::Space* s = e.next()) {
-    static_cast<GolombRuler*>(s)->print();
+    static_cast<GolombRuler*>(s)->print(std::cout);
     delete s;
   }
-  */
+
+  /*
   Gist::Print<GolombRuler> p("Print solution");
   Gist::Options o;
   o.inspect.click(&p);
   Gist::dfs(g,o);
   delete g;
-
+*/
   return 0;
 }

@@ -6,7 +6,7 @@
 using std::cout;
 using std::endl;
 
-int main2(void) {
+int main(void) {
   using namespace MPG::CPRel;
   using namespace MPG::CPRel::VarImpl;
 
@@ -54,7 +54,7 @@ int main2(void) {
 
   return 0;
 }
-
+/*
 int main(void) {
   using namespace MPG::CPRel;
   using namespace MPG::CPRel::VarImpl;
@@ -69,3 +69,4 @@ int main(void) {
   }
   return 0;
 }
+*/
