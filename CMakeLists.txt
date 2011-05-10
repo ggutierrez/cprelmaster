@@ -16,8 +16,6 @@ message(STATUS "Building for architecture: ${CMAKE_SYSTEM_PROCESSOR}")
 ##########################################################################
 if (CMAKE_SYSTEM_PROCESSOR MATCHES x86_64)
   add_definitions("-fPIC")
-  add_definitions("-mtune=native -DHAVE_IEEE_754")
-  add_definitions("-DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
 else()
   message(STATUS "This has not been built in any other architecture than x86_64")
 endif()
@@ -148,6 +146,10 @@ add_library(st ${ST_SRCS})
 add_library(mpr ${MTR_SRCS})
 add_library(epd ${EPD_SRCS})
 
+target_link_libraries(mpr util)
+target_link_libraries(epd util)
+target_link_libraries(st util)
+target_link_libraries(cudd util st mpr epd)
 ## NOTE about warnings:
 ## When CUDF is compiled by gcc there are a lot of warnings signaling
 ## unused parameters. As they can hide other important warnings of this project
@@ -158,10 +160,19 @@ add_library(epd ${EPD_SRCS})
 ##
 ## For gcc, the option -fdiagnostics-show-option shows the specific code of the
 ## diagnostic.
-
 set(CUDD_IGNORE_WARNINGS "-Wno-unused-parameter -Wno-sign-compare")
+## Building options extracted from original CUDD Makefile
+set(CUDD_BUILD_FLAGS)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES x86_64)
+  set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+else()
+  set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
+endif()
+set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} ${CUDD_IGNORE_WARNINGS}")
+
+message(STATUS "Cudd flags used: ${CUDD_BUILD_FLAGS}")
 set_target_properties(cudd util st mpr epd
-  PROPERTIES COMPILE_FLAGS "${CUDD_IGNORE_WARNINGS}")
+  PROPERTIES COMPILE_FLAGS "${CUDD_BUILD_FLAGS}")
 
 set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
@@ -240,6 +251,11 @@ else()
   list(APPEND CONFIGURE_OPTIONS "CXXFLAGS=-DGECODE_HAS_VAR_DISPOSE")
   list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_VAR_DISPOSE")
   list(APPEND CONFIGURE_OPTIONS "--with-vis=${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
+
+  #list(APPEND CONFIGURE_OPTIONS "CXXFLAGS=-DGECODE_HAS_GRAPH_VARS -DGECODE_HAS_VAR_DISPOSE")
+  #list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_GRAPH_VARS  -DGECODE_HAS_VAR_DISPOSE")
+  #list(APPEND CONFIGURE_OPTIONS "--with-vis=/home/gg1/Work/temp-build/graph-vars/graph.vis")
+
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
