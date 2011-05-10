@@ -7,8 +7,8 @@ using std::cout;
 using std::endl;
 
 int main(void) {
-  using namespace CPRel;
-  using namespace CPRel::BDDImpl;
+  using namespace MPG::CPRel;
+  using namespace MPG::CPRel::VarImpl;
 
   {
 
