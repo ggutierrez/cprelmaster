@@ -393,7 +393,7 @@ operator <<(std::basic_ostream<Char,Traits>& os, const ConstCPRelView& x) {
 
 }
 
-void branch(Gecode::Home home, const CPRelVarArgs& x);
+void branch(Gecode::Home home, CPRelVar x);
 }
 
 

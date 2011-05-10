@@ -21,13 +21,13 @@ public:
     CPRel::GRelation ub(CPRel::create(rl));
 
     r = CPRelVar(*this,lb,ub);
-    //    std::cerr << r << std::endl;
+    branch(*this,r);
   }
   virtual void constrain(const Gecode::Space&) {
 
   }
   void print(void) const {
-    std::cout << "\tm[] = " << r << std::endl;
+    std::cout << "\tsol " << r << std::endl;
   }
   GolombRuler(bool share, GolombRuler& s)
     : Gecode::Space(share,s) {
