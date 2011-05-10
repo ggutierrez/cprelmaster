@@ -16,10 +16,13 @@ class GRelationIter;
 class GRelation {
 private:
   friend class GRelationIter;
+  typedef boost::shared_ptr<VarImpl::RelationImpl> Impl;
   /// Relation storage
-  boost::shared_ptr<VarImpl::RelationImpl> pimpl_;
+  Impl pimpl_;
   /// Avoid default construction
   GRelation(void);
+  /// Constructor taking an implementation
+  explicit GRelation(Impl impl);
 public:
   /// \name Constructors, destructors and assignement
   //@{
@@ -55,10 +58,19 @@ public:
    */
   bool differenceAssign(const GRelation& r);
   //@}
+  /// \name Relation operations
+  //@{
+  /// Computes \f$ this \setminus r \f$
+  GRelation difference(const GRelation& r) const;
+  //@}
   /// \name Test operations
   //@{
-  /// Tests whether this relation is a subset of \a r
-  bool subset(const GRelation& r) const;
+  /// Tests \f$ this \subseteq r \f$
+  bool subsetEq(const GRelation& r) const;
+  /// Tests \f$ this \supset r \f$
+  bool superset(const GRelation& r) const;
+  /// Tests \f$ this \cap r = \emptyset \f
+  bool disjoint(const GRelation& r) const;
   /// Tests whether this represents the same relation as \a r
   bool eq(const GRelation& r) const;
   //@}

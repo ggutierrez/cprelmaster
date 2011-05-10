@@ -112,8 +112,8 @@ public:
    *
    */
   ModEvent include(Space& home, const GRelation& r) {
-    if (glb_.subset(r)) return ME_CPREL_NONE;
-    if (!r.subset(lub_)) return ME_CPREL_FAILED;
+    if (r.superset(lub_)) return ME_CPREL_FAILED;
+    if (r.subsetEq(glb_)) return ME_CPREL_NONE;
     std::cout << "Modification will take place" << std::endl;
     glb_.unionAssign(r);
 
@@ -125,11 +125,12 @@ public:
    *
    */
   ModEvent exclude(Space& home, const GRelation& r) {
-    assert(false);
-//    if (n <= l) return ME_CPREL_NONE;
-//    if (n > u) return ME_CPREL_FAILED;
+    if (!r.disjoint(glb_)) return ME_CPREL_FAILED;
+    if (r.disjoint(lub_)) return ME_CPREL_NONE;
+    lub_.differenceAssign(r);
+
     CPRelDelta d(1,2);
-    return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MIN, d);
+    return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MAX, d);
   }
   //@}
   /// \name Domain tests
@@ -197,7 +198,7 @@ public:
     : VarImpVar<CPRel::CPRelVarImp>
       (new (home) CPRel::CPRelVarImp(home,l,u)) {
     std::cout << "Created variable" << std::endl;
-    if (!l.subset(u))
+    if (!l.subsetEq(u))
       throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }
   // access operations
@@ -216,9 +217,9 @@ operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& x) {
   s.copyfmt(os); s.width(0);
   if (x.assigned())
     s << "val:{" << x.glb() << "}#" << "C";
-  else {
-    s << "glb:{" << x.glb() << "}, unk:{" << x.lub() << "}";
-  }
+  else
+    s << "glb:{" << x.glb() << "}, unk:{"
+      << x.lub().difference(x.glb()) << "}";
   return os << s.str();
 }
 

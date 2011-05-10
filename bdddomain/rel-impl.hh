@@ -193,11 +193,36 @@ RelationImpl intersect(const RelationImpl& r, const RelationImpl& s) {
   return i;
 }
 
-/// Tests if relation \a r is a subset of relation \a s
+/// Subset: \f$ r \subseteq s \f$
+inline
+bool subsetEq(const RelationImpl& r, const RelationImpl& s) {
+  assert(r.arity() == s.arity());
+  return intersect(r,s) == r;
+}
+
+/// Superset: \f$ r \supseteq s \f$
+inline
+bool supersetEq(const RelationImpl& r, const RelationImpl& s) {
+  return subsetEq(s,r);
+}
+
+/// Proper subset: \f$ r \subset s \f$
 inline
 bool subset(const RelationImpl& r, const RelationImpl& s) {
   assert(r.arity() == s.arity());
-  return intersect(r,s) == r;
+  return subsetEq(r,s) && r != s;
+}
+
+/// Proper superset: \f$ r \supset s \f$
+inline
+bool superset(const RelationImpl& r, const RelationImpl& s) {
+  return subset(s,r);
+}
+
+/// Disjoint: \f$ r \cap s = \emptyset \f$
+inline
+bool disjoint(const RelationImpl& r, const RelationImpl& s) {
+  return intersect(r,s).empty();
 }
 
 /// Returns the complement of relation \a r
