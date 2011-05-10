@@ -10,9 +10,12 @@ namespace VarImpl {
   class RelationImpl;
 }
 
+class GRelationIter;
+
 /// Class representing a ground relation
 class GRelation {
 private:
+  friend class GRelationIter;
   /// Relation storage
   boost::shared_ptr<VarImpl::RelationImpl> pimpl_;
   /// Avoid default construction
@@ -73,5 +76,40 @@ GRelation create(const std::vector<Tuple>& dom);
 
 /// Outputs relation \a r to \a os
 std::ostream& operator<< (std::ostream& os, const GRelation& r);
+
+namespace VarImpl {
+  class RelationImplIter;
+}
+
+/// Iterator on the tuples of a ground relation
+class GRelationIter {
+private:
+  /// Relation storage
+  boost::shared_ptr<VarImpl::RelationImplIter> pimpl_;
+  /**
+   * \brief Stores the current tuple
+   *
+   * This temporal storage is needed because the iterator provided by the
+   * implementation is not at least forward iterator.
+   */
+  Tuple current_;
+  /// Indicates if there is a current element to be read
+  bool valid_;
+  /// Avoid default construction
+  GRelationIter(void);
+public:
+  /// Constructs an iterator on relation \a r
+  GRelationIter(const GRelation& r);
+  /// Copy constructor
+  GRelationIter(const GRelationIter& it);
+  /// Destructor
+  ~GRelationIter(void);
+  /// Tests whether the iterator is still valid
+  bool operator()(void) const;
+  /// Returns the current value under iteration
+  Tuple val(void) const;
+  /// Advances the iterator
+  void operator++(void);
+};
 }}
 #endif

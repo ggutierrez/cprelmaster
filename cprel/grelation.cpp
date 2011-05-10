@@ -65,8 +65,43 @@ GRelation create(const std::vector<Tuple>& dom) {
 }
 
 std::ostream& operator<< (std::ostream& os, const GRelation& r) {
-  os << "RelationR";
+  for(GRelationIter it(r); it(); ++it)
+    os << it.val() << " ";
   return os;
+}
+
+GRelationIter::GRelationIter(const GRelation& r)
+  : pimpl_(new VarImpl::RelationImplIter(r.pimpl_->tuples()))
+  , current_(r.pimpl_->arity())
+  , valid_(pimpl_->operator ()()) {
+
+  if (valid_)
+    current_ = pimpl_->val();
+//  std::cerr << "Initial value " << current_ << std::endl;
+}
+
+GRelationIter::GRelationIter(const GRelationIter& r)
+  : pimpl_(r.pimpl_), current_(r.current_), valid_(r.valid_) {}
+
+GRelationIter::~GRelationIter(void) {
+  pimpl_.reset();
+}
+
+bool GRelationIter::operator ()(void) const {
+  return valid_;
+}
+
+Tuple GRelationIter::val() const {
+  return current_;
+}
+
+void GRelationIter::operator ++(void) {
+  if(! pimpl_->operator ()())
+    valid_ = false;
+  else {
+    current_ = pimpl_->val();
+    //std::cerr << "New value ready " << current_ << std::endl;
+  }
 }
 
 }}

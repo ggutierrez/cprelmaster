@@ -24,12 +24,35 @@ int main(void) {
   y0.push_back(Tuple(1,1));
 
 //  using namespace CPRel::BDDImpl;
+  GRelation empty(2);
   GRelation r(create(x0));
   GRelation s(create(y0));
 
-  cout << r.differenceAssign(s) << endl;
-  cout << "new card " << r.cardinality() << endl;
+//  cout << r.differenceAssign(s) << endl;
+//  cout << "new card " << r.cardinality() << endl;
+  GRelationIter it(r);
+  assert(it());
+  cout << it.val() << endl;
+  ++it;
+  cout << it.val() << endl;
+  ++it;
+  cout << it.val() << endl;
+  ++it;
+  cout << it.val() << endl;
+  ++it;
+  assert(!it());
+  cout << endl;
+  GRelationIter it2(s);
+  for (; it2(); ++it2)
+    cout << it2.val() << endl;
 
+  GRelationIter it3(empty);
+  assert(!it3());
+
+  it3 = GRelationIter(r);
+  assert(it3());
+  for (; it3(); ++it3)
+    cout << it3.val() << endl;
 
   return 0;
 }

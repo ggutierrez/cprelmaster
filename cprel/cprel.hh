@@ -215,9 +215,10 @@ operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& x) {
   std::basic_ostringstream<Char,Traits> s;
   s.copyfmt(os); s.width(0);
   if (x.assigned())
-    s << "*" << x.glb();
-  else
+    s << "val:{" << x.glb() << "}#" << "C";
+  else {
     s << "glb:{" << x.glb() << "}, unk:{" << x.lub() << "}";
+  }
   return os << s.str();
 }
 

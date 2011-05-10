@@ -170,7 +170,7 @@ else()
 endif()
 set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} ${CUDD_IGNORE_WARNINGS}")
 
-message(STATUS "Cudd flags used: ${CUDD_BUILD_FLAGS}")
+#message(STATUS "Cudd flags used: ${CUDD_BUILD_FLAGS}")
 set_target_properties(cudd util st mpr epd
   PROPERTIES COMPILE_FLAGS "${CUDD_BUILD_FLAGS}")
 
@@ -292,7 +292,7 @@ install(TARGETS gecodecprel
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 install(DIRECTORY cprel/ DESTINATION include/cprel
-          FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
+        FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
 ##########################################################################
 # Uninstall
 ##########################################################################
