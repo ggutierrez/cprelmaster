@@ -18,7 +18,7 @@ private:
   /// Avoid default construction
   GRelation(void);
 public:
-  /// \name Constructors, destructors and assignment
+  /// \name Constructors, destructors and assignement
   //@{
   /// Constructor for an empty relation of arity \a a
   explicit GRelation(int a);
@@ -29,7 +29,13 @@ public:
   /// Destructor
   ~GRelation(void);
   //@}
-  /// Adds a tuple \a t to the relation
+  /// \name Modification operations
+  //@{
+  /**
+   * \brief Adds tuple \a t to the relation
+   *
+   * The returned value indicates if the relation changed due to the operation.
+   */
   bool add(const Tuple& t);
   /**
    * \brief Union of relations: \f$ this = this \cup r \f$.
@@ -45,19 +51,27 @@ public:
    * because the operation.
    */
   bool differenceAssign(const GRelation& r);
+  //@}
+  /// \name Test operations
+  //@{
+  /// Tests whether this relation is a subset of \a r
+  bool subset(const GRelation& r) const;
+  /// Tests whether this represents the same relation as \a r
+  bool eq(const GRelation& r) const;
+  //@}
   /// \name Information
   //@{
   /// Returns the arity of the relation
   int arity(void) const;
   /// Returns the cardinality of the relation
   double cardinality(void) const;
-  /// Tests whether this represents the same relation as \a r
-  bool eq(const GRelation& r) const;
   //@}
 };
 
 /// Creates a relation with the elements contained in \a dom
 GRelation create(const std::vector<Tuple>& dom);
 
+/// Outputs relation \a r to \a os
+std::ostream& operator<< (std::ostream& os, const GRelation& r);
 }}
 #endif

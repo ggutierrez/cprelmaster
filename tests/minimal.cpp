@@ -9,8 +9,6 @@ using namespace MPG::CPRel;
 
 class GolombRuler : public Gecode::Space {
 protected:
-  //static const int n = 2;
-  //CPRelVarArray m;
   CPRelVar r;
 public:
   GolombRuler(void)  {
@@ -23,14 +21,13 @@ public:
     CPRel::GRelation ub(CPRel::create(rl));
 
     r = CPRelVar(*this,lb,ub);
-
-    //branch(*this, m);
+    //    std::cerr << r << std::endl;
   }
   virtual void constrain(const Gecode::Space&) {
 
   }
   void print(void) const {
-    std::cout << "\tm[] = " << std::endl;
+    std::cout << "\tm[] = " << r << std::endl;
   }
   GolombRuler(bool share, GolombRuler& s)
     : Gecode::Space(share,s) {
@@ -45,7 +42,7 @@ int main(int, char**) {
   GolombRuler* g = new GolombRuler();
   Gecode::BAB<GolombRuler> e(g);
   delete g;
-
+  std::cout << "Search will start" << std::endl;
   while (Gecode::Space* s = e.next()) {
     static_cast<GolombRuler*>(s)->print();
     delete s;

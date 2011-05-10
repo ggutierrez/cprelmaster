@@ -18,7 +18,9 @@ GRelation& GRelation::operator =(GRelation& right) {
 }
 
 GRelation::~GRelation(void) {
+//  std::cerr << "Disposing grelation" << std::endl;
   pimpl_.reset();
+//  std::cerr << "--Disposing grelation" << std::endl;
 }
 
 bool GRelation::add(const Tuple &t) {
@@ -33,6 +35,10 @@ int GRelation::arity(void) const {
 
 double GRelation::cardinality(void) const {
   return pimpl_->cardinality();
+}
+
+bool GRelation::subset(const GRelation& r) const {
+  return VarImpl::subset(*pimpl_,*r.pimpl_);
 }
 
 bool GRelation::eq(const GRelation& r) const {
@@ -57,4 +63,10 @@ GRelation create(const std::vector<Tuple>& dom) {
   for (; c != dom.end(); ++c) r.add(*c);
   return r;
 }
+
+std::ostream& operator<< (std::ostream& os, const GRelation& r) {
+  os << "RelationR";
+  return os;
+}
+
 }}

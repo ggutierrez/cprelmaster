@@ -4,6 +4,8 @@
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 #include <cuddCdd.h>
+
+
 #include <cprel/tuple.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {

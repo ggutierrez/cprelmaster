@@ -81,32 +81,49 @@ public:
   /// Constructor for a variable with empty lower bound and
   CPRelVarImp(Space& home, const GRelation& l, const GRelation& u)
     : CPRelVarImpBase(home), glb_(l), lub_(u) {
+
+    std::cout << "Created variable implementation" << std::endl;
     /// assert throw an exception if glb \notin lub
   }
-  /// Dispose
+  /// Resources disposal
   void dispose(Space&) {
+//    std::cout << "Starting disposal" << std::endl;
     glb_.~GRelation();
+//    std::cerr << "--disposing--" << std::endl;
     lub_.~GRelation();
+//    std::cout << "Finishing disposal" << std::endl;
   }
-  // access operations
+  //@}
+  /// \name Bound access
+  //@{
+  /// Returns a relation representing the greatest lower bound of the variable
   GRelation glb(void) const {
     return glb_;
   }
+  /// Returns a relation representing the least upper bound of the variable
   GRelation lub(void) const {
     return lub_;
   }
-  // assignment test
-  bool assigned(void) const {
-    return glb_.eq(lub_);
-  }
-  // modification operations
+  //@}
+  /// \name Pruning operations
+  //@{
+  /**
+   * \brief Prune the variable by doing: \f$ glb = glb \cup r \f$
+   *
+   */
   ModEvent include(Space& home, const GRelation& r) {
-    assert(false);
-//    if (n >= u) return ME_CPREL_NONE;
-//    if (n < l) return ME_CPREL_FAILED;
+    if (glb_.subset(r)) return ME_CPREL_NONE;
+    if (!r.subset(lub_)) return ME_CPREL_FAILED;
+    std::cout << "Modification will take place" << std::endl;
+    glb_.unionAssign(r);
+
     CPRelDelta d(1,2);
-    return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MAX, d);
+    return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MIN, d);
   }
+  /**
+   * \brief Prune the variable by doing: \f$ lub = lub \setminus r \f$
+   *
+   */
   ModEvent exclude(Space& home, const GRelation& r) {
     assert(false);
 //    if (n <= l) return ME_CPREL_NONE;
@@ -114,6 +131,16 @@ public:
     CPRelDelta d(1,2);
     return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MIN, d);
   }
+  //@}
+  /// \name Domain tests
+  //@{
+  /// Tests for assignment \f$ glb = lub \f$
+  bool assigned(void) const {
+    return glb_.eq(lub_);
+  }
+  //@}
+  /// \name Subscriptions handling
+  //@{
   // subscriptions
   void subscribe(Space& home, Propagator& p, PropCond pc,
                  bool schedule=true) {
@@ -128,7 +155,9 @@ public:
   void cancel(Space& home, Advisor& a) {
     CPRelVarImpBase::cancel(home,a,assigned());
   }
-  // copying
+  //@}
+  /// \name Copying
+  //@{
   CPRelVarImp(Space& home, bool share, CPRelVarImp& y)
     : CPRelVarImpBase(home,share,y), glb_(y.glb_), lub_(y.lub_) {}
 
@@ -138,6 +167,7 @@ public:
     else
       return new (home) CPRelVarImp(home,share,*this);
   }
+  //@}
   // delta information
   static int min(const Delta& d) {
     return static_cast<const CPRelDelta&>(d).min();
@@ -166,10 +196,9 @@ public:
   CPRelVar(Space& home, const CPRel::GRelation& l, const CPRel::GRelation& u)
     : VarImpVar<CPRel::CPRelVarImp>
       (new (home) CPRel::CPRelVarImp(home,l,u)) {
-//    if ((min < CPRel::Limits::min) || (max > CPRel::Limits::max))
-//      throw CPRel::OutOfLimits("CPRelVar::CPRelVar");
-//    if (min > max)
-//      throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
+    std::cout << "Created variable" << std::endl;
+    if (!l.subset(u))
+      throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }
   // access operations
   CPRel::GRelation glb(void) const {
@@ -186,10 +215,9 @@ operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& x) {
   std::basic_ostringstream<Char,Traits> s;
   s.copyfmt(os); s.width(0);
   if (x.assigned())
-    s << "is assigned "; // x.min();
+    s << "*" << x.glb();
   else
-    s << "is not assigned ";
-    //s << '[' << x.min() << ".." << x.max() << ']';
+    s << "glb:{" << x.glb() << "}, unk:{" << x.lub() << "}";
   return os << s.str();
 }
 
