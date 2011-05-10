@@ -334,10 +334,10 @@ operator<<(std::basic_ostream<Char,Traits>& os, const CPRelView& x) {
   std::basic_ostringstream<Char,Traits> s;
   s.copyfmt(os); s.width(0);
   if (x.assigned())
-    s << " is assigned view "; //s << x.min();
+    s << "val:{" << x.glb() << "}#" << "C";
   else
-    s << " not assigned view ";
-    //s << '[' << x.min() << ".." << x.max() << ']';
+    s << "glb:{" << x.glb() << "}, unk:{"
+      << x.lub().difference(x.glb()) << "}";
   return os << s.str();
 }
 

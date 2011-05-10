@@ -28,31 +28,39 @@ int main(void) {
   GRelation r(create(x0));
   GRelation s(create(y0));
 
-//  cout << r.differenceAssign(s) << endl;
-//  cout << "new card " << r.cardinality() << endl;
-  GRelationIter it(r);
-  assert(it());
-  cout << it.val() << endl;
-  ++it;
-  cout << it.val() << endl;
-  ++it;
-  cout << it.val() << endl;
-  ++it;
-  cout << it.val() << endl;
-  ++it;
-  assert(!it());
-  cout << endl;
-  GRelationIter it2(s);
-  for (; it2(); ++it2)
-    cout << it2.val() << endl;
+/*
+  cout << "Relation r: " << r << endl;
+  GRelation z(r);
+  cout << "Relation z: " << z << endl;
+  Tuple t(5,11);
+  z.add(t);
 
-  GRelationIter it3(empty);
-  assert(!it3());
+  cout << "Relation r: " << r << endl;
+  cout << "Relation z: " << z << endl;
+*/
+//  GRelationIter it(r);
+//  assert(it());
+//  cout << it.val() << endl;
+//  ++it;
+//  cout << it.val() << endl;
+//  ++it;
+//  cout << it.val() << endl;
+//  ++it;
+//  cout << it.val() << endl;
+//  ++it;
+//  assert(!it());
+//  cout << endl;
+//  GRelationIter it2(s);
+//  for (; it2(); ++it2)
+//    cout << it2.val() << endl;
 
-  it3 = GRelationIter(r);
-  assert(it3());
-  for (; it3(); ++it3)
-    cout << it3.val() << endl;
+//  GRelationIter it3(empty);
+//  assert(!it3());
+
+//  it3 = GRelationIter(r);
+//  assert(it3());
+//  for (; it3(); ++it3)
+//    cout << it3.val() << endl;
 
   return 0;
 }

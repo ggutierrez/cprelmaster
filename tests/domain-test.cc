@@ -6,7 +6,7 @@
 using std::cout;
 using std::endl;
 
-int main(void) {
+int main2(void) {
   using namespace MPG::CPRel;
   using namespace MPG::CPRel::VarImpl;
 
@@ -44,13 +44,28 @@ int main(void) {
 
     cout << "Relation s " << s << endl;
     cout << "Relation empty " << empty << endl;
-/*
-    RelationImpl inter(full);
-    for (RelationImplIter it = inter.tuples(); it();) {
-      cout << "Tuple " << it.val() << endl;
-    }
-*/
+
+//    RelationImpl inter(full);
+//    for (RelationImplIter it = inter.tuples(); it();) {
+//      cout << "Tuple " << it.val() << endl;
+//    }
+
   }
 
+  return 0;
+}
+
+int main(void) {
+  using namespace MPG::CPRel;
+  using namespace MPG::CPRel::VarImpl;
+  cout << "Tests starts" << endl;
+  {
+    RelationImpl s(2);
+    RelationImpl t(s);
+    s.add(Tuple(0,0));
+
+    cout << "S: " << s << endl;
+    cout << "T: " << t << endl;
+  }
   return 0;
 }

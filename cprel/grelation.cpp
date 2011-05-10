@@ -13,7 +13,7 @@ GRelation::GRelation(int a) {
 }
 
 GRelation::GRelation(const GRelation &r)
-  : pimpl_(r.pimpl_) { }
+  : pimpl_(new RelationImpl(*(r.pimpl_))) { }
 
 GRelation& GRelation::operator =(GRelation& right) {
   pimpl_.swap(right.pimpl_);
