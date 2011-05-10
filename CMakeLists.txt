@@ -25,7 +25,7 @@ endif()
 # Additional compiler flags
 ##########################################################################
 add_definitions("-Wall -Wextra")
-add_definitions("-O0 -g")
+add_definitions("-O0 -g -fdiagnostics-show-option")
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -147,6 +147,21 @@ add_library(util ${UTIL_SRCS})
 add_library(st ${ST_SRCS})
 add_library(mpr ${MTR_SRCS})
 add_library(epd ${EPD_SRCS})
+
+## NOTE about warnings:
+## When CUDF is compiled by gcc there are a lot of warnings signaling
+## unused parameters. As they can hide other important warnings of this project
+## they will be disabled during the building of CUDD specific targets. For
+## this every compiler provides a different option so please set the following
+## variable with the compiler options that prevent the report of this specific
+## type of warning. (This is ONLY for CUDF building)
+##
+## For gcc, the option -fdiagnostics-show-option shows the specific code of the
+## diagnostic.
+
+set(CUDD_IGNORE_WARNINGS "-Wno-unused-parameter -Wno-sign-compare")
+set_target_properties(cudd util st mpr epd
+  PROPERTIES COMPILE_FLAGS "${CUDD_IGNORE_WARNINGS}")
 
 set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
