@@ -10,11 +10,15 @@ project(cuddcp)
 ##########################################################################
 # System information
 ##########################################################################
-message(STATUS "Building for architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "Building for architecture: ${CMAKE_SYSTEM}")
+if(CMAKE_SYSTEM MATCHES Darwin-10.6.0)
+  message(STATUS "  Not fully tested platform")
+endif()
+message(STATUS "Void pointer size ${CMAKE_SIZEOF_VOID_P}")
 ##########################################################################
 # Cuddy flags
 ##########################################################################
-if (CMAKE_SYSTEM_PROCESSOR MATCHES x86_64)
+if (CMAKE_SIZE_OF_VOID_P MATCHES "8")
   add_definitions("-fPIC")
 else()
   message(STATUS "This has not been built in any other architecture than x86_64")
@@ -163,7 +167,7 @@ target_link_libraries(cudd util st mpr epd)
 set(CUDD_IGNORE_WARNINGS "-Wno-unused-parameter -Wno-sign-compare")
 ## Building options extracted from original CUDD Makefile
 set(CUDD_BUILD_FLAGS)
-if(CMAKE_SYSTEM_PROCESSOR MATCHES x86_64)
+if(CMAKE_SIZEOF_VOID_P MATCHES "8")
   set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
 else()
   set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
@@ -319,18 +323,20 @@ endif()
 ##########################################################################
 # Swig
 ##########################################################################
-find_package(SWIG 1.3.40)
-if (NOT SWIG_FOUND)
-  message(FATAL_ERROR "Swig executable not found.")
-else()
+find_package(SWIG 1.3.31)
+set(BUILD_LISP_INTERFACE No)
+if (SWIG_FOUND)
+  set(BUILD_LISP_INTERFACE Yes)
   include(${SWIG_USE_FILE})
   message(STATUS "Swig information:")
   message(STATUS "   program: ${SWIG_EXECUTABLE}")
+else()
+  message(STATUS "Swig interface cannot be build")
 endif()
 ##########################################################################
 # Lisp
 ##########################################################################
-find_program(LISPINT sbcl)
+#find_program(LISPINT sbcl)
 #if (NOT LISPINT)
 #  message(FATAL_ERROR "Lisp interpreter not found")
 #else()
@@ -339,28 +345,37 @@ find_program(LISPINT sbcl)
 ##########################################################################
 # Test
 ##########################################################################
-## The foreign library
-add_library(test gelisp/test.cpp gelisp/test.hh)
-## The swig part
-set_source_files_properties(test.i PROPERTIES CPLUSPLUS ON)
-#set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
-swig_add_module(lisptest cffi test.i)
-swig_link_libraries(lisptest test)
+if(BUILD_LISP_INTERFACE)
+  ## The foreign library
+  add_library(test gelisp/test.cpp gelisp/test.hh)
+  ## The swig part
+  set_source_files_properties(test.i PROPERTIES CPLUSPLUS ON)
+  #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
+  swig_add_module(lisptest cffi test.i)
+  swig_link_libraries(lisptest test)
+endif()
 ##########################################################################
 # Gelisp
 ##########################################################################
-## The foreign library
-add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hh)
-## The swig part
-set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
-#set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
-swig_add_module(gelisp cffi gelisp.i)
-swig_link_libraries(gelisp cxxgelisp gecodecprel ${Gecode_LIBRARIES})
+if(BUILD_LISP_INTERFACE)
+  ## The foreign library
+  add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hh)
+  target_link_libraries(cxxgelisp gecodecprel ${Gecode_LIBRARIES})
+
+  ## The swig part
+  set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
+  #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
+  swig_add_module(gelisp cffi gelisp.i)
+  swig_link_libraries(gelisp cxxgelisp gecodecprel ${Gecode_LIBRARIES})
+
+
+  add_executable(gelispcl gelisp/gelispcl.cpp)
+  target_link_libraries(gelispcl cxxgelisp gecodecprel ${Gecode_LIBRARIES})
+endif()
+message(STATUS "Gecode libraries ${Gecode_LIBRARIES}")
 ##########################################################################
 # Executables
 ##########################################################################
-add_executable(gelispcl gelisp/gelispcl.cpp)
-target_link_libraries(gelispcl cxxgelisp gecodecprel ${Gecode_LIBRARIES})
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})

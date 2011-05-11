@@ -111,7 +111,7 @@ namespace GeLisp {
 
   // searchAll
   void searchAll(GlSpace& root) {
-    /*
+  
     Gecode::DFS<GlSpace> e(&root);
     int solutions = 0;
     while (Space* s = e.next()) {
@@ -120,12 +120,13 @@ namespace GeLisp {
       delete s;
     }
    cerr << "Finished search all: " << solutions << endl;
-   */
+  
+/*
     using namespace Gecode;
     Gist::Print<GlSpace> p("Print solution");
     Gist::Options o;
     o.inspect.click(&p);
     Gist::dfs(&root,o);
-
+*/
   }
 }
