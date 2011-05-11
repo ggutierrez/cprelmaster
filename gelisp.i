@@ -648,22 +648,6 @@
   using namespace GeLisp;
 %}
 
-/*
-%exception {
-try {
-  $action
-    } catch(Gecode::Exception e) {
-  std::cerr << e.what() << std::endl;
- } catch(Gecode::Exception& e) {
-  std::cerr << e.what() << std::endl;
- } catch(Gecode::Exception *e) {
-  std::cerr << e->what() << std::endl;
- } catch (...) {
-  std::cerr << "unhandled exception." << std::endl;	
- }
- }
-
-*/
 %include <gelisp/gelisp.hh>
  //%include <gelisp/gecheader.hpp>
 

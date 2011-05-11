@@ -256,7 +256,7 @@ else()
   #list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_GRAPH_VARS  -DGECODE_HAS_VAR_DISPOSE")
   #list(APPEND CONFIGURE_OPTIONS "--with-vis=/home/gg1/Work/temp-build/graph-vars/graph.vis")
 
-  list(APPEND CONFIGURE_OPTIONS "--disable-gist")
+  #list(APPEND CONFIGURE_OPTIONS "--disable-gist")
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
@@ -356,11 +356,11 @@ set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
 #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
 swig_add_module(gelisp cffi gelisp.i)
 swig_link_libraries(gelisp cxxgelisp gecodecprel ${Gecode_LIBRARIES})
-
-
 ##########################################################################
 # Executables
 ##########################################################################
+add_executable(gelispcl gelisp/gelispcl.cpp)
+target_link_libraries(gelispcl cxxgelisp gecodecprel ${Gecode_LIBRARIES})
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
