@@ -172,6 +172,8 @@ int main(void) {
   Relation Prov(Cudd::zero(),provs,2);
 
   //cout << "elements in all " << all.size() << endl;
+#ifndef NDEBUG
   cout << "This number should be zero: " << Cudd::references() << endl;
+#endif
   return 0;
 }

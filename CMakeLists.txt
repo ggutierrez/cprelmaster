@@ -18,16 +18,16 @@ message(STATUS "Void pointer size ${CMAKE_SIZEOF_VOID_P}")
 ##########################################################################
 # Cuddy flags
 ##########################################################################
-if (CMAKE_SIZE_OF_VOID_P MATCHES "8")
-  add_definitions("-fPIC")
+if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+  add_definitions(-fPIC)
 else()
-  message(STATUS "This has not been built in any other architecture than x86_64")
+  message(WARNING "This has not been built in any other architecture than x86_64")
 endif()
 ##########################################################################
 # Additional compiler flags
 ##########################################################################
-add_definitions("-Wall -Wextra")
-add_definitions("-O0 -g -fdiagnostics-show-option")
+add_definitions(-Wall -Wextra)
+# add_definitions(-O0 -g -fdiagnostics-show-option)
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -164,19 +164,18 @@ target_link_libraries(cudd util st mpr epd)
 ##
 ## For gcc, the option -fdiagnostics-show-option shows the specific code of the
 ## diagnostic.
-set(CUDD_IGNORE_WARNINGS "-Wno-unused-parameter -Wno-sign-compare")
-## Building options extracted from original CUDD Makefile
-set(CUDD_BUILD_FLAGS)
-if(CMAKE_SIZEOF_VOID_P MATCHES "8")
-  set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
-else()
-  set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
-endif()
-set(CUDD_BUILD_FLAGS "${CUDD_BUILD_FLAGS} ${CUDD_IGNORE_WARNINGS}")
 
-#message(STATUS "Cudd flags used: ${CUDD_BUILD_FLAGS}")
-set_target_properties(cudd util st mpr epd
-  PROPERTIES COMPILE_FLAGS "${CUDD_BUILD_FLAGS}")
+## Building options extracted from original CUDD Makefile
+if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+else()
+  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
+endif()
+
+set_source_files_properties(
+    ${CUDD_SRCS} ${UTIL_SRCS} ${ST_SRCS} ${MTR_SRCS} ${EPD_SRCS}
+    PROPERTIES COMPILE_FLAGS ${EXTRA_FLAGS}
+)
 
 set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
