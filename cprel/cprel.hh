@@ -100,6 +100,15 @@ public:
   GRelation lub(void) const {
     return lub_;
   }
+  /**
+   * \brief Unknown access.
+   *
+   * Returns a relation (copy) with the maximum relation that can be included in
+   * the lower bound.
+   */
+  GRelation unk(void) const {
+    return lub_.difference(glb_);
+  }
   //@}
   /// \name Pruning operations
   //@{
@@ -193,13 +202,34 @@ public:
     if (!l.subsetEq(u))
       throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }
-  // access operations
+  /// \name Domain ifnormation
+  //@{
+  /**
+   * \brief Greatest lower bound access.
+   *
+   * Returns a relation (copy) that represents the lower bound of the variable.
+   */
   CPRel::GRelation glb(void) const {
     return x->glb();
   }
+  /**
+   * \brief Least upper bound access.
+   *
+   * Returns a relation (copy) that represents the upper bound of the variable.
+   */
   CPRel::GRelation lub(void) const {
     return x->lub();
   }
+  /**
+   * \brief Unknown access.
+   *
+   * Returns a relation (copy) with the maximum relation that can be included in
+   * the lower bound.
+   */
+  CPRel::GRelation unk(void) const {
+    return x->unk();
+  }
+  //@}
 };
 
 template<class Char, class Traits>
@@ -207,11 +237,18 @@ std::basic_ostream<Char,Traits>&
 operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& x) {
   std::basic_ostringstream<Char,Traits> s;
   s.copyfmt(os); s.width(0);
-  if (x.assigned())
-    s << "val:{" << x.glb() << "}#" << "C";
-  else
-    s << "glb:{" << x.glb() << "}, unk:{"
-      << x.lub().difference(x.glb()) << "}";
+
+  using namespace CPRel;
+  if (x.assigned()) s << "val:{";
+  else s << "glb:{";
+
+  GRelation glb(x.glb());
+  s  << glb << "}#" << glb.cardinality();
+
+  if(!x.assigned()) {
+    GRelation unk(x.unk());
+    s << ", unk:{" << unk << "}#" << unk.cardinality();
+  }
   return os << s.str();
 }
 
@@ -255,7 +292,7 @@ public:
 }
 // variable arrays
 namespace MPG {
-
+/// Passing relation variables
 class CPRelVarArgs : public VarArgArray<CPRelVar> {
 public:
   CPRelVarArgs(void) {}
@@ -287,7 +324,7 @@ public:
 
 // integer view
 namespace MPG { namespace CPRel {
-
+/// Relation view for relation variables
 class CPRelView : public VarImpView<CPRelVar> {
 protected:
   using VarImpView<CPRelVar>::x;
@@ -303,6 +340,9 @@ public:
   }
   GRelation lub(void) const {
     return x->lub();
+  }
+  GRelation unk(void) const {
+    return x->unk();
   }
   // modification operations
   ModEvent include(Space& home, const GRelation& r) {

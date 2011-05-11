@@ -69,7 +69,7 @@ public:
   bool subsetEq(const GRelation& r) const;
   /// Tests \f$ this \supset r \f$
   bool superset(const GRelation& r) const;
-  /// Tests \f$ this \cap r = \emptyset \f
+  /// Tests \f$ this \cap r = \emptyset \f$
   bool disjoint(const GRelation& r) const;
   /// Tests whether this represents the same relation as \a r
   bool eq(const GRelation& r) const;

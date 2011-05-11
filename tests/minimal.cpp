@@ -22,6 +22,7 @@ public:
     CPRel::GRelation ub(CPRel::create(rl));
 
     r = CPRelVar(*this,lb,ub);
+    std::cerr << r << std::endl;
     branch(*this,r);
   }
   virtual void constrain(const Gecode::Space&) {
