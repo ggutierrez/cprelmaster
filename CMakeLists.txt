@@ -15,10 +15,17 @@ if(CMAKE_SYSTEM MATCHES Darwin-10.6.0)
   message(STATUS "  Not fully tested platform")
 endif()
 message(STATUS "Void pointer size ${CMAKE_SIZEOF_VOID_P}")
+
+include(CheckTypeSize)
+check_type_size("void*" SIZEOF_VOID_P)
+if(SIZEOF_VOID_P STREQUAL "")
+  message(SEND_ERROR "Failed to determine sizeof(void*)")
+endif()
+message("Size of pointer to void (compiler): ${SIZEOF_VOID_P}")
 ##########################################################################
 # Cuddy flags
 ##########################################################################
-if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+if(SIZEOF_VOID_P MATCHES "8")
   add_definitions(-fPIC)
 else()
   message(WARNING "This has not been built in any other architecture than x86_64")
@@ -166,10 +173,12 @@ target_link_libraries(cudd util st mpr epd)
 ## diagnostic.
 
 ## Building options extracted from original CUDD Makefile
-if(CMAKE_SIZEOF_VOID_P MATCHES "8")
+if(SIZEOF_VOID_P MATCHES "8")
   set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
-else()
+elseif(SIZEOF_VOID_P MATCHES "4")
   set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
+else()
+  message(SEND_ERROR "Unable to determine the flags to build cudd")
 endif()
 
 set_source_files_properties(
@@ -260,6 +269,7 @@ else()
   #list(APPEND CONFIGURE_OPTIONS "--with-vis=/home/gg1/Work/temp-build/graph-vars/graph.vis")
 
   #list(APPEND CONFIGURE_OPTIONS "--disable-gist")
+  list(APPEND CONFIGURE_OPTIONS "--with-architectures=${CMAKE_OSX_ARCHITECTURES}")
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
@@ -268,7 +278,7 @@ else()
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j4
+    BUILD_COMMAND make -j10
     INSTALL_COMMAND make install
   )
 endif()
