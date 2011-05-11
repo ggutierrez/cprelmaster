@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-support")
 
 project(cuddcp)
-
+set(PROJECT_VERSION "0.9.0")
 ##########################################################################
 # Command line options
 ##########################################################################
@@ -373,6 +373,13 @@ if(BUILD_LISP_INTERFACE)
   target_link_libraries(gelispcl cxxgelisp gecodecprel ${Gecode_LIBRARIES})
 endif()
 message(STATUS "Gecode libraries ${Gecode_LIBRARIES}")
+##########################################################################
+# Source distribution
+##########################################################################
+set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${PROJECT_VERSION})
+add_custom_target(dist
+  COMMAND git archive --format zip --output ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.zip --prefix=${ARCHIVE_NAME}/ master
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 ##########################################################################
 # Executables
 ##########################################################################
