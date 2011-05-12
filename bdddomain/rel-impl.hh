@@ -30,6 +30,14 @@ private:
   DdNode *one_;
   /// Constant false
   DdNode *zero_;
+  /**
+   * \brief Defines the number of bits to represent an element inside a relation
+   * tuple.
+   *
+   * The maximum number that can be part of relation's tuple is 2^BBV_. A
+   * suitable value for this attribute is 5 and this allows to represent positive
+   * integers with 32 bits.
+   */
   int BBV_;
   int  BA_;
   /// \name Constructors and destructor
@@ -147,6 +155,8 @@ public:
   /// Tests if the represented relation is the universe
   bool universe(void) const;
   //@}
+  /// \name Operations
+  RelationImpl swap_columns(int x, int y) const;
   /// \name Iteration
   //@{
   /// Returns an iterator on the tuples of the relation

@@ -200,11 +200,8 @@ endif()
 # Domain representation using BDDs
 ##########################################################################
 set(BDDDOMAIN_SRCS
-  bdddomain/relation.cpp
   bdddomain/rel-impl.cpp
   bdddomain/rel-impl.hh
-
-  cprel/tuple.hh
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
