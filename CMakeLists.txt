@@ -8,6 +8,21 @@ set(PROJECT_VERSION "0.9.0")
 ##########################################################################
 
 ##########################################################################
+# Compiler information
+##########################################################################
+if(CMAKE_COMPILER_IS_GNUCC)
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+                    OUTPUT_VARIABLE GCC_VERSION)
+  if (GCC_VERSION VERSION_GREATER 4.2 OR GCC_VERSION VERSION_EQUAL 4.2)
+    message(STATUS "GCC version ${GCC_VERSION}")
+  else()
+    messge(FATAL_ERROR "GCC version 4.2 or greater is required")
+  endif()
+else()
+  message(WARNING "This project has been only built with GCC, other compilers
+                  might work...")
+endif()
+##########################################################################
 # System information
 ##########################################################################
 message(STATUS "Building for architecture: ${CMAKE_SYSTEM}")
@@ -190,7 +205,7 @@ set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
 # Boost
 ##########################################################################
-find_package( Boost 1.36.0)
+find_package(Boost 1.36.0)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 else()
@@ -292,6 +307,7 @@ set(CPREL_SRCS
   cprel/grelation.hh
   cprel/cprel.hh
   cprel/main.cpp
+  doc/main.hh
 )
 add_library(gecodecprel ${CPREL_SRCS})
 target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
