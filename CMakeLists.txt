@@ -311,17 +311,17 @@ include_directories(${Gecode_INCLUDE_DIRS})
 # Relation constraint system
 ##########################################################################
 set(CPREL_SRCS
-  cprel/tuple.hh
-  cprel/grelation.hh
   cprel/cprel.hh
-  cprel/varimp.hh
+  cprel/grelation.hh
+  cprel/tuple.hh
   cprel/var.hh
+  cprel/varimp.hh
   cprel/view.hh
 
   cprel/grelation.cpp
   cprel/main.cpp
-
   doc/main.hh
+
 )
 add_library(gecodecprel ${CPREL_SRCS})
 target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
