@@ -4,7 +4,22 @@
 #include <boost/shared_ptr.hpp>
 #include <cprel/tuple.hh>
 
+
 namespace MPG { namespace CPRel {
+/**
+ * \defgroup GRelation Ground relations
+ *
+ * Ground relations are the basic construct of the relation domain. The term
+ * ground is used to differenciate this relation from a relation represented by
+ * a decission variable. This module offers the capability to define and operate
+ * on this kind of relations.
+ */
+
+class BadRelation : public Gecode::Exception {
+public:
+  BadRelation(const char* l)
+    : Exception(l,"Bad relation description") {}
+};
 
 namespace VarImpl {
   class RelationImpl;
@@ -12,7 +27,10 @@ namespace VarImpl {
 
 class GRelationIter;
 
-/// Class representing a ground relation
+/**
+ * \brief Class representing a ground relation
+ * \ingroup GRelation
+ */
 class GRelation {
 private:
   friend class GRelationIter;
@@ -83,21 +101,31 @@ public:
   //@}
 };
 
-/// Creates a relation with the elements contained in \a dom
+/**
+ * \brief Creates a relation with the elements contained in \a dom.
+ * \ingroup GRelation
+ */
 GRelation create(const std::vector<Tuple>& dom);
 
-/// Outputs relation \a r to \a os
+/**
+ * \brief Outputs relation \a r to \a os
+ * \ingroup GRelation
+ */
 std::ostream& operator<< (std::ostream& os, const GRelation& r);
 
 namespace VarImpl {
   class RelationImplIter;
 }
 
-/// Iterator on the tuples of a ground relation
+/**
+ * \brief Iterator on the tuples of a ground relation
+ * \ingroup GRelation
+ */
 class GRelationIter {
 private:
+  typedef boost::shared_ptr<VarImpl::RelationImplIter> Impl;
   /// Relation storage
-  boost::shared_ptr<VarImpl::RelationImplIter> pimpl_;
+  Impl pimpl_;
   /**
    * \brief Stores the current tuple
    *

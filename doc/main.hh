@@ -76,24 +76,33 @@
  * \code Copyright (c) 1995-2004, Regents of the University of Colorado \endcode
  *
  */
+
+/**
+ * \page practical Practical constraint programming on relations
+ *
+ * \section declground Ground relation specification
+ *
+ * There are several ways to specify a ground relation. The most common one is
+ * by specifying the set of tuples that conform it. See the documentation of the
+ * CPRel::Tuple class for more information about how to create tuples.
+ *
+ */
+
 /** \mainpage Constraint programming on relations (CPRel)
  *
- * \authors Gustavo Gutierrez
- * \authors Yves Jaradin
+ * \authors Gustavo Gutierrez: <tt>gutierrez.gustavo</tt> <b>at</b> uclouvain.be
+ * \authors Yves Jaradin: <tt>yves.jaradin</tt> <b>at</b> uclouvain.be
  *
  * \section intro Introduction
  * This package provides the implementation of a constraint system on relations.
  * It is developed as a module for the <a href="http://www.gecode.org"> Gecode</a>
  * constraint library. This documentation is divided in:
  *
- * <ul>
- *   <li>Using the library.
- *   <ul>
- *     <li>\subpage install
- *     <li>Examples
- *   </ul>
- *   <li> \subpage license
- * </ul>
- *
+ * - Using the library.
+ *   - \subpage install
+ *   - Examples
+ * - \subpage license
+ * - Constraint programming on relations
+ * - Acknowledgements
  *
  */
