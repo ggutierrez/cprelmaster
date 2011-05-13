@@ -3,8 +3,7 @@
 
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
-#include <cuddCdd.h>
-
+#include <cudd/cuddInt.h>
 
 #include <cprel/tuple.hh>
 
@@ -45,8 +44,8 @@ private:
   /// Constructor that initializes the BDD manager of CUDD
   BddManager (void)
     : dd(Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
-    , one_(CDD_ONE(dd))
-    , zero_(CDD_ZERO(dd))
+    , one_(DD_ONE(dd))
+    , zero_(Cudd_Not(DD_ONE(dd)))
     , BBV_(5), BA_(3)
   {
     std::cout << "Created bdd manager" << std::endl;

@@ -6,7 +6,7 @@ set(PROJECT_VERSION "0.9.0")
 ##########################################################################
 # Command line options
 ##########################################################################
-
+option(UNIT_TEST "Build unit tests (requires boost unit_test)" NO)
 ##########################################################################
 # Compiler information
 ##########################################################################
@@ -36,20 +36,15 @@ check_type_size("void*" SIZEOF_VOID_P)
 if(SIZEOF_VOID_P STREQUAL "")
   message(SEND_ERROR "Failed to determine sizeof(void*)")
 endif()
-message("Size of pointer to void (compiler): ${SIZEOF_VOID_P}")
-##########################################################################
-# Cuddy flags
-##########################################################################
+message(STATUS "Size of pointer to void (compiler): ${SIZEOF_VOID_P}")
 if(SIZEOF_VOID_P MATCHES "8")
   add_definitions(-fPIC)
-else()
-  message(WARNING "This has not been built in any other architecture than x86_64")
 endif()
 ##########################################################################
 # Additional compiler flags
 ##########################################################################
 add_definitions(-Wall -Wextra)
-# add_definitions(-O0 -g -fdiagnostics-show-option)
+add_definitions(-O0 -g -fdiagnostics-show-option)
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -77,7 +72,7 @@ set(CUDD_SRCS
   cudd/cuddBddIte.c
   cudd/cuddBridge.c
   cudd/cuddCache.c
-  cudd/cuddCdd.c
+#  cudd/cuddCdd.c
   cudd/cuddCheck.c
   cudd/cuddClip.c
   cudd/cuddCof.c
@@ -205,21 +200,35 @@ set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
 # Boost
 ##########################################################################
-find_package(Boost 1.36.0)
+set(BOOST_COMPONENTS)
+if(UNIT_TEST)
+  message(STATUS "Building unit tests")
+  list(APPEND BOOST_COMPONENTS unit_test_framework)
+endif()
+find_package(Boost 1.36.0 COMPONENTS ${BOOST_COMPONENTS})
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
+  if(UNIT_TEST)
+    set(TEST_SOURCES tests/test-main.cpp)
+    set(TEST_LIBRARIES ${Boost_LIBRARIES})
+  endif()
 else()
   message(FATAL_ERROR "Boost is needed to build this application")
 endif()
 ##########################################################################
 # Domain representation using BDDs
 ##########################################################################
+include_directories(${CMAKE_SOURCE_DIR})
 set(BDDDOMAIN_SRCS
   bdddomain/rel-impl.cpp
   bdddomain/rel-impl.hh
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
+if(UNIT_TEST)
+  list(APPEND TEST_SOURCES bdddomain/tests/bddrel.cpp)
+  list(APPEND TEST_LIBRARIES bdddomain)
+endif()
 ##########################################################################
 # BDDDomain Installation
 ##########################################################################
@@ -231,16 +240,16 @@ install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
 ##########################################################################
 # Cdds examples
 ##########################################################################
-include_directories("${CMAKE_SOURCE_DIR}")
-add_executable(testcdd tests/testcdd.c)
-target_link_libraries(testcdd m ${CUDD_LIBS})
+#include_directories("${CMAKE_SOURCE_DIR}")
+#add_executable(testcdd tests/testcdd.c)
+#target_link_libraries(testcdd m ${CUDD_LIBS})
 
-add_executable(testobj
-  tests/testcdd.cpp
-  cdd-obj/cdd.cpp
-  cdd-obj/cdd.hh
-)
-target_link_libraries(testobj ${CUDD_LIBS})
+#add_executable(testobj
+#  tests/testcdd.cpp
+#  cdd-obj/cdd.cpp
+#  cdd-obj/cdd.hh
+#)
+#target_link_libraries(testobj ${CUDD_LIBS})
 ##########################################################################
 # Gecode
 ##########################################################################
@@ -345,6 +354,14 @@ if(DOXYGEN_FOUND)
   )
 endif()
 ##########################################################################
+# Unit test
+##########################################################################
+if(UNIT_TEST)
+  add_executable(unit-test ${TEST_SOURCES})
+  target_link_libraries(unit-test ${TEST_LIBRARIES})
+  message(STATUS "Test libraries ${TEST_LIBRARIES}")
+endif()
+##########################################################################
 # Swig
 ##########################################################################
 find_package(SWIG 1.3.31)
@@ -396,7 +413,6 @@ if(BUILD_LISP_INTERFACE)
   add_executable(gelispcl gelisp/gelispcl.cpp)
   target_link_libraries(gelispcl cxxgelisp gecodecprel ${Gecode_LIBRARIES})
 endif()
-message(STATUS "Gecode libraries ${Gecode_LIBRARIES}")
 ##########################################################################
 # Source distribution
 ##########################################################################
