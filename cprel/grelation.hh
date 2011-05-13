@@ -15,12 +15,6 @@ namespace MPG { namespace CPRel {
  * on this kind of relations.
  */
 
-class BadRelation : public Gecode::Exception {
-public:
-  BadRelation(const char* l)
-    : Exception(l,"Bad relation description") {}
-};
-
 namespace VarImpl {
   class RelationImpl;
 }
