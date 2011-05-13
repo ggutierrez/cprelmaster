@@ -26,6 +26,14 @@ GRelation::~GRelation(void) {
 //  std::cout << "--Disposing grelation" << std::endl;
 }
 
+GRelation GRelation::create_full(int a) {
+  RelationImpl full = RelationImpl::create_full(a);
+  return
+      GRelation(
+        Impl(new RelationImpl(full))
+        );
+}
+
 bool GRelation::add(const Tuple &t) {
   RelationImpl old = *pimpl_;
   pimpl_->add(t);

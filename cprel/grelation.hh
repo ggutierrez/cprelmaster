@@ -46,6 +46,8 @@ public:
   GRelation& operator=(GRelation& right);
   /// Destructor
   ~GRelation(void);
+  /// Constructs a full relation of arity \a a
+  static GRelation create_full(int a);
   //@}
   /// \name Modification operations
   //@{

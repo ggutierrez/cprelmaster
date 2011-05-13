@@ -84,20 +84,30 @@ public:
     : CPRelVarImpBase(home), glb_(l), lub_(u) {}
   /// Resources disposal
   void dispose(Space&) {
-//    std::cout << "Starting disposal" << std::endl;
+    //    std::cout << "Starting disposal" << std::endl;
     glb_.~GRelation();
-//    std::cerr << "--disposing--" << std::endl;
+    //    std::cerr << "--disposing--" << std::endl;
     lub_.~GRelation();
-//    std::cout << "Finishing disposal" << std::endl;
+    //    std::cout << "Finishing disposal" << std::endl;
   }
   //@}
   /// \name Bound access
   //@{
-  /// Returns a relation representing the greatest lower bound of the variable
+  /**
+   * \brief Returns a relation representing the greatest lower bound of the
+   * variable.
+   *
+   * This relation contains the tuples that are known to be part of the variable.
+   */
   GRelation glb(void) const {
     return glb_;
   }
-  /// Returns a relation representing the least upper bound of the variable
+  /**
+   * \brief Returns a relation representing the least upper bound of the
+   * variable.
+   *
+   * This relation contains the tuples that are possible part of the variable.
+   */
   GRelation lub(void) const {
     return lub_;
   }
@@ -105,10 +115,21 @@ public:
    * \brief Unknown access.
    *
    * Returns a relation (copy) with the maximum relation that can be included in
-   * the lower bound.
+   * the lower bound. \f$unk = lub \setminus glb \f$
    */
   GRelation unk(void) const {
     return lub_.difference(glb_);
+  }
+  /**
+   * \brief Out of bound access.
+   *
+   * Returns a relation (copy) that is known to not be part of the set of relations
+   * represented by the variable. \f$oob = O \setminus lub \f$, wher \f$ O \f$ is
+   * the full relation.
+   */
+  GRelation oob(void) const {
+    GRelation o(GRelation::create_full(glb_.arity()));
+    return o.difference(lub_);
   }
   //@}
   /// \name Pruning operations
@@ -206,17 +227,19 @@ public:
   /// \name Domain ifnormation
   //@{
   /**
-   * \brief Greatest lower bound access.
+   * \brief Returns a relation representing the greatest lower bound of the
+   * variable.
    *
-   * Returns a relation (copy) that represents the lower bound of the variable.
+   * This relation contains the tuples that are known to be part of the variable.
    */
   CPRel::GRelation glb(void) const {
     return x->glb();
   }
   /**
-   * \brief Least upper bound access.
+   * \brief Returns a relation representing the least upper bound of the
+   * variable.
    *
-   * Returns a relation (copy) that represents the upper bound of the variable.
+   * This relation contains the tuples that are possible part of the variable.
    */
   CPRel::GRelation lub(void) const {
     return x->lub();
@@ -225,10 +248,20 @@ public:
    * \brief Unknown access.
    *
    * Returns a relation (copy) with the maximum relation that can be included in
-   * the lower bound.
+   * the lower bound. \f$unk = lub \setminus glb \f$
    */
   CPRel::GRelation unk(void) const {
     return x->unk();
+  }
+  /**
+   * \brief Out of bound access.
+   *
+   * Returns a relation (copy) that is known to not be part of the set of relations
+   * represented by the variable. \f$oob = O \setminus lub \f$, wher \f$ O \f$ is
+   * the full relation.
+   */
+  CPRel::GRelation oob(void) const {
+    return x->oob();
   }
   //@}
 };
@@ -249,6 +282,9 @@ operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& x) {
   if(!x.assigned()) {
     GRelation unk(x.unk());
     s << ", unk:{" << unk << "}#" << unk.cardinality();
+    /// The oob
+    GRelation oob(x.oob());
+    s << ", oob:{...}#" << oob.cardinality();
   }
   return os << s.str();
 }
