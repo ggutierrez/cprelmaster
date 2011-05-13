@@ -19,6 +19,7 @@ namespace MPG { namespace CPRel { namespace Branch {
  */
 class NoneMin : public Gecode::Brancher {
 protected:
+  /// Relation to branch on
   CPRelView x_;
   /// Simple, tuple-based relation choice
   class RelChoice : public Gecode::Choice {

@@ -84,8 +84,18 @@
  *
  * There are several ways to specify a ground relation. The most common one is
  * by specifying the set of tuples that conform it. See the documentation of the
- * CPRel::Tuple class for more information about how to create tuples.
+ * Tuple class for more information about how to create tuples.
  *
+ * For instance, the following function declares th ground relation \a R that
+ * contains the tuples <tt>(1,2,3), (3,0,2)</tt> and <tt>(99,30,42)</tt> and
+ * then prints it on the standard output.
+ * \include declground-ex.cpp
+ *
+ * \section declvar Variable declaration
+ *
+ * \section relbranch Branching on relation decission variables
+ *
+ * \section relsearch Search
  */
 
 /** \mainpage Constraint programming on relations (CPRel)
@@ -100,7 +110,7 @@
  *
  * - Using the library.
  *   - \subpage install
- *   - Examples
+ *   - \subpage practical
  * - \subpage license
  * - Constraint programming on relations
  * - Acknowledgements

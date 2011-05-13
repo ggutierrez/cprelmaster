@@ -27,12 +27,13 @@ using Gecode::VarImpView;
 // exceptions
 namespace MPG { namespace CPRel {
 
+/// Exception indicating invalid limits
 class OutOfLimits : public Exception {
 public:
   OutOfLimits(const char* l)
     : Exception(l,"Number out of limits") {}
 };
-
+/// Exception indicating empty domain declaration
 class VariableEmptyDomain : public Exception {
 public:
   VariableEmptyDomain(const char* l)
@@ -184,7 +185,7 @@ public:
 
 // variable
 namespace MPG {
-
+/// Relation variables
 class CPRelVar : public VarImpVar<CPRel::CPRelVarImp> {
 protected:
   using VarImpVar<CPRel::CPRelVarImp>::x;
@@ -259,7 +260,7 @@ class CPRelVarArgs; class CPRelVarArray;
 }
 
 namespace Gecode {
-
+/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<Gecode::VarArray<MPG::CPRelVar> > {
 public:
@@ -267,24 +268,33 @@ public:
   typedef MPG::CPRelVar       ValueType;
   typedef MPG::CPRelVarArgs   ArgsType;
 };
+/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<MPG::CPRelVarArray> {
 public:
+  /// Type for storage
   typedef MPG::CPRelVarArray  StorageType;
+  /// Stored type
   typedef MPG::CPRelVar       ValueType;
   typedef MPG::CPRelVarArgs   ArgsType;
 };
+/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<Gecode::VarArgArray<MPG::CPRelVar> > {
 public:
+  /// Type for storage
   typedef MPG::CPRelVarArgs   StorageType;
+  /// Stored type
   typedef MPG::CPRelVar       ValueType;
   typedef MPG::CPRelVarArgs   ArgsType;
 };
+/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<MPG::CPRelVarArgs> {
 public:
+  /// Type for storage
   typedef MPG::CPRelVarArgs  StorageType;
+  /// Stored type
   typedef MPG::CPRelVar      ValueType;
   typedef MPG::CPRelVarArgs  ArgsType;
 };
@@ -306,7 +316,7 @@ public:
       (*this)[i] = CPRelVar(home,l,u);
   }
 };
-
+/// Array of relation variables
 class CPRelVarArray : public VarArray<CPRelVar> {
 public:
   CPRelVarArray(void) {}
@@ -376,7 +386,7 @@ operator<<(std::basic_ostream<Char,Traits>& os, const CPRelView& x) {
 }}
 // constant integer view
 namespace MPG { namespace CPRel {
-
+/// Constant view on a relation variable
 class ConstCPRelView : public ConstView<CPRelView> {
 protected:
   int x;
@@ -403,7 +413,7 @@ public:
   int max(const Delta&) const {
     GECODE_NEVER; return 0;
   }
-  // update during cloning
+  /// Update during cloning
   void update(Space& home, bool share, ConstCPRelView& y) {
     ConstView<CPRelView>::update(home,share,y);
     x = y.x;

@@ -6,10 +6,18 @@
 #include <iostream>
 
 namespace MPG { namespace CPRel {
+/**
+ * \defgroup TupleGroup Tuples
+ *
+ * Tuples are the abstraction for the elements of relations.
+ */
 
 using std::vector;
 
-/// Class to abstract a tuple in a relation
+/**
+ * \brief Class to abstract a tuple in a relation
+ * \ingroup TupleGroup
+ */
 class Tuple {
 private:
   /// Actual data container
@@ -34,6 +42,13 @@ public:
     data_.push_back(a);
     data_.push_back(b);
   }
+  /// Constructor for a ternary tuple
+  Tuple(int a, int b, int c) : arity_(3) {
+    data_.reserve(3);
+    data_.push_back(a);
+    data_.push_back(b);
+    data_.push_back(c);
+  }
   /// Copy constructor
   Tuple(const Tuple& t)
     : data_(t.data_), arity_(t.arity_) {}
@@ -49,7 +64,6 @@ public:
     assert(i>=0 && i<arity_);
     return data_.at(i);
   }
-
   /// Arity of the tuple
   int arity(void) const { return arity_; }
   /// Iterator to the start of the tuple
@@ -62,6 +76,10 @@ public:
   }
 };
 
+/**
+ * \brief Outputs tuple \a t to \a os
+ * \ingroup TupleGroup
+ */
 inline
 std::ostream& operator << (std::ostream& os, const Tuple& t) {
   os << "[";

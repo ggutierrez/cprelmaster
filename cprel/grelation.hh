@@ -98,6 +98,9 @@ public:
 /**
  * \brief Creates a relation with the elements contained in \a dom.
  * \ingroup GRelation
+ *
+ * The arity of the created relation corresponds to the number of elements of the
+ * provided tuples. All the tuples are assumed to be of the same arity.
  */
 GRelation create(const std::vector<Tuple>& dom);
 
