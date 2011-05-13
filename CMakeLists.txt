@@ -312,10 +312,15 @@ include_directories(${Gecode_INCLUDE_DIRS})
 ##########################################################################
 set(CPREL_SRCS
   cprel/tuple.hh
-  cprel/grelation.cpp
   cprel/grelation.hh
   cprel/cprel.hh
+  cprel/varimp.hh
+  cprel/var.hh
+  cprel/view.hh
+
+  cprel/grelation.cpp
   cprel/main.cpp
+
   doc/main.hh
 )
 add_library(gecodecprel ${CPREL_SRCS})
