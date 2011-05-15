@@ -4,7 +4,10 @@
 #include <cprel/cprel.hh>
 
 namespace MPG { namespace CPRel { namespace Prop {
-
+/**
+ * \brief Equality propagator between two relations
+ * \ingroup SetProp
+ */
 class Equal : public Gecode::Propagator {
 protected:
   CPRel::CPRelView left_, right_;
@@ -64,7 +67,10 @@ public:
 };
 }}
 
-/// Posts: \f$ A \eqiv B \f$
+/**
+ * \brief Posts: \f$ A = B \f$
+ * \ingroup SetProp
+ */
 void equal(Gecode::Space& home, CPRelVar A, CPRelVar B) {
   if (home.failed()) return;
 

@@ -78,7 +78,7 @@ public:
   GRelation difference(const GRelation& r) const;
   /// Computes \f$ this \cap r \f$
   GRelation intersect(const GRelation& r) const;
-  /// Computes \f$ \overrule{this}\f$
+  /// Computes \f$ \overline{this}\f$
   GRelation complement(void) const;
   //@}
   /// \name Test operations

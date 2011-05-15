@@ -599,6 +599,7 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = @CMAKE_SOURCE_DIR@/cprel \
+                         @CMAKE_SOURCE_DIR@/cprel/prop \
                          @CMAKE_SOURCE_DIR@/bdddomain \
                          @CMAKE_SOURCE_DIR@/doc
 

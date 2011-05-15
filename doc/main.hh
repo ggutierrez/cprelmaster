@@ -142,3 +142,10 @@
  * - Acknowledgements
  *
  */
+
+/**
+ * \defgroup SetProp Set propagators on relations
+ *
+ * A relation can be seen as a set of tuples. From this point of view different
+ * constraints can be defined. These propagators are presented in this module.
+ */
