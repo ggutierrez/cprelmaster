@@ -77,13 +77,25 @@ bool GRelation::differenceAssign(const GRelation &r) {
 }
 
 GRelation GRelation::difference(const GRelation &r) const {
-  using VarImpl::difference;
   return
       GRelation(
-        Impl(new RelationImpl(difference(*pimpl_,*(r.pimpl_))))
+        Impl(new RelationImpl(VarImpl::difference(*pimpl_,*(r.pimpl_))))
         );
 }
 
+GRelation GRelation::intersect(const GRelation &r) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(VarImpl::intersect(*pimpl_,*(r.pimpl_))))
+        );
+}
+
+GRelation GRelation::complement(void) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(VarImpl::complement(*pimpl_)))
+        );
+}
 
 GRelation create(const std::vector<Tuple>& dom) {
   std::vector<Tuple>::const_iterator c = dom.begin();

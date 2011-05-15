@@ -98,6 +98,32 @@
  * \section relsearch Search
  */
 
+/**
+ * \page setcprel Set constraints
+ *
+ * The constraints presented in this section have in common that they consider a
+ * relation as a set of tuples. Under this assumption, we define the following
+ * constraints:
+ *
+ * \section cprelland Intersection:
+ * States that the intersection between relations \f$A\f$ and \f$B\f$ is equal
+ * to relation \f$C\f$. The semantic definition for this constraint is:
+ * \f[
+ *  Intersect(A,B,C) \equiv \forall t: t \in A \land t \in B \iff t \in C
+ * \f]
+ */
+/**
+ * \page cprel Constraint programming on relations
+ *
+ * \section cprelvars Variables
+ *
+ * \section cprelconstraints Constraints
+ * - \subpage setcprel
+ *
+ * \section cprelbranch Branchers
+ *
+ */
+
 /** \mainpage Constraint programming on relations (CPRel)
  *
  * \authors Gustavo Gutierrez: <tt>gutierrez.gustavo</tt> <b>at</b> uclouvain.be
@@ -112,7 +138,7 @@
  *   - \subpage install
  *   - \subpage practical
  * - \subpage license
- * - Constraint programming on relations
+ * - \subpage cprel
  * - Acknowledgements
  *
  */

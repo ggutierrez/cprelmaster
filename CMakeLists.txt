@@ -322,6 +322,9 @@ set(CPREL_SRCS
   cprel/main.cpp
   doc/main.hh
 
+# propagators
+  cprel/prop/equality.hh
+  cprel/prop/equality.cpp
 )
 add_library(gecodecprel ${CPREL_SRCS})
 target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
@@ -437,3 +440,7 @@ target_link_libraries(domain-test bdddomain)
 
 add_executable(grel-test tests/grel-test.cpp)
 target_link_libraries(grel-test gecodecprel)
+
+# test for the equality propagator
+add_executable(eq tests/equality.cpp)
+target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
