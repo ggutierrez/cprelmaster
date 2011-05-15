@@ -12,12 +12,10 @@ using Gecode::ES_OK;
 namespace MPG { namespace CPRel { namespace Branch {
 
 /**
- * \brief Simple, tuple based brancher
- *
- * Simple brancher on a relation variable that selects a tuple and decides
- * to include and exclude it.
+ * \brief Simple and naive brancher based on tuple inclusion and exclusion.
+ * \ingroup RelBranch
  */
-class NoneMin : public Gecode::Brancher {
+class NaiveBranch : public Gecode::Brancher {
 protected:
   /// Relation to branch on
   CPRelView x_;
@@ -27,7 +25,7 @@ protected:
     /// Tuple to branch on
     Tuple t_;
     /// Constructor
-    RelChoice(const NoneMin& b, const Tuple& t)
+    RelChoice(const NaiveBranch& b, const Tuple& t)
       : Choice(b,2), t_(t) {}
     /// Returns the size of the object
     virtual size_t size(void) const {
@@ -36,20 +34,20 @@ protected:
   };
 public:
   /// Constructor for a brancher on variable \a x
-  NoneMin(Home home, CPRelView x)
+  NaiveBranch(Home home, CPRelView x)
     : Brancher(home), x_(x) {}
   /// Brancher posting
   static void post(Home home, CPRelView x) {
-    (void) new (home) NoneMin(home,x);
+    (void) new (home) NaiveBranch(home,x);
   }
   /// Constructor for clonning
-  NoneMin(Space& home, bool share, NoneMin& b)
+  NaiveBranch(Space& home, bool share, NaiveBranch& b)
     : Brancher(home,share,b) {
     x_.update(home,share,b.x_);
   }
   /// Brancher copying
   virtual Brancher* copy(Space& home, bool share) {
-    return new (home) NoneMin(home,share,*this);
+    return new (home) NaiveBranch(home,share,*this);
   }
   /// Brancher disposal
   virtual size_t dispose(Space& home) {
@@ -81,10 +79,17 @@ public:
 };
 }}
 
-void branch(Home home, CPRelVar x) {
+/**
+ * \brief Naive brancher on relation \a R
+ * \ingroup RelBranch
+ *
+ * Branches on \a R by selecting a tuple in it and creating a choice point that
+ * includes and excludes that tuple.
+ */
+void branch(Home home, CPRelVar R) {
   using namespace CPRel::Branch;
   if (home.failed()) return;
-  NoneMin::post(home,x);
+  NaiveBranch::post(home,R);
 }
 
 }

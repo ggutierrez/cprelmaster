@@ -43,7 +43,6 @@ class CPRelVarArgs; class CPRelVarArray;
 }
 
 namespace Gecode {
-/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<Gecode::VarArray<MPG::CPRelVar> > {
 public:
@@ -51,33 +50,24 @@ public:
   typedef MPG::CPRelVar       ValueType;
   typedef MPG::CPRelVarArgs   ArgsType;
 };
-/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<MPG::CPRelVarArray> {
 public:
-  /// Type for storage
   typedef MPG::CPRelVarArray  StorageType;
-  /// Stored type
   typedef MPG::CPRelVar       ValueType;
   typedef MPG::CPRelVarArgs   ArgsType;
 };
-/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<Gecode::VarArgArray<MPG::CPRelVar> > {
 public:
-  /// Type for storage
   typedef MPG::CPRelVarArgs   StorageType;
-  /// Stored type
   typedef MPG::CPRelVar       ValueType;
   typedef MPG::CPRelVarArgs   ArgsType;
 };
-/// Specialization of ArrayTraits for arrays of relation variables
 template<>
 class ArrayTraits<MPG::CPRelVarArgs> {
 public:
-  /// Type for storage
   typedef MPG::CPRelVarArgs  StorageType;
-  /// Stored type
   typedef MPG::CPRelVar      ValueType;
   typedef MPG::CPRelVarArgs  ArgsType;
 };
@@ -85,7 +75,6 @@ public:
 }
 // variable arrays
 namespace MPG {
-/// Passing relation variables
 class CPRelVarArgs : public VarArgArray<CPRelVar> {
 public:
   CPRelVarArgs(void) {}
@@ -99,7 +88,6 @@ public:
       (*this)[i] = CPRelVar(home,l,u);
   }
 };
-/// Array of relation variables
 class CPRelVarArray : public VarArray<CPRelVar> {
 public:
   CPRelVarArray(void) {}
