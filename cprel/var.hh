@@ -5,28 +5,66 @@
 #include <cprel/grelation.hh>
 #include <cprel/varimp.hh>
 
-using Gecode::VarImpVar;
+/**
+ * \defgroup CPRelVars Relation variables
+ *
+ * This module define the interface to model constraint problems using relation
+ * variables.
+ */
 
-// variable
+/**
+ * \defgroup SetProp Set propagators on relations
+ *
+ * A relation can be seen as a set of tuples. From this point of view different
+ * constraints can be defined. These propagators are presented in this module.
+ */
+
+/**
+ * \defgroup RelBranch Branchers (distribution strategies) on relations
+ *
+ * This module contains the branchers that can be used on relation domains.
+ */
+
 namespace MPG {
-/// Relation variables
-class CPRelVar : public VarImpVar<CPRel::CPRelVarImp> {
+/**
+ * \brief Relation variables.
+ * \ingroup CPRelVars
+ *
+ * This class provides the way to create and access information of relation
+ * variables.
+ */
+class CPRelVar : public Gecode::VarImpVar<CPRel::CPRelVarImp> {
 protected:
+  /// Variable implementation
   using VarImpVar<CPRel::CPRelVarImp>::x;
 public:
+  /// \name Constructors
+  //@{
+  /// Default constructor
   CPRelVar(void) {}
+  /// Copy constructor
   CPRelVar(const CPRelVar& y)
-    : VarImpVar<CPRel::CPRelVarImp>(y.varimp()) {}
+    : Gecode::VarImpVar<CPRel::CPRelVarImp>(y.varimp()) {}
+  /// Constructor from a variable implementation \a y
   CPRelVar(CPRel::CPRelVarImp *y)
-    : VarImpVar<CPRel::CPRelVarImp>(y) {}
-
-  // variable creation
+    : Gecode::VarImpVar<CPRel::CPRelVarImp>(y) {}
+  //@}
+  /// \name Variable creation
+  //@{
+  /**
+   * \brief Creates a relation variable with \a l as the lower bound relation
+   * and \a u as the upper bound.
+   *
+   * \warning Throws a CPRel::VariableEmptyDomain if the provided bounds describe
+   * an empty domain.
+   */
   CPRelVar(Space& home, const CPRel::GRelation& l, const CPRel::GRelation& u)
     : VarImpVar<CPRel::CPRelVarImp>
       (new (home) CPRel::CPRelVarImp(home,l,u)) {
     if (!l.subsetEq(u))
       throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }
+  //@}
   /// \name Domain ifnormation
   //@{
   /**
@@ -69,31 +107,38 @@ public:
   //@}
 };
 
+/**
+ * \brief Output relation variable \a R to \a os.
+ * \ingroup CPRelVars
+ *
+ * \a R is printed as three different groups: the lower bound (\a glb), the unknown
+ * Which is equivalent to \f$ lub \setminus glb \f$ and the out of bound (\f$\mathcal{U}_{k}\setminus lub \f$
+ * ), where \f$\mathcal{U}_{k}\f$ is the universe containing all tuples of arity
+ * \f$k\f$.
+ */
 template<class Char, class Traits>
 std::basic_ostream<Char,Traits>&
-operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& x) {
+operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& R) {
   std::basic_ostringstream<Char,Traits> s;
   s.copyfmt(os); s.width(0);
 
   using namespace CPRel;
-  if (x.assigned()) s << "val:{";
+  if (R.assigned()) s << "val:{";
   else s << "glb:{";
 
-  GRelation glb(x.glb());
+  GRelation glb(R.glb());
   s  << glb << "}#" << glb.cardinality();
 
-  if(!x.assigned()) {
-    GRelation unk(x.unk());
+  if(!R.assigned()) {
+    GRelation unk(R.unk());
     s << ", unk:{" << unk << "}#" << unk.cardinality();
     /// The oob
-    GRelation oob(x.oob());
+    GRelation oob(R.oob());
     s << ", oob:{...}#" << oob.cardinality();
   }
   return os << s.str();
 }
 
 }
-
-
 
 #endif

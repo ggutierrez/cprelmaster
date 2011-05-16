@@ -232,7 +232,7 @@ endif()
 ##########################################################################
 # BDDDomain Installation
 ##########################################################################
-install(TARGETS bdddomain
+install(TARGETS bdddomain ${CUDD_LIBS}
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 install(DIRECTORY bdddomain/ DESTINATION include/bdddomain

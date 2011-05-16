@@ -24,10 +24,10 @@ private:
   vector<int> data_;
   /// Arity of the tuple
   int arity_;
+  /// Avoiding Default constructor
+  Tuple(void);
 public:
   typedef vector<int>::const_iterator iterator;
-  /// Default constructor
-  Tuple(void);
   /// Constructor for an empty tuple of \a k elements
   Tuple(int k) {
     data_.reserve(k);
