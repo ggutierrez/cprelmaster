@@ -39,6 +39,7 @@ public:
    * variable.
    */
   GRelation glb(void) const {
+    // this is equivalent to the x.oob()
     return x.lub().complement();
   }
   /**
@@ -65,8 +66,7 @@ public:
    * the full relation.
    */
   GRelation oob(void) const {
-    GRelation o(GRelation::create_full(glb().arity()));
-    return o.difference(lub());
+    return x.glb();
   }
   //@}
   /// \name Modification operations

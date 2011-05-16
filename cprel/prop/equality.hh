@@ -51,15 +51,15 @@ public:
     GECODE_ME_CHECK(left_.include(home,right_.glb()));
     GECODE_ME_CHECK(right_.include(home,left_.glb()));
 
-    std::cout << "Caard after 1(left): " << left_.glb().cardinality() << std::endl;
-    std::cout << "Caard after 1(RIGHT): " << right_.glb().cardinality() << std::endl;
+//    std::cout << "Caard after 1(left): " << left_.glb().cardinality() << std::endl;
+//    std::cout << "Caard after 1(RIGHT): " << right_.glb().cardinality() << std::endl;
 
-    std::cout << "Elems right.lub: " << right_.lub().cardinality() << std::endl;
-    std::cout << "Elems left.lub: " << left_.lub().cardinality() << std::endl;
-    std::cout << "Elems inter: " << right_.lub().intersect(left_.lub()) << std::endl;
+//    std::cout << "Elems right.lub: " << right_.lub().cardinality() << std::endl;
+//    std::cout << "Elems left.lub: " << left_.lub().cardinality() << std::endl;
+//    std::cout << "Elems inter: " << right_.lub().intersect(left_.lub()) << std::endl;
     // Both variables must have the same possible elements
     GRelation commonUpperBound(left_.lub().intersect(right_.lub()));
-    std::cout << "performed: " << commonUpperBound << std::endl;
+//    std::cout << "performed: " << commonUpperBound << std::endl;
     GECODE_ME_CHECK(
           left_.exclude(home,commonUpperBound.complement())
           );

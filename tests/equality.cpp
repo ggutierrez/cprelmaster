@@ -20,13 +20,15 @@ GRelation domRu(void) {
 }
 
 GRelation domQu(void) {
-  vector<Tuple> rl;
+/*  vector<Tuple> rl;
   rl.reserve(4);
   rl.push_back(Tuple(2,3)); rl.push_back(Tuple(0,0));
   rl.push_back(Tuple(2,1)); rl.push_back(Tuple(1,1));
   //rl.push_back(Tuple(6,7));
 
   return GRelation(CPRel::create(rl));
+  */
+  return GRelation::create_full(2);
 }
 
 class EqualityTest : public Gecode::Space {
@@ -38,10 +40,10 @@ public:
     GRelation lbr(2);
     r = CPRelVar(*this,lbr,domRu());
     GRelation lbq(2); //lbq.add(Tuple(2,3));
-    q = CPRelVar(*this,lbq,domRu());
+    q = CPRelVar(*this,lbq,domQu());
 
-    std::cerr << "R:" << r << std::endl;
-    std::cerr << "Q:" << q << std::endl;
+    //std::cerr << "R:" << r << std::endl;
+    //std::cerr << "Q:" << q << std::endl;
 
     //equal(*this,r,q);
     complement(*this,r,q);
@@ -50,7 +52,7 @@ public:
   void print(std::ostream& os) const {
     os << "<b>Space</b>" << std::endl;
     os << "<b>R</b>: " << r << std::endl
-       << "<b>Q</b>: " << q << std::endl;
+       << "<b>Q</b>: " << q.oob() << std::endl;
   }
   EqualityTest(bool share, EqualityTest& s)
     : Gecode::Space(share,s) {
