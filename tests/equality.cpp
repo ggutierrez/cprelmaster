@@ -21,10 +21,10 @@ GRelation domRu(void) {
 
 GRelation domQu(void) {
   vector<Tuple> rl;
-  rl.reserve(5);
+  rl.reserve(4);
   rl.push_back(Tuple(2,3)); rl.push_back(Tuple(0,0));
   rl.push_back(Tuple(2,1)); rl.push_back(Tuple(1,1));
-  rl.push_back(Tuple(6,7));
+  //rl.push_back(Tuple(6,7));
 
   return GRelation(CPRel::create(rl));
 }
@@ -37,11 +37,14 @@ public:
 
     GRelation lbr(2);
     r = CPRelVar(*this,lbr,domRu());
-    GRelation lbq(2); lbq.add(Tuple(2,3));
-    q = CPRelVar(*this,lbq,domQu());
+    GRelation lbq(2); //lbq.add(Tuple(2,3));
+    q = CPRelVar(*this,lbq,domRu());
 
-    equal(*this,r,q);
-    //std::cerr << r << std::endl;
+    std::cerr << "R:" << r << std::endl;
+    std::cerr << "Q:" << q << std::endl;
+
+    //equal(*this,r,q);
+    complement(*this,r,q);
     branch(*this,r);
   }
   void print(std::ostream& os) const {

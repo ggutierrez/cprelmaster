@@ -317,6 +317,8 @@ set(CPREL_SRCS
   cprel/var.hh
   cprel/varimp.hh
   cprel/view.hh
+  cprel/const-view.hh
+  cprel/complement-view.hh
 
   cprel/grelation.cpp
   cprel/main.cpp

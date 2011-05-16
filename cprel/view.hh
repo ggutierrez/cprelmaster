@@ -120,62 +120,12 @@ operator<<(std::basic_ostream<Char,Traits>& os, const CPRelView& R) {
   return os << s.str();
 }
 
-}}
-
-// constant integer view
-namespace MPG { namespace CPRel {
-/// Constant view on a relation variable
-class ConstCPRelView : public Gecode::ConstView<CPRelView> {
-protected:
-  int x;
-public:
-  ConstCPRelView(void) : x(0) {}
-  ConstCPRelView(int n) : x(n) {}
-
-  int min(void) const {
-    return x;
-  }
-  int max(void) const {
-    return x;
-  }
-  ModEvent lq(Space&, int n) {
-    return (x <= n) ? ME_CPREL_NONE : ME_CPREL_FAILED;
-  }
-  ModEvent gq(Space&, int n) {
-    return (x >= n) ? ME_CPREL_NONE : ME_CPREL_FAILED;
-  }
-  // delta information
-  int min(const Delta&) const {
-    GECODE_NEVER; return 0;
-  }
-  int max(const Delta&) const {
-    GECODE_NEVER; return 0;
-  }
-  /// Update during cloning
-  void update(Space& home, bool share, ConstCPRelView& y) {
-    ConstView<CPRelView>::update(home,share,y);
-    x = y.x;
-  }
-};
-// view tests
-inline bool same(const ConstCPRelView& x, const ConstCPRelView& y) {
-  return x.min() == y.min();
-}
-inline bool before(const ConstCPRelView& x, const ConstCPRelView& y) {
-  return x.min() < y.min();
-}
-
-template<class Char, class Traits>
-std::basic_ostream<Char,Traits>&
-operator <<(std::basic_ostream<Char,Traits>& os, const ConstCPRelView& x) {
-  return os << x.min();
-}
-
 }
 
 void branch(Gecode::Home home, CPRelVar x);
 }
 
-
+#include <cprel/const-view.hh>
+#include <cprel/complement-view.hh>
 
 #endif

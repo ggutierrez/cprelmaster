@@ -23,15 +23,16 @@ public:
   static Gecode::ExecStatus
   post(Gecode::Home home,
        CPRel::CPRelView a, CPRel::CPRelView b, CPRel::CPRelView c) {
+    using CPRel::CPRelView;
 
     if (Gecode::same(a,b)) {
-      return Equal::post(home,a,c);
+      return Equal<CPRelView,CPRelView>::post(home,a,c);
     }
     if (Gecode::same(a,c)) {
-      return Equal::post(home,b,c);
+      return Equal<CPRelView,CPRelView>::post(home,b,c);
     }
     if (Gecode::same(b,c)) {
-      return Equal::post(home,a,c);
+      return Equal<CPRelView,CPRelView>::post(home,a,c);
     }
     (void) new (home) Intersect(home,a,b,c);
     return Gecode::ES_OK;
