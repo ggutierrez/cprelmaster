@@ -108,7 +108,7 @@ public:
 };
 
 /**
- * \brief Output relation variable \a R to \a os.
+ * \brief Output relation variable \a R to \a os
  * \ingroup CPRelVars
  *
  * \a R is printed as three different groups: the lower bound (\a glb), the unknown

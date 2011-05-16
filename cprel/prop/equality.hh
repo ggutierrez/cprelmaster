@@ -71,13 +71,7 @@ public:
  * \brief Posts: \f$ A = B \f$
  * \ingroup SetProp
  */
-void equal(Gecode::Space& home, CPRelVar A, CPRelVar B) {
-  if (home.failed()) return;
-
-  CPRel::CPRelView left(A);
-  CPRel::CPRelView right(B);
-  GECODE_ES_FAIL(CPRel::Prop::Equal::post(home,left,right));
-}
+void equal(Gecode::Space& home, CPRelVar A, CPRelVar B);
 
 }
 #endif
