@@ -36,7 +36,7 @@ namespace MPG {
 class CPRelVar : public Gecode::VarImpVar<CPRel::CPRelVarImp> {
 protected:
   /// Variable implementation
-  using VarImpVar<CPRel::CPRelVarImp>::x;
+  using Gecode::VarImpVar<CPRel::CPRelVarImp>::x;
 public:
   /// \name Constructors
   //@{
@@ -59,7 +59,7 @@ public:
    * an empty domain.
    */
   CPRelVar(Space& home, const CPRel::GRelation& l, const CPRel::GRelation& u)
-    : VarImpVar<CPRel::CPRelVarImp>
+    : Gecode::VarImpVar<CPRel::CPRelVarImp>
       (new (home) CPRel::CPRelVarImp(home,l,u)) {
     if (!l.subsetEq(u))
       throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");

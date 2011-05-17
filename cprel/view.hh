@@ -9,7 +9,7 @@ namespace MPG { namespace CPRel {
 class CPRelView : public Gecode::VarImpView<CPRelVar> {
 protected:
   /// Variable
-  using VarImpView<CPRelVar>::x;
+  using Gecode::VarImpView<CPRelVar>::x;
 public:
   /// \name Constructors
   //@{

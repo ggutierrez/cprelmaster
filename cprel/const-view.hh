@@ -73,7 +73,7 @@ public:
   }
   /// Update during cloning
   void update(Space& home, bool share, ConstCPRelView& y) {
-    ConstView<CPRelView>::update(home,share,y);
+    Gecode::ConstView<CPRelView>::update(home,share,y);
     r_ = y.r_;
   }
 };
