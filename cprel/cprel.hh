@@ -106,4 +106,7 @@ public:
 // View implementation
 #include <cprel/view.hh>
 
+namespace MPG {
+void branch(Gecode::Home home, CPRelVar x);
+}
 #endif

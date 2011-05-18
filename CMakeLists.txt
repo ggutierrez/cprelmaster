@@ -220,8 +220,14 @@ endif()
 ##########################################################################
 include_directories(${CMAKE_SOURCE_DIR})
 set(BDDDOMAIN_SRCS
+  bdddomain/manager.hh
+  bdddomain/manager.cpp
+  bdddomain/encoding.cpp
+  bdddomain/encoding.hh
   bdddomain/rel-impl.cpp
   bdddomain/rel-impl.hh
+  bdddomain/cube-iterator.hh
+  bdddomain/cube-iterator.cpp
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
@@ -321,7 +327,7 @@ set(CPREL_SRCS
   cprel/complement-view.hh
 
   cprel/grelation.cpp
-  cprel/main.cpp
+  cprel/varimp.cpp
   doc/main.hh
 
 # propagators
@@ -330,6 +336,8 @@ set(CPREL_SRCS
 
   cprel/prop/and.hh
   cprel/prop/and.cpp
+# branchers
+  cprel/branch/branch.cpp
 )
 add_library(gecodecprel ${CPREL_SRCS})
 target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
@@ -360,7 +368,7 @@ if(DOXYGEN_FOUND)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
   set(DOC_SOURCE_CODE doc/declground-ex.cpp)
   file(COPY ${DOC_SOURCE_CODE} DESTINATION  ${CMAKE_BINARY_DIR})
-  add_custom_target(doc
+  add_custom_target(html
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating API documentation with Doxygen" VERBATIM
@@ -429,14 +437,30 @@ endif()
 ##########################################################################
 # Source distribution
 ##########################################################################
-set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${PROJECT_VERSION})
+MACRO(TODAY RESULT)
+ if(WIN32)
+   execute_process(COMMAND "date" "/T" OUTPUT_VARIABLE ${RESULT})
+   string(REGEX REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1" ${RESULT} ${${RESULT}})
+ elseif(UNIX)
+   execute_process(COMMAND "date" "+%d/%m/%Y" OUTPUT_VARIABLE ${RESULT})
+   string(REGEX REPLACE "(..)/(..)/..(..).*" "\\3\\2\\1" ${RESULT} ${${RESULT}})
+ else()
+   message(SEND_ERROR "date not implemented")
+   set(${RESULT} 000000)
+ endif()
+ENDMACRO()
+
+TODAY(TIME_SUFFIX)
+set(FILE_SUFFIX "${PROJECT_VERSION}-${TIME_SUFFIX}")
+set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${FILE_SUFFIX})
 add_custom_target(dist
-  COMMAND git archive --format zip --output ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.zip --prefix=${ARCHIVE_NAME}/ master
+  git archive --format zip --output ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.zip --prefix=${ARCHIVE_NAME}/ master
+  COMMAND tar zcvf "${CMAKE_BINARY_DIR}/doc-${FILE_SUFFIX}.tgz" ${CMAKE_BINARY_DIR}/html
+  DEPENDS html
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 ##########################################################################
 # Executables
 ##########################################################################
-
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
 

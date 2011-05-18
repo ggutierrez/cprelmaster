@@ -1,7 +1,5 @@
 #include <cprel/cprel.hh>
 
-
-
 using Gecode::Home;
 using Gecode::Space;
 using Gecode::Choice;
@@ -93,6 +91,3 @@ void branch(Home home, CPRelVar R) {
 }
 
 }
-
-// Register a disposer for variable implementations
-Gecode::VarImpDisposer<MPG::CPRel::CPRelVarImp> d;

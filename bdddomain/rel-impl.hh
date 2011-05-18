@@ -1,103 +1,16 @@
 #ifndef __CPREL_BDDDOMAIN_REL_IMPL_HH__
 #define __CPREL_BDDDOMAIN_REL_IMPL_HH__
 
-#include <boost/utility.hpp>
-#include <boost/shared_ptr.hpp>
-#include <cudd/cuddInt.h>
 
+#include <bdddomain/manager.hh>
 #include <cprel/tuple.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
-
-class BddManager;
-typedef boost::shared_ptr<BddManager> PManager;
 /**
- * \brief Class to handle the creation and destruction of Cudd related objects.
+ * \defgroup DomRepr Domain representation
  *
- * The idea of having this class is to create a global object that
- * is in charge of the resource deallocation of Cudd entities. For
- * this reason only one manager is used and this class implements the
- * singleton pattern.
+ * This module provides the support to represent relation domains.
  */
-class BddManager : private boost::noncopyable {
-private:
-  /// Only one single instance of this class is allowed at run time
-  static PManager _instance;
-  /// Pointer to the Bdd manager
-  DdManager *dd;
-  /// Constant true
-  DdNode *one_;
-  /// Constant false
-  DdNode *zero_;
-  /**
-   * \brief Defines the number of bits to represent an element inside a relation
-   * tuple.
-   *
-   * The maximum number that can be part of relation's tuple is 2^BBV_. A
-   * suitable value for this attribute is 5 and this allows to represent positive
-   * integers with 32 bits.
-   */
-  int BBV_;
-  int  BA_;
-  /// \name Constructors and destructor
-  //@{
-  /// Constructor that initializes the BDD manager of CUDD
-  BddManager (void)
-    : dd(Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
-    , one_(DD_ONE(dd))
-    , zero_(Cudd_Not(DD_ONE(dd)))
-    , BBV_(5), BA_(3)
-  {
-    std::cout << "Created bdd manager" << std::endl;
-  }
-  /// Creates an instace of this object
-  static void create() {
-    _instance.reset( new BddManager, &deleter );
-  }
-  /// Destructor that releases the BDD manager of CUDD
-  ~BddManager (void) {
-    std::cout << "Called destructor: " << references() << std::endl;
-    Cudd_Quit(dd);
-  }
-  //@}
-  /// Method called by the managed pointer when destructed
-  static void deleter(BddManager *ptr) {
-    delete ptr;
-  }
-  int references(void) {
-    return Cudd_CheckZeroRef(dd);
-  }
-public:
-  /// Returns an instance of the manager
-  static PManager instance(void) {
-    if (_instance.get() != NULL)
-      return _instance;
-    create();
-    return _instance;
-  }
-  /// \name Access
-  //@{
-  /// Returns the bdd manager
-  DdManager* manager(void) {
-    return dd;
-  }
-  /// Returns the constant \c true
-  DdNode* one(void) {
-    return one_;
-  }
-  /// Returns the constant \c false
-  DdNode* zero(void) {
-    return zero_;
-  }
-  int bbv(void) {
-    return BBV_;
-  }
-  int ba(void) {
-    return BA_;
-  }
-  //@}
-};
-
 class RelationImplIter;
 /// Stores the representation of a relation using BDDs
 class RelationImpl {
@@ -155,7 +68,12 @@ public:
   bool universe(void) const;
   //@}
   /// \name Operations
+  /**
+   * \brief Returns the relation resulting from swapping column \a x by \a y
+   */
   RelationImpl swap_columns(int x, int y) const;
+  /// Returns the relation resulting from existencially quantifying on column \a c
+  RelationImpl cuantifyExist(int c) const;
   /// \name Iteration
   //@{
   /// Returns an iterator on the tuples of the relation
@@ -163,19 +81,29 @@ public:
   //@}
 };
 
-/// Tests whether two relations are the same
+/**
+ * \brief Tests whether two relations are the same.
+ * \ingroup DomRepr
+ */
 inline
 bool operator==(const RelationImpl& r, const RelationImpl& s) {
   return r.equal(s);
 }
 
-/// Tests whether two relations are different
+/**
+ * \brief Tests whether two relations are different
+ * \ingroup DomRepr
+ */
 inline
 bool operator!=(const RelationImpl& r, const RelationImpl& s) {
   return !r.equal(s);
 }
 
-/// Returns the union of relations \a r and \a s
+
+/**
+ * \brief Returns the union of relations \a r and \a s
+ * \ingroup DomRepr
+ */
 inline
 RelationImpl Union(const RelationImpl& r, const RelationImpl& s) {
   assert(r.arity() == s.arity());
@@ -184,7 +112,10 @@ RelationImpl Union(const RelationImpl& r, const RelationImpl& s) {
   return u;
 }
 
-/// Returns the difference between relations \a r and \a s
+/**
+ * \brief Returns the difference between relations \a r and \a s
+ * \ingroup Domrepr
+ */
 inline
 RelationImpl difference(const RelationImpl& r, const RelationImpl& s) {
   assert(r.arity() == s.arity());
@@ -193,7 +124,10 @@ RelationImpl difference(const RelationImpl& r, const RelationImpl& s) {
   return d;
 }
 
-/// Returns the intersection between relations \a r and \a s
+/**
+ * \brief Returns the intersection between relations \a r and \a s
+ * \ingroup DomRepr
+ */
 inline
 RelationImpl intersect(const RelationImpl& r, const RelationImpl& s) {
   assert(r.arity() == s.arity());
@@ -202,39 +136,57 @@ RelationImpl intersect(const RelationImpl& r, const RelationImpl& s) {
   return i;
 }
 
-/// Subset: \f$ r \subseteq s \f$
+/**
+ * \brief Subset: \f$ r \subseteq s \f$
+ * \ingroup DomRepr
+ */
 inline
 bool subsetEq(const RelationImpl& r, const RelationImpl& s) {
   assert(r.arity() == s.arity());
   return intersect(r,s) == r;
 }
 
-/// Superset: \f$ r \supseteq s \f$
+/**
+ * \brief Superset: \f$ r \supseteq s \f$
+ * \ingroup DomRepr
+ */
 inline
 bool supersetEq(const RelationImpl& r, const RelationImpl& s) {
   return subsetEq(s,r);
 }
 
-/// Proper subset: \f$ r \subset s \f$
+/**
+ * \brief Proper subset: \f$ r \subset s \f$
+ * \ingroup DomRepr
+ */
 inline
 bool subset(const RelationImpl& r, const RelationImpl& s) {
   assert(r.arity() == s.arity());
   return subsetEq(r,s) && r != s;
 }
 
-/// Proper superset: \f$ r \supset s \f$
+/**
+ * \brief Proper superset: \f$ r \supset s \f$
+ * \ingroup DomRepr
+ */
 inline
 bool superset(const RelationImpl& r, const RelationImpl& s) {
   return subset(s,r);
 }
 
-/// Disjoint: \f$ r \cap s = \emptyset \f$
+/**
+ * \brief Disjoint: \f$ r \cap s = \emptyset \f$
+ * \ingroup DomRepr
+ */
 inline
 bool disjoint(const RelationImpl& r, const RelationImpl& s) {
   return intersect(r,s).empty();
 }
 
-/// Returns the complement of relation \a r
+/**
+ * \brief Returns the complement of relation \a r
+ * \ingroup DomRepr
+ */
 inline
 RelationImpl complement(const RelationImpl& r) {
   RelationImpl c(r);
@@ -242,7 +194,16 @@ RelationImpl complement(const RelationImpl& r) {
   return c;
 }
 
-/// Class to iterate in tuples of a relation implementation
+/**
+ * \brief Class to iterate on tuples of a relation implementation
+ * \ingroup DomRepr
+ *
+ * \warning The tuple iteration on relations should be used with care. Very large
+ * relations can result in large amount of run time.
+ *
+ * The implementation of this iterator makes it advance on the relation after the
+ * call to the val(). It is not in any way an standard iterator.
+ */
 class RelationImplIter {
 private:
   /// The BDD with the representation of the relation being iterated
@@ -266,6 +227,10 @@ public:
   bool operator()(void) const;
 };
 
+/**
+ * \brief Output a relation implementation \a r in tuple format to \a os
+ * \ingroup DomRepr
+ */
 inline
 std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
   os << "{";
@@ -275,6 +240,7 @@ std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
   os << "}";
   return os;
 }
+
 }}}
 
 #endif

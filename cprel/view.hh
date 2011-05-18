@@ -125,10 +125,7 @@ operator<<(std::basic_ostream<Char,Traits>& os, const CPRelView& R) {
   return os << s.str();
 }
 
-}
-
-void branch(Gecode::Home home, CPRelVar x);
-}
+}}
 
 #include <cprel/const-view.hh>
 #include <cprel/complement-view.hh>
