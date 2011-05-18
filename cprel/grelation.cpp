@@ -104,6 +104,10 @@ GRelation create(const std::vector<Tuple>& dom) {
   return r;
 }
 
+GRelation create_full(int a) {
+  return GRelation(a).complement();
+}
+
 std::ostream& operator<< (std::ostream& os, const GRelation& r) {
   for(GRelationIter it(r); it(); ++it)
     os << it.val() << " ";

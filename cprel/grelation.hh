@@ -111,6 +111,12 @@ public:
 GRelation create(const std::vector<Tuple>& dom);
 
 /**
+ * \brief Creates a full relation of arity \a a.
+ * \ingroup GRelation
+ */
+GRelation create_full(int a);
+
+/**
  * \brief Outputs relation \a r to \a os
  * \ingroup GRelation
  */

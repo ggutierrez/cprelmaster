@@ -7,7 +7,24 @@
 
 namespace MPG { namespace CPRel {
 
-/// Constant view on a relation variable
+/**
+ * \brief Constant view on a relation variable
+ * \ingroup CPRelViews
+ *
+ * A constant view \f$C\f$ for a ground relation \f$G\f$ provides operations
+ * such that \f$C\f$ behaves like the relation view with domain \f$[G,G]\f$.
+ *
+ * - To create a full view of arity n:
+ *   \code
+ *   GRelation ur = create_full(n);
+ *   ConstView u(ur);
+ *   \endcode
+ * - To create an empty view of arity n:
+ *   \code
+ *   GRelation er(n);
+ *   ConstView e(er);
+ *   \endcode
+ */
 class ConstCPRelView : public Gecode::ConstView<CPRelView> {
 protected:
   /// Constant relation
@@ -23,25 +40,35 @@ public:
   /// \name Access operations
   //@{
   /**
-   * \brief Returns the wrapped relation as lower bound.
+   * \brief Returns the lower bound.
+   *
+   * As the view is constant, this returns a copy of the relation itself.
    */
   GRelation glb(void) const {
     return r_;
   }
   /**
-   * \brief Returns the wrapped relation as upper bound.
+   * \brief Returns the upper bound.
+   *
+   * As the view is constant, this returns a copy of the relation itself.
    */
   GRelation lub(void) const {
     return r_;
   }
   /**
    * \brief Unknown access.
+   *
+   * As a constant view is considered assigned this method retuns an empty ground
+   * relation as the unknown.
    */
   GRelation unk(void) const {
     return GRelation(r_.arity());
   }
   /**
    * \brief Out of bound access.
+   *
+   * The elements that are not part of the relation in the case of a constant view
+   * correspond to the complement of the relation.
    */
   GRelation oob(void) const {
     return r_.complement();

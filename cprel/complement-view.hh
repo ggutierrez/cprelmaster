@@ -8,6 +8,7 @@ namespace MPG { namespace CPRel {
 
 /**
  * \brief Complement relation view
+ * \ingroup CPRelViews
  *
  * A complement view \f$C\f$ for a relation view \f$R\f$ provides operations
  * such that \f$C\f$ behaves like the complement of \f$R\f$.

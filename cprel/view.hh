@@ -5,7 +5,12 @@
 #include <cprel/var.hh>
 
 namespace MPG { namespace CPRel {
-/// View for relation variables
+/**
+ * \brief View for relation variables.
+ * \ingroup CPRelViews
+ *
+ * Normal view on variable implementation of relation variables.
+ */
 class CPRelView : public Gecode::VarImpView<CPRelVar> {
 protected:
   /// Variable

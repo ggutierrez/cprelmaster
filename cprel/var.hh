@@ -8,8 +8,15 @@
 /**
  * \defgroup CPRelVars Relation variables
  *
- * This module define the interface to model constraint problems using relation
+ * This module defines the interface to model constraint problems using relation
  * variables.
+ */
+
+/**
+ * \defgroup CPRelViews Relation views
+ *
+ * This module defines the interface to implement propagators and brancher on
+ * relation variables.
  */
 
 /**
