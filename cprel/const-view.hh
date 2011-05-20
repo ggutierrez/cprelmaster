@@ -36,6 +36,8 @@ public:
   //@{
   /// Constuctor from a ground relation
   ConstCPRelView(const GRelation& r) : r_(r) {}
+  /// Copy constructor
+  ConstCPRelView(const ConstCPRelView& v) : r_(v.r_) {}
   //@}
   /// \name Access operations
   //@{

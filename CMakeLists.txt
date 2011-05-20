@@ -305,8 +305,7 @@ else()
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j10
-    INSTALL_COMMAND make install
+    BUILD_COMMAND make -j3 INSTALL_COMMAND make install
   )
 endif()
 ##########################################################################

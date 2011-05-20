@@ -72,6 +72,13 @@ public:
       throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }
   //@}
+  /// \name Relation information
+  //@{
+  /// Returns the arity
+  int arity(void) const {
+    return x->arity();
+  }
+  //@}
   /// \name Domain ifnormation
   //@{
   /**

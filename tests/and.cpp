@@ -1,7 +1,6 @@
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
 #include <cprel/cprel.hh>
-#include <cprel/prop/and.hh>
 #include <vector>
 
 using namespace Gecode;
@@ -9,7 +8,6 @@ using std::pair;
 using std::make_pair;
 using namespace MPG;
 using namespace MPG::CPRel;
-using namespace MPG::CPRel::Prop;
 
 pair<GRelation,GRelation> domR(void) {
 

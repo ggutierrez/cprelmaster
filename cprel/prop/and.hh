@@ -9,31 +9,44 @@ namespace MPG { namespace CPRel { namespace Prop {
  * \brief Intersection propagator between two relations
  * \ingroup SetProp
  */
+template <typename View0, typename View1, typename View2>
 class Intersect : public Gecode::Propagator {
 protected:
-  CPRel::CPRelView a_, b_, c_;
+  /// First relation
+  View0 a_;
+  /// Second relation
+  View1 b_;
+  /// Third relation
+  View2 c_;
 public:
+  /// Constructor
   Intersect(
-    Gecode::Home home, CPRel::CPRelView a, CPRel::CPRelView b,CPRel::CPRelView c)
+    Gecode::Home home, View0 a, View1 b,View2 c)
     : Gecode::Propagator(home), a_(a), b_(b), c_(c) {
     a_.subscribe(home,*this,CPRel::PC_CPREL_BND);
     b_.subscribe(home,*this,CPRel::PC_CPREL_BND);
     c_.subscribe(home,*this,CPRel::PC_CPREL_BND);
   }
+  /**
+   * \brief Intersect propagator posting
+   * \todo In order to make this method smarter, we can detect if two of the views
+   * are the same and in that case prefer to post the equality constraint. This
+   * will be only possible when the function \a same is defined for all the views
+   * (i.e. Complement and Constant). For now this function is missing.
+   */
   static Gecode::ExecStatus
-  post(Gecode::Home home,
-       CPRel::CPRelView a, CPRel::CPRelView b, CPRel::CPRelView c) {
-    using CPRel::CPRelView;
-
+  post(Gecode::Home home, View0 a, View1 b, View2 c) {
+    /*
     if (Gecode::same(a,b)) {
-      return Equal<CPRelView,CPRelView>::post(home,a,c);
+      return Equal<View0,View2>::post(home,a,c);
     }
     if (Gecode::same(a,c)) {
-      return Equal<CPRelView,CPRelView>::post(home,b,c);
+      return Equal<View1,View2>::post(home,b,c);
     }
     if (Gecode::same(b,c)) {
-      return Equal<CPRelView,CPRelView>::post(home,a,c);
+      return Equal<View1,View2>::post(home,a,c);
     }
+    */
     (void) new (home) Intersect(home,a,b,c);
     return Gecode::ES_OK;
   }
@@ -46,7 +59,7 @@ public:
     return sizeof(*this);
   }
   Intersect(Gecode::Space& home, bool share, Intersect& p)
-    : Gecode::Propagator(home,share,p) {
+    : Gecode::Propagator(home,share,p), a_(p.a_), b_(p.b_), c_(p.c_) {
     a_.update(home,share,p.a_);
     b_.update(home,share,p.b_);
     c_.update(home,share,p.c_);
@@ -94,13 +107,5 @@ public:
     return Gecode::ES_FIX;
   }
 };
-}}
-
-/**
- * \brief Posts: \f$ A \cap B = C \f$
- * \ingroup SetProp
- */
-void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
-
-}
+}}}
 #endif

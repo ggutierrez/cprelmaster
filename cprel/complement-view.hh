@@ -32,6 +32,9 @@ public:
   ComplementView(void);
   /// Initialize from relation view \a y
   explicit ComplementView(View& y);
+  /// Copy constructor
+  ComplementView(const ComplementView<View>& v)
+    : Gecode::DerivedView<View>(v) {}
   //@}
   /// \name Access operations
   //@{

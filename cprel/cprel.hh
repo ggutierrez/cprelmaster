@@ -28,6 +28,12 @@ public:
   VariableEmptyDomain(const char* l)
     : Exception(l,"Attempt to create variable with empty domain") {}
 };
+/// Exception indicating invalid arity
+class ArityMismatch : public Exception {
+public:
+  ArityMismatch(const char* l)
+    : Exception(l,"Invalid arity for operation") {}
+};
 
 }}
 
@@ -107,6 +113,45 @@ public:
 #include <cprel/view.hh>
 
 namespace MPG {
+/**
+ * \brief Posts: \f$ A = B \f$
+ * \ingroup SetProp
+ */
+void equal(Gecode::Space& home, CPRelVar A, CPRelVar B);
+
+/**
+ * \brief Posts: \f$ A = \overline{B} \f$
+ * \ingroup SetProp
+ */
+void complement(Gecode::Space& home, CPRelVar A, CPRelVar B);
+/**
+ * \brief Posts: \f$ A \cap B = C \f$
+ * \ingroup SetProp
+ */
+void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
+/**
+ * \brief Posts: \f$ A \cup B = C \f$
+ * \ingroup SetProp
+ */
+void Union(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
+/**
+ * \brief Posts: \f$ A \subseteq B \f$
+ * \ingroup SetProp
+ */
+void subset(Gecode::Space& home, CPRelVar A, CPRelVar B);
+/**
+ * \brief Posts: \f$ disjoint(A,B)\f$.
+ * \ingroup SetProp
+ *
+ * Enforces that \a A and \a B are two disjoint relations.
+ */
+void disjoint(Gecode::Space& home, CPRelVar A, CPRelVar B);
+/**
+ * \brief Posts the constraint: \f$ \forall t : t\in A \Rightarrow t\in B \iff t \in C \f$
+ * \ingroup SetProp
+ */
+void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
+
 void branch(Gecode::Home home, CPRelVar x);
 }
 #endif

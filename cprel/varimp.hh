@@ -59,6 +59,12 @@ public:
     //    std::cout << "Finishing disposal" << std::endl;
   }
   //@}
+  /// \name Relation information
+  //@{
+  int arity(void) const {
+    return glb_.arity();
+  }
+  //@}
   /// \name Bound access
   //@{
   /**
