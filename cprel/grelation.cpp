@@ -64,6 +64,14 @@ bool GRelation::eq(const GRelation& r) const {
   return *pimpl_ == *(r.pimpl_);
 }
 
+bool GRelation::empty(void) const {
+  return pimpl_->empty();
+}
+
+bool GRelation::universe(void) const {
+  return pimpl_->universe();
+}
+
 bool GRelation::unionAssign(const GRelation &r) {
   RelationImpl old = *pimpl_;
   pimpl_->add(*(r.pimpl_));
@@ -109,6 +117,18 @@ GRelation create_full(int a) {
 }
 
 std::ostream& operator<< (std::ostream& os, const GRelation& r) {
+  if (r.universe()) {
+    os << "U";
+    return os;
+  }
+  if (r.empty()) {
+    os << "E";
+    return os;
+  }
+  if (r.cardinality() > 1000) {
+    os << "{>>1000}";
+    return os;
+  }
   for(GRelationIter it(r); it(); ++it)
     os << it.val() << " ";
   return os;

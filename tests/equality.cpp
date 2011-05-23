@@ -1,34 +1,29 @@
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
 #include <cprel/cprel.hh>
-#include <cprel/prop/equality.hh>
-#include <vector>
 
 using namespace Gecode;
-
+using std::pair;
+using std::make_pair;
 using namespace MPG;
 using namespace MPG::CPRel;
-using namespace MPG::CPRel::Prop;
 
-GRelation domRu(void) {
-  vector<Tuple> rl;
-  rl.reserve(4);
-  rl.push_back(Tuple(2,3)); rl.push_back(Tuple(0,0));
-  rl.push_back(Tuple(2,1)); rl.push_back(Tuple(1,1));
+pair<GRelation,GRelation> domR(void) {
 
-  return GRelation(CPRel::create(rl));
+  GRelation ub(2);
+  ub.add(Tuple(0,0));
+  ub.add(Tuple(0,1));
+
+  return make_pair(GRelation(2),ub);
 }
 
-GRelation domQu(void) {
-/*  vector<Tuple> rl;
-  rl.reserve(4);
-  rl.push_back(Tuple(2,3)); rl.push_back(Tuple(0,0));
-  rl.push_back(Tuple(2,1)); rl.push_back(Tuple(1,1));
-  //rl.push_back(Tuple(6,7));
+pair<GRelation,GRelation> domQ(void) {
 
-  return GRelation(CPRel::create(rl));
-  */
-  return GRelation::create_full(2);
+  GRelation ub = create_full(2);
+  //ub.add(Tuple(0,0));
+  //ub.add(Tuple(0,1));
+
+  return make_pair(GRelation(2),ub);
 }
 
 class EqualityTest : public Gecode::Space {
@@ -37,23 +32,35 @@ protected:
 public:
   EqualityTest(void)  {
 
-    GRelation lbr(2);
-    r = CPRelVar(*this,lbr,domRu());
-    GRelation lbq(2); //lbq.add(Tuple(2,3));
-    q = CPRelVar(*this,lbq,domQu());
+    pair<GRelation,GRelation> dr = domR();
+    r = CPRelVar(*this,dr.first,dr.second);
+    pair<GRelation,GRelation> dq = domQ();
+    q = CPRelVar(*this,dq.first,dq.second);
 
-    //std::cerr << "R:" << r << std::endl;
-    //std::cerr << "Q:" << q << std::endl;
+    std::cerr << "R:" << r << std::endl;
+    std::cerr << "Q:" << q << std::endl;
 
-    //equal(*this,r,q);
+//    equal(*this,r,q);
     complement(*this,r,q);
     branch(*this,r);
   }
+  void printHtml(std::ostream& os, CPRelVar v) const {
+    os << "<td>" << v.glb().complement() << "</td><td>"
+       << v.unk() << "</td><td>" << v.oob() << "</td><td>"
+       << (v.assigned()? "Yes" : "NO") << "</td>";
+  }
   void print(std::ostream& os) const {
     os << "<b>Space</b>" << std::endl;
-    os << "<b>R</b>: " << r << std::endl
-       << "<b>Q</b>: " << q.oob() << std::endl;
+    os << "<table border=\"1\">"
+       << "<tr><th>Var</th><th>GLB*</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>"
+       << "<tr><td><b>R</b></td>";
+    printHtml(os,r);
+    os << "</tr>"
+       <<"<tr><td><b>Q</b></td>";
+    printHtml(os,q);
+    os << "</tr></table>" << std::endl;
   }
+
   EqualityTest(bool share, EqualityTest& s)
     : Gecode::Space(share,s) {
     r.update(*this, share, s.r);

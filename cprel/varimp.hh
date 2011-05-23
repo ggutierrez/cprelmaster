@@ -98,12 +98,10 @@ public:
    * \brief Out of bound access.
    *
    * Returns a relation (copy) that is known to not be part of the set of relations
-   * represented by the variable. \f$oob = O \setminus lub \f$, wher \f$ O \f$ is
-   * the full relation.
+   * represented by the variable. \f$oob = \overline{lub} \f$.
    */
   GRelation oob(void) const {
-    GRelation o(GRelation::create_full(glb_.arity()));
-    return o.difference(lub_);
+    return lub_.complement();
   }
   //@}
   /// \name Pruning operations
@@ -113,9 +111,11 @@ public:
    *
    */
   ModEvent include(Space& home, const GRelation& r) {
-    if (r.superset(lub_)) return ME_CPREL_FAILED;
     if (r.subsetEq(glb_)) return ME_CPREL_NONE;
+    if (!r.subsetEq(lub_)) return ME_CPREL_FAILED;
+    // actual prunning
     glb_.unionAssign(r);
+    assert(glb_.subsetEq(lub_));
     CPRelDelta d(1,2);
     return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MIN, d);
   }
@@ -127,6 +127,7 @@ public:
     if (!r.disjoint(glb_)) return ME_CPREL_FAILED;
     if (r.disjoint(lub_)) return ME_CPREL_NONE;
     lub_.differenceAssign(r);
+    assert(glb_.subsetEq(lub_));
     CPRelDelta d(1,2);
     return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MAX, d);
   }

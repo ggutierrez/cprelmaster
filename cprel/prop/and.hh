@@ -78,27 +78,32 @@ public:
     GECODE_ME_CHECK(
           c_.include(home,a_.glb().intersect(b_.glb()))
           );
-    // lub(_c) \subseteq lub(_a) \cap lub(b)
+    // lub(_a) \cap lub(b) \subseteq lub(_c)
     GECODE_ME_CHECK(
-          c_.exclude(home,a_.lub().intersect(b_.lub()).complement())
+          c_.exclude(home,a_.lub().intersect(b_.lub()).intersect(c_.lub()).complement())
           );
-    // glb(_c) \subseteq glb(_a)
+
+
+    // c_ \subseteq a_
     GECODE_ME_CHECK(
           a_.include(home,c_.glb())
           );
-    // lub(_a) \subseteq lub(_c)
-    GECODE_ME_CHECK(
-          a_.exclude(home,c_.lub().complement())
-          );
 
-    // glb(_c) \subseteq glb(_b)
+    // c_ \subseteq b_
     GECODE_ME_CHECK(
           b_.include(home,c_.glb())
           );
-    // lub(_b) \subseteq lub(_c)
+
+    // lub(b_) \subseteq lub(c_) \ glb(a_)
     GECODE_ME_CHECK(
-          b_.exclude(home,c_.lub().complement())
+          b_.exclude(home, a_.glb().difference(c_.lub()))
           );
+
+    // lub(a_) \subseteq lub(c_) \ glb(b_)
+    GECODE_ME_CHECK(
+          a_.exclude(home, b_.glb().difference(c_.lub()))
+          );
+
 
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned() && c_.assigned())

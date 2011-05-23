@@ -91,6 +91,10 @@ public:
   bool disjoint(const GRelation& r) const;
   /// Tests whether this represents the same relation as \a r
   bool eq(const GRelation& r) const;
+  /// Tests whther the relation is empty
+  bool empty(void) const;
+  /// Tests whther the relation represents the univers
+  bool universe(void) const;
   //@}
   /// \name Information
   //@{
@@ -119,6 +123,9 @@ GRelation create_full(int a);
 /**
  * \brief Outputs relation \a r to \a os
  * \ingroup GRelation
+ *
+ * \todo The implementation of this function relies on an iterator on the tuples
+ * of \a r. I should offer a better way to print the domain in a compressed way
  */
 std::ostream& operator<< (std::ostream& os, const GRelation& r);
 

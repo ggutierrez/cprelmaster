@@ -340,6 +340,13 @@ set(CPREL_SRCS
 )
 add_library(gecodecprel ${CPREL_SRCS})
 target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
+if(UNIT_TEST)
+  set(PROPAGATOR_TESTS
+    cprel/prop/tests/and.cpp)
+  list(APPEND TEST_SOURCES ${PROPAGATOR_TESTS})
+  list(APPEND TEST_LIBRARIES gecodecprel)
+endif()
+
 ##########################################################################
 # Installation                                                           #
 ##########################################################################

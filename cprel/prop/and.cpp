@@ -31,8 +31,6 @@ void Union(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
 
   CPRelView a(A), b(B), c(C);
 
-  //GRelation empty(A.arity());
-  //CPRel::ConstCPRelView emptyView(empty);
   typedef ComplementView<CPRelView> CView;
   CView complementA(a), complementB(b), complementC(c);
   GECODE_ES_FAIL((Intersect<CView,CView,CView>::

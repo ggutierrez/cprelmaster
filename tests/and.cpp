@@ -1,7 +1,6 @@
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
 #include <cprel/cprel.hh>
-#include <vector>
 
 using namespace Gecode;
 using std::pair;
@@ -15,6 +14,7 @@ pair<GRelation,GRelation> domR(void) {
   ub.add(Tuple(0,0));
   ub.add(Tuple(0,1));
 
+  // empty... {[0,0],[0,1]}]
   return make_pair(GRelation(2),ub);
 }
 
@@ -29,7 +29,7 @@ pair<GRelation,GRelation> domQ(void) {
 
 pair<GRelation,GRelation> domT(void) {
   GRelation lb(2);
-  lb.add(Tuple(0,0));
+  //lb.add(Tuple(0,0));
 
   GRelation ub(2);
   ub.add(Tuple(0,0));
@@ -53,15 +53,32 @@ public:
    pair<GRelation,GRelation> dt = domT();
    t = CPRelVar(*this,dt.first,dt.second);
 
-    intersect(*this,r,q,t);
+   //   intersect(*this,r,q,t);
+   Union(*this,r,q,t);
 
-    branch(*this,r);
+   branch(*this,r);
+   branch(*this,q);
+   //   branch(*this,t);
+  }
+  void printHtml(std::ostream& os, CPRelVar v) const {
+    os << "<td>" << v.glb() << "</td><td>"
+       << v.unk() << "</td><td>" << v.oob() << "</td><td>"
+       << (v.assigned()? "Yes" : "NO") << "</td>";
   }
   void print(std::ostream& os) const {
     os << "<b>Space</b>" << std::endl;
-    os << "<b>R</b>: " << r << std::endl
-       << "<b>Q</b>: " << q << std::endl
-       << "<b>T</b>: " << t << std::endl;
+    os << "<table border=\"1\">"
+       << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>"
+       << "<tr><td><b>R</b></td>";
+    printHtml(os,r);
+    os << "</tr>"
+       <<"<tr><td><b>Q</b></td>";
+    printHtml(os,q);
+    os << "</tr>"
+       <<"<tr><td><b>T</b></td>";
+    printHtml(os,t);
+    os << "</tr></table>" << std::endl;
+
   }
   AndTest(bool share, AndTest& s)
     : Gecode::Space(share,s) {

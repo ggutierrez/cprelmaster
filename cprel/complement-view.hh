@@ -43,8 +43,7 @@ public:
    * variable.
    */
   GRelation glb(void) const {
-    // this is equivalent to the x.oob()
-    return x.lub().complement();
+    return x.oob();
   }
   /**
    * \brief Returns a relation representing the least upper bound of the
@@ -60,7 +59,7 @@ public:
    * the lower bound. \f$unk = lub \setminus glb \f$
    */
   GRelation unk(void) const {
-    return lub().difference(glb());
+    return x.unk();
   }
   /**
    * \brief Out of bound access.

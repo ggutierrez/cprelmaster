@@ -6,6 +6,11 @@
 #include <bdddomain/manager.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
+/**
+ * \defgroup BDDEnc Ground relation encoding
+ *
+ *
+ */
 
 /// Returns the variables (indices) used in the bdd to encode column \a c
 std::vector<int> bddVars(int c);
