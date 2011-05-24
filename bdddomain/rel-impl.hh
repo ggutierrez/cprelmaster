@@ -36,6 +36,15 @@ public:
   void swap(const RelationImpl& r);
   /// Create a full relation of arity \a a
   static RelationImpl create_full(int a);
+  /**
+   * \brief Creates a relation from a raw Bdd \a b and arity \a a.
+   *
+   * \warning The constructor that allows the creation from a raw bdd is private
+   * for a good reason: it does not perform any check on the bdd or the given
+   * arity. The idea behind this method is to bypass this restriction but it should
+   * be used carefully.
+   */
+  static RelationImpl create_fromBdd(DdNode* b, int a);
   /// Destructor
   ~RelationImpl(void);
   //@}
@@ -98,7 +107,6 @@ inline
 bool operator!=(const RelationImpl& r, const RelationImpl& s) {
   return !r.equal(s);
 }
-
 
 /**
  * \brief Returns the union of relations \a r and \a s

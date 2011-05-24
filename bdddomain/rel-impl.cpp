@@ -30,6 +30,10 @@ RelationImpl RelationImpl::create_full(int a) {
   return RelationImpl(one(),a);
 }
 
+RelationImpl RelationImpl::create_fromBdd(DdNode* b, int a) {
+  return RelationImpl(b,a);
+}
+
 void RelationImpl::swap(const RelationImpl& r) {
   Cudd_RecursiveDeref(dd(),bdd_);
   bdd_ = r.bdd_;

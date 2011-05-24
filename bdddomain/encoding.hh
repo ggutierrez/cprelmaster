@@ -13,7 +13,10 @@ namespace MPG { namespace CPRel { namespace VarImpl {
  */
 
 /// Returns the variables (indices) used in the bdd to encode column \a c
-std::vector<int> bddVars(int c);
+std::vector<int> bddIndices(int c);
+
+/// Returns the variables used in the bdd to encode column \a c
+std::vector<DdNode*> bddVars(int c);
 
 DdNode* swap_columns(DdNode *r, int x, int y);
 

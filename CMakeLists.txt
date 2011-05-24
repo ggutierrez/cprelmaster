@@ -220,14 +220,16 @@ endif()
 ##########################################################################
 include_directories(${CMAKE_SOURCE_DIR})
 set(BDDDOMAIN_SRCS
-  bdddomain/manager.hh
-  bdddomain/manager.cpp
+  bdddomain/cube-iterator.cpp
+  bdddomain/cube-iterator.hh
   bdddomain/encoding.cpp
   bdddomain/encoding.hh
+  bdddomain/manager.cpp
+  bdddomain/manager.hh
+  bdddomain/relations.cpp
+  bdddomain/relations.hh
   bdddomain/rel-impl.cpp
   bdddomain/rel-impl.hh
-  bdddomain/cube-iterator.hh
-  bdddomain/cube-iterator.cpp
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
@@ -316,25 +318,26 @@ include_directories(${Gecode_INCLUDE_DIRS})
 # Relation constraint system
 ##########################################################################
 set(CPREL_SRCS
+  cprel/complement-view.hh
+  cprel/const-view.hh
   cprel/cprel.hh
+  cprel/grelation.cpp
   cprel/grelation.hh
   cprel/tuple.hh
   cprel/var.hh
+  cprel/varimp.cpp
   cprel/varimp.hh
   cprel/view.hh
-  cprel/const-view.hh
-  cprel/complement-view.hh
 
-  cprel/grelation.cpp
-  cprel/varimp.cpp
+# documentation
   doc/main.hh
 
 # propagators
-  cprel/prop/equality.hh
-  cprel/prop/equality.cpp
-
-  cprel/prop/and.hh
   cprel/prop/and.cpp
+  cprel/prop/and.hh
+  cprel/prop/equality.cpp
+  cprel/prop/equality.hh
+
 # branchers
   cprel/branch/branch.cpp
 )

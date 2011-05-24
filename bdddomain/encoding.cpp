@@ -2,9 +2,9 @@
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 
-vector<int> bddVars(int c) {
+vector<int> bddIndices(int c) {
   vector<int> vars;
-  vars.reserve(1 << bbv());
+  vars.reserve(bitsPerInteger());
 
   for (int i = (1 << bbv()); i--;) {
     vars.push_back((i << ba())+c);
@@ -12,10 +12,21 @@ vector<int> bddVars(int c) {
   return vars;
 }
 
+vector<DdNode*> bddVars(int c) {
+  vector<DdNode*> vars;
+  vars.reserve(bitsPerInteger());
+
+  for (int i = bitsPerInteger(); i--;) {
+    int var = (i << ba())+c;
+    vars.push_back(Cudd_bddIthVar(dd(),var));
+  }
+  return vars;
+}
+
 DdNode* swap_columns(DdNode *r, int x, int y) {
   // Get the indices of the variables used by columns x and y
-  vector<int> ix(bddVars(x));
-  vector<int> iy(bddVars(y));
+  vector<int> ix(bddIndices(x));
+  vector<int> iy(bddIndices(y));
 
   typedef vector<int>::iterator it;
 
