@@ -15,7 +15,6 @@ DdNode* create_equalXY(void);
  * \ingroup DomRepr
  */
 DdNode* create_greaterXY(void);
-
 }}}
 
 #endif

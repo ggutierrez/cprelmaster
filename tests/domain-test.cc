@@ -16,6 +16,7 @@ int main(void) {
 
 
     DdNode *eq = create_greaterXY();
+    Cudd_Ref(eq);
     Cudd_RecursiveDeref(dd(),eq);
 
 //    RelationImpl s(2);
