@@ -103,6 +103,11 @@ public:
   /// Returns the cardinality of the relation
   double cardinality(void) const;
   //@}
+  /// \name Constant relations
+  //@{
+  /// Creates the binary relation \f$ R = \{(x,y) : x = y \} \f$
+  static GRelation equalXY(void);
+  //@}
 };
 
 /**

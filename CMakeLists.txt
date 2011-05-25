@@ -332,6 +332,9 @@ set(CPREL_SRCS
   cprel/varimp.hh
   cprel/view.hh
 
+# builtin ground relations
+  cprel/grel-builtin/arith.cpp
+
 # documentation
   doc/main.hh
 
