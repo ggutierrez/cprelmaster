@@ -173,7 +173,7 @@ Tuple RelationImplIter::val(void) {
 
   // Prepare the output
   Tuple out(arity_);
-  for (int i = 0; i < arity_; i++) out[i] = tuple[i];
+  for (int i = 0; i < arity_; i++) out[i] = tuple[arity_-1-i];
 
   // Affect the state of the iterator
   remove(out);

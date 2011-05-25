@@ -52,7 +52,7 @@ DdNode* encode(int p, int a) {
   DdNode *f = one();
   DdNode *v, *tmp;
   Cudd_Ref(f);
-  for (int i = (1 << bbv()); i--;) {
+  for (int i = bitsPerInteger(); i--;) {
     v = Cudd_bddIthVar(dd(),(i << ba())+a);
     tmp = Cudd_bddAnd(dd(), p&1 ? v : Cudd_Not(v),f);
     Cudd_Ref(tmp);
@@ -67,7 +67,7 @@ DdNode* encode(const Tuple& tuple) {
   DdNode *f = one();
   DdNode *t, *tmp;
   Cudd_Ref(f);
-  int c = 0;
+  int c = tuple.arity()-1;
   for (Tuple::iterator i = tuple.cbegin(); i != tuple.cend(); ++i) {
     t = encode(*i,c);
     tmp = Cudd_bddAnd(dd(),f,t);
@@ -75,7 +75,7 @@ DdNode* encode(const Tuple& tuple) {
     Cudd_RecursiveDeref(dd(),t);
     Cudd_RecursiveDeref(dd(),f);
     f = tmp;
-    c++;
+    c--;
   }
   return f;
 }

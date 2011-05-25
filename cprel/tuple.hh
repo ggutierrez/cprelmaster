@@ -17,6 +17,9 @@ using std::vector;
 /**
  * \brief Class to abstract a tuple in a relation
  * \ingroup TupleGroup
+ *
+ * \todo For now a tuple is represented as a vector of elements and this can be
+ * better if we use pimp and usa abdd for instance to store it.
  */
 class Tuple {
 private:

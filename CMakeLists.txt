@@ -45,6 +45,7 @@ endif()
 ##########################################################################
 add_definitions(-Wall -Wextra)
 add_definitions(-O0 -g -fdiagnostics-show-option)
+#set(CMAKE_CXX_FLAGS "-std=c++0x")
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -184,9 +185,9 @@ target_link_libraries(cudd util st mpr epd)
 
 ## Building options extracted from original CUDD Makefile
 if(SIZEOF_VOID_P MATCHES "8")
-  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
 elseif(SIZEOF_VOID_P MATCHES "4")
-  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
+  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
 else()
   message(SEND_ERROR "Unable to determine the flags to build cudd")
 endif()
