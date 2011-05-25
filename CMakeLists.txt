@@ -20,7 +20,7 @@ if(CMAKE_COMPILER_IS_GNUCC)
   endif()
 else()
   message(WARNING "This project has been only built with GCC, other compilers
-                  might work...")
+                  might work: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_COMPILER_IS_CLANGCXX}")
 endif()
 ##########################################################################
 # System information
@@ -185,9 +185,11 @@ target_link_libraries(cudd util st mpr epd)
 
 ## Building options extracted from original CUDD Makefile
 if(SIZEOF_VOID_P MATCHES "8")
-  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+#  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
 elseif(SIZEOF_VOID_P MATCHES "4")
-  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
+  #set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
+  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
 else()
   message(SEND_ERROR "Unable to determine the flags to build cudd")
 endif()
