@@ -9,38 +9,35 @@ using namespace MPG;
 using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
-
   GRelation ub(2);
   ub.add(Tuple(0,0));
-  ub.add(Tuple(0,1));
-
-  // empty... {[0,0],[0,1]}]
+  // empty... {[0,0]}
   return make_pair(GRelation(2),ub);
 }
 
 pair<GRelation,GRelation> domQ(void) {
-
   GRelation ub(2);
   ub.add(Tuple(0,0));
-  ub.add(Tuple(0,1));
-
+  // empty... {[0,0]}
   return make_pair(GRelation(2),ub);
 }
 
 pair<GRelation,GRelation> domT(void) {
-  GRelation lb(2);
-  //lb.add(Tuple(0,0));
-
   GRelation ub(2);
   ub.add(Tuple(0,0));
-  ub.add(Tuple(0,1));
+  // empty... {[0,0]}
+  return make_pair(GRelation(2),ub);
+}
 
-  return make_pair(lb,ub);
+pair<GRelation,GRelation> domS(void) {
+  GRelation ub = create_full(2);
+  // empty...full
+  return make_pair(GRelation(2),ub);
 }
 
 class AndTest : public Gecode::Space {
 protected:
-  CPRelVar r,q,t;
+  CPRelVar r,q,t,s;
 public:
   AndTest(void)  {
 
@@ -53,12 +50,16 @@ public:
    pair<GRelation,GRelation> dt = domT();
    t = CPRelVar(*this,dt.first,dt.second);
 
-   //   intersect(*this,r,q,t);
-   Union(*this,r,q,t);
+   pair<GRelation,GRelation> ds = domS();
+   s = CPRelVar(*this,ds.first,ds.second);
 
-   branch(*this,r);
-   branch(*this,q);
-   //   branch(*this,t);
+   //   intersect(*this,r,q,t);
+   complement(*this,s,r);
+   Union(*this,s,q,t);
+
+   //branch(*this,r);
+   //branch(*this,q);
+   branch(*this,t);
   }
   void printHtml(std::ostream& os, CPRelVar v) const {
     os << "<td>" << v.glb() << "</td><td>"
@@ -80,11 +81,12 @@ public:
     os << "</tr></table>" << std::endl;
 
   }
-  AndTest(bool share, AndTest& s)
-    : Gecode::Space(share,s) {
-    r.update(*this, share, s.r);
-    q.update(*this, share, s.q);
-    t.update(*this, share, s.t);
+  AndTest(bool share, AndTest& sp)
+    : Gecode::Space(share,sp) {
+    r.update(*this, share, sp.r);
+    q.update(*this, share, sp.q);
+    t.update(*this, share, sp.t);
+    s.update(*this, share, sp.s);
   }
   virtual Space* copy(bool share) {
     return new AndTest(share,*this);
