@@ -125,8 +125,9 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
     os << "E";
     return os;
   }
+  
   if (r.cardinality() > 1000) {
-    os << "{>>1000}";
+    os << "compl(" << r.complement() << ")";
     return os;
   }
   for(GRelationIter it(r); it(); ++it)
