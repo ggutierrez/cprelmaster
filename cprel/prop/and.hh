@@ -28,11 +28,13 @@ public:
     c_.subscribe(home,*this,CPRel::PC_CPREL_BND);
   }
   /**
-   * \brief Intersect propagator posting
-   * \todo In order to make this method smarter, we can detect if two of the views
-   * are the same and in that case prefer to post the equality constraint. This
-   * will be only possible when the function \a same is defined for all the views
-   * (i.e. Complement and Constant). For now this function is missing.
+   * \brief Intersect propagator posting 
+   *
+   * \todo In order to make this method smarter, we can detect if two
+   * of the views are the same and in that case prefer to post the
+   * equality constraint. This will be only possible when the function
+   * \a same is defined for all the views (i.e. Complement and
+   * Constant). For now this function is missing.
    */
   static Gecode::ExecStatus
   post(Gecode::Home home, View0 a, View1 b, View2 c) {
@@ -74,35 +76,29 @@ public:
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
-    // glb(a_) \cap glb(b_) \subseteq glb(c_)
-    GECODE_ME_CHECK(
-          c_.include(home,a_.glb().intersect(b_.glb()))
-          );
+    // glb(c_) \subseteq glb(a_)  \cap glb(b_)
+    {
+      GRelation r(a_.glb().intersect(b_.glb()));
+      GECODE_ME_CHECK(c_.include(home,r));
+    }
+    
     // lub(_a) \cap lub(b) \subseteq lub(_c)
-    GECODE_ME_CHECK(
-          c_.exclude(home,a_.lub().intersect(b_.lub()).intersect(c_.lub()).complement())
-          );
-
+    {
+      GRelation r(a_.lub().intersect(b_.lub()).intersect(c_.lub()));
+      GECODE_ME_CHECK(c_.exclude(home,r.complement()));
+    }
 
     // c_ \subseteq a_
-    GECODE_ME_CHECK(
-          a_.include(home,c_.glb())
-          );
+    GECODE_ME_CHECK(a_.include(home,c_.glb()));
 
     // c_ \subseteq b_
-    GECODE_ME_CHECK(
-          b_.include(home,c_.glb())
-          );
+    GECODE_ME_CHECK(b_.include(home,c_.glb()));
 
-    // lub(b_) \subseteq lub(c_) \ glb(a_)
-    GECODE_ME_CHECK(
-          b_.exclude(home, a_.glb().difference(c_.lub()))
-          );
+    // lub(b_) \subseteq glb(a_) \ lub(c_)
+    GECODE_ME_CHECK(b_.exclude(home, a_.glb().difference(c_.lub())));
 
-    // lub(a_) \subseteq lub(c_) \ glb(b_)
-    GECODE_ME_CHECK(
-          a_.exclude(home, b_.glb().difference(c_.lub()))
-          );
+    // lub(a_) \subseteq glb(b_) \ lub(c_)
+    GECODE_ME_CHECK(a_.exclude(home, b_.glb().difference(c_.lub())));
 
 
     // Propagator subsumpiton

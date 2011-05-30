@@ -53,32 +53,29 @@ public:
    pair<GRelation,GRelation> ds = domS();
    s = CPRelVar(*this,ds.first,ds.second);
 
-   //   intersect(*this,r,q,t);
-   complement(*this,s,r);
-   Union(*this,s,q,t);
+   //implies(*this,r,q,t);
+   implies(*this,s,q,t);
 
    //branch(*this,r);
-   //branch(*this,q);
-   branch(*this,t);
+   branch(*this,q);
+   //branch(*this,t);
   }
-  void printHtml(std::ostream& os, CPRelVar v) const {
+  void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
+    os << "<tr><td><b>" << varName << "</b></td>";
     os << "<td>" << v.glb() << "</td><td>"
        << v.unk() << "</td><td>" << v.oob() << "</td><td>"
-       << (v.assigned()? "Yes" : "NO") << "</td>";
+       << (v.assigned()? "Yes" : "NO") << "</td></tr>";
   }
   void print(std::ostream& os) const {
     os << "<b>Space</b>" << std::endl;
     os << "<table border=\"1\">"
-       << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>"
-       << "<tr><td><b>R</b></td>";
-    printHtml(os,r);
-    os << "</tr>"
-       <<"<tr><td><b>Q</b></td>";
-    printHtml(os,q);
-    os << "</tr>"
-       <<"<tr><td><b>T</b></td>";
-    printHtml(os,t);
-    os << "</tr></table>" << std::endl;
+       << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>";
+   
+    printHtml(os,"R",r);
+    printHtml(os,"S",s);
+    printHtml(os,"Q",q);
+    printHtml(os,"T",t);
+    os << "</table>" << std::endl;
 
   }
   AndTest(bool share, AndTest& sp)
