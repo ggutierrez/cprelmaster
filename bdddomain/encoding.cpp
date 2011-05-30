@@ -2,6 +2,8 @@
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 
+using std::pair;
+      
 vector<int> bddIndices(int c) {
   vector<int> vars;
   vars.reserve(bitsPerInteger());
@@ -24,28 +26,36 @@ vector<DdNode*> bddVars(int c) {
 }
 
 DdNode* swap_columns(DdNode *r, int x, int y) {
-  // Get the indices of the variables used by columns x and y
-  vector<int> ix(bddIndices(x));
-  vector<int> iy(bddIndices(y));
+  vector<DdNode*> vx(bddVars(x));
+  vector<DdNode*> vy(bddVars(y));
 
-  typedef vector<int>::iterator it;
+  return Cudd_bddSwapVariables(dd(),r,&vx[0],&vy[0],vx.size());
+}
+      
+DdNode* swap_columns(DdNode *r, const vector<pair<int,int> >& swapDesc) {
+  vector<DdNode*> orig, perm;
+  int descSize = static_cast<int>(swapDesc.size());
+  orig.reserve(descSize * bitsPerInteger());
+  perm.reserve(descSize * bitsPerInteger());
 
-  DdNode*  vx[ix.size()];
-  int index = 0;
-  for (it i = ix.begin(); i != ix.end(); ++i) {
-    vx[index] = Cudd_bddIthVar(dd(),*i);
-    index++;
+  typedef vector<pair<int,int> >::const_iterator It;
+  vector<DdNode*> tempOrig, tempPerm;
+  tempOrig.reserve(bitsPerInteger());
+  tempPerm.reserve(bitsPerInteger());
+  for (It i = swapDesc.begin(); i != swapDesc.end(); ++i) {
+    tempOrig = bddVars(i->first);
+    tempPerm = bddVars(i->second);
+    std::copy(tempOrig.begin(), tempOrig.end(), back_inserter(orig));
+    std::copy(tempPerm.begin(), tempPerm.end(), back_inserter(perm));
+    tempOrig.clear();
+    tempPerm.clear();
   }
-  DdNode*  vy[iy.size()];
-  index = 0;
-  for (it i = iy.begin(); i != iy.end(); ++i) {
-    vy[index] = Cudd_bddIthVar(dd(),*i);
-    index++;
-  }
 
-  DdNode **vx_ = vx;
-  DdNode **vy_ = vy;
-  return Cudd_bddSwapVariables(dd(),r,vx_,vy_,ix.size());
+  assert(static_cast<int>(orig.size()) == descSize * bitsPerInteger() &&
+	 static_cast<int>(perm.size()) == descSize * bitsPerInteger() &&
+	 "size of the bddVar vector is not correct");
+
+  return Cudd_bddSwapVariables(dd(),r,&orig[0],&perm[0],orig.size());
 }
 
 DdNode* encode(int p, int a) {

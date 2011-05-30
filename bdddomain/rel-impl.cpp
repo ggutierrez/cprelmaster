@@ -2,6 +2,7 @@
 #include <bdddomain/encoding.hh>
 #include <bdddomain/rel-impl.hh>
 
+using std::pair;
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 
@@ -120,12 +121,19 @@ RelationImpl RelationImpl::swap_columns(int x, int y) const {
   return RelationImpl(VarImpl::swap_columns(bdd_,x,y), arity_);
 }
 
+RelationImpl RelationImpl::permute(const vector<pair<int,int> >& permDesc) const {
+  //TODO: error detection on the description
+  // Only valid columns are presented in the description
+  // Every column appears at most once
+  return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
+}
+      /*
 RelationImpl RelationImpl::cuantifyExist(int c) const {
   std::cout << "Called cuantify: " << c << std::endl;
 
   //return RelationImpl(VarImpl::swap_columns(bdd_,x,y), arity_);
 }
-
+      */
 RelationImplIter RelationImpl::tuples(void) const {
   return RelationImplIter(bdd_,arity_);
 }

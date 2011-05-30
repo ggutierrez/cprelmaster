@@ -7,13 +7,39 @@
 
 using std::cout;
 using std::endl;
+using std::pair;
+using std::vector;
+using std::make_pair;
+
+using namespace MPG::CPRel;
+using namespace MPG::CPRel::VarImpl;
+
+RelationImpl test0(void) {
+  RelationImpl ub(2);
+  ub.add(Tuple(0,0));
+  ub.add(Tuple(1,0));
+  ub.add(Tuple(2,0));
+  ub.add(Tuple(3,0));
+  ub.add(Tuple(4,0));
+  ub.add(Tuple(5,0));
+  return ub;
+}
+
 
 int main(void) {
-  using namespace MPG::CPRel;
-  using namespace MPG::CPRel::VarImpl;
   cout << "Tests starts" << endl;
   {
+    vector<pair<int,int> > desc;
+    desc.reserve(1);
+    desc.push_back(make_pair(0,1));
+    
+    RelationImpl r = test0();
+    
+    cout << "The relation: " << r << endl;
+    
+    RelationImpl p = r.permute(desc);
 
+    cout << "The permutation: " << p << endl;
 
     //DdNode *eq = create_greaterXY();
     //Cudd_Ref(eq);

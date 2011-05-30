@@ -53,12 +53,13 @@ public:
    pair<GRelation,GRelation> ds = domS();
    s = CPRelVar(*this,ds.first,ds.second);
 
+   intersect(*this,r,q,t);
    //implies(*this,r,q,t);
-   implies(*this,s,q,t);
+   //implies(*this,s,q,t);
 
    //branch(*this,r);
-   branch(*this,q);
-   //branch(*this,t);
+   //branch(*this,q);
+   branch(*this,t);
   }
   void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
     os << "<tr><td><b>" << varName << "</b></td>";

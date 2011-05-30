@@ -81,6 +81,17 @@ public:
    * \brief Returns the relation resulting from swapping column \a x by \a y
    */
   RelationImpl swap_columns(int x, int y) const;
+  /**
+   * \brief Returns the relation resulting from permuting \a this
+   * according with \a permDesc.
+   *
+   * \a permDesc describes the way to perform the permutation. It
+   * contains pairs of columns that describes a column and the new
+   * column in the permutation. for instance: [(2,3), (1,4)] will give
+   * a permutation where column 2 and 3 and permuted (swapped). The
+   * same for columns 1 and 4.
+   */
+  RelationImpl permute(const std::vector<std::pair<int,int> >& permDesc) const;
   /// Returns the relation resulting from existencially quantifying on column \a c
   RelationImpl cuantifyExist(int c) const;
   /// \name Iteration
