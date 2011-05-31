@@ -29,14 +29,13 @@ RelationImpl test0(void) {
 int main(void) {
   cout << "Tests starts" << endl;
   {
-    vector<pair<int,int> > desc;
-    desc.reserve(1);
-    desc.push_back(make_pair(0,1));
-    
+    PermDescriptor desc;
+    desc.permute(0,1);
+
     RelationImpl r = test0();
-    
+
     cout << "The relation: " << r << endl;
-    
+
     RelationImpl p = r.permute(desc);
 
     cout << "The permutation: " << p << endl;

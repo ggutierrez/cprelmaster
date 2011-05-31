@@ -38,7 +38,7 @@ std::vector<DdNode*> bddVars(int c);
  * - It specifies valid columns in the relation \a r
  * - It does not contain the same column in defferent pairs.
  */
- DdNode* swap_columns(DdNode *r, const std::vector<std::pair<int,int> >& swapDesc);
+ DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc);
 
 /**
  * \brief Return the relation resulting from swaping column \a x by column \a y in \a r.

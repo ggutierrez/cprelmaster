@@ -33,7 +33,7 @@ DdNode* swap_columns(DdNode *r, int x, int y) {
   return Cudd_bddSwapVariables(dd(),r,&vx[0],&vy[0],vx.size());
 }
 
-DdNode* swap_columns(DdNode *r, const vector<pair<int,int> >& swapDesc) {
+DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
   vector<DdNode*> orig, perm;
   int descSize = static_cast<int>(swapDesc.size());
   orig.reserve(descSize * bitsPerInteger());
@@ -43,9 +43,9 @@ DdNode* swap_columns(DdNode *r, const vector<pair<int,int> >& swapDesc) {
   vector<DdNode*> tempOrig, tempPerm;
   tempOrig.reserve(bitsPerInteger());
   tempPerm.reserve(bitsPerInteger());
-  for (It i = swapDesc.begin(); i != swapDesc.end(); ++i) {
-    tempOrig = bddVars(i->first);
-    tempPerm = bddVars(i->second);
+  for (DescIterator i(swapDesc); i(); ++i) {
+    tempOrig = bddVars(i.val().first);
+    tempPerm = bddVars(i.val().second);
     std::copy(tempOrig.begin(), tempOrig.end(), back_inserter(orig));
     std::copy(tempPerm.begin(), tempPerm.end(), back_inserter(perm));
     tempOrig.clear();

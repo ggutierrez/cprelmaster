@@ -122,7 +122,7 @@ RelationImpl RelationImpl::swap_columns(int x, int y) const {
   return RelationImpl(VarImpl::swap_columns(bdd_,x,y), arity_);
 }
 
-RelationImpl RelationImpl::permute(const vector<pair<int,int> >& permDesc) const {
+RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
   //TODO: error detection on the description
   // Only valid columns are presented in the description
   // Every column appears at most once
