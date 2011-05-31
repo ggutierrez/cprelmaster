@@ -12,8 +12,6 @@ namespace MPG { namespace CPRel {
  * Tuples are the abstraction for the elements of relations.
  */
 
-using std::vector;
-
 /**
  * \brief Class to abstract a tuple in a relation
  * \ingroup TupleGroup
@@ -24,13 +22,13 @@ using std::vector;
 class Tuple {
 private:
   /// Actual data container
-  vector<int> data_;
+  std::vector<int> data_;
   /// Arity of the tuple
   int arity_;
   /// Avoiding Default constructor
   Tuple(void);
 public:
-  typedef vector<int>::const_iterator iterator;
+  typedef std::vector<int>::const_iterator iterator;
   /// Constructor for an empty tuple of \a k elements
   Tuple(int k) {
     data_.reserve(k);
@@ -70,11 +68,11 @@ public:
   /// Arity of the tuple
   int arity(void) const { return arity_; }
   /// Iterator to the start of the tuple
-  vector<int>::const_iterator cbegin(void) const {
+  std::vector<int>::const_iterator cbegin(void) const {
     return data_.begin();
   }
   /// Iterator to the end of the tuple
-  vector<int>::const_iterator cend(void) const {
+  std::vector<int>::const_iterator cend(void) const {
     return data_.end();
   }
 };

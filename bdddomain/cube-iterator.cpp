@@ -19,7 +19,7 @@ bool CubeIterator::operator ()(void) const {
   return relation_ != zero();
 }
 
-vector<int> CubeIterator::val(void) {
+std::vector<int> CubeIterator::val(void) {
 //  const int cube_size = 1<<(bbv() + ba());
 //  const int tuple_size = 1 << ba();
 

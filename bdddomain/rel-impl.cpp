@@ -3,6 +3,7 @@
 #include <bdddomain/rel-impl.hh>
 
 using std::pair;
+using std::vector;
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 

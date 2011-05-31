@@ -87,7 +87,7 @@ public:
    *
    * \a permDesc describes the way to perform the permutation. It
    * contains pairs of columns that describes a column and the new
-   * column in the permutation. for instance: [(2,3), (1,4)] will give
+   * column in the permutation. For instance: [(2,3), (1,4)] will give
    * a permutation where column 2 and 3 and permuted (swapped). The
    * same for columns 1 and 4.
    */

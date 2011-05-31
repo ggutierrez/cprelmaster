@@ -5,6 +5,7 @@
 
 using namespace Gecode;
 
+using std::vector;
 using namespace MPG;
 using namespace MPG::CPRel;
 
