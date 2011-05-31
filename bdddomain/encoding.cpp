@@ -79,8 +79,8 @@ DdNode* encode(const Tuple& tuple) {
   DdNode *t, *tmp;
   Cudd_Ref(f);
   int c = tuple.arity()-1;
-  for (Tuple::iterator i = tuple.cbegin(); i != tuple.cend(); ++i) {
-    t = encode(*i,c);
+  for (int i = 0; i < tuple.arity(); i++) {
+    t = encode(tuple.at(i),c);
     tmp = Cudd_bddAnd(dd(),f,t);
     Cudd_Ref(tmp);
     Cudd_RecursiveDeref(dd(),t);

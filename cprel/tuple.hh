@@ -67,14 +67,6 @@ public:
   }
   /// Arity of the tuple
   int arity(void) const { return arity_; }
-  /// Iterator to the start of the tuple
-  std::vector<int>::const_iterator cbegin(void) const {
-    return data_.begin();
-  }
-  /// Iterator to the end of the tuple
-  std::vector<int>::const_iterator cend(void) const {
-    return data_.end();
-  }
 };
 
 /**
