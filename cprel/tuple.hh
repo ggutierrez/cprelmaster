@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <vector>
+#include <set>
 #include <iostream>
 
 namespace MPG { namespace CPRel {
@@ -132,6 +133,19 @@ public:
   /// Returns the inverse of the permutation
   PermDescriptor inverse(void) const {
     return PermDescriptor(permute_,origin_);
+  }
+  /// Tests whether the description is valid for a relation of arity \a a
+  bool valid(int a) const {
+    if (a < static_cast<int>(size()))
+      return false;
+    std::set<int> domain, range;
+    std::copy(origin_.begin(), origin_.end(),
+              std::inserter(domain,domain.begin()));
+    std::copy(permute_.begin(), permute_.end(),
+              std::inserter(range,range.begin()));
+    if (domain.size() != range.size())
+      return false;
+    return true;
   }
 };
 /**

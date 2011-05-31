@@ -25,9 +25,9 @@ protected:
   /// member or compute it every time is needed?
 
   /// Associated descriptor
-  const PermDescriptor& desc_;
+  const PermDescriptor desc_;
   /// Inverse descriptor
-  const PermDescriptor& inverse_;
+  const PermDescriptor inverse_;
 public:
   /// \name Constructors
   //@{

@@ -34,7 +34,12 @@ public:
   ArityMismatch(const char* l)
     : Exception(l,"Invalid arity for operation") {}
 };
-
+/// Exception indicating invalid permutation
+class InvalidPermutation : public Exception {
+public:
+  InvalidPermutation(const char* l)
+    : Exception(l,"Invalid permutation for operation") {}
+};
 }}
 
 // Variable implementation definition
