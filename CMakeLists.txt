@@ -322,6 +322,7 @@ include_directories(${Gecode_INCLUDE_DIRS})
 ##########################################################################
 set(CPREL_SRCS
   cprel/complement-view.hh
+  cprel/permuted-view.hh
   cprel/const-view.hh
   cprel/cprel.hh
   cprel/grelation.cpp

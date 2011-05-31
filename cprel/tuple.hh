@@ -107,6 +107,9 @@ private:
   std::vector<int> origin_;
   /// Corresponding columns in the permuted relation
   std::vector<int> permute_;
+  /// Constructor from two vectors containing the description
+  PermDescriptor(const std::vector<int>& origin, const std::vector<int>& perm)
+    : origin_(origin), permute_(perm){}
 public:
   /// Default constructor for an empty description
   PermDescriptor(void) {}
@@ -125,6 +128,10 @@ public:
     permute_.push_back(y);
     assert(origin_.size() == permute_.size()
            && "Invalid state of permutation descriptor");
+  }
+  /// Returns the inverse of the permutation
+  PermDescriptor inverse(void) const {
+    return PermDescriptor(permute_,origin_);
   }
 };
 /**

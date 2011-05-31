@@ -80,6 +80,8 @@ public:
   GRelation intersect(const GRelation& r) const;
   /// Computes \f$ \overline{this}\f$
   GRelation complement(void) const;
+  /// Computes the permutation of this according to \a desc
+  GRelation permute(const PermDescriptor& desc) const;
   //@}
   /// \name Test operations
   //@{

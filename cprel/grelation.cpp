@@ -104,6 +104,13 @@ GRelation GRelation::complement(void) const {
         Impl(new RelationImpl(VarImpl::complement(*pimpl_)))
         );
 }
+GRelation GRelation::permute(const PermDescriptor& desc) const {
+
+  return
+      GRelation(
+        Impl(new RelationImpl(VarImpl::permute(*pimpl_,desc)))
+        );
+}
 
 GRelation create(const std::vector<Tuple>& dom) {
   std::vector<Tuple>::const_iterator c = dom.begin();
@@ -125,7 +132,7 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
     os << "E";
     return os;
   }
-  
+
   if (r.cardinality() > 1000) {
     os << "compl(" << r.complement() << ")";
     return os;
