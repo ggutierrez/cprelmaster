@@ -27,6 +27,13 @@ public:
   CPRelView(CPRelVarImp* y)
     : Gecode::VarImpView<CPRelVar>(y) {}
   //@}
+  /// \name Information
+  //@{
+  /// Returns the arity of the view
+  int arity(void) const {
+    return x->arity();
+  }
+  //@}
   /// \name Access operations
   //@{
   /**

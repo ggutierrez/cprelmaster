@@ -140,7 +140,11 @@ PermutedView<View>::PermutedView(void) {}
 
 template <typename View>
 PermutedView<View>::PermutedView(View& y, const PermDescriptor& d)
-  : Gecode::DerivedView<View>(y), desc_(d), inverse_(d.inverse()) {}
+  : Gecode::DerivedView<View>(y), desc_(d), inverse_(d.inverse()) {
+
+  if (!desc_.valid(y.arity()))
+    throw InvalidPermutation("permutation constraint (invalid especification)");
+}
 
 
 }}

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cprel/tuple.hh>
+#include <cprel/descriptor.hh>
 #include <bdddomain/manager.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {

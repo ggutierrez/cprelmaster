@@ -117,6 +117,9 @@ public:
 // View implementation
 #include <cprel/view.hh>
 
+// Descriptors
+#include <cprel/descriptor.hh>
+
 namespace MPG {
 /**
  * \brief Posts: \f$ A = B \f$
@@ -156,6 +159,11 @@ void disjoint(Gecode::Space& home, CPRelVar A, CPRelVar B);
  * \ingroup SetProp
  */
 void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
+/**
+ * \brief Posts the constraint: \f$ A = \pi_{desc} B \f$
+ * \ingroup RelProp
+ */
+void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, const CPRel::PermDescriptor& desc);
 
 void branch(Gecode::Home home, CPRelVar x);
 }

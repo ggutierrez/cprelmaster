@@ -39,6 +39,13 @@ public:
   /// Copy constructor
   ConstCPRelView(const ConstCPRelView& v) : r_(v.r_) {}
   //@}
+  /// \name Information
+  //@{
+  /// Returns the arity of the view
+  int arity(void) const {
+    return r_.arity();
+  }
+  //@}
   /// \name Access operations
   //@{
   /**

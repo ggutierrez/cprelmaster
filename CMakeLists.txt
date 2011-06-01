@@ -310,7 +310,7 @@ else()
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j3 INSTALL_COMMAND make install
+    BUILD_COMMAND make -j1 INSTALL_COMMAND make install
   )
 endif()
 ##########################################################################
@@ -323,6 +323,7 @@ include_directories(${Gecode_INCLUDE_DIRS})
 set(CPREL_SRCS
   cprel/complement-view.hh
   cprel/permuted-view.hh
+  cprel/descriptor.hh
   cprel/const-view.hh
   cprel/cprel.hh
   cprel/grelation.cpp

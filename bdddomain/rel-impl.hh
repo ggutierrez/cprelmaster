@@ -4,6 +4,7 @@
 
 #include <bdddomain/manager.hh>
 #include <cprel/tuple.hh>
+#include <cprel/descriptor.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 /**

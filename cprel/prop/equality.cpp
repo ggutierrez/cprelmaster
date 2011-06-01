@@ -1,4 +1,5 @@
 #include <cprel/prop/equality.hh>
+#include <cprel/descriptor.hh>
 
 namespace MPG {
 
