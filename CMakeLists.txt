@@ -232,6 +232,7 @@ set(BDDDOMAIN_SRCS
   bdddomain/rel-impl.cpp
   bdddomain/rel-impl.hh
   bdddomain/tuple.hh
+  bdddomain/tuple.cpp
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
