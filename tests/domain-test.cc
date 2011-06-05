@@ -16,12 +16,12 @@ using namespace MPG::CPRel::VarImpl;
 
 RelationImpl test0(void) {
   RelationImpl ub(2);
-  ub.add(Tuple(0,0));
-  ub.add(Tuple(1,0));
-  ub.add(Tuple(2,0));
-  ub.add(Tuple(3,0));
-  ub.add(Tuple(4,0));
-  ub.add(Tuple(5,0));
+  ub.add(make_Tuple(0,0));
+  ub.add(make_Tuple(1,0));
+  ub.add(make_Tuple(2,0));
+  ub.add(make_Tuple(3,0));
+  ub.add(make_Tuple(4,0));
+  ub.add(make_Tuple(5,0));
   return ub;
 }
 
@@ -50,8 +50,8 @@ int main(void) {
 
 //    RelationImpl s(2);
 //    //RelationImpl t(s);
-//    s.add(Tuple(0,1));
-//    s.add(Tuple(3,2));
+//    s.add(make_Tuple(0,1));
+//    s.add(make_Tuple(3,2));
 
 //    cout << "S: " << s << endl;
 //    RelationImpl nr(s.swap_columns(0,1));

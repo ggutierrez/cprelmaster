@@ -11,17 +11,17 @@ int main(void) {
   using namespace MPG::CPRel;
   vector<Tuple> x0;
   x0.reserve(4);
-  x0.push_back(Tuple(2,3));
-  x0.push_back(Tuple(0,0));
-  x0.push_back(Tuple(2,1));
-  x0.push_back(Tuple(1,1));
+  x0.push_back(make_Tuple(2,3));
+  x0.push_back(make_Tuple(0,0));
+  x0.push_back(make_Tuple(2,1));
+  x0.push_back(make_Tuple(1,1));
 
 //  vector<Tuple> y0;
 //  y0.reserve(4);
-//  y0.push_back(Tuple(5,3));
-//  y0.push_back(Tuple(2,0));
-//  y0.push_back(Tuple(2,7));
-//  y0.push_back(Tuple(1,1));
+//  y0.push_back(make_Tuple(5,3));
+//  y0.push_back(make_Tuple(2,0));
+//  y0.push_back(make_Tuple(2,7));
+//  y0.push_back(make_Tuple(1,1));
 
 //  using namespace CPRel::BDDImpl;
 //  GRelation empty(2);
@@ -32,7 +32,7 @@ int main(void) {
   cout << "Relation r: " << r << endl;
   GRelation z(r);
   cout << "Relation z: " << z << endl;
-  Tuple t(5,11);
+  make_Tuple t(5,11);
   z.add(t);
 
   cout << "Relation r: " << r << endl;

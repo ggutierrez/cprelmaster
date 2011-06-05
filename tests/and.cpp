@@ -10,21 +10,21 @@ using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
   GRelation ub(2);
-  ub.add(Tuple(0,0));
+  ub.add(make_Tuple(0,0));
   // empty... {[0,0]}
   return make_pair(GRelation(2),ub);
 }
 
 pair<GRelation,GRelation> domQ(void) {
   GRelation ub(2);
-  ub.add(Tuple(0,0));
+  ub.add(make_Tuple(0,0));
   // empty... {[0,0]}
   return make_pair(GRelation(2),ub);
 }
 
 pair<GRelation,GRelation> domT(void) {
   GRelation ub(2);
-  ub.add(Tuple(0,0));
+  ub.add(make_Tuple(0,0));
   // empty... {[0,0]}
   return make_pair(GRelation(2),ub);
 }
@@ -71,7 +71,7 @@ public:
     os << "<b>Space</b>" << std::endl;
     os << "<table border=\"1\">"
        << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>";
-   
+
     printHtml(os,"R",r);
     printHtml(os,"S",s);
     printHtml(os,"Q",q);

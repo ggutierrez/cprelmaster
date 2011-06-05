@@ -16,10 +16,10 @@ public:
   GolombRuler(void)  {
     vector<Tuple> rl;
     rl.reserve(4);
-    rl.push_back(Tuple(2,3)); rl.push_back(Tuple(0,0));
-    rl.push_back(Tuple(2,1)); rl.push_back(Tuple(1,1));
+    rl.push_back(make_Tuple(2,3)); rl.push_back(make_Tuple(0,0));
+    rl.push_back(make_Tuple(2,1)); rl.push_back(make_Tuple(1,1));
 
-    CPRel::GRelation lb(2);// lb.add(Tuple(0,0));
+    CPRel::GRelation lb(2);// lb.add(make_Tuple(0,0));
     CPRel::GRelation ub(CPRel::create(rl));
 
     r = CPRelVar(*this,lb,ub);

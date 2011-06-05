@@ -11,8 +11,8 @@ using namespace MPG::CPRel;
 pair<GRelation,GRelation> domR(void) {
 
   GRelation ub(2);
-  ub.add(Tuple(0,0));
-  ub.add(Tuple(0,1));
+  ub.add(make_Tuple(0,0));
+  ub.add(make_Tuple(0,1));
 
   return make_pair(GRelation(2),ub);
 }

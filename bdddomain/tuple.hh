@@ -44,19 +44,6 @@ public:
     for(int i = 0; i < arity_; i++)
       data_.push_back(-1);
   }
-  /// Constructor for a binary tuple
-  Tuple(int a, int b) : arity_(2) {
-    data_.reserve(2);
-    data_.push_back(a);
-    data_.push_back(b);
-  }
-  /// Constructor for a ternary tuple
-  Tuple(int a, int b, int c) : arity_(3) {
-    data_.reserve(3);
-    data_.push_back(a);
-    data_.push_back(b);
-    data_.push_back(c);
-  }
   /// Copy constructor
   Tuple(const Tuple& t)
     : data_(t.data_), arity_(t.arity_) {}
@@ -75,6 +62,22 @@ public:
   /// Arity of the tuple
   int arity(void) const { return arity_; }
 };
+
+/// Creates a binary tuple with \a a and \a b
+inline
+Tuple make_Tuple(int a, int b) {
+  Tuple t(2);
+  t[0] = a; t[1] = b;
+  return t;
+}
+
+/// Creates a ternary tuple with \a a, \a b and \a c
+inline
+Tuple make_Tuple(int a, int b, int c) {
+  Tuple t(3);
+  t[0] = a; t[1] = b; t[2] = c;
+  return t;
+}
 
 /**
  * \brief Outputs tuple \a t to \a os
