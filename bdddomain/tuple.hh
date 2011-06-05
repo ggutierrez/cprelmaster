@@ -13,6 +13,17 @@ namespace MPG { namespace CPRel {
  * Tuples are the abstraction for the elements of relations.
  */
 
+namespace VarImpl {
+/*
+  These forward declarations are needed because of the friend relation between
+  RelationImpl and RelationImplIter with the Tuple class. I do not like declaring
+  friends just for these classes to access the encode function of the tuple, it
+  would be better to provide a conversion operator from Tuple to DdNode for this
+  purpose.
+  */
+class RelationImpl;
+class RelationImplIter;
+}
 /**
  * \brief Class to abstract a tuple in a relation
  * \ingroup TupleGroup
@@ -22,6 +33,8 @@ namespace MPG { namespace CPRel {
  */
 class Tuple {
 private:
+  friend class VarImpl::RelationImpl;
+  friend class VarImpl::RelationImplIter;
   /// Actual data container
   std::vector<int> data_;
   /// Arity of the tuple
@@ -30,7 +43,6 @@ private:
   Tuple(void);
   /// Returns a BDD representation for the encoding of \a p in column \a a
   static DdNode* encode(int p, int a);
-public:
   /// Returns a BDD representing \a this
   DdNode* encode(void) const;
 public:
