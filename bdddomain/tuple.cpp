@@ -1,7 +1,18 @@
 #include <bdddomain/tuple.hh>
+#include <vector>
+
+using std::vector;
 
 namespace MPG { namespace CPRel {
 using namespace VarImpl;
+
+Tuple::Tuple(const std::vector<int>& v)
+  : data_(v), arity_(v.size()) {}
+
+Tuple::Tuple(const Tuple& t)
+  : data_(t.data_), arity_(t.arity_) {}
+
+Tuple::~Tuple(void) {}
 
 DdNode* Tuple::encode(int p, int a) {
   DdNode *f = one();
@@ -33,6 +44,10 @@ DdNode* Tuple::encode(void) const {
     c--;
   }
   return f;
+}
+
+vector<int> Tuple::value(void) const {
+  return vector<int>(data_);
 }
 
 }}
