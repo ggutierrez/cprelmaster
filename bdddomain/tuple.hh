@@ -29,11 +29,11 @@ private:
   int arity_;
   /// Avoiding Default constructor
   Tuple(void);
-public:
   /// Returns a BDD representation for the encoding of \a p in column \a a
   static DdNode* encode(int p, int a);
+public:
   /// Returns a BDD representing \a this
-  static DdNode* encode(const Tuple& tuple);
+  DdNode* encode(void) const;
 public:
   typedef std::vector<int>::const_iterator iterator;
   /// Constructor for an empty tuple of \a k elements

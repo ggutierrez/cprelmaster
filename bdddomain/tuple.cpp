@@ -18,13 +18,13 @@ DdNode* Tuple::encode(int p, int a) {
   return f;
 }
 
-DdNode* Tuple::encode(const Tuple& tuple) {
+DdNode* Tuple::encode(void) const {
   DdNode *f = one();
   DdNode *t, *tmp;
   Cudd_Ref(f);
-  int c = tuple.arity()-1;
-  for (int i = 0; i < tuple.arity(); i++) {
-    t = encode(tuple.at(i),c);
+  int c = data_.size()-1;
+  for (unsigned int i = 0; i < data_.size(); i++) {
+    t = encode(data_.at(i),c);
     tmp = Cudd_bddAnd(dd(),f,t);
     Cudd_Ref(tmp);
     Cudd_RecursiveDeref(dd(),t);
