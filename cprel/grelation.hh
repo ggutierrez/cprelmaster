@@ -2,7 +2,7 @@
 #define __CPREL_CPREL_GRELATION_HH__
 
 #include <boost/shared_ptr.hpp>
-#include <cprel/tuple.hh>
+#include <bdddomain/tuple.hh>
 #include <cprel/descriptor.hh>
 
 namespace MPG { namespace CPRel {

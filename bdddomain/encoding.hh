@@ -2,7 +2,7 @@
 #define __CPREL_BDDDOMAIN_ENCODING_HH__
 
 #include <vector>
-#include <cprel/tuple.hh>
+#include <bdddomain/tuple.hh>
 #include <cprel/descriptor.hh>
 #include <bdddomain/manager.hh>
 

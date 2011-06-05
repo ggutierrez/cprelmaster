@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cprel/grelation.hh>
-#include <cprel/tuple.hh>
+#include <bdddomain/tuple.hh>
 
 using std::cout;
 using std::endl;

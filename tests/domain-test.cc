@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <cprel/tuple.hh>
+#include <bdddomain/tuple.hh>
 #include <bdddomain/rel-impl.hh>
 
 #include <bdddomain/relations.hh>

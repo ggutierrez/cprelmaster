@@ -233,6 +233,7 @@ set(BDDDOMAIN_SRCS
   bdddomain/relations.hh
   bdddomain/rel-impl.cpp
   bdddomain/rel-impl.hh
+  bdddomain/tuple.hh
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
@@ -328,7 +329,6 @@ set(CPREL_SRCS
   cprel/cprel.hh
   cprel/grelation.cpp
   cprel/grelation.hh
-  cprel/tuple.hh
   cprel/var.hh
   cprel/varimp.cpp
   cprel/varimp.hh
