@@ -223,8 +223,6 @@ endif()
 ##########################################################################
 include_directories(${CMAKE_SOURCE_DIR})
 set(BDDDOMAIN_SRCS
-  bdddomain/cube-iterator.cpp
-  bdddomain/cube-iterator.hh
   bdddomain/encoding.cpp
   bdddomain/encoding.hh
   bdddomain/manager.cpp
