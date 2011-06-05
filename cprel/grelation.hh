@@ -155,7 +155,7 @@ private:
    * This temporal storage is needed because the iterator provided by the
    * implementation is not at least forward iterator.
    */
-  Tuple current_;
+  Tuple* current_;
   /// Indicates if there is a current element to be read
   bool valid_;
   /// Avoid default construction

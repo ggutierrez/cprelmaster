@@ -52,8 +52,6 @@ public:
    * of the tuple is the size of the vector.
    */
   explicit Tuple(const std::vector<int>& v);
-  /// Constructor for an empty tuple of \a k elements
-  Tuple(int k);
   /// Copy constructor
   Tuple(const Tuple& t);
   /// Destructor

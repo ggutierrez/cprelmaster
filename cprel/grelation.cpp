@@ -144,11 +144,11 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
 
 GRelationIter::GRelationIter(const GRelation& r)
   : pimpl_(new VarImpl::RelationImplIter(r.pimpl_->tuples()))
-  , current_(r.pimpl_->arity())
+  , current_(NULL)
   , valid_(pimpl_->operator ()()) {
 
   if (valid_)
-    current_ = pimpl_->val();
+    current_ = new Tuple(pimpl_->val());
 //  std::cerr << "Initial value " << current_ << std::endl;
 }
 
@@ -157,6 +157,7 @@ GRelationIter::GRelationIter(const GRelationIter& r)
 
 GRelationIter::~GRelationIter(void) {
   pimpl_.reset();
+  delete current_;
 }
 
 bool GRelationIter::operator ()(void) const {
@@ -164,14 +165,14 @@ bool GRelationIter::operator ()(void) const {
 }
 
 Tuple GRelationIter::val() const {
-  return current_;
+  return *current_;
 }
 
 void GRelationIter::operator ++(void) {
   if(! pimpl_->operator ()())
     valid_ = false;
   else {
-    current_ = pimpl_->val();
+    current_ = new Tuple(pimpl_->val());
     //std::cerr << "New value ready " << current_ << std::endl;
   }
 }
