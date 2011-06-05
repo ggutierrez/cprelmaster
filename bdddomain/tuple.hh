@@ -56,11 +56,6 @@ public:
   /// Destructor
   ~Tuple(void) {}
   /// Access to the \a i element of the tuple
-  int& operator[](int i) {
-    assert(i>=0 && i<arity_);
-    return data_[i];
-  }
-  /// Access to the \a i element of the tuple
   int at(int i) const {
     assert(i>=0 && i<arity_);
     return data_.at(i);
@@ -72,17 +67,19 @@ public:
 /// Creates a binary tuple with \a a and \a b
 inline
 Tuple make_Tuple(int a, int b) {
-  Tuple t(2);
-  t[0] = a; t[1] = b;
-  return t;
+  std::vector<int> v;
+  v.reserve(2);
+  v.push_back(a); v.push_back(b);
+  return Tuple(v);
 }
 
 /// Creates a ternary tuple with \a a, \a b and \a c
 inline
 Tuple make_Tuple(int a, int b, int c) {
-  Tuple t(3);
-  t[0] = a; t[1] = b; t[2] = c;
-  return t;
+  std::vector<int> v;
+  v.reserve(3);
+  v.push_back(a); v.push_back(b); v.push_back(c);
+  return Tuple(v);
 }
 
 /**
