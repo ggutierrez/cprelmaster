@@ -36,6 +36,12 @@ public:
   DdNode* encode(void) const;
 public:
   typedef std::vector<int>::const_iterator iterator;
+  /**
+   * \brief Construct a tuple with all the elements present in \a v. The arity
+   * of the tuple is the size of the vector.
+   */
+  explicit Tuple(const std::vector<int>& v)
+    : data_(v), arity_(v.size()) {}
   /// Constructor for an empty tuple of \a k elements
   Tuple(int k) {
     data_.reserve(k);

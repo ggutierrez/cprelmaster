@@ -181,9 +181,9 @@ Tuple RelationImplIter::val(void) {
   Cudd_GenFree(gen);
 
   // Prepare the output
-  Tuple out(arity_);
-  for (int i = 0; i < arity_; i++) out[i] = tuple[arity_-1-i];
-
+  vector<int> v;
+  for (int i = 0; i < arity_; i++) v.push_back(tuple[arity_-1-i]);
+  Tuple out(v);
   // Affect the state of the iterator
   remove(out);
 
