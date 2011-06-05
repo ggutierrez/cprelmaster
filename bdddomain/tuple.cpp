@@ -12,6 +12,9 @@ Tuple::Tuple(const std::vector<int>& v)
 Tuple::Tuple(const Tuple& t)
   : data_(t.data_), arity_(t.arity_) {}
 
+Tuple::Tuple(int k)
+ : arity_(k) {}
+
 Tuple::~Tuple(void) {}
 
 DdNode* Tuple::encode(int p, int a) {

@@ -3,7 +3,6 @@
 
 #include <cassert>
 #include <vector>
-#include <set>
 #include <iostream>
 #include <bdddomain/manager.hh>
 
@@ -42,7 +41,7 @@ public:
    */
   explicit Tuple(const std::vector<int>& v);
   /// Constructor for an empty tuple of \a k elements
-  Tuple(int k) : arity_(k) {}
+  Tuple(int k);
   /// Copy constructor
   Tuple(const Tuple& t);
   /// Destructor

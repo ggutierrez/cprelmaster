@@ -2,6 +2,7 @@
 #define __CPREL_CPREL_DESCRIPTOR_HH__
 
 #include <gecode/kernel.hh>
+#include <set>
 
 namespace MPG { namespace CPRel {
 
