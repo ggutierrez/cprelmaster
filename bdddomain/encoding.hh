@@ -2,9 +2,8 @@
 #define __CPREL_BDDDOMAIN_ENCODING_HH__
 
 #include <vector>
-#include <bdddomain/tuple.hh>
-#include <cprel/descriptor.hh>
 #include <bdddomain/manager.hh>
+#include <cprel/descriptor.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 /**

@@ -96,38 +96,57 @@ public:
   DdNode* zero(void) {
     return zero_;
   }
+  /// Returns the number of bits used to represent each integer in a tuple
   int bbv(void) {
     return BBV_;
   }
+  /// Returns the number of bits for the arity representation
   int ba(void) {
     return BA_;
   }
   //@}
 };
 
-/// Function to return the manager
+/**
+ * \brief Returns the manager
+ * \ingroup DomRepr
+ */
 inline
 DdManager* dd(void) {
   return BddManager::instance()->manager();
 }
 
-/// Function to return logical true
+/**
+ * \brief Returns logical true
+ * \ingroup DomRepr
+ */
 inline
 DdNode* one(void) {
   return BddManager::instance()->one();
 }
 
-/// Function to return logical false
+/**
+ * \brief Returns logical false
+ * \ingroup DomRepr
+ */
 inline
 DdNode* zero(void) {
   return BddManager::instance()->zero();
 }
 
+/**
+ * \brief Returns the number of bits used to represent each element of a tuple
+ * \ingroup DomRepr
+ */
 inline
 int bbv(void) {
   return BddManager::instance()->bbv();
 }
 
+/**
+ * \brief Returns the number of bits used to represent the arity
+ * \ingroup DomRepr
+ */
 inline
 int ba(void) {
   return BddManager::instance()->ba();
