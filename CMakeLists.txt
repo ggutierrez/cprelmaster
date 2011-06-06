@@ -43,9 +43,31 @@ endif()
 ##########################################################################
 # Additional compiler flags
 ##########################################################################
-add_definitions(-Wall -Wextra)
-add_definitions(-O0 -g -fdiagnostics-show-option)
-#set(CMAKE_CXX_FLAGS "-std=c++0x")
+include(CheckCXXCompilerFlag)
+
+check_cxx_compiler_flag("-std=c++0x" C0X_SUPPORT)
+if(C0X_SUPPORT)
+  message(STATUS "CXX has c++0x support")
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x")
+endif()
+
+check_cxx_compiler_flag(-Wall FLAG_WALL)
+if(FLAG_WALL)
+  add_definitions(-Wall)
+endif()
+
+check_cxx_compiler_flag(-Wextra FLAG_WEXTRA)
+if(FLAG_WEXTRA)
+  add_definitions(-Wextra)
+endif()
+
+check_cxx_compiler_flag(-fdiagnostics-show-option FLAG_DIAGNOSTIC)
+if(FLAG_DIAGNOSTIC)
+  add_definitions(-fdiagnostics-show-option)
+endif()
+
+## temporal flags for development
+add_definitions(-O0 -g)
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -175,30 +197,56 @@ target_link_libraries(cudd util st mpr epd)
 ## NOTE about warnings:
 ## When CUDF is compiled by gcc there are a lot of warnings signaling
 ## unused parameters. As they can hide other important warnings of this project
-## they will be disabled during the building of CUDD specific targets. For
-## this every compiler provides a different option so please set the following
-## variable with the compiler options that prevent the report of this specific
-## type of warning. (This is ONLY for CUDF building)
-##
-## For gcc, the option -fdiagnostics-show-option shows the specific code of the
-## diagnostic.
+## they will be disabled during the building of CUDD specific targets.
+
+include(CheckCCompilerFlag)
+set(CUDD_SPECIFIC_FLAGS)
+
+check_c_compiler_flag(-Wno-unused-parameter FLAG_DIS_UNUSED)
+if(FLAG_DIS_UNUSED)
+ set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -Wno-unused-parameter")
+endif()
+
+check_c_compiler_flag(-Wno-sign-compare FLAG_DIS_SIGN)
+if(FLAG_DIS_SIGN)
+  set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -Wno-sign-compare")
+endif()
 
 ## Building options extracted from original CUDD Makefile
 if(SIZEOF_VOID_P MATCHES "8")
-#  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
-  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+  set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+
+  check_c_compiler_flag("-mtune=native" FLAG_TUNE_NATIVE)
+  if(FLAG_TUNE_NATIVE)
+    set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -mtune=native")
+  else()
+    message(WARNING "CUDD compilation option not supported!")
+  endif()
+
 elseif(SIZEOF_VOID_P MATCHES "4")
-  #set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-array-bounds -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
-  set(EXTRA_FLAGS "-Wno-unused-parameter -Wno-sign-compare -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD")
+  set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -DHAVE_IEEE_754 -DBSD")
+
+  check_c_compiler_flag("-mtune=pentium4" FLAG_TUNE_PIV)
+  if(FLAG_TUNE_PIV)
+    set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -mtune=pentium4")
+  else()
+    message(WARNING "CUDD compilation option not supported!")
+  endif()
+
+  check_c_compiler_flag(-malign-double FLAG_ALIGN_DOUBLE)
+  if(FLAG_ALIGN_DOUBLE)
+    set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -malign-double")
+  else()
+    message(WARNING "CUDD compilation option not supported!")
+  endif()
 else()
   message(SEND_ERROR "Unable to determine the flags to build cudd")
 endif()
 
 set_source_files_properties(
     ${CUDD_SRCS} ${UTIL_SRCS} ${ST_SRCS} ${MTR_SRCS} ${EPD_SRCS}
-    PROPERTIES COMPILE_FLAGS ${EXTRA_FLAGS}
+    PROPERTIES COMPILE_FLAGS ${CUDD_SPECIFIC_FLAGS}
 )
-
 set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
 # Boost
@@ -248,19 +296,6 @@ install(TARGETS bdddomain ${CUDD_LIBS}
   ARCHIVE DESTINATION lib)
 install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
-##########################################################################
-# Cdds examples
-##########################################################################
-#include_directories("${CMAKE_SOURCE_DIR}")
-#add_executable(testcdd tests/testcdd.c)
-#target_link_libraries(testcdd m ${CUDD_LIBS})
-
-#add_executable(testobj
-#  tests/testcdd.cpp
-#  cdd-obj/cdd.cpp
-#  cdd-obj/cdd.hh
-#)
-#target_link_libraries(testobj ${CUDD_LIBS})
 ##########################################################################
 # Gecode
 ##########################################################################
@@ -493,3 +528,9 @@ target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
 # test for the and propagator
 add_executable(and tests/and.cpp)
 target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
+
+
+if(C0X_SUPPORT)
+  add_executable(swap-test tests/swap-test.cpp)
+  target_link_libraries(swap-test gecodecprel ${Gecode_LIBRARIES})
+endif()
