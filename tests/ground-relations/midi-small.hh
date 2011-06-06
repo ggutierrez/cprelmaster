@@ -1,6 +1,6 @@
 #include <vector>
 
-std::vector<int> midi_small = {
+std::vector<std::vector<int> > midi_small = {
   {62, 0, 1043, 100, 2},
   {69, 1043, 1044, 100, 2},
   {65, 2087, 1043, 100, 2},

@@ -121,11 +121,34 @@ void RelationImpl::complement(void) {
 }
 
 RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
-  //TODO: error detection on the description
-  // Only valid columns are presented in the description
-  // Every column appears at most once
+  /**
+   * \todo Error detection on the description
+   * Only valid columns are presented in the description
+   * Every column appears at most once
+   */
   return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
 }
+
+RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
+  std::cout << "Join operation" << std::endl
+            << "Left relation " << std::endl << *this << std::endl
+            << "Right relation " << std::endl << r << std::endl
+            << " Join on: " << j << "columns" << std::endl;
+
+/*
+  PermDescriptor perm;
+  perm.permute(2,0);
+  perm.permute(1,2);
+  perm.permute(0,1);
+*/
+  RelationImpl new_left(bdd_,arity_+j);
+  //new_left = new_left.permute(perm);
+
+  std::cout << "intermediate  " << new_left << std::endl;
+  return RelationImpl(bdd_,arity_);
+}
+
+
       /*
 RelationImpl RelationImpl::cuantifyExist(int c) const {
   std::cout << "Called cuantify: " << c << std::endl;

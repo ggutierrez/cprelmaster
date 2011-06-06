@@ -53,7 +53,7 @@ private:
     , one_(DD_ONE(dd))
     , zero_(Cudd_Not(DD_ONE(dd)))
     , BBV_(5), BA_(3)
-//    , BBV_(2), BA_(1)
+//    , BBV_(2), BA_(2)
   {
     std::cout << "Created bdd manager" << std::endl;
   }

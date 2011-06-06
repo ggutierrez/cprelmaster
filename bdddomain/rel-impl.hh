@@ -84,6 +84,11 @@ public:
    *
    */
   RelationImpl permute(const PermDescriptor& permDesc) const;
+  /**
+   * \brief Performs \f$ this \bowtie_{j} r \f$
+   *
+   */
+  RelationImpl join(int j, const RelationImpl& r) const;
   /// Returns the relation resulting from existencially quantifying on column \a c
   RelationImpl cuantifyExist(int c) const;
   /// \name Iteration
