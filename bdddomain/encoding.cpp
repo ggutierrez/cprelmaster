@@ -26,13 +26,6 @@ vector<DdNode*> bddVars(int c) {
   return vars;
 }
 
-DdNode* swap_columns(DdNode *r, int x, int y) {
-  vector<DdNode*> vx(bddVars(x));
-  vector<DdNode*> vy(bddVars(y));
-
-  return Cudd_bddSwapVariables(dd(),r,&vx[0],&vy[0],vx.size());
-}
-
 DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
   vector<DdNode*> orig, perm;
   int descSize = static_cast<int>(swapDesc.size());

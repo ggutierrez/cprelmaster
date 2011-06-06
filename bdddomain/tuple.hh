@@ -36,7 +36,8 @@ private:
   friend class VarImpl::RelationImpl;
   friend class VarImpl::RelationImplIter;
   /// Actual data container
-  std::vector<int> data_;
+  //std::vector<int> data_;
+  DdNode* data_;
   /// Arity of the tuple
   int arity_;
   /// Avoiding Default constructor
@@ -45,6 +46,8 @@ private:
   static DdNode* encode(int p, int a);
   /// Returns a BDD representing \a this
   DdNode* encode(void) const;
+  /// Returns a BDD representing \a this
+  DdNode* encode(const std::vector<int>& v) const;
 public:
   typedef std::vector<int>::const_iterator iterator;
   /**
@@ -54,6 +57,8 @@ public:
   explicit Tuple(const std::vector<int>& v);
   /// Copy constructor
   Tuple(const Tuple& t);
+  /// Assignement operator
+  Tuple& operator = (const Tuple& t);
   /// Destructor
   ~Tuple(void);
   /// Returns a vector with all the elements in the tuple

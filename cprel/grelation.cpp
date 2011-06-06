@@ -137,8 +137,10 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
     os << "compl(" << r.complement() << ")";
     return os;
   }
+
   for(GRelationIter it(r); it(); ++it)
     os << it.val() << " ";
+
   return os;
 }
 
@@ -172,6 +174,7 @@ void GRelationIter::operator ++(void) {
   if(! pimpl_->operator ()())
     valid_ = false;
   else {
+    delete current_;
     current_ = new Tuple(pimpl_->val());
     //std::cerr << "New value ready " << current_ << std::endl;
   }

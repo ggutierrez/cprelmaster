@@ -145,5 +145,10 @@ int maxArity(void) {
   return 1 << ba();
 }
 
+inline
+int cubeSize(void) {
+  return 1 << (bbv() + ba());
+}
+
 }}}
 #endif

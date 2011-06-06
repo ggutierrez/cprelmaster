@@ -79,10 +79,6 @@ public:
   //@}
   /// \name Operations
   /**
-   * \brief Returns the relation resulting from swapping column \a x by \a y
-   */
-  RelationImpl swap_columns(int x, int y) const;
-  /**
    * \brief Returns the relation resulting from permuting \a this
    * according with \a permDesc.
    *
