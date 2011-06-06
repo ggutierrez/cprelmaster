@@ -48,22 +48,13 @@ public:
   /// \a Constructors and disposer
   //@{
   /// Constructor for a variable with empty lower bound and
-  CPRelVarImp(Space& home, const GRelation& l, const GRelation& u)
-    : CPRelVarImpBase(home), glb_(l), lub_(u) {}
+  CPRelVarImp(Space& home, const GRelation& l, const GRelation& u);
   /// Resources disposal
-  void dispose(Space&) {
-    //    std::cout << "Starting disposal" << std::endl;
-    glb_.~GRelation();
-    //    std::cerr << "--disposing--" << std::endl;
-    lub_.~GRelation();
-    //    std::cout << "Finishing disposal" << std::endl;
-  }
+  void dispose(Space&);
   //@}
   /// \name Relation information
   //@{
-  int arity(void) const {
-    return glb_.arity();
-  }
+  int arity(void) const { return glb_.arity(); }
   //@}
   /// \name Bound access
   //@{
@@ -73,36 +64,28 @@ public:
    *
    * This relation contains the tuples that are known to be part of the variable.
    */
-  GRelation glb(void) const {
-    return glb_;
-  }
+  GRelation glb(void) const { return glb_; }
   /**
    * \brief Returns a relation representing the least upper bound of the
    * variable.
    *
    * This relation contains the tuples that are possible part of the variable.
    */
-  GRelation lub(void) const {
-    return lub_;
-  }
+  GRelation lub(void) const { return lub_; }
   /**
    * \brief Unknown access.
    *
    * Returns a relation (copy) with the maximum relation that can be included in
    * the lower bound. \f$unk = lub \setminus glb \f$
    */
-  GRelation unk(void) const {
-    return lub_.difference(glb_);
-  }
+  GRelation unk(void) const { return lub_.difference(glb_); }
   /**
    * \brief Out of bound access.
    *
    * Returns a relation (copy) that is known to not be part of the set of relations
    * represented by the variable. \f$oob = \overline{lub} \f$.
    */
-  GRelation oob(void) const {
-    return lub_.complement();
-  }
+  GRelation oob(void) const { return lub_.complement(); }
   //@}
   /// \name Pruning operations
   //@{
@@ -110,44 +93,17 @@ public:
    * \brief Prune the variable by doing: \f$ glb = glb \cup r \f$
    *
    */
-  ModEvent include(Space& home, const GRelation& r) {
-    /*
-      std::cout << "Inclusion. " << glb_ << "..." << lub_ << std::endl
-      << "\tinclude " << r << std::endl;
-    */
-    if (r.subsetEq(glb_)) return ME_CPREL_NONE;
-    if (!r.subsetEq(lub_)) return ME_CPREL_FAILED;
-    // actual prunning
-    glb_.unionAssign(r);
-    assert(glb_.subsetEq(lub_));
-    //std::cout << "\tResult: " << glb_ << "..." << lub_ << std::endl;
-    CPRelDelta d(1,2);
-    return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MIN, d);
-  }
+  ModEvent include(Space& home, const GRelation& r);
   /**
    * \brief Prune the variable by doing: \f$ lub = lub \setminus r \f$
    *
    */
-  ModEvent exclude(Space& home, const GRelation& r) {
-    /*
-      std::cout << "Exclusion. " << glb_ << "..." << lub_ << std::endl
-      << "\texclude " << r << std::endl;
-    */
-    if (!r.disjoint(glb_)) return ME_CPREL_FAILED;
-    if (r.disjoint(lub_)) return ME_CPREL_NONE;
-    lub_.differenceAssign(r);
-    assert(glb_.subsetEq(lub_));
-    //std::cout << "\tResult: " << glb_ << "..." << lub_ << std::endl;
-    CPRelDelta d(1,2);
-    return notify(home, assigned() ? ME_CPREL_VAL : ME_CPREL_MAX, d);
-  }
+  ModEvent exclude(Space& home, const GRelation& r);
   //@}
   /// \name Domain tests
   //@{
   /// Tests for assignment \f$ glb = lub \f$
-  bool assigned(void) const {
-    return glb_.eq(lub_);
-  }
+  bool assigned(void) const { return glb_.eq(lub_); }
   //@}
   /// \name Subscriptions handling
   //@{
@@ -186,7 +142,6 @@ public:
     return static_cast<const CPRelDelta&>(d).max();
   }
 };
-
 }}
 
 

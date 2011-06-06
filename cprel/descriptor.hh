@@ -56,12 +56,13 @@ public:
   }
   /// Tests whether the description is valid for a relation of arity \a a
   bool valid(int a) const {
+    using namespace std;
     if (a < static_cast<int>(size()))
       return false;
-    std::set<int> domain, range;
-    std::copy(origin_.begin(), origin_.end(),
+    set<int> domain, range;
+    copy(origin_.begin(), origin_.end(),
               std::inserter(domain,domain.begin()));
-    std::copy(permute_.begin(), permute_.end(),
+    copy(permute_.begin(), permute_.end(),
               std::inserter(range,range.begin()));
     if (domain.size() != range.size())
       return false;
