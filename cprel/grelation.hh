@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include <bdddomain/tuple.hh>
 #include <cprel/descriptor.hh>
+#include <boost/shared_ptr.hpp>
 
 namespace MPG { namespace CPRel {
 /**
@@ -149,13 +150,14 @@ private:
   typedef boost::shared_ptr<VarImpl::RelationImplIter> Impl;
   /// Relation storage
   Impl pimpl_;
+  typedef boost::shared_ptr<Tuple> TuplePtr;
   /**
    * \brief Stores the current tuple
    *
    * This temporal storage is needed because the iterator provided by the
    * implementation is not at least forward iterator.
    */
-  Tuple* current_;
+  TuplePtr current_;
   /// Indicates if there is a current element to be read
   bool valid_;
   /// Avoid default construction

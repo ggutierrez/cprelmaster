@@ -44,8 +44,14 @@ private:
   Tuple(void);
   /// Returns a BDD representation for the encoding of \a p in column \a a
   static DdNode* encode(int p, int a);
-  /// Returns a BDD representing \a this
-  DdNode* encode(void) const;
+  /**
+   * \brief Returns a BDD representing \a this
+   *
+   * \warning It is the responsability of the calle to handle the reference
+   * counting of the returned BDD. For instance, to call Cudd_Ref before using
+   * it and Cudd_RecursiveDeref when not needed anymore.
+   */
+  DdNode* getBDD(void) const;
   /// Returns a BDD representing \a this
   DdNode* encode(const std::vector<int>& v) const;
 public:

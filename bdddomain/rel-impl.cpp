@@ -61,7 +61,8 @@ bool RelationImpl::universe(void) const {
 
 void RelationImpl::add(const Tuple& t) {
   assert(arity_ == t.arity());
-  DdNode *et = t.encode();
+  DdNode *et = t.getBDD();
+  Cudd_Ref(et);
   DdNode *tmp = Cudd_bddOr(dd(),bdd_,et);
   Cudd_Ref(tmp);
   Cudd_RecursiveDeref(dd(),et);
@@ -71,7 +72,8 @@ void RelationImpl::add(const Tuple& t) {
 
 void RelationImpl::remove(const Tuple& t) {
   assert(arity_ == t.arity());
-  DdNode *et = t.encode();
+  DdNode *et = t.getBDD();
+  Cudd_Ref(et);
   DdNode *tmp = Cudd_bddAnd(dd(),bdd_,Cudd_Not(et));
   Cudd_Ref(tmp);
   Cudd_RecursiveDeref(dd(),et);
@@ -187,8 +189,9 @@ Tuple RelationImplIter::val(void) {
 }
 
 void RelationImplIter::remove(const Tuple& t) {
-  DdNode *i = Cudd_Not(t.encode());
-  DdNode *tmp = Cudd_bddAnd(dd(),relation_,i);
+  DdNode *i = t.getBDD();
+  Cudd_Ref(i);
+  DdNode *tmp = Cudd_bddAnd(dd(),relation_,Cudd_Not(i));
   Cudd_Ref(tmp);
   Cudd_RecursiveDeref(dd(),i);
   Cudd_RecursiveDeref(dd(),relation_);

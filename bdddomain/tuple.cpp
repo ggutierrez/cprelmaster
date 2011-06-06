@@ -63,8 +63,7 @@ DdNode* Tuple::encode(const std::vector<int>& v) const {
   return f;
 }
 
-DdNode* Tuple::encode(void) const {
-  Cudd_Ref(data_);
+DdNode* Tuple::getBDD(void) const {
   return data_;
 }
 
