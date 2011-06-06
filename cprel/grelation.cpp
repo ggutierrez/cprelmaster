@@ -20,11 +20,7 @@ GRelation& GRelation::operator =(GRelation& right) {
   return *this;
 }
 
-GRelation::~GRelation(void) {
-//  std::cout << "Disposing grelation" << std::endl;
-  //pimpl_->~RelationImpl();
-//  std::cout << "--Disposing grelation" << std::endl;
-}
+GRelation::~GRelation(void) {}
 
 GRelation GRelation::create_full(int a) {
   RelationImpl full = RelationImpl::create_full(a);
@@ -150,7 +146,6 @@ GRelationIter::GRelationIter(const GRelation& r)
 
   if (valid_)
     current_ = TuplePtr(new Tuple(pimpl_->val()));
-//  std::cerr << "Initial value " << current_ << std::endl;
 }
 
 GRelationIter::GRelationIter(const GRelationIter& r)
@@ -171,10 +166,8 @@ Tuple GRelationIter::val() const {
 void GRelationIter::operator ++(void) {
   if(! pimpl_->operator ()())
     valid_ = false;
-  else {
+  else
     current_ = TuplePtr(new Tuple(pimpl_->val()));
-    //std::cerr << "New value ready " << current_ << std::endl;
-  }
 }
 
 }}
