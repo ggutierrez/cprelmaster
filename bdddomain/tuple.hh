@@ -55,7 +55,6 @@ private:
   /// Returns a BDD representing \a this
   DdNode* encode(const std::vector<int>& v) const;
 public:
-  typedef std::vector<int>::const_iterator iterator;
   /**
    * \brief Construct a tuple with all the elements present in \a v. The arity
    * of the tuple is the size of the vector.

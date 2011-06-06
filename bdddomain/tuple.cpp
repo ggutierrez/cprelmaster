@@ -68,30 +68,33 @@ DdNode* Tuple::getBDD(void) const {
 }
 
 vector<int> Tuple::value(void) const {
-  const int cube_size = cubeSize();
 
-  std::vector<int> cube_(cube_size,0);
-  int *cube = &cube_[0];
-  CUDD_VALUE_TYPE value;
+  const int cube_size = 1<<(bbv() + ba());
+  const int tuple_size = 1 << ba();
 
-  const int tuple_size = arity_;
-  std::vector<int> tuple(arity_,0);
-  DdGen *gen = Cudd_FirstCube(dd(),data_,&cube,&value);
-  assert(gen != NULL && "Invalid cube in generator");
+  int cube_[cube_size];
+  int *cube = cube_;
+  int tuple[tuple_size];
+  CUDD_VALUE_TYPE val;
 
-  for(int i = cube_size - 1; i>=0; i--){
-    int current = i & (tuple_size-1) ;
-    if(current < arity_) {
-      // we are only interested in the elements of the cube that correspond to
-      // the current tuple. Therfore, we only read from the first element up to
-      // the last element that falls in the tuple according with its cardinality.
-      int to_and = (bitsPerInteger()-1-(i>>ba()));
-      tuple[current] &= ~(1 << to_and);
-      tuple[current] |= (cube[i]&1) << to_and;
+  for(int k = 0; k < tuple_size; k++) tuple[k] = 0;
+
+  DdGen* gen = Cudd_FirstCube(dd(),data_,&cube,&val);
+  assert(gen != NULL);
+  for(int i = cube_size -1; i>=0; i--){
+    if( (i & (tuple_size-1)) < arity_){
+      tuple[i&(tuple_size-1)] &=
+          ~(1<<((1<<bbv())-1-(i>>ba())));
+      tuple[i&(tuple_size-1)] |=
+          (cube[i]&1)<<((1<<bbv())-1-(i>>ba()));
     }
   }
   Cudd_GenFree(gen);
-  return tuple;
+
+  // Prepare the output
+  vector<int> v;
+  for (int i = 0; i < arity_; i++) v.push_back(tuple[arity_-1-i]);
+  return v;
 }
 
 }}
