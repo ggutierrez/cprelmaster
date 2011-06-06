@@ -481,7 +481,7 @@ add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
 
 add_executable(domain-test tests/domain-test.cc)
-target_link_libraries(domain-test bdddomain)
+target_link_libraries(domain-test bdddomain ${Gecode_LIBRARIES})
 
 add_executable(grel-test tests/grel-test.cpp)
 target_link_libraries(grel-test gecodecprel)
