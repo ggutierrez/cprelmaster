@@ -100,6 +100,8 @@ public:
   GRelation join(int j,const GRelation& r) const;
   /// Returns the relation \f$ this \times r \f$
   GRelation times(const GRelation& r) const;
+  /// Returns the relation resulting from existencially quantifying on column \a c
+  GRelation exists(int c) const;
   //@}
   /// \name Test operations
   //@{

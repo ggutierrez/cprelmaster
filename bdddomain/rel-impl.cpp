@@ -155,13 +155,18 @@ RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
   return lxu;
 }
 
-      /*
-RelationImpl RelationImpl::cuantifyExist(int c) const {
+RelationImpl RelationImpl::exists(int c) const {
   std::cout << "Called cuantify: " << c << std::endl;
 
-  //return RelationImpl(VarImpl::swap_columns(bdd_,x,y), arity_);
+  RelationImpl q(VarImpl::exists(bdd_,c), arity_);
+
+  //***
+  PermDescriptor d;
+  for (int i = arity_ -1; i > c; i--)
+  d.permute(i,i-1);
+  return RelationImpl(q.permute(d).bdd_,arity_-1);
 }
-      */
+
 RelationImplIter RelationImpl::tuples(void) const {
   return RelationImplIter(bdd_,arity_);
 }

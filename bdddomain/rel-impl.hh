@@ -98,7 +98,7 @@ public:
    */
   RelationImpl join(int j, const RelationImpl& r) const;
   /// Returns the relation resulting from existencially quantifying on column \a c
-  RelationImpl cuantifyExist(int c) const;
+  RelationImpl exists(int c) const;
   /// \name Iteration
   //@{
   /// Returns an iterator on the tuples of the relation

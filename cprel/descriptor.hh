@@ -18,7 +18,8 @@ class DescIterator;
  * \brief Describes a permutation on a relation
  * \ingroup GRelation
  *
- * A Permutation descriptor describes the way to perform a given permutation on a relation. It
+ * A Permutation descriptor describes the way to perform a given permutation on
+ * a relation.
  * \todo example!
  */
 class PermDescriptor {
@@ -44,7 +45,7 @@ public:
    * by column \a y.
    */
   void permute(int x, int y) {
-    // \todo Check if x and y already exist in the description and rise an exception
+    /// \todo Check if x and y already exist in the description and rise an exception
     origin_.push_back(x);
     permute_.push_back(y);
     assert(origin_.size() == permute_.size()
@@ -54,7 +55,12 @@ public:
   PermDescriptor inverse(void) const {
     return PermDescriptor(permute_,origin_);
   }
-  /// Tests whether the description is valid for a relation of arity \a a
+  /**
+   * \brief Tests whether the description is valid for a relation of arity \a a
+   *
+   * - It specifies valid columns for a relation of arity \a a
+   * - It does not contain the same column in defferent pairs.
+   */
   bool valid(int a) const {
     using namespace std;
     if (a < static_cast<int>(size()))

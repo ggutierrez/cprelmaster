@@ -534,3 +534,7 @@ add_executable(swap-test tests/swap-test.cpp)
 
 add_executable(join-test tests/join-test.cpp)
   target_link_libraries(join-test gecodecprel ${Gecode_LIBRARIES})
+
+add_executable(proj-test tests/proj-test.cpp)
+  target_link_libraries(proj-test gecodecprel ${Gecode_LIBRARIES})
+

@@ -51,4 +51,15 @@ DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
 
   return Cudd_bddSwapVariables(dd(),r,&orig[0],&perm[0],orig.size());
 }
+
+DdNode* exists(DdNode* r, int c) {
+  std::vector<int> indices = bddIndices(c);
+  DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
+  Cudd_Ref(cube);
+  DdNode *q = Cudd_bddExistAbstract(dd(),r,cube);
+  Cudd_RecursiveDeref(dd(),cube);
+  return q;
+}
+
+
 }}}

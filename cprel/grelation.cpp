@@ -121,6 +121,13 @@ GRelation GRelation::times(const GRelation& r) const {
   return join(0,r);
 }
 
+GRelation GRelation::exists(int c) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->exists(c)))
+        );
+}
+
 GRelation create(const std::vector<Tuple>& dom) {
   std::vector<Tuple>::const_iterator c = dom.begin();
   GRelation r(c->arity());
