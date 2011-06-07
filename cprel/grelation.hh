@@ -98,6 +98,8 @@ public:
   GRelation timesU(int n, bool left) const;
   /// Returns the relation \f$ this \bowtie_{j} r \f$
   GRelation join(int j,const GRelation& r) const;
+  /// Returns the relation \f$ this \times r \f$
+  GRelation times(const GRelation& r) const;
   //@}
   /// \name Test operations
   //@{

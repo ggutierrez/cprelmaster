@@ -141,10 +141,6 @@ RelationImpl RelationImpl::timesU(int n, bool left) const {
 }
 
 RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
-  std::cout << "Join operation" << std::endl
-            << "Left relation " << std::endl << *this << std::endl
-            << "Right relation " << std::endl << r << std::endl
-            << " Join on: " << j << "columns" << std::endl;
 
   const RelationImpl& l = *this;
   // computes: l \bowtie_{j} r
@@ -152,11 +148,11 @@ RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
   assert(l.arity() >= j && r.arity() >= j
          && "There are not enough columns for the join");
 
-  RelationImpl l_x_u = l.timesU(r.arity() - j,false);
-  RelationImpl r_x_u = r.timesU(l.arity() - j,true);
+  RelationImpl lxu = l.timesU(r.arity() - j,false);
+  RelationImpl rxu = r.timesU(l.arity() - j,true);
 
-  l_x_u.intersect(r_x_u);
-  return l_x_u;
+  lxu.intersect(rxu);
+  return lxu;
 }
 
       /*

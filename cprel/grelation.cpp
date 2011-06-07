@@ -117,6 +117,10 @@ GRelation GRelation::join(int j,const GRelation& r) const {
         );
 }
 
+GRelation GRelation::times(const GRelation& r) const {
+  return join(0,r);
+}
+
 GRelation create(const std::vector<Tuple>& dom) {
   std::vector<Tuple>::const_iterator c = dom.begin();
   GRelation r(c->arity());
