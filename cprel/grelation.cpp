@@ -107,6 +107,20 @@ GRelation GRelation::permute(const PermDescriptor& desc) const {
         );
 }
 
+GRelation GRelation::timesU(int n, bool left) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->timesU(n, left)))
+        );
+}
+
+GRelation GRelation::join(int j,const GRelation& r) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->join(j, *(r.pimpl_))))
+        );
+}
+
 GRelation create(const std::vector<Tuple>& dom) {
   std::vector<Tuple>::const_iterator c = dom.begin();
   GRelation r(c->arity());
@@ -154,10 +168,10 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
     return os;
   }
 
-  if (r.cardinality() > 1000) {
-    os << "compl(" << r.complement() << ")";
-    return os;
-  }
+//  if (r.cardinality() > 1000) {
+//    os << "compl(" << r.complement() << ")";
+//    return os;
+//  }
 
   for(GRelationIter it(r); it(); ++it)
     os << it.val() << " ";

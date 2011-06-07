@@ -126,8 +126,31 @@ RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
    * Only valid columns are presented in the description
    * Every column appears at most once
    */
-  RelationImpl r(VarImpl::swap_columns(bdd_,permDesc),arity_);
-//  std::cout << "Resulted relation " << r << std::endl;
+  return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
+}
+
+/// Moves column \a c in \a r to be the right most column (the first.)
+void moveToRightMost(RelationImpl& r, int c) {
+  if (c == 0) return;
+  assert(c > 0 && c < r.arity() && "Invalid column index.");
+  int current = c;
+  while (current > 0) {
+    PermDescriptor d;
+    std::cout << "Permuting " << current << " and " << current-1 << std::endl;
+    d.permute(current,current-1);
+    r = r.permute(d);
+    current--;
+  };
+}
+
+RelationImpl RelationImpl::timesU(int n, bool left) const {
+  if (left)
+    return RelationImpl(bdd_,arity_+n);
+  /// \todo The implementation of the right cross producto is expensive because
+  /// of the number of permutations that have to be done.
+  RelationImpl r(bdd_,arity_+n);
+  for (int i = r.arity()-1; i >= arity_; i--)
+    moveToRightMost(r,r.arity()-1);
   return r;
 }
 
@@ -137,19 +160,18 @@ RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
             << "Right relation " << std::endl << r << std::endl
             << " Join on: " << j << "columns" << std::endl;
 
-/*
-  PermDescriptor perm;
-  perm.permute(2,0);
-  perm.permute(1,2);
-  perm.permute(0,1);
-*/
-  RelationImpl new_left(bdd_,arity_+j);
-  //new_left = new_left.permute(perm);
+  const RelationImpl& l = *this;
+  // computes: l \bowtie_{j} r
 
-  std::cout << "intermediate  " << new_left << std::endl;
-  return RelationImpl(bdd_,arity_);
+  assert(l.arity() >= j && r.arity() >= j
+         && "There are not enough columns for the join");
+
+  RelationImpl l_x_u = l.timesU(r.arity() - j,false);
+  RelationImpl r_x_u = r.timesU(l.arity() - j,true);
+
+  l_x_u.intersect(r_x_u);
+  return l_x_u;
 }
-
 
       /*
 RelationImpl RelationImpl::cuantifyExist(int c) const {

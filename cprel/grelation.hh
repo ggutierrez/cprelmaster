@@ -22,7 +22,7 @@ public:
   InvalidRelationSource(const char* l)
   : Exception(l,"Invalid source describing relation") {}
 };
-  
+
 namespace VarImpl {
   class RelationImpl;
 }
@@ -90,6 +90,10 @@ public:
   GRelation complement(void) const;
   /// Computes the permutation of this according to \a desc
   GRelation permute(const PermDescriptor& desc) const;
+  /// Returns the relation \f$ this \times \mathcal{U}^n \f$
+  GRelation timesU(int n, bool left) const;
+  /// Returns the relation \f$ this \bowtie_{j} r \f$
+  GRelation join(int j,const GRelation& r) const;
   //@}
   /// \name Test operations
   //@{

@@ -529,8 +529,8 @@ target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
 add_executable(and tests/and.cpp)
 target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
 
-
-##if(C0X_SUPPORT)
-  add_executable(swap-test tests/swap-test.cpp)
+add_executable(swap-test tests/swap-test.cpp)
   target_link_libraries(swap-test gecodecprel ${Gecode_LIBRARIES})
-##endif()
+
+add_executable(join-test tests/join-test.cpp)
+  target_link_libraries(join-test gecodecprel ${Gecode_LIBRARIES})

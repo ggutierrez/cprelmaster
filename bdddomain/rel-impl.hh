@@ -85,6 +85,11 @@ public:
    */
   RelationImpl permute(const PermDescriptor& permDesc) const;
   /**
+   * \brief Returns the relation \f$ \mathcal{U}^n \times this \iff left \f$ or
+   * \f$ this \times \mathcal{U}^n \iff \lnot left \f$
+   */
+  RelationImpl timesU(int n, bool left) const;
+  /**
    * \brief Performs \f$ this \bowtie_{j} r \f$
    *
    */

@@ -52,8 +52,8 @@ private:
     : dd(Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
     , one_(DD_ONE(dd))
     , zero_(Cudd_Not(DD_ONE(dd)))
-    , BBV_(5), BA_(3)
-//    , BBV_(2), BA_(2)
+//    , BBV_(5), BA_(3)
+    , BBV_(2), BA_(2) // 4 bits to represent elements and maimum 4-ary
   {
     std::cout << "Created bdd manager" << std::endl;
   }
