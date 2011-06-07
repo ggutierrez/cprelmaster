@@ -119,6 +119,32 @@ GRelation create_full(int a) {
   return GRelation(a).complement();
 }
 
+GRelation read(std::istream& is, int arity) {
+  if (!is.good() || is.fail())
+    throw InvalidRelationSource("While reading stream:");
+  
+  GRelation r(arity);
+  std::vector<int> tuple_values;
+  tuple_values.reserve(arity);
+  std::string line;
+  int numLines = 0;
+  while (is.good()) {
+    std::getline(is, line);
+    numLines++;
+    if (line.empty()) continue;
+    std::stringstream st(line);
+    while (st.good()) {
+      int v; st >> v;
+      tuple_values.push_back(v);
+    }
+    assert(static_cast<int>(tuple_values.size()) == arity);
+    // At this point tuple_values contains all the elements of the tuple
+    r.add(Tuple(tuple_values));
+    tuple_values.clear();
+  }
+  return r;
+}
+  
 std::ostream& operator<< (std::ostream& os, const GRelation& r) {
   if (r.universe()) {
     os << "U";

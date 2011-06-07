@@ -16,6 +16,13 @@ namespace MPG { namespace CPRel {
  * on this kind of relations.
  */
 
+/// Exception indicating invalid stream containing relation
+class InvalidRelationSource : public Gecode::Exception {
+public:
+  InvalidRelationSource(const char* l)
+  : Exception(l,"Invalid source describing relation") {}
+};
+  
 namespace VarImpl {
   class RelationImpl;
 }
@@ -127,6 +134,22 @@ GRelation create(const std::vector<Tuple>& dom);
  * \ingroup GRelation
  */
 GRelation create_full(int a);
+
+/**
+ * \brief Creates a relation of arity \a arity from the contents read from \a is.
+ * \ingroup GRelation
+ *
+ * The expected format in \a is is:
+ * - Different tuples are sepparated by end of line (std::endl)
+ * - Elements in each tuple are separated by one or more spaces
+ * - Tuples are of exactly \a arity elements
+ *
+ * \warning An exception InvalidRelationSource is thrown if the stream is
+ * either empty or failed.
+ * \todo Perform some checking to guarantee that the elements that are read are
+ * representable.
+ */
+GRelation read(std::istream& is, int arity);
 
 /**
  * \brief Outputs relation \a r to \a os

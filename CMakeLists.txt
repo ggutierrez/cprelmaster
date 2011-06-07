@@ -530,7 +530,7 @@ add_executable(and tests/and.cpp)
 target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
 
 
-if(C0X_SUPPORT)
+##if(C0X_SUPPORT)
   add_executable(swap-test tests/swap-test.cpp)
   target_link_libraries(swap-test gecodecprel ${Gecode_LIBRARIES})
-endif()
+##endif()
