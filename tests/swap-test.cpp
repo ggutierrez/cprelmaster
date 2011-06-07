@@ -20,24 +20,21 @@ int main(void) {
   cout << "Tests starts" << endl;
   {
 
-    ifstream input("/Users/ggutierrez/Work2/cprel/tests/ground-relations/midi-medium.txt");
+    ifstream input("/home/gg/Work/cprel/tests/ground-relations/midi-medium.txt");
     GRelation r = read(input,5);
+    PermDescriptor pd;
+    pd.permute(0,1);
+    GRelation s = r.permute(pd);
+    cout << s << endl;
     cout << r << endl;
-    
-//    std::for_each(midi_small.begin(),midi_small.end(),
-//                  [&](const std::vector<int>& t) {
-//                  Tuple v(t);
-//                  r.add(v);
-//                  });
+    cout << "Cardinality of the created relation: " << r.cardinality() << endl;
 
-  //cout << r << endl;
-//  PermDescriptor pd;
-//  pd.permute(0,4);
-//  pd.permute(3,1);
-//  RelationImpl s = r.permute(pd);
-//  cout << s << endl;
-//
-//  assert(r.cardinality() == s.cardinality());
+
+    ifstream input2("/home/gg/Work/cprel/tests/ground-relations/small-rel.txt");
+    GRelation w = read(input2,2);
+    GRelation z = w.permute(pd);
+    cout << w << endl;
+    cout << z << endl;
   }
   return 0;
 }
