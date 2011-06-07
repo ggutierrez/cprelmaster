@@ -209,16 +209,6 @@ RelationImpl complement(const RelationImpl& r) {
   c.complement();
   return c;
 }
-/**
- * \brief Returns the permutation of relation \a r according with description \a desc
- * \ingroup DomRepr
- */
-inline
-RelationImpl permute(const RelationImpl& r, const PermDescriptor& desc) {
-  RelationImpl p(r);
-  p.permute(desc);
-  return p;
-}
 
 /**
  * \brief Class to iterate on tuples of a relation implementation

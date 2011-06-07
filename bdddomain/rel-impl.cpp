@@ -126,7 +126,9 @@ RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
    * Only valid columns are presented in the description
    * Every column appears at most once
    */
-  return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
+  RelationImpl r(VarImpl::swap_columns(bdd_,permDesc),arity_);
+//  std::cout << "Resulted relation " << r << std::endl;
+  return r;
 }
 
 RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {

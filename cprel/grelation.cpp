@@ -101,10 +101,9 @@ GRelation GRelation::complement(void) const {
         );
 }
 GRelation GRelation::permute(const PermDescriptor& desc) const {
-
   return
       GRelation(
-        Impl(new RelationImpl(VarImpl::permute(*pimpl_,desc)))
+        Impl(new RelationImpl(pimpl_->permute(desc)))
         );
 }
 
@@ -122,7 +121,7 @@ GRelation create_full(int a) {
 GRelation read(std::istream& is, int arity) {
   if (!is.good() || is.fail())
     throw InvalidRelationSource("While reading stream:");
-  
+
   GRelation r(arity);
   std::vector<int> tuple_values;
   tuple_values.reserve(arity);
@@ -144,7 +143,7 @@ GRelation read(std::istream& is, int arity) {
   }
   return r;
 }
-  
+
 std::ostream& operator<< (std::ostream& os, const GRelation& r) {
   if (r.universe()) {
     os << "U";
