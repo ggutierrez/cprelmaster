@@ -95,6 +95,8 @@ GRelation GRelation::complement(void) const {
         );
 }
 GRelation GRelation::permute(const PermDescriptor& desc) const {
+  if (!desc.valid(arity()))
+    throw InvalidPermDescriptor("GRelation::permute");
   return
       GRelation(
         Impl(new RelationImpl(pimpl_->permute(desc)))

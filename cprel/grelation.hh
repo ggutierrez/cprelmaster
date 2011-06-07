@@ -81,14 +81,19 @@ public:
   GRelation intersect(const GRelation& r) const;
   /// Computes \f$ \overline{this}\f$
   GRelation complement(void) const;
-  /// Computes the permutation of this according to \a desc
+  /**
+   * \brief Computes the permutation of \a this according to \a desc.
+   *
+   * \warning The permutation descriptor has to be valid for the relation. If it
+   * is not then a InvalidPermDescriptor exception is thrown.
+   */
   GRelation permute(const PermDescriptor& desc) const;
   /**
-   * \brief Computes the cross product of \a this with \f$ \mathcal{U}^n \f$.
+   * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
    *
    * As the cross product operation is not conmutative, the \a left parameter
-   * indicates whether to perform  \f$ \mathcal{U}^n \times \mathrm{this}\f$ if
-   * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}^n\f$ otherwise.
+   * indicates whether to perform  \f$ \mathcal{U}_n \times \mathrm{this}\f$ if
+   * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}_n\f$ otherwise.
    */
   GRelation timesU(int n, bool left) const;
   /// Returns the relation \f$ this \bowtie_{j} r \f$
@@ -106,7 +111,7 @@ public:
   bool eq(const GRelation& r) const;
   /// Tests whther the relation is empty
   bool empty(void) const;
-  /// Tests whther the relation represents the univers
+  /// Tests whther the relation represents the universe
   bool universe(void) const;
   //@}
   /// \name Information

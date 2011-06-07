@@ -46,8 +46,8 @@ DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
   }
 
   assert(static_cast<int>(orig.size()) == descSize * bitsPerInteger() &&
-   static_cast<int>(perm.size()) == descSize * bitsPerInteger() &&
-   "size of the bddVar vector is not correct");
+         static_cast<int>(perm.size()) == descSize * bitsPerInteger() &&
+         "size of the bddVar vector is not correct");
 
   return Cudd_bddSwapVariables(dd(),r,&orig[0],&perm[0],orig.size());
 }

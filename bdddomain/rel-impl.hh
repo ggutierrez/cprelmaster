@@ -85,11 +85,11 @@ public:
    */
   RelationImpl permute(const PermDescriptor& permDesc) const;
   /**
-   * \brief Computes the cross product of \a this with \f$ \mathcal{U}^n \f$.
+   * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
    *
    * As the cross product operation is not conmutative, the \a left parameter
-   * indicates whether to perform  \f$ \mathcal{U}^n \times \mathrm{this}\f$ if
-   * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}^n\f$ otherwise.
+   * indicates whether to perform  \f$ \mathcal{U}_n \times \mathrm{this}\f$ if
+   * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}_n\f$ otherwise.
    */
   RelationImpl timesU(int n, bool left) const;
   /**

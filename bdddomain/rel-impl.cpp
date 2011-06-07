@@ -129,29 +129,15 @@ RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
   return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
 }
 
-/// Moves column \a c in \a r to be the right most column (the first.)
-void moveToRightMost(RelationImpl& r, int c) {
-  if (c == 0) return;
-  assert(c > 0 && c < r.arity() && "Invalid column index.");
-  int current = c;
-  while (current > 0) {
-    PermDescriptor d;
-    std::cout << "Permuting " << current << " and " << current-1 << std::endl;
-    d.permute(current,current-1);
-    r = r.permute(d);
-    current--;
-  };
-}
-
 RelationImpl RelationImpl::timesU(int n, bool left) const {
   if (left)
     return RelationImpl(bdd_,arity_+n);
-  /// \todo The implementation of the right cross producto is expensive because
-  /// of the number of permutations that have to be done.
-  RelationImpl r(bdd_,arity_+n);
-  for (int i = r.arity()-1; i >= arity_; i--)
-    moveToRightMost(r,r.arity()-1);
-  return r;
+
+  PermDescriptor d;
+  for (int i = 0; i < arity_; i++)
+    d.permute(i,i+n);
+  RelationImpl r = permute(d);
+  return RelationImpl(r.bdd_,arity_+n);
 }
 
 RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
