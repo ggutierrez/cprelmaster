@@ -30,10 +30,8 @@ GRelation GRelation::create_full(int a) {
         );
 }
 
-bool GRelation::add(const Tuple &t) {
-  RelationImpl old = *pimpl_;
+void GRelation::add(const Tuple &t) {
   pimpl_->add(t);
-  return old != *pimpl_;
 }
 
 int GRelation::arity(void) const {
@@ -68,16 +66,12 @@ bool GRelation::universe(void) const {
   return pimpl_->universe();
 }
 
-bool GRelation::unionAssign(const GRelation &r) {
-  RelationImpl old = *pimpl_;
+void GRelation::unionAssign(const GRelation &r) {
   pimpl_->add(*(r.pimpl_));
-  return old != *pimpl_;
 }
 
-bool GRelation::differenceAssign(const GRelation &r) {
-  RelationImpl old = *pimpl_;
+void GRelation::differenceAssign(const GRelation &r) {
   pimpl_->remove(*(r.pimpl_));
-  return old != *pimpl_;
 }
 
 GRelation GRelation::difference(const GRelation &r) const {

@@ -85,8 +85,11 @@ public:
    */
   RelationImpl permute(const PermDescriptor& permDesc) const;
   /**
-   * \brief Returns the relation \f$ \mathcal{U}^n \times this \iff left \f$ or
-   * \f$ this \times \mathcal{U}^n \iff \lnot left \f$
+   * \brief Computes the cross product of \a this with \f$ \mathcal{U}^n \f$.
+   *
+   * As the cross product operation is not conmutative, the \a left parameter
+   * indicates whether to perform  \f$ \mathcal{U}^n \times \mathrm{this}\f$ if
+   * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}^n\f$ otherwise.
    */
   RelationImpl timesU(int n, bool left) const;
   /**

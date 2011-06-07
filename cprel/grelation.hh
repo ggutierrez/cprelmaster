@@ -60,25 +60,18 @@ public:
   /// \name Modification operations
   //@{
   /**
-   * \brief Adds tuple \a t to the relation
-   *
-   * The returned value indicates if the relation changed due to the operation.
+   * \brief Adds tuple \a t to the relation. If \f$ t \in this \f$ the relation
+   * remains unchanged.
    */
-  bool add(const Tuple& t);
+  void add(const Tuple& t);
   /**
    * \brief Union of relations: \f$ this = this \cup r \f$.
-   *
-   * The returned boolean indicates of \c this relation changed
-   * because the operation.
    */
-  bool unionAssign(const GRelation& r);
+  void unionAssign(const GRelation& r);
   /**
    * \brief Difference of relations: \f$ this = this \setminus r \f$.
-   *
-   * The returned boolean indicates of \c this relation changed
-   * because the operation.
    */
-  bool differenceAssign(const GRelation& r);
+  void differenceAssign(const GRelation& r);
   //@}
   /// \name Relation operations
   //@{
@@ -90,7 +83,13 @@ public:
   GRelation complement(void) const;
   /// Computes the permutation of this according to \a desc
   GRelation permute(const PermDescriptor& desc) const;
-  /// Returns the relation \f$ this \times \mathcal{U}^n \f$
+  /**
+   * \brief Computes the cross product of \a this with \f$ \mathcal{U}^n \f$.
+   *
+   * As the cross product operation is not conmutative, the \a left parameter
+   * indicates whether to perform  \f$ \mathcal{U}^n \times \mathrm{this}\f$ if
+   * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}^n\f$ otherwise.
+   */
   GRelation timesU(int n, bool left) const;
   /// Returns the relation \f$ this \bowtie_{j} r \f$
   GRelation join(int j,const GRelation& r) const;
@@ -112,9 +111,9 @@ public:
   //@}
   /// \name Information
   //@{
-  /// Returns the arity of the relation
+  /// Returns the arity (i.e. number of columns) of the relation
   int arity(void) const;
-  /// Returns the cardinality of the relation
+  /// Returns the cardinality (i.e. number of tuples) of the relation
   double cardinality(void) const;
   //@}
   /// \name Constant relations
