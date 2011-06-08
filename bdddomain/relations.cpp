@@ -11,7 +11,7 @@ RelationImpl create_equalXY(void) {
   vector<DdNode*> c1 = bddVars(1);
 
   return RelationImpl::create_fromBdd(
-        Cudd_Xeqy(dd(),bitsPerInteger(),&c0[0],&c1[0]),2
+        Cudd_Xeqy(dd(),Limits::bitsPerInteger,&c0[0],&c1[0]),2
         );
 }
 
@@ -20,7 +20,7 @@ RelationImpl create_greaterXY(void) {
   vector<DdNode*> c1 = bddVars(1);
 
   return RelationImpl::create_fromBdd(
-        Cudd_Xgty(dd(),bitsPerInteger(),NULL,&c0[0],&c1[0]),2
+        Cudd_Xgty(dd(),Limits::bitsPerInteger,NULL,&c0[0],&c1[0]),2
         );
 }
 }}}

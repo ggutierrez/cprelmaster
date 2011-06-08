@@ -82,7 +82,7 @@ void RelationImpl::remove(const Tuple& t) {
 }
 
 double RelationImpl::cardinality(void) const {
-  return Cudd_CountMinterm(dd(),bdd_,arity_ << bbv());
+  return Cudd_CountMinterm(dd(),bdd_,arity_ << Limits::bbv);
 }
 
 void RelationImpl::add(const RelationImpl& r) {
@@ -198,8 +198,8 @@ bool RelationImplIter::operator ()(void) const {
 }
 
 Tuple RelationImplIter::val(void) {
-  const int cube_size = 1<<(bbv() + ba());
-  const int tuple_size = 1 << ba();
+  const int cube_size = 1<<(Limits::bbv + Limits::ba);
+  const int tuple_size = 1 << Limits::ba;
 
   int cube_[cube_size];
   int *cube = cube_;
@@ -213,9 +213,9 @@ Tuple RelationImplIter::val(void) {
   for(int i = cube_size -1; i>=0; i--){
     if( (i & (tuple_size-1))<arity_){
       tuple[i&(tuple_size-1)] &=
-          ~(1<<((1<<bbv())-1-(i>>ba())));
+          ~(1<<((1<<Limits::bbv)-1-(i>>Limits::ba)));
       tuple[i&(tuple_size-1)] |=
-          (cube[i]&1)<<((1<<bbv())-1-(i>>ba()));
+          (cube[i]&1)<<((1<<Limits::bbv)-1-(i>>Limits::ba));
     }
   }
   Cudd_GenFree(gen);

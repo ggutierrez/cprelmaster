@@ -35,8 +35,8 @@ DdNode* Tuple::encode(int p, int a) {
   DdNode *f = one();
   DdNode *v, *tmp;
   Cudd_Ref(f);
-  for (int i = bitsPerInteger(); i--;) {
-    v = Cudd_bddIthVar(dd(),(i << ba())+a);
+  for (int i = Limits::bitsPerInteger; i--;) {
+    v = Cudd_bddIthVar(dd(),(i << Limits::ba)+a);
     tmp = Cudd_bddAnd(dd(), p&1 ? v : Cudd_Not(v),f);
     Cudd_Ref(tmp);
     Cudd_RecursiveDeref(dd(),f);
@@ -69,8 +69,8 @@ DdNode* Tuple::getBDD(void) const {
 
 vector<int> Tuple::value(void) const {
 
-  const int cube_size = 1<<(bbv() + ba());
-  const int tuple_size = 1 << ba();
+  const int cube_size = 1<<(Limits::bbv + Limits::ba);
+  const int tuple_size = 1 << Limits::ba;
 
   int cube_[cube_size];
   int *cube = cube_;
@@ -84,9 +84,9 @@ vector<int> Tuple::value(void) const {
   for(int i = cube_size -1; i>=0; i--){
     if( (i & (tuple_size-1)) < arity_){
       tuple[i&(tuple_size-1)] &=
-          ~(1<<((1<<bbv())-1-(i>>ba())));
+          ~(1<<((1<<Limits::bbv)-1-(i>>Limits::ba)));
       tuple[i&(tuple_size-1)] |=
-          (cube[i]&1)<<((1<<bbv())-1-(i>>ba()));
+          (cube[i]&1)<<((1<<Limits::bbv)-1-(i>>Limits::ba));
     }
   }
   Cudd_GenFree(gen);

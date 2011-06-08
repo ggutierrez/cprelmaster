@@ -8,6 +8,38 @@
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 
+namespace Limits {
+/**
+ * \brief Number of bits to represent an element inside a relation
+ * tuple.
+ * \ingroup DomRepr
+ *
+ * The maximum number that can be part of relation's tuple is 2^bbv.
+ * - Setting this attribute to 5 will allow to represent positive integers
+ *   of 32 bits.
+ */
+const int bbv = 2;
+/**
+ * \brief Number of bits of the maximum arity that can be represented
+ * \ingroup DomRepr
+ *
+ * The maximum arity that a relation can have is 2^ba.
+ * - Setting this attribute to 3 will allow to represent up to 8-ary relations
+ */
+const int ba = 2;
+/**
+ * \brief Number of bits used to represent each element of a tuple
+ * \ingroup DomRepr
+ */
+const int bitsPerInteger = 1 << bbv;
+/**
+ * \brief Number of bits used to represent the arity
+ * \ingroup DomRepr
+ */
+const int arity = 1 << ba;
+
+}
+
 class BddManager;
 typedef boost::shared_ptr<BddManager> PManager;
 /**
@@ -29,22 +61,6 @@ private:
   DdNode *one_;
   /// Constant false
   DdNode *zero_;
-  /**
-   * \brief Defines the number of bits to represent an element inside a relation
-   * tuple.
-   *
-   * The maximum number that can be part of relation's tuple is 2^BBV_. A
-   * suitable value for this attribute is 5 and this allows to represent positive
-   * integers with 32 bits.
-   */
-  int BBV_;
-  /**
-   * \brief Defines the number of bits of the maximum arity that can be represented
-   *
-   * The maximum arity that a relation can have is 2^BA_. A suitable value for
-   * this attribute is 3 and this allows to represent up to 8-ary relations
-   */
-  int  BA_;
   /// \name Constructors and destructor
   //@{
   /// Constructor that initializes the BDD manager of CUDD
@@ -52,8 +68,6 @@ private:
     : dd(Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
     , one_(DD_ONE(dd))
     , zero_(Cudd_Not(DD_ONE(dd)))
-//    , BBV_(5), BA_(3)
-    , BBV_(2), BA_(2) // 4 bits to represent elements and maimum 4-ary
   {
     std::cout << "Created bdd manager" << std::endl;
   }
@@ -96,14 +110,6 @@ public:
   DdNode* zero(void) {
     return zero_;
   }
-  /// Returns the number of bits used to represent each integer in a tuple
-  int bbv(void) {
-    return BBV_;
-  }
-  /// Returns the number of bits for the arity representation
-  int ba(void) {
-    return BA_;
-  }
   //@}
 };
 
@@ -133,41 +139,5 @@ inline
 DdNode* zero(void) {
   return BddManager::instance()->zero();
 }
-
-/**
- * \brief Returns the number of bits used to represent each element of a tuple
- * \ingroup DomRepr
- */
-inline
-int bbv(void) {
-  return BddManager::instance()->bbv();
-}
-
-/**
- * \brief Returns the number of bits used to represent the arity
- * \ingroup DomRepr
- */
-inline
-int ba(void) {
-  return BddManager::instance()->ba();
-}
-
-inline
-int bitsPerInteger(void) {
-  // 2^BBV
-  return 1 << bbv();
-}
-
-inline
-int maxArity(void) {
-  // 2^BA
-  return 1 << ba();
-}
-
-inline
-int cubeSize(void) {
-  return 1 << (bbv() + ba());
-}
-
 }}}
 #endif
