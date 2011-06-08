@@ -29,20 +29,22 @@ RelationImpl test0(void) {
 int main(void) {
   cout << "Tests starts" << endl;
   {
-    PermDescriptor desc;
-    desc.permute(0,1);
+    Tuple t = make_Tuple(1,2);
+    cout << "Tuple " << t << endl;
+//    PermDescriptor desc;
+//    desc.permute(0,1);
 
-    RelationImpl r = test0();
+//    RelationImpl r = test0();
 
-    cout << "The relation: " << r << endl;
+//    cout << "The relation: " << r << endl;
 
-    RelationImpl p = r.permute(desc);
-    RelationImpl q = p.permute(desc.inverse());
+//    RelationImpl p = r.permute(desc);
+//    RelationImpl q = p.permute(desc.inverse());
 
-    cout << "The permutation: " << p << endl;
-    cout << "The permutation2: " << q << endl;
+//    cout << "The permutation: " << p << endl;
+//    cout << "The permutation2: " << q << endl;
 
-    assert(r==q);
+//    assert(r==q);
 
     //DdNode *eq = create_greaterXY();
     //Cudd_Ref(eq);

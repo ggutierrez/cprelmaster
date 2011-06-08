@@ -67,7 +67,42 @@ DdNode* Tuple::getBDD(void) const {
   return data_;
 }
 
+void Tuple::decodeCube(int* cube, std::vector<int>& tuple) const {
+  const int cubeSize = 1<<(Limits::bbv + Limits::ba);
+  const int maxTupleSize = 1 << Limits::ba;
+
+  std::cout << "The size of a cube: " << cubeSize << std::endl;
+
+  for (int i = 0; i < cubeSize; i++) {
+    // maxTupleSize -1 in binary is equivalent to ones at every place
+    // as i is ranging from 0 to cubeSize there are values that are not
+    // interesting for a tuple of arity_ elements. This conditional ensures that
+    // only meaningful possitions in the cube are taken into account
+    if ((i & (maxTupleSize - 1)) < arity_) {
+      std::cout << cube[i] << " ";
+
+    }
+  }
+  std::cout << std::endl;
+}
+
 vector<int> Tuple::value(void) const {
+  const int cubeSize = 1<<(Limits::bbv + Limits::ba);
+  int cube_[cubeSize];
+  int *cube = cube_;
+  CUDD_VALUE_TYPE val;
+
+  DdGen* gen = Cudd_FirstCube(dd(),data_,&cube,&val);
+  assert(gen != NULL);
+
+  vector<int> tuple;
+  decodeCube(cube,tuple);
+
+  return tuple;
+
+}
+
+vector<int> Tuple::value2(void) const {
 
   const int cube_size = 1<<(Limits::bbv + Limits::ba);
   const int tuple_size = 1 << Limits::ba;

@@ -68,6 +68,8 @@ public:
   ~Tuple(void);
   /// Returns a vector with all the elements in the tuple
   std::vector<int> value(void) const;
+  std::vector<int> value2(void) const;
+  void decodeCube(int* cube, std::vector<int>& tuple) const;
   /// Arity of the tuple
   int arity(void) const { return arity_; }
 };
