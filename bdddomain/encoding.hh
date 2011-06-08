@@ -25,6 +25,13 @@ std::vector<int> bddIndices(int c);
 std::vector<DdNode*> bddVars(int c);
 
 /**
+ * \brief Decodes \a cube, extracted from the BDD and returns the tuple it
+ * represents.
+ * \ingroup BDDEnc
+ */
+std::vector<int> decodeCube(int* cube, int arity);
+
+/**
  * \brief Returns the relation resulting from swapping \a r according to the
  * swapping description \a swapDesc.
  * \ingroup BDDEnc

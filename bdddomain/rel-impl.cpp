@@ -198,6 +198,7 @@ bool RelationImplIter::operator ()(void) const {
 }
 
 Tuple RelationImplIter::val(void) {
+/*
   const int cube_size = 1<<(Limits::bbv + Limits::ba);
   const int tuple_size = 1 << Limits::ba;
 
@@ -228,6 +229,25 @@ Tuple RelationImplIter::val(void) {
   remove(out);
 
   return out;
+*/
+  const int cube_size = 1<<(Limits::bbv + Limits::ba);
+
+  int cube_[cube_size];
+  int *cube = cube_;
+  CUDD_VALUE_TYPE val;
+
+  DdGen* gen = Cudd_FirstCube(dd(),relation_,&cube,&val);
+  assert(gen != NULL);
+  vector<int> v = decodeCube(cube,arity_);
+  Cudd_GenFree(gen);
+
+  // Prepare the output
+  Tuple out(v);
+  // Affect the state of the iterator
+  remove(out);
+
+  return out;
+
 }
 
 void RelationImplIter::remove(const Tuple& t) {
