@@ -1,17 +1,13 @@
 #ifndef __CPREL_CPREL_PERM_DESCRIPTOR_HH__
 #define __CPREL_CPREL_PERM_DESCRIPTOR_HH__
 
-#include <gecode/kernel.hh>
+#include <bdddomain/exception.hh>
 #include <set>
 
 namespace MPG { namespace CPRel {
 
 /// Exception indicating invalid permutation description
-class InvalidPermDescriptor : public Gecode::Exception {
-public:
-  InvalidPermDescriptor(const char* l)
-    : Exception(l,"Invalid permutation description") {}
-};
+struct InvalidPermDescriptor : virtual ExceptionBase {};
 
 class DescIterator;
 /**

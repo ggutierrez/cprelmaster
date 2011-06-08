@@ -94,9 +94,15 @@ GRelation GRelation::complement(void) const {
         Impl(new RelationImpl(VarImpl::complement(*pimpl_)))
         );
 }
+
 GRelation GRelation::permute(const PermDescriptor& desc) const {
+  typedef boost::error_info<struct tag_perm_descriptor,std::string>
+      perm_descriptor;
+
   if (!desc.valid(arity()))
-    throw InvalidPermDescriptor("GRelation::permute");
+    throw InvalidPermDescriptor()
+      << errno_code(errno)
+      << perm_descriptor("Invalid permutation description used at: GRelation::permute");
   return
       GRelation(
         Impl(new RelationImpl(pimpl_->permute(desc)))

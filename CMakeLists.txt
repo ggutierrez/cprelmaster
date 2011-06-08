@@ -273,16 +273,17 @@ include_directories(${CMAKE_SOURCE_DIR})
 set(BDDDOMAIN_SRCS
   bdddomain/encoding.cpp
   bdddomain/encoding.hh
+  bdddomain/exception.hh
   bdddomain/manager.cpp
   bdddomain/manager.hh
-  bdddomain/relations.cpp
-  bdddomain/relations.hh
-  bdddomain/rel-impl.cpp
-  bdddomain/rel-impl.hh
-  bdddomain/tuple.hh
-  bdddomain/tuple.cpp
   bdddomain/perm-descriptor.hh
   bdddomain/proj-descriptor.hh
+  bdddomain/rel-impl.cpp
+  bdddomain/rel-impl.hh
+  bdddomain/relations.cpp
+  bdddomain/relations.hh
+  bdddomain/tuple.cpp
+  bdddomain/tuple.hh
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})

@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <bdddomain/manager.hh>
-#include <gecode/kernel.hh>
+#include <bdddomain/exception.hh>
 
 namespace MPG { namespace CPRel {
 /**
@@ -14,11 +14,12 @@ namespace MPG { namespace CPRel {
  * Tuples are the abstraction for the elements of relations.
  */
 /// Exception indicating invalid permutation description
-class RepresentationOverflow : public Gecode::Exception {
-public:
-  RepresentationOverflow(const char* l)
-    : Exception(l,"An overflow occurs when trying to represent an element.") {}
-};
+struct RepresentationOverflow : virtual ExceptionBase {};
+
+//public:
+//  RepresentationOverflow(const char* l)
+//    : Exception(l,"An overflow occurs when trying to represent an element.") {}
+//};
 namespace VarImpl {
 /*
   These forward declarations are needed because of the friend relation between
