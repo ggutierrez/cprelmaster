@@ -34,6 +34,11 @@ Tuple& Tuple::operator = (const Tuple& t) {
 }
 
 DdNode* Tuple::encode(int p, int a) {
+  if (!Limits::fits(p)) {
+    std::cerr << p << std::endl;
+    throw RepresentationOverflow("encode");
+  }
+
   DdNode *f = one();
   DdNode *v, *tmp;
   Cudd_Ref(f);

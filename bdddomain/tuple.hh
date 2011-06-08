@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <bdddomain/manager.hh>
+#include <gecode/kernel.hh>
 
 namespace MPG { namespace CPRel {
 /**
@@ -12,7 +13,12 @@ namespace MPG { namespace CPRel {
  *
  * Tuples are the abstraction for the elements of relations.
  */
-
+/// Exception indicating invalid permutation description
+class RepresentationOverflow : public Gecode::Exception {
+public:
+  RepresentationOverflow(const char* l)
+    : Exception(l,"An overflow occurs when trying to represent an element.") {}
+};
 namespace VarImpl {
 /*
   These forward declarations are needed because of the friend relation between
@@ -42,7 +48,12 @@ private:
   int arity_;
   /// Avoiding Default constructor
   Tuple(void);
-  /// Returns a BDD representation for the encoding of \a p in column \a a
+  /**
+   * \brief Returns a BDD representation for the encoding of \a p in column \a a
+   *
+   * \warning Throws and exception of type RepresentationOverflow if \a p cannot
+   * be represented with the current manager setup.
+   */
   static DdNode* encode(int p, int a);
   /**
    * \brief Returns a BDD representing \a this

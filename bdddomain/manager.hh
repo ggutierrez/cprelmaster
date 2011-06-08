@@ -38,6 +38,15 @@ const int bitsPerInteger = 1 << bbv;
  */
 const int arity = 1 << ba;
 
+/**
+ * \brief Tests whether \a v can be encoded with the current setup of the
+ * manager.
+ * \ingroup DomRepr
+ */
+inline
+bool fits(int v) {
+  return ((~((1LL << bitsPerInteger)-1)) & v) == 0;
+}
 }
 
 class BddManager;
