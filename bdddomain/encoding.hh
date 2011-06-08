@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <bdddomain/manager.hh>
-#include <cprel/descriptor.hh>
+#include <bdddomain/perm-descriptor.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 /**
@@ -27,11 +27,21 @@ std::vector<DdNode*> bddVars(int c);
 /**
  * \brief Returns the relation resulting from swapping \a r according to the
  * swapping description \a swapDesc.
- * *
+ * \ingroup BDDEnc
  * \warning The content of the description is the responsability of the caller.
  */
  DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc);
 
- DdNode* exists(DdNode* r, int c);
+ /**
+  * \brief Existensial quantification of column \a c on relation \a r.
+  * \ingroup BDDEnc
+  */
+ DdNode* exists(int c, DdNode* r);
+
+ /**
+  * \brief Universal quantification of column \a c on relation \a r.
+  * \ingroup BDDEnc
+  */
+ DdNode* forall(int c, DdNode* r);
 }}}
 #endif

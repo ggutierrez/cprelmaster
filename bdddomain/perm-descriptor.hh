@@ -1,5 +1,5 @@
-#ifndef __CPREL_CPREL_DESCRIPTOR_HH__
-#define __CPREL_CPREL_DESCRIPTOR_HH__
+#ifndef __CPREL_CPREL_PERM_DESCRIPTOR_HH__
+#define __CPREL_CPREL_PERM_DESCRIPTOR_HH__
 
 #include <gecode/kernel.hh>
 #include <set>

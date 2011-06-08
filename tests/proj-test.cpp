@@ -34,7 +34,10 @@ int main(void) {
     GRelation w = read(input2,2);
     cout << "The relation: " << w << endl;
 
-    GRelation z = w.exists(1);
+    int p_[] = {0,1};
+    std::vector<int> p(p_, p_+2);
+    ProjDescriptor d(p);
+    GRelation z = w.project(d);
     cout << z << endl;
   }
   return 0;

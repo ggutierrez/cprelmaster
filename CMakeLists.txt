@@ -281,6 +281,8 @@ set(BDDDOMAIN_SRCS
   bdddomain/rel-impl.hh
   bdddomain/tuple.hh
   bdddomain/tuple.cpp
+  bdddomain/perm-descriptor.hh
+  bdddomain/proj-descriptor.hh
 )
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain ${CUDD_LIBS})
@@ -358,7 +360,6 @@ include_directories(${Gecode_INCLUDE_DIRS})
 set(CPREL_SRCS
   cprel/complement-view.hh
   cprel/permuted-view.hh
-  cprel/descriptor.hh
   cprel/const-view.hh
   cprel/cprel.hh
   cprel/grelation.cpp

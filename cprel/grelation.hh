@@ -3,7 +3,8 @@
 
 #include <boost/shared_ptr.hpp>
 #include <bdddomain/tuple.hh>
-#include <cprel/descriptor.hh>
+#include <bdddomain/perm-descriptor.hh>
+#include <bdddomain/proj-descriptor.hh>
 #include <boost/shared_ptr.hpp>
 
 namespace MPG { namespace CPRel {
@@ -102,6 +103,11 @@ public:
   GRelation times(const GRelation& r) const;
   /// Returns the relation resulting from existencially quantifying on column \a c
   GRelation exists(int c) const;
+  /**
+   * \brief Returns the projection of the represented relation according with the
+   * projection description \a projDesc.
+   */
+  GRelation project(const ProjDescriptor& projDesc) const;
   //@}
   /// \name Test operations
   //@{

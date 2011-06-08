@@ -118,7 +118,8 @@ public:
 #include <cprel/view.hh>
 
 // Descriptors
-#include <cprel/descriptor.hh>
+#include <bdddomain/perm-descriptor.hh>
+#include <bdddomain/proj-descriptor.hh>
 
 namespace MPG {
 /**

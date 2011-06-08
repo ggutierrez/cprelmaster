@@ -121,11 +121,10 @@ void RelationImpl::complement(void) {
 }
 
 RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
-  /**
-   * \todo Error detection on the description
-   * Only valid columns are presented in the description
-   * Every column appears at most once
-   */
+  // No error detection on permDesc is done here. The reason is because under
+  // some circumstances this method is used to move columns in the representation
+  // to places that are outside of the arity of the relation. For instance,
+  // this \times U^n is implemented by doing the shift of n columns to the right.
   return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
 }
 
@@ -134,8 +133,7 @@ RelationImpl RelationImpl::timesU(int n, bool left) const {
     return RelationImpl(bdd_,arity_+n);
 
   PermDescriptor d;
-  for (int i = 0; i < arity_; i++)
-    d.permute(i,i+n);
+  for (int i = 0; i < arity_; i++) d.permute(i,i+n);
   RelationImpl r = permute(d);
   return RelationImpl(r.bdd_,arity_+n);
 }
@@ -156,15 +154,25 @@ RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
 }
 
 RelationImpl RelationImpl::exists(int c) const {
-  std::cout << "Called cuantify: " << c << std::endl;
+ return RelationImpl(VarImpl::exists(c, bdd_), arity_);
+}
 
-  RelationImpl q(VarImpl::exists(bdd_,c), arity_);
+RelationImpl RelationImpl::project(int c) const {
+  RelationImpl q(exists(c));
 
-  //***
   PermDescriptor d;
-  for (int i = arity_ -1; i > c; i--)
-  d.permute(i,i-1);
+  for (int i = arity_ -1; i > c; i--) d.permute(i,i-1);
   return RelationImpl(q.permute(d).bdd_,arity_-1);
+}
+
+RelationImpl RelationImpl::project(const ProjDescriptor& projDesc) const {
+  std::cout << "Called projection" << std::endl;
+  RelationImpl r = *this;
+  std::vector<int> q(projDesc.complement(arity_));
+  for (unsigned int i = 0; i < q.size(); i++) {
+    r = r.project(q[i]);
+  }
+  return r;
 }
 
 RelationImplIter RelationImpl::tuples(void) const {

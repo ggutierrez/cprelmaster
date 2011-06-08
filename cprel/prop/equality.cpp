@@ -1,5 +1,5 @@
 #include <cprel/prop/equality.hh>
-#include <cprel/descriptor.hh>
+#include <bdddomain/perm-descriptor.hh>
 
 namespace MPG {
 

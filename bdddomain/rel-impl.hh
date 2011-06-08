@@ -4,7 +4,8 @@
 
 #include <bdddomain/manager.hh>
 #include <bdddomain/tuple.hh>
-#include <cprel/descriptor.hh>
+#include <bdddomain/perm-descriptor.hh>
+#include <bdddomain/proj-descriptor.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 /**
@@ -97,8 +98,17 @@ public:
    *
    */
   RelationImpl join(int j, const RelationImpl& r) const;
-  /// Returns the relation resulting from existencially quantifying on column \a c
+  /**
+   * \brief Returns the relation resulting from existencially quantifying the
+   * column \a c of the represented relation.
+   */
   RelationImpl exists(int c) const;
+  /**
+   * \brief Returns the projection of the represented relation according with the
+   * projection description \a projDesc.
+   */
+  RelationImpl project(const ProjDescriptor& projDesc) const;
+  RelationImpl project(int c) const;
   /// \name Iteration
   //@{
   /// Returns an iterator on the tuples of the relation

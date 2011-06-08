@@ -128,6 +128,13 @@ GRelation GRelation::exists(int c) const {
         );
 }
 
+GRelation GRelation::project(const ProjDescriptor& projDesc) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->project(projDesc)))
+        );
+}
+
 GRelation create(const std::vector<Tuple>& dom) {
   std::vector<Tuple>::const_iterator c = dom.begin();
   GRelation r(c->arity());
