@@ -18,7 +18,7 @@ namespace Limits {
  * - Setting this attribute to 5 will allow to represent positive integers
  *   of 32 bits.
  */
-const int bbv = 2;
+const int bbv = 5;
 /**
  * \brief Number of bits of the maximum arity that can be represented
  * \ingroup DomRepr
@@ -26,7 +26,7 @@ const int bbv = 2;
  * The maximum arity that a relation can have is 2^ba.
  * - Setting this attribute to 3 will allow to represent up to 8-ary relations
  */
-const int ba = 2;
+const int ba = 3;
 /**
  * \brief Number of bits used to represent each element of a tuple
  * \ingroup DomRepr
