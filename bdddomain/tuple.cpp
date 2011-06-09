@@ -1,6 +1,5 @@
 #include <bdddomain/tuple.hh>
 #include <bdddomain/encoding.hh>
-
 #include <vector>
 
 using std::vector;
@@ -10,7 +9,7 @@ using namespace VarImpl;
 
 Tuple::Tuple(const std::vector<int>& v)
   : data_(encode(v)), arity_(v.size()) {
-  //Cudd_Ref(data_);
+  // The representation from "encode" is already referenced.
 }
 
 Tuple::Tuple(const Tuple& t)
@@ -24,6 +23,7 @@ Tuple::~Tuple(void) {
 
 Tuple& Tuple::operator = (const Tuple& t) {
   if (this == &t) return *this;
+  /// \todo FIXME!
   assert(false && "FIXME!!!");
   std::cerr << t.arity();
   arity_ = t.arity_;

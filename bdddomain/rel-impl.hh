@@ -108,6 +108,10 @@ public:
    * projection description \a projDesc.
    */
   RelationImpl project(const ProjDescriptor& projDesc) const;
+  /**
+   * \brief Returns the result of projection the represented relation on all its
+   * columns but \a c.
+   */
   RelationImpl project(int c) const;
   /// \name Iteration
   //@{

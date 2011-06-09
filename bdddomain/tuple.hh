@@ -37,7 +37,6 @@ private:
   friend class VarImpl::RelationImpl;
   friend class VarImpl::RelationImplIter;
   /// Actual data container
-  //std::vector<int> data_;
   DdNode* data_;
   /// Arity of the tuple
   int arity_;
