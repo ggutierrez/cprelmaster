@@ -4,7 +4,9 @@
 #include <iostream>
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/static_assert.hpp>
 #include <cudd/cuddInt.h>
+#include <limits>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 
@@ -39,14 +41,14 @@ const int bitsPerInteger = 1 << bbv;
 const int arity = 1 << ba;
 
 /**
- * \brief Tests whether \a v can be encoded with the current setup of the
- * manager.
+ * \brief Ensures that the library is compiled on an architecture in which the
+ * bits in an integer fits in the bdd representation. This is because most of the
+ * operations on tuples or anything that has a bdd representation behind use the
+ * int type to input and output values.
  * \ingroup DomRepr
  */
-inline
-bool fits(int v) {
-  return ((~((1LL << bitsPerInteger)-1)) & v) == 0;
-}
+BOOST_STATIC_ASSERT(std::numeric_limits<int>::digits <= bitsPerInteger
+                    && "The BDD configuration is wrong for this built");
 }
 
 class BddManager;

@@ -34,16 +34,6 @@ Tuple& Tuple::operator = (const Tuple& t) {
 }
 
 DdNode* Tuple::encode(int p, int a) {
-  typedef boost::error_info<struct tag_encoding_overflow,std::string>
-      encoding_overflow;
-
-  if (!Limits::fits(p)) {
-    std::cerr << p << std::endl;
-    throw RepresentationOverflow()
-        << errno_code(errno)
-        << encoding_overflow("An overflow occurs when trying to represent an element.");
-  }
-
   DdNode *f = one();
   DdNode *v, *tmp;
   Cudd_Ref(f);

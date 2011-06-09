@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 #include <bdddomain/manager.hh>
-#include <bdddomain/exception.hh>
 
 namespace MPG { namespace CPRel {
 /**
@@ -14,7 +13,6 @@ namespace MPG { namespace CPRel {
  * Tuples are the abstraction for the elements of relations.
  */
 /// Exception indicating invalid permutation description
-struct RepresentationOverflow : virtual ExceptionBase {};
 
 namespace VarImpl {
 /*
