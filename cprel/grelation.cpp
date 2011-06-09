@@ -88,6 +88,13 @@ GRelation GRelation::intersect(const GRelation &r) const {
         );
 }
 
+GRelation GRelation::Union(const GRelation &r) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(VarImpl::Union(*pimpl_,*(r.pimpl_))))
+        );
+}
+
 GRelation GRelation::complement(void) const {
   return
       GRelation(

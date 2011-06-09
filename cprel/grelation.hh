@@ -76,6 +76,8 @@ public:
   GRelation difference(const GRelation& r) const;
   /// Computes \f$ this \cap r \f$
   GRelation intersect(const GRelation& r) const;
+  /// Computes \f$ this \cup r \f$
+  GRelation Union(const GRelation& r) const;
   /// Computes \f$ \overline{this}\f$
   GRelation complement(void) const;
   /**

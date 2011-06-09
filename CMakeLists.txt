@@ -67,7 +67,7 @@ if(FLAG_DIAGNOSTIC)
 endif()
 
 ## temporal flags for development
-add_definitions(-O0 -g)
+##add_definitions(-O0 -g)
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -205,6 +205,11 @@ set(CUDD_SPECIFIC_FLAGS)
 check_c_compiler_flag(-Wno-unused-parameter FLAG_DIS_UNUSED)
 if(FLAG_DIS_UNUSED)
  set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -Wno-unused-parameter")
+endif()
+
+check_c_compiler_flag(-Wno-uninitialized FLAG_DIS_UNINITIALIZED)
+if(FLAG_DIS_UNINITIALIZED)
+ set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -Wno-uninitialized")
 endif()
 
 check_c_compiler_flag(-Wno-sign-compare FLAG_DIS_SIGN)
