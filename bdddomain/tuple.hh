@@ -16,10 +16,6 @@ namespace MPG { namespace CPRel {
 /// Exception indicating invalid permutation description
 struct RepresentationOverflow : virtual ExceptionBase {};
 
-//public:
-//  RepresentationOverflow(const char* l)
-//    : Exception(l,"An overflow occurs when trying to represent an element.") {}
-//};
 namespace VarImpl {
 /*
   These forward declarations are needed because of the friend relation between

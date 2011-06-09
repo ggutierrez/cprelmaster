@@ -166,6 +166,14 @@ RelationImpl RelationImpl::project(int c) const {
 }
 
 RelationImpl RelationImpl::project(const ProjDescriptor& projDesc) const {
+  typedef boost::error_info<struct tag_proj_descriptor,std::string>
+      proj_descriptor;
+
+  if (!projDesc.valid(arity_)) {
+    throw InvalidProjDescriptor()
+        << errno_code(errno)
+        << proj_descriptor("Invalid projection description");
+  }
   std::cout << "Called projection" << std::endl;
   RelationImpl r = *this;
   std::vector<int> q(projDesc.complement(arity_));

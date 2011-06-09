@@ -1,17 +1,13 @@
 #ifndef __CPREL_CPREL_PROJ_DESCRIPTOR_HH__
 #define __CPREL_CPREL_PROJ_DESCRIPTOR_HH__
 
-#include <gecode/kernel.hh>
+#include <bdddomain/exception.hh>
 #include <set>
 
 namespace MPG { namespace CPRel {
 
 /// Exception indicating invalid projection description
-class InvalidProjDescriptor : public Gecode::Exception {
-public:
-  InvalidProjDescriptor(const char* l)
-    : Exception(l,"Invalid projection description") {}
-};
+struct InvalidProjDescriptor : virtual ExceptionBase {};
 
 /**
  * \brief Describes a permutation on a relation

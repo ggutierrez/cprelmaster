@@ -514,15 +514,6 @@ add_custom_target(dist
 ##########################################################################
 # Executables
 ##########################################################################
-add_executable(minimal tests/minimal.cpp)
-target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
-
-add_executable(domain-test tests/domain-test.cc)
-target_link_libraries(domain-test bdddomain ${Gecode_LIBRARIES})
-
-add_executable(grel-test tests/grel-test.cpp)
-target_link_libraries(grel-test gecodecprel)
-
 # test for the equality propagator
 add_executable(eq tests/equality.cpp)
 target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
@@ -531,12 +522,22 @@ target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
 add_executable(and tests/and.cpp)
 target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
 
+add_executable(minimal tests/minimal.cpp)
+target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
+
+add_executable(domain-test tests/domain-test.cc)
+target_link_libraries(domain-test bdddomain)
+
+add_executable(grel-test tests/grel-test.cpp)
+target_link_libraries(grel-test gecodecprel)
+
+
 add_executable(swap-test tests/swap-test.cpp)
-  target_link_libraries(swap-test gecodecprel ${Gecode_LIBRARIES})
+  target_link_libraries(swap-test gecodecprel)
 
 add_executable(join-test tests/join-test.cpp)
-  target_link_libraries(join-test gecodecprel ${Gecode_LIBRARIES})
+  target_link_libraries(join-test gecodecprel)
 
 add_executable(proj-test tests/proj-test.cpp)
-  target_link_libraries(proj-test gecodecprel ${Gecode_LIBRARIES})
+  target_link_libraries(proj-test gecodecprel)
 

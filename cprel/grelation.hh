@@ -18,11 +18,7 @@ namespace MPG { namespace CPRel {
  */
 
 /// Exception indicating invalid stream containing relation
-class InvalidRelationSource : public Gecode::Exception {
-public:
-  InvalidRelationSource(const char* l)
-  : Exception(l,"Invalid source describing relation") {}
-};
+struct InvalidRelationSource : virtual ExceptionBase {};
 
 namespace VarImpl {
   class RelationImpl;

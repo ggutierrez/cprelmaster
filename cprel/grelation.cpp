@@ -153,8 +153,14 @@ GRelation create_full(int a) {
 }
 
 GRelation read(std::istream& is, int arity) {
-  if (!is.good() || is.fail())
-    throw InvalidRelationSource("While reading stream:");
+  typedef boost::error_info<struct tag_invalid_source,std::string>
+      invalid_source;
+
+  if (!is.good() || is.fail()) {
+    throw InvalidRelationSource()
+        << errno_code(errno)
+        << invalid_source("Invalid source describing relation");
+  }
 
   GRelation r(arity);
   std::vector<int> tuple_values;
