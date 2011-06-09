@@ -541,3 +541,5 @@ add_executable(join-test tests/join-test.cpp)
 add_executable(proj-test tests/proj-test.cpp)
   target_link_libraries(proj-test gecodecprel)
 
+add_executable(midi-4seasons-test tests/midi-four-seasons.cpp)
+  target_link_libraries(midi-4seasons-test gecodecprel)
