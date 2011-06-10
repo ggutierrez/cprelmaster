@@ -12,6 +12,18 @@ Tuple::Tuple(const std::vector<int>& v)
   // The representation from "encode" is already referenced.
 }
 
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+Tuple::Tuple(const std::initializer_list<int> l)
+  : arity_(l.size()) {
+  /** \todo This is not as efficient as it can be. The best thing is for encode
+   * to get two iterators and this will avoid copying to a temporal vector
+   */
+  std::vector<int> v(l.begin(),l.end());
+  // The representation from "encode" is already referenced.
+  data_ = encode(v);
+}
+#endif
+
 Tuple::Tuple(const Tuple& t)
   : data_(t.data_), arity_(t.arity_) {
   Cudd_Ref(data_);
@@ -81,6 +93,5 @@ vector<int> Tuple::value(void) const {
   Cudd_GenFree(gen);
 
   return tuple;
-
 }
 }}

@@ -4,6 +4,9 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#include <initializer_list>
+#endif
 #include <bdddomain/manager.hh>
 
 namespace MPG { namespace CPRel {
@@ -65,6 +68,16 @@ public:
    * of the tuple is the size of the vector.
    */
   explicit Tuple(const std::vector<int>& v);
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+  /**
+   * \brief Construct a tuple with all the elements present in \a l. The arity
+   * of the tuple is the size of the list.
+   *
+   * The constructor is not explicit to encourage conversion from initializer
+   * lists to tuples.
+   */
+  Tuple(std::initializer_list<int> l);
+#endif
   /// Copy constructor
   Tuple(const Tuple& t);
   /// Assignement operator

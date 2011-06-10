@@ -25,15 +25,22 @@ public:
   /// Default constructor for an empty projection
   ProjDescriptor(void) {}
   /// Constructor for a projection on the columns specified by \a v
-  ProjDescriptor(const std::vector<int>& v)
+  explicit ProjDescriptor(const std::vector<int>& v)
     : columns_(v) {
     std::sort(columns_.begin(),columns_.end());
   }
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+  /// Constructor for a projection on the columns specified by \a v
+  ProjDescriptor(std::initializer_list<int> l)
+    : columns_(l.begin(),l.end()) {
+    std::sort(columns_.begin(),columns_.end());
+  }
+#endif
   /// Copy constructor
   ProjDescriptor(const ProjDescriptor& d)
     : columns_(d.columns_) {}
   /// returns the size of the projection (number of columns to project on)
-  unsigned int size(void) const { return columns_.size(); }
+  int size(void) const { return columns_.size(); }
   /**
    * \brief Returns the columns that are not part of the projection for a relation
    * of arity \a a.
