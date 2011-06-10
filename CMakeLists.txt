@@ -67,7 +67,7 @@ if(FLAG_DIAGNOSTIC)
 endif()
 
 ## temporal flags for development
-##add_definitions(-O0 -g)
+add_definitions(-O0 -g)
 ##########################################################################
 # Cudd library
 ##########################################################################
@@ -386,6 +386,8 @@ set(CPREL_SRCS
   cprel/prop/and.hh
   cprel/prop/equality.cpp
   cprel/prop/equality.hh
+  cprel/prop/projection.cpp
+  cprel/prop/projection.hh
 
 # branchers
   cprel/branch/branch.cpp
@@ -526,6 +528,11 @@ target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
 # test for the and propagator
 add_executable(and tests/and.cpp)
 target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
+
+# test for the projection propagator
+add_executable(projection tests/projection.cpp)
+target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
+
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})

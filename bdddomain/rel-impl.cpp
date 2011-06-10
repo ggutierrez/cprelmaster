@@ -174,7 +174,7 @@ RelationImpl RelationImpl::project(const ProjDescriptor& projDesc) const {
         << errno_code(errno)
         << proj_descriptor("Invalid projection description");
   }
-  std::cout << "Called projection" << std::endl;
+
   RelationImpl r = *this;
   std::vector<int> q(projDesc.complement(arity_));
   for (unsigned int i = 0; i < q.size(); i++) {

@@ -165,6 +165,11 @@ void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
  * \ingroup RelProp
  */
 void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, const CPRel::PermDescriptor& desc);
+/**
+ * \brief Posts the constraint: \f$ \Pi_{p} A = B \f$
+ * \ingroup RelProp
+ */
+void projection(Gecode::Space& home, const CPRel::ProjDescriptor& p, CPRelVar A, CPRelVar B);
 
 void branch(Gecode::Home home, CPRelVar x);
 }
