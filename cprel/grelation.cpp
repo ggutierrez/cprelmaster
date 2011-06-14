@@ -142,6 +142,14 @@ GRelation GRelation::exists(int c) const {
 }
 
 GRelation GRelation::project(int p) const {
+  typedef boost::error_info<struct tag_projection,std::string>
+      projection;
+
+  if(p <= 0 || p > arity()) {
+    throw InvalidProjection()
+        << errno_code(errno)
+        << projection("Invalid columns to project on");
+  }
   return
       GRelation(
         Impl(new RelationImpl(pimpl_->project(p)))

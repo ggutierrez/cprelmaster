@@ -166,15 +166,6 @@ RelationImpl RelationImpl::projectBut(int c) const {
 }
 
 RelationImpl RelationImpl::project(int p) const {
-  typedef boost::error_info<struct tag_projection,std::string>
-      projection;
-
-  if(p <= 0 || p > arity_) {
-    throw InvalidProjection()
-        << errno_code(errno)
-        << projection("Invalid columns to project on");
-  }
-
   RelationImpl r = *this;
   if (p == arity_) return r;
 

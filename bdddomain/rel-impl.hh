@@ -8,10 +8,6 @@
 #include <bdddomain/perm-descriptor.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
-
-/// Exception indicating invalid projection description
-struct InvalidProjection : virtual ExceptionBase {};
-
 /**
  * \defgroup DomRepr Domain representation
  *

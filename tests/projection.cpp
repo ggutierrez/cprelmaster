@@ -11,19 +11,19 @@ using namespace MPG;
 using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
-
   GRelation ub(2);
-  ub.add({0,0});
-  //ub.add({0,1});
+  ub.add(make_Tuple(1,2));
+  ub.add(make_Tuple(0,2));
+  ub.add(make_Tuple(5,2));
+  ub.add(make_Tuple(5,5));
 
   return make_pair(GRelation(2),ub);
 }
 
 pair<GRelation,GRelation> domQ(void) {
-
   GRelation ub(1);
-  ub.add({0});
-  ub.add({1});
+  ub.add(make_Tuple(2));
+  ub.add(make_Tuple(0));
 
   return make_pair(GRelation(1),ub);
 }
@@ -39,12 +39,10 @@ public:
     pair<GRelation,GRelation> dq = domQ();
     q = CPRelVar(*this,dq.first,dq.second);
 
-    ProjDescriptor p({0});
-
     //std::cerr << "R:" << r.lub().project(p) << std::endl;
     //std::cerr << "Q:" << q << std::endl;
 
-    projection(*this,p,r,q);
+    projection(*this,1,r,q);
     branch(*this,r);
 //    branch(*this,q);
 }
@@ -61,8 +59,8 @@ void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
   os << "<table border=\"1\">"
      << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>";
 
-  printHtml(os,"R",r);
-  printHtml(os,"Q",q);
+  printHtml(os,"Left",r);
+  printHtml(os,"Right",q);
   os << "</table>" << std::endl;
   }
 
@@ -78,6 +76,15 @@ void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
 
 int main(int, char**) {
   EqualityTest* g = new EqualityTest();
+  /*
+  Gecode::DFS<EqualityTest> e(g);
+  delete g;
+  std::cout << "Search will start" << std::endl;
+  while (Gecode::Space* s = e.next()) {
+    static_cast<EqualityTest*>(s)->print(std::cout);
+    delete s;
+  }
+  */
 
   Gist::Print<EqualityTest> p("Print solution");
   Gist::Options o;

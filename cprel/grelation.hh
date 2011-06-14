@@ -4,7 +4,6 @@
 #include <boost/shared_ptr.hpp>
 #include <bdddomain/tuple.hh>
 #include <bdddomain/perm-descriptor.hh>
-#include <bdddomain/proj-descriptor.hh>
 #include <boost/shared_ptr.hpp>
 
 namespace MPG { namespace CPRel {
@@ -19,6 +18,8 @@ namespace MPG { namespace CPRel {
 
 /// Exception indicating invalid stream containing relation
 struct InvalidRelationSource : virtual ExceptionBase {};
+/// Exception indicating invalid projection description
+struct InvalidProjection : virtual ExceptionBase {};
 
 namespace VarImpl {
   class RelationImpl;
