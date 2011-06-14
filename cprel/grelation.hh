@@ -95,7 +95,7 @@ public:
    * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}_n\f$ otherwise.
    */
   GRelation timesU(int n, bool left) const;
-  /// Performs \f$ r \times U \f$ and swaps the right most column to be \a c.
+  /// Performs \f$ this \times U \f$ and swaps the right most column to be \a c.
   GRelation timesUSwap(int c) const;
   /// Returns the relation \f$ this \bowtie_{j} r \f$
   GRelation join(int j,const GRelation& r) const;
@@ -106,14 +106,12 @@ public:
   /**
    * \brief Returns \f$ \Pi_{p} this \f$.
    *
-   * Where \a this is the represented relation and \a p is a ProjectionDescriptor
-   * that describes the set of columns to projec on.
+   * This is, the projection of \a this on the \a p rightmost columns.
    *
-   * \warning Throws an exception InvalidProjDescriptor if the projection
-   * specification is not valid: \f$ arity(this) < |p| \f$ or if \f$ \exists x
-   * \in p : x > arity(this)\f$
+   * \warning Throws an exception InvalidProjection if \a p is not a valid column
+   * in the relation.
    */
-  GRelation project(const ProjDescriptor& p) const;
+  GRelation project(int p) const;
   //@}
   /// \name Test operations
   //@{

@@ -157,7 +157,7 @@ RelationImpl RelationImpl::exists(int c) const {
  return RelationImpl(VarImpl::exists(c, bdd_), arity_);
 }
 
-RelationImpl RelationImpl::project(int c) const {
+RelationImpl RelationImpl::projectBut(int c) const {
   RelationImpl q(exists(c));
 
   PermDescriptor d;
@@ -165,20 +165,21 @@ RelationImpl RelationImpl::project(int c) const {
   return RelationImpl(q.permute(d).bdd_,arity_-1);
 }
 
-RelationImpl RelationImpl::project(const ProjDescriptor& projDesc) const {
-  typedef boost::error_info<struct tag_proj_descriptor,std::string>
-      proj_descriptor;
+RelationImpl RelationImpl::project(int p) const {
+  typedef boost::error_info<struct tag_projection,std::string>
+      projection;
 
-  if (!projDesc.valid(arity_)) {
-    throw InvalidProjDescriptor()
+  if(p <= 0 || p > arity_) {
+    throw InvalidProjection()
         << errno_code(errno)
-        << proj_descriptor("Invalid projection description");
+        << projection("Invalid columns to project on");
   }
 
   RelationImpl r = *this;
-  std::vector<int> q(projDesc.complement(arity_));
-  for (unsigned int i = 0; i < q.size(); i++) {
-    r = r.project(q[i]);
+  if (p == arity_) return r;
+
+  for (int i = p; i < arity_; i++) {
+    r = r.projectBut(i);
   }
   return r;
 }

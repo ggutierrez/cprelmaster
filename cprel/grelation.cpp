@@ -141,10 +141,10 @@ GRelation GRelation::exists(int c) const {
         );
 }
 
-GRelation GRelation::project(const ProjDescriptor& projDesc) const {
+GRelation GRelation::project(int p) const {
   return
       GRelation(
-        Impl(new RelationImpl(pimpl_->project(projDesc)))
+        Impl(new RelationImpl(pimpl_->project(p)))
         );
 }
 

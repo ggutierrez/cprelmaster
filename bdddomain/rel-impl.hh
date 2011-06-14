@@ -4,10 +4,14 @@
 
 #include <bdddomain/manager.hh>
 #include <bdddomain/tuple.hh>
+#include <bdddomain/exception.hh>
 #include <bdddomain/perm-descriptor.hh>
-#include <bdddomain/proj-descriptor.hh>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
+
+/// Exception indicating invalid projection description
+struct InvalidProjection : virtual ExceptionBase {};
+
 /**
  * \defgroup DomRepr Domain representation
  *
@@ -104,14 +108,17 @@ public:
    */
   RelationImpl exists(int c) const;
   /**
-   * \brief Returns the projection of the represented relation according with the
-   * projection description \a projDesc.
+   * \brief Returns \f$ \Pi_{\{0,\ldots,p\}}this \f$.
+   *
+   * The projection of this on the \a p rightmost columns.
    */
-  RelationImpl project(const ProjDescriptor& projDesc) const;
+  RelationImpl project(int p) const;
   /**
    * \brief Returns \f$\Pi_{\overline{c}}this \f$.
+   *
+   * The projection of \a this on all its columns but \a c
    */
-  RelationImpl project(int c) const;
+  RelationImpl projectBut(int c) const;
   /// \name Iteration
   //@{
   /// Returns an iterator on the tuples of the relation
