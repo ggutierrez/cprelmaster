@@ -5,7 +5,9 @@
 
 namespace MPG { namespace CPRel { namespace Prop {
 /**
- * \brief Propagates: \f$ \Pi_{p}A = B \f$
+ * \brief Propagates: \f$ \Pi_{p}A = B \f$.
+ *
+ * \f$ A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \f$
  * \ingroup RelProp
  */
 template <typename ViewLeft, typename ViewRight>
@@ -15,32 +17,31 @@ protected:
   ViewLeft left_;
   /// Right relation of the constraint
   ViewRight right_;
-  /// Projection description for \a left_
-  ProjDescriptor p_;
+  /// Number of columns (on the right) to project on.
+  int p_;
 public:
   /// Constructor for the propagator \f$ \Pi_{p}left = right \f$
-  Project(Gecode::Home home, const ProjDescriptor& p, ViewLeft left, ViewRight right)
+  Project(Gecode::Home home, int p, ViewLeft left, ViewRight right)
     : Gecode::Propagator(home), left_(left), right_(right), p_(p) {
     left_.subscribe(home,*this,CPRel::PC_CPREL_BND);
     right_.subscribe(home,*this,CPRel::PC_CPREL_BND);
   }
   /// Propagator posting
-  static Gecode::ExecStatus post(Gecode::Home home, const ProjDescriptor& p,
-                                 ViewLeft left, ViewRight right) {
+  static Gecode::ExecStatus post(Gecode::Home home, int p, ViewLeft left,
+                                 ViewRight right) {
 
     // check that the relations has the right arities
-    if (left.arity()-p.size() != right.arity()) {
+    if (left.arity()-p != right.arity()) {
       std::cerr << "Invalid arity for the relations or the size of the descriptor"
                 << std::endl;
       return Gecode::ES_FAILED;
     }
 
     // If left and right are the same variable then the constraint is eihter trivially
-    // entailed (p contains all the columns) or failed as there is no way to satisfy
+    // entailed (p refers to all the columns) or failed as there is no way to satisfy
     // it.
     if (same(left,right)) {
-      if (p.complement(left.arity()).size() != 0)
-        return Gecode::ES_FAILED;
+      if (p != 0) return Gecode::ES_FAILED;
       return Gecode::ES_OK;
     }
 
@@ -69,11 +70,15 @@ public:
                                 const Gecode::ModEventDelta&) const {
     return Gecode::PropCost::binary(Gecode::PropCost::LO);
   }
+public:
   /// Main propagation algorithm
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
-    // implements: \Pi_{p}A = B
+    std::cout << "Propagating projection" << std::endl
+    << "A: " << left_ << std::endl
+    << "B: " << right_ << std::endl;
 
+    // implements: \Pi_{p}A = B
     // First part: \Pi_{p}A \implies B
     //    \Pi_{p}glb(A) \subseteq B
     GRelation glbLeft_p = left_.glb().project(p_);
@@ -81,8 +86,13 @@ public:
 
     //    \Pi_{p}lub(A) \supseteq B
     GRelation lubLeft_p = left_.lub().project(p_);
+    std::cout << "Should exclude: " << lubLeft_p << " compl" << std::endl;
     GECODE_ME_CHECK(right_.exclude(home,lubLeft_p.complement()));
 
+    GRelation maxIntersection = right_.lub().timesU(right_.arity()-p_,false);
+    std::cout << "Max intersection: " << maxIntersection.arity() << std::endl;
+
+//    GECODE_ME_CHECK(left_.exclude(home,maxIntersection.complement()));
     /// \todo Missing the other direction of the propagator
 
     // Propagator subsumpiton

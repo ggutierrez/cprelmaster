@@ -1,17 +1,16 @@
 #include <cprel/prop/projection.hh>
-#include <bdddomain/proj-descriptor.hh>
 
 namespace MPG {
 using namespace CPRel;
 using namespace CPRel::Prop;
-void projection(Gecode::Space& home, const ProjDescriptor& p, CPRelVar A, CPRelVar B) {
+void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B) {
   if (home.failed()) return;
 
   // p has to be a valid projection description for A
   typedef boost::error_info<struct tag_proj_descriptor,std::string>
       proj_descriptor;
-  if (!p.valid(A.arity()))
-    throw InvalidProjDescriptor()
+  if (p > A.arity())
+    throw InvalidProjection()
       << errno_code(errno)
       << proj_descriptor("Invalid projection description when posting projection constraint: p has to be valid for A");
 
