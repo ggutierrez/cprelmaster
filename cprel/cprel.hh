@@ -29,9 +29,9 @@ public:
     : Exception(l,"Attempt to create variable with empty domain") {}
 };
 /// Exception indicating invalid arity
-class ArityMismatch : public Exception {
+class ArityMissmatch : public Exception {
 public:
-  ArityMismatch(const char* l)
+  ArityMissmatch(const char* l)
     : Exception(l,"Invalid arity for operation") {}
 };
 /// Exception indicating invalid permutation

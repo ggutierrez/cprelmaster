@@ -18,7 +18,7 @@ using namespace CPRel::Prop;
 void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
   if (!checkArityEq(A,B,C)) 
-    throw ArityMismatch("intersect constraint");
+    throw ArityMissmatch("intersect constraint");
   
   CPRelView a(A);
   CPRelView b(B);
@@ -29,7 +29,7 @@ void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
 void Union(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
   if (!checkArityEq(A,B,C)) 
-    throw ArityMismatch("union constraint");
+    throw ArityMissmatch("union constraint");
 
   CPRelView a(A), b(B), c(C);
 
@@ -42,7 +42,7 @@ void Union(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
 void subset(Gecode::Space& home, CPRelVar A, CPRelVar B) {
   if (home.failed()) return;
   if (A.arity() != B.arity())
-    throw ArityMismatch("subset constraint");
+    throw ArityMissmatch("subset constraint");
 
   CPRelView a(A);
   CPRelView b(B);
@@ -60,7 +60,7 @@ void subset(Gecode::Space& home, CPRelVar A, CPRelVar B) {
 void disjoint(Gecode::Space& home, CPRelVar A, CPRelVar B) {
   if (home.failed()) return;
   if (A.arity() != B.arity())
-    throw ArityMismatch("disjoint constraint");
+    throw ArityMissmatch("disjoint constraint");
 
   CPRelView a(A);
   CPRelView b(B);
@@ -75,7 +75,7 @@ void disjoint(Gecode::Space& home, CPRelVar A, CPRelVar B) {
 void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
   if (!checkArityEq(A,B,C))
-    throw ArityMismatch("intersect constraint");
+    throw ArityMissmatch("intersect constraint");
   
   CPRelView a(A), b(B), c(C);
   typedef ComplementView<CPRelView> CView;

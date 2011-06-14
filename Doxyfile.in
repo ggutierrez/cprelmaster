@@ -894,7 +894,7 @@ HTML_DYNAMIC_SECTIONS  = NO
 # See http://developer.apple.com/tools/creatingdocsetswithdoxygen.html
 # for more information.
 
-GENERATE_DOCSET        = NO
+GENERATE_DOCSET        = YES
 
 # When GENERATE_DOCSET tag is set to YES, this tag determines the name of the
 # feed. A documentation feed provides an umbrella under which multiple
@@ -1095,7 +1095,7 @@ FORMULA_TRANSPARENT    = YES
 # output. When enabled you also need to install MathJax separately and
 # configure the path to it using the MATHJAX_RELPATH option.
 
-USE_MATHJAX            = NO
+USE_MATHJAX            = YES
 
 # When MathJax is enabled you need to specify the location relative to the
 # HTML output directory using the MATHJAX_RELPATH option. The destination
@@ -1115,7 +1115,7 @@ MATHJAX_RELPATH        = http://www.mathjax.org/mathjax
 # typically be disabled. For large projects the javascript based search engine
 # can be slow, then enabling SERVER_BASED_SEARCH may provide a better solution.
 
-SEARCHENGINE           = YES
+SEARCHENGINE           = NO
 
 # When the SERVER_BASED_SEARCH tag is enabled the search engine will be
 # implemented using a PHP enabled web server instead of at the web client
@@ -1134,7 +1134,7 @@ SERVER_BASED_SEARCH    = NO
 # If the GENERATE_LATEX tag is set to YES (the default) Doxygen will
 # generate Latex output.
 
-GENERATE_LATEX         = YES
+GENERATE_LATEX         = NO
 
 # The LATEX_OUTPUT tag is used to specify where the LaTeX docs will be put.
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be
@@ -1160,7 +1160,7 @@ MAKEINDEX_CMD_NAME     = makeindex
 # LaTeX documents. This may be useful for small projects and may help to
 # save some trees in general.
 
-COMPACT_LATEX          = NO
+COMPACT_LATEX          = YES
 
 # The PAPER_TYPE tag can be used to set the paper type that is used
 # by the printer. Possible values are: a4, letter, legal and
@@ -1562,7 +1562,7 @@ GROUP_GRAPHS           = YES
 # collaboration diagrams in a style similar to the OMG's Unified Modeling
 # Language.
 
-UML_LOOK               = NO
+UML_LOOK               = YES
 
 # If set to YES, the inheritance and collaboration graphs will show the
 # relations between templates and their instances.

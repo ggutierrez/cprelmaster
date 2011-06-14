@@ -9,7 +9,7 @@ void equal(Gecode::Space& home, CPRelVar A, CPRelVar B) {
   if (home.failed()) return;
 
   if (A.arity() != B.arity())
-    throw ArityMismatch("equality constraint");
+    throw ArityMissmatch("equality constraint");
 
   CPRelView left(A);
   CPRelView right(B);
@@ -20,7 +20,7 @@ void complement(Gecode::Space& home, CPRelVar A, CPRelVar B) {
   if (home.failed()) return;
 
   if (A.arity() != B.arity())
-    throw ArityMismatch("complement constraint");
+    throw ArityMissmatch("complement constraint");
 
   CPRelView left(A);
   CPRelView vb(B);
@@ -34,7 +34,7 @@ void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, const PermDescript
   if (home.failed()) return;
 
   if (A.arity() != B.arity())
-    throw ArityMismatch("permutation constraint");
+    throw ArityMissmatch("permutation constraint");
 
   if (desc.size() == 0) {
     std::cerr << "Posting permutation with emtpy description does nothing"

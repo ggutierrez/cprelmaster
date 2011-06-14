@@ -109,8 +109,7 @@ public:
    */
   RelationImpl project(const ProjDescriptor& projDesc) const;
   /**
-   * \brief Returns the result of projection the represented relation on all its
-   * columns but \a c.
+   * \brief Returns \f$\Pi_{\overline{c}}this \f$.
    */
   RelationImpl project(int c) const;
   /// \name Iteration

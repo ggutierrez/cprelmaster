@@ -7,6 +7,7 @@ set(PROJECT_VERSION "0.9.0")
 # Command line options
 ##########################################################################
 option(UNIT_TEST "Build unit tests (requires boost unit_test)" NO)
+
 ##########################################################################
 # Compiler information
 ##########################################################################
@@ -425,6 +426,8 @@ ADD_CUSTOM_TARGET(uninstall
 ##########################################################################
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
+  message(STATUS "Doxygen was found, to build the documentation run:
+  make html")
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
   set(DOC_SOURCE_CODE doc/declground-ex.cpp)
   file(COPY ${DOC_SOURCE_CODE} DESTINATION  ${CMAKE_BINARY_DIR})

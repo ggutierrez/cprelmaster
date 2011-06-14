@@ -68,6 +68,8 @@ public:
   CPRelVar(Space& home, const CPRel::GRelation& l, const CPRel::GRelation& u)
     : Gecode::VarImpVar<CPRel::CPRelVarImp>
       (new (home) CPRel::CPRelVarImp(home,l,u)) {
+    if (l.arity() != u.arity())
+      throw CPRel::ArityMissmatch("CPRelVar::CPRelVar");
     if (!l.subsetEq(u))
       throw CPRel::VariableEmptyDomain("CPRelVar::CPRelVar");
   }

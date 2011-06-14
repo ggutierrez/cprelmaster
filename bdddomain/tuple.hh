@@ -90,6 +90,15 @@ public:
   int arity(void) const { return arity_; }
 };
 
+/// Creates a binary tuple with \a a
+inline
+Tuple make_Tuple(int a) {
+  std::vector<int> v;
+  v.reserve(1);
+  v.push_back(a);
+  return Tuple(v);
+}
+
 /// Creates a binary tuple with \a a and \a b
 inline
 Tuple make_Tuple(int a, int b) {
