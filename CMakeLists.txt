@@ -283,7 +283,6 @@ set(BDDDOMAIN_SRCS
   bdddomain/manager.cpp
   bdddomain/manager.hh
   bdddomain/perm-descriptor.hh
-  bdddomain/proj-descriptor.hh
   bdddomain/rel-impl.cpp
   bdddomain/rel-impl.hh
   bdddomain/relations.cpp
