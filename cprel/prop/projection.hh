@@ -7,7 +7,8 @@ namespace MPG { namespace CPRel { namespace Prop {
 /**
  * \brief Propagates: \f$ \Pi_{p}A = B \f$.
  *
- * \f$ A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \f$
+ * \f$ A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \f$ and \f$p\f$
+ * is the number of righ most columns to project on.
  * \ingroup RelProp
  */
 template <typename ViewLeft, typename ViewRight>
@@ -20,7 +21,7 @@ protected:
   /// Number of columns (on the right) to project on.
   int p_;
 public:
-  /// Constructor for the propagator \f$ \Pi_{p}left = right \f$
+  /// Constructor
   Project(Gecode::Home home, int p, ViewLeft left, ViewRight right)
     : Gecode::Propagator(home), left_(left), right_(right), p_(p) {
     left_.subscribe(home,*this,CPRel::PC_CPREL_BND);
@@ -74,10 +75,6 @@ public:
   /// Main propagation algorithm
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
-    std::cout << "Propagating projection" << std::endl
-    << "A: " << left_ << std::endl
-    << "B: " << right_ << std::endl;
-
     // implements: \Pi_{p}A = B
     // First part: \Pi_{p}A \implies B
     //    \Pi_{p}glb(A) \subseteq B
@@ -86,13 +83,13 @@ public:
 
     //    \Pi_{p}lub(A) \supseteq B
     GRelation lubLeft_p = left_.lub().project(p_);
-    std::cout << "Should exclude: " << lubLeft_p << " compl" << std::endl;
     GECODE_ME_CHECK(right_.exclude(home,lubLeft_p.complement()));
 
-    GRelation maxIntersection = right_.lub().timesU(right_.arity()-p_,false);
-    std::cout << "Max intersection: " << maxIntersection.arity() << std::endl;
+    // lub(A) \subseteq (U_{B.arity()-p}\times lub(B)) \cap lub(B)
+    GRelation maxIntersection =
+        right_.lub().timesU(left_.arity()-p_,true).intersect(left_.lub());
 
-//    GECODE_ME_CHECK(left_.exclude(home,maxIntersection.complement()));
+    GECODE_ME_CHECK(left_.exclude(home,maxIntersection.complement()));
     /// \todo Missing the other direction of the propagator
 
     // Propagator subsumpiton

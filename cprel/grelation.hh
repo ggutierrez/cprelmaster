@@ -28,8 +28,21 @@ namespace VarImpl {
 class GRelationIter;
 
 /**
- * \brief Class representing a ground relation
+ * \brief Class representing a ground relation.
  * \ingroup GRelation
+ *
+ * This class provides a way to represent a relation along with operations on it.
+ * In all the documentation of this class \a this refers to the represented
+ * relation. There are two basic notions attached to a relation:
+ * - Its arity that is the number of elements that each tuple in the relation has.
+ * - Its cardinality, which is the total number of tuple the relation contains.
+ *
+ * \f$arity(this)\f$ and \f$|this|\f$ denote resp. the arity and the cardinality
+ * of the represented relation.
+ *
+ * Relations can be large but finite. The largest possible relation of arity
+ * \f$n\f$ is \f$\mathcal{U}_{n}=\mathcal{U}\times\ldots\times\mathcal{U}\f$.
+ * and \f$\mathcal{U}=\{x: 0 \leq x \leq k\} \f$ for an arbitrary large \f$k\f$.
  */
 class GRelation {
 private:
@@ -52,7 +65,7 @@ public:
   GRelation& operator=(GRelation& right);
   /// Destructor
   ~GRelation(void);
-  /// Constructs a full relation of arity \a a
+  /// Constructs the relation \f$R=\mathcal{U}_{a}\f$
   static GRelation create_full(int a);
   //@}
   /// \name Modification operations
