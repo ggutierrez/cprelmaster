@@ -8,7 +8,7 @@ namespace MPG { namespace CPRel { namespace Prop {
  * \brief Propagates: \f$ \Pi_{p}A = B \f$.
  *
  * \f$ A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \f$ and \f$p\f$
- * is the number of righ most columns to project on.
+ * is the number of right most columns to project on.
  * \ingroup RelProp
  */
 template <typename ViewLeft, typename ViewRight>
@@ -88,9 +88,9 @@ public:
     // lub(A) \subseteq (U_{B.arity()-p}\times lub(B)) \cap lub(B)
     GRelation maxIntersection =
         right_.lub().timesU(left_.arity()-p_,true).intersect(left_.lub());
-
     GECODE_ME_CHECK(left_.exclude(home,maxIntersection.complement()));
-    /// \todo Missing the other direction of the propagator
+
+    /// \todo Missing 1/4 of the propagator: unique quantifier.
 
     // Propagator subsumpiton
     if (left_.assigned() && right_.assigned())
