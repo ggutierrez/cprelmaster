@@ -65,7 +65,16 @@ public:
                                        const Gecode::ModEventDelta&)  {
 
     std::cout << "Propagating join!" << std::endl;
+    // implements: A \bowtie_{j} B = C
+    // First part: C \subseteq A \bowtie_{j} B
 
+    GRelation glbJ = a_.glb().join(j_,b_.glb());
+    GECODE_ME_CHECK(c_.include(home,glbJ));
+
+    GRelation lubJ = a_.lub().join(j_,b_.lub());
+    GECODE_ME_CHECK(c_.exclude(home,lubJ.complement()));
+
+    /// \todo Add other direction of the constraint.
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned() && c_.assigned())
       return home.ES_SUBSUMED(*this);

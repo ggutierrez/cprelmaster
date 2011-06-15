@@ -1,3 +1,4 @@
+#include <fstream>
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
 #include <cprel/cprel.hh>
@@ -9,51 +10,40 @@ using namespace MPG;
 using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
-  GRelation ub(2);
-  ub.add(make_Tuple(0,0));
-  // empty... {[0,0]}
-  return make_pair(GRelation(2),ub);
+  std::ifstream inputL("/home/gg/Work/cprel/tests/ground-relations/r3.txt");
+  GRelation ub = read(inputL,3);
+  return make_pair(GRelation(3),ub);
 }
 
-pair<GRelation,GRelation> domQ(void) {
-  GRelation ub(2);
-  ub.add(make_Tuple(0,0));
-  // empty... {[0,0]}
+pair<GRelation,GRelation> domS(void) {
+  std::ifstream inputR("/home/gg/Work/cprel/tests/ground-relations/s2.txt");
+  GRelation ub = read(inputR,2);
   return make_pair(GRelation(2),ub);
 }
 
 pair<GRelation,GRelation> domT(void) {
-  GRelation ub(2);
-  ub.add(make_Tuple(0,0));
-  // empty... {[0,0]}
-  return make_pair(GRelation(2),ub);
-}
-
-pair<GRelation,GRelation> domS(void) {
-  GRelation ub = create_full(2);
-  // empty...full
-  return make_pair(GRelation(2),ub);
+  GRelation ub = create_full(4);
+  return make_pair(GRelation(4),ub);
 }
 
 class AndTest : public Gecode::Space {
 protected:
-  CPRelVar r,q,t,s;
+  CPRelVar r,s,t;
 public:
   AndTest(void)  {
 
    pair<GRelation,GRelation> dr = domR();
    r = CPRelVar(*this,dr.first,dr.second);
 
-   pair<GRelation,GRelation> dq = domQ();
-   q = CPRelVar(*this,dq.first,dq.second);
+   pair<GRelation,GRelation> ds = domS();
+   s = CPRelVar(*this,ds.first,ds.second);
 
    pair<GRelation,GRelation> dt = domT();
    t = CPRelVar(*this,dt.first,dt.second);
 
-   pair<GRelation,GRelation> ds = domS();
-   s = CPRelVar(*this,ds.first,ds.second);
-
-   join(*this,r,1,q,t);
+   join(*this,r,1,s,t);
+   branch(*this,r);
+   branch(*this,s);
    branch(*this,t);
   }
   void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
@@ -69,7 +59,6 @@ public:
 
     printHtml(os,"R",r);
     printHtml(os,"S",s);
-    printHtml(os,"Q",q);
     printHtml(os,"T",t);
     os << "</table>" << std::endl;
 
@@ -77,7 +66,6 @@ public:
   AndTest(bool share, AndTest& sp)
     : Gecode::Space(share,sp) {
     r.update(*this, share, sp.r);
-    q.update(*this, share, sp.q);
     t.update(*this, share, sp.t);
     s.update(*this, share, sp.s);
   }
