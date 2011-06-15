@@ -120,6 +120,25 @@ public:
 // Descriptors
 #include <bdddomain/perm-descriptor.hh>
 
+/**
+ * \defgroup SetProp Set propagators on relations
+ *
+ * A relation can be seen as a set of tuples. From this point of view different
+ * constraints can be defined. These propagators are presented in this module.
+ */
+
+/**
+ * \defgroup RelProp Basic relation propagators.
+ *
+ * This module contains basic constraints on relations.
+ */
+
+/**
+ * \defgroup RelBranch Branchers (distribution strategies) on relations
+ *
+ * This module contains the branchers that can be used on relation domains.
+ */
+
 namespace MPG {
 /**
  * \brief Posts: \f$ A = B \f$
@@ -160,7 +179,7 @@ void disjoint(Gecode::Space& home, CPRelVar A, CPRelVar B);
  */
 void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
 /**
- * \brief Posts the constraint: \f$ A = \pi_{desc} B \f$
+ * \brief Posts the constraint: \f$ A = B \leftrightarrow_{\text{desc}} \f$
  * \ingroup RelProp
  */
 void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, const CPRel::PermDescriptor& desc);
@@ -169,6 +188,11 @@ void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, const CPRel::PermD
  * \ingroup RelProp
  */
 void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B);
+/**
+ * \brief Posts the constraint: \f$ A\;\bowtie_{j}\;B = C \f$
+ * \ingroup RelProp
+ */
+void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
 
 void branch(Gecode::Home home, CPRelVar x);
 }

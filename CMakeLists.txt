@@ -386,6 +386,8 @@ set(CPREL_SRCS
   cprel/prop/and.hh
   cprel/prop/equality.cpp
   cprel/prop/equality.hh
+  cprel/prop/join.hh
+  cprel/prop/join.cpp
   cprel/prop/projection.cpp
   cprel/prop/projection.hh
 
@@ -535,6 +537,9 @@ target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
 add_executable(projection tests/projection.cpp)
 target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
 
+# test for the join propagator
+add_executable(join tests/join.cpp)
+target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})

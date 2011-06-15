@@ -111,14 +111,19 @@ public:
   GRelation timesU(int n, bool left) const;
   /// Performs \f$ this \times U \f$ and swaps the right most column to be \a c.
   GRelation timesUSwap(int c) const;
-  /// Returns the relation \f$ this \bowtie_{j} r \f$
+  /**
+   * \brief Returns: \f$ \mathit{this}\;\bowtie_{j}\; r \f$.
+   *
+   * This is, the result of joining the two relations on the \a j right most
+   * columns of \a this and the \a j left most columns of \a r.
+   */
   GRelation join(int j,const GRelation& r) const;
   /// Returns the relation \f$ this \times r \f$
   GRelation times(const GRelation& r) const;
   /// Returns the relation resulting from existencially quantifying on column \a c
   GRelation exists(int c) const;
   /**
-   * \brief Returns \f$ \Pi_{p} this \f$.
+   * \brief Returns: \f$ \Pi_{p} this \f$.
    *
    * This is, the projection of \a this on the \a p rightmost columns.
    *
