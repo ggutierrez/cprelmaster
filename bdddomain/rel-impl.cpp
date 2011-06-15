@@ -139,9 +139,7 @@ RelationImpl RelationImpl::timesU(int n, bool left) const {
 }
 
 RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
-
   const RelationImpl& l = *this;
-  // computes: l \bowtie_{j} r
 
   assert(l.arity() >= j && r.arity() >= j
          && "There are not enough columns for the join");

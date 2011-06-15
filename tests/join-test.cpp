@@ -30,11 +30,11 @@ int main(void) {
     cout << "Cardinality of the created relation: " << r.cardinality() << endl;
 */
 
-    ifstream inputL("/home/gg/Work/cprel/tests/ground-relations/small-rel.txt");
-    GRelation w = read(inputL,2);
+    ifstream inputL("/home/gg/Work/cprel/tests/ground-relations/r3.txt");
+    GRelation w = read(inputL,3);
     cout << "Left relation: " << w << endl << endl;
 
-    ifstream inputR("/home/gg/Work/cprel/tests/ground-relations/small-rel2.txt");
+    ifstream inputR("/home/gg/Work/cprel/tests/ground-relations/s2.txt");
     GRelation x = read(inputR,2);
     cout << "Right relation: " << x << endl << endl;
 

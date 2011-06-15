@@ -124,6 +124,14 @@ GRelation GRelation::timesU(int n, bool left) const {
 }
 
 GRelation GRelation::join(int j,const GRelation& r) const {
+  typedef boost::error_info<struct tag_invalid_join,std::string>
+      invalid_join;
+
+  if (arity() < j || r.arity() < j)
+    throw InvalidJoin()
+      << errno_code(errno)
+      << invalid_join("There are not enough columns for the join");
+
   return
       GRelation(
         Impl(new RelationImpl(pimpl_->join(j, *(r.pimpl_))))

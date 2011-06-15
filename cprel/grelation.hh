@@ -18,8 +18,10 @@ namespace MPG { namespace CPRel {
 
 /// Exception indicating invalid stream containing relation
 struct InvalidRelationSource : virtual ExceptionBase {};
-/// Exception indicating invalid projection description
+/// Exception indicating invalid projection
 struct InvalidProjection : virtual ExceptionBase {};
+/// Exception indicating invalid join
+struct InvalidJoin: virtual ExceptionBase {};
 
 namespace VarImpl {
   class RelationImpl;
