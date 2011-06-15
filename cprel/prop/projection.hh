@@ -6,10 +6,10 @@
 namespace MPG { namespace CPRel { namespace Prop {
 /**
  * \brief Propagates: \f$ \Pi_{p}A = B \f$.
+ * \ingroup RelProp
  *
  * \f$ A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \f$ and \f$p\f$
- * is the number of right most columns to project on.
- * \ingroup RelProp
+ * is the number of columns on the right (counting from zero) to project on.
  */
 template <typename ViewA, typename ViewB>
 class Project : public Gecode::Propagator {

@@ -128,9 +128,18 @@ public:
  */
 
 /**
- * \defgroup RelProp Basic relation propagators.
+ * \defgroup RelProp Basic relation propagators
  *
- * This module contains basic constraints on relations.
+ * The propagators presented in this module extend common operations on relations
+ * to constraints.  As opposed to databases, columns in the relation decission
+ * variables are identified by their possition. This is, a relation of arity \a
+ * n has columns \f$0,\ldots,n-1\f$ being the column identified with 0 the right
+ * most one.
+ *
+ * As the notion of "colum names" is merely numeric, some of the constraints that
+ * work with column information take numbers identifying the columns as parameters.
+ * Moreover, constraints like \a join and \a projection rely on some conventions
+ * regarding this imput.
  */
 
 /**
@@ -143,27 +152,44 @@ namespace MPG {
 /**
  * \brief Posts: \f$ A = B \f$
  * \ingroup SetProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
  */
 void equal(Gecode::Space& home, CPRelVar A, CPRelVar B);
 
 /**
  * \brief Posts: \f$ A = \overline{B} \f$
  * \ingroup SetProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
  */
 void complement(Gecode::Space& home, CPRelVar A, CPRelVar B);
 /**
  * \brief Posts: \f$ A \cap B = C \f$
  * \ingroup SetProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
+ * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n}\f$
  */
 void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
 /**
  * \brief Posts: \f$ A \cup B = C \f$
  * \ingroup SetProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
+ * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n}\f$
  */
 void Union(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
 /**
  * \brief Posts: \f$ A \subseteq B \f$
  * \ingroup SetProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
  */
 void subset(Gecode::Space& home, CPRelVar A, CPRelVar B);
 /**
@@ -171,26 +197,51 @@ void subset(Gecode::Space& home, CPRelVar A, CPRelVar B);
  * \ingroup SetProp
  *
  * Enforces that \a A and \a B are two disjoint relations.
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
  */
 void disjoint(Gecode::Space& home, CPRelVar A, CPRelVar B);
 /**
  * \brief Posts the constraint: \f$ \forall t : t\in A \Rightarrow t\in B \iff t \in C \f$
  * \ingroup SetProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
+ * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n}\f$
  */
 void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
 /**
- * \brief Posts the constraint: \f$ A = B \leftrightarrow_{\text{desc}} \f$
+ * \brief Posts the constraint: \f$ A = B \leftrightarrow_{\text{desc}}\f$.
  * \ingroup RelProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B  a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param desc an object describing the permutation. It represents a map from
+ *        columns of \a A to columns of \a B.
+ *
+ * @see PermDescriptor
  */
-void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, const CPRel::PermDescriptor& desc);
+void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B,
+                 const CPRel::PermDescriptor& desc);
 /**
- * \brief Posts the constraint: \f$ \Pi_{p} A = B \f$
+ * \brief Posts the constraint: \f$ \Pi_{p} A = B \f$.
  * \ingroup RelProp
+ *
+ * @param p is the number of columns on the right of \a A to project on.
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n-p}\f$
  */
 void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B);
 /**
  * \brief Posts the constraint: \f$ A\;\bowtie_{j}\;B = C \f$
  * \ingroup RelProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param j is the number of columns on the right of \a A
+ * and on the left of \a B to join on.
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{m}\f$
+ * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n+m-j}\f$
  */
 void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
 

@@ -39,8 +39,8 @@ class GRelationIter;
  * - Its arity that is the number of elements that each tuple in the relation has.
  * - Its cardinality, which is the total number of tuple the relation contains.
  *
- * \f$arity(this)\f$ and \f$|this|\f$ denote resp. the arity and the cardinality
- * of the represented relation.
+ * \f$arity(\text{this})\f$ and \f$|\text{this}|\f$ denote resp. the arity and
+ * the cardinality of the represented relation.
  *
  * Relations can be large but finite. The largest possible relation of arity
  * \f$n\f$ is \f$\mathcal{U}_{n}=\mathcal{U}\times\ldots\times\mathcal{U}\f$.
@@ -50,8 +50,7 @@ class GRelation {
 private:
   friend class GRelationIter;
   typedef boost::shared_ptr<VarImpl::RelationImpl> Impl;
-  /// Relation storage
-  Impl pimpl_;
+  Impl pimpl_; ///> Relation storage
   /// Avoid default construction
   GRelation(void);
   /// Constructor taking an implementation
@@ -86,7 +85,7 @@ public:
    */
   void differenceAssign(const GRelation& r);
   //@}
-  /// \name Relation operations
+  /// \name Set operations
   //@{
   /// Computes \f$ this \setminus r \f$
   GRelation difference(const GRelation& r) const;
@@ -96,6 +95,9 @@ public:
   GRelation Union(const GRelation& r) const;
   /// Computes \f$ \overline{this}\f$
   GRelation complement(void) const;
+  //@}
+  /// \name Relation operations
+  //@{
   /**
    * \brief Computes the permutation of \a this according to \a desc.
    *
@@ -111,8 +113,6 @@ public:
    * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}_n\f$ otherwise.
    */
   GRelation timesU(int n, bool left) const;
-  /// Performs \f$ this \times U \f$ and swaps the right most column to be \a c.
-  GRelation timesUSwap(int c) const;
   /**
    * \brief Returns: \f$ \mathit{this}\;\bowtie_{j}\; r \f$.
    *

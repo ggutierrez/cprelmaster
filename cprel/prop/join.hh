@@ -9,21 +9,21 @@ namespace MPG { namespace CPRel { namespace Prop {
  * \brief Join propagator between two relations
  * \ingroup RelProp
  */
-template <typename View0, typename View1, typename View2>
+template <typename ViewA, typename ViewB, typename ViewC>
 class Join : public Gecode::Propagator {
 protected:
   /// First relation
-  View0 a_;
+  ViewA a_;
   /// Columns to join on
   int j_;
   /// Second relation
-  View1 b_;
+  ViewB b_;
   /// Third relation
-  View2 c_;
+  ViewC c_;
 public:
   /// Constructor
   Join(
-    Gecode::Home home, View0 a, int j, View1 b,View2 c)
+    Gecode::Home home, ViewA a, int j, ViewB b,ViewC c)
     : Gecode::Propagator(home), a_(a), j_(j), b_(b), c_(c) {
     a_.subscribe(home,*this,CPRel::PC_CPREL_BND);
     b_.subscribe(home,*this,CPRel::PC_CPREL_BND);
@@ -36,7 +36,7 @@ public:
    * two of the arguments?.
    */
   static Gecode::ExecStatus
-  post(Gecode::Home home, View0 a, int j, View1 b, View2 c) {
+  post(Gecode::Home home, ViewA a, int j, ViewB b, ViewC c) {
     (void) new (home) Join(home,a,j,b,c);
     return Gecode::ES_OK;
   }
