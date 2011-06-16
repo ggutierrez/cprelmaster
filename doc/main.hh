@@ -126,8 +126,6 @@
 
 /** \mainpage Constraint programming on relations (CPRel)
  *
- * \authors Gustavo Gutierrez: <tt>gutierrez.gustavo</tt> <b>at</b> uclouvain.be
- * \authors Yves Jaradin: <tt>yves.jaradin</tt> <b>at</b> uclouvain.be
  *
  * \section intro Introduction
  * This package provides the implementation of a constraint system on relations.
@@ -140,6 +138,26 @@
  * - \subpage license
  * - \subpage cprel
  * - Acknowledgements
+ *
+ * \section download Download
+ * To get the latest version of the package:
+ * \code
+ * git clone git://github.com/ggutierrez/cprelmaster.git
+ * \endcode
+ * For instructions on how to build it: \ref install.
+ *
+ * \section contact Contact information
+ * Any comment or question related to the use of the library is welcome and can
+ * be done by using the development site:
+ * https://github.com/ggutierrez/cprelmaster
+ *
+ * The development of this library is independent on Gecode. We  kindly ask
+ * the users to NOT use the Gecode mailing list or any other Gecode resources
+ * to ask questions concerning CPRel.
+ *
+ * Contacting the authors is also possible:
+ * \authors Gustavo Gutierrez: <tt>gustavo.ggutierrez</tt> <b>at</b> gmail.com
+ * \authors Yves Jaradin.
  *
  */
 
