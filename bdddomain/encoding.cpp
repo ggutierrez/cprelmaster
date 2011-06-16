@@ -1,4 +1,5 @@
 #include <bdddomain/encoding.hh>
+#include <bdddomain/unique.h>
 
 namespace MPG { namespace CPRel { namespace VarImpl {
 
@@ -95,6 +96,15 @@ DdNode* exists(int c, DdNode* r) {
   DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
   Cudd_Ref(cube);
   DdNode *q = Cudd_bddExistAbstract(dd(),r,cube);
+  Cudd_RecursiveDeref(dd(),cube);
+  return q;
+}
+
+DdNode* unique(int c, DdNode* r) {
+  std::vector<int> indices = bddIndices(c);
+  DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
+  Cudd_Ref(cube);
+  DdNode *q = Cudd_bddUniqueAbstract(dd(),r,cube);
   Cudd_RecursiveDeref(dd(),cube);
   return q;
 }

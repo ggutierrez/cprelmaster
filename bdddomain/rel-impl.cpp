@@ -155,6 +155,10 @@ RelationImpl RelationImpl::exists(int c) const {
  return RelationImpl(VarImpl::exists(c, bdd_), arity_);
 }
 
+RelationImpl RelationImpl::unique(int c) const {
+ return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+}
+
 RelationImpl RelationImpl::projectBut(int c) const {
   RelationImpl q(exists(c));
 

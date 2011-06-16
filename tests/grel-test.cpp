@@ -1,7 +1,8 @@
 #include <iostream>
-#include <vector>
+#include <fstream>
 #include <cprel/grelation.hh>
 #include <bdddomain/tuple.hh>
+
 
 using std::cout;
 using std::endl;
@@ -9,58 +10,17 @@ using std::vector;
 
 int main(void) {
   using namespace MPG::CPRel;
-  vector<Tuple> x0;
-  x0.reserve(4);
-  x0.push_back(make_Tuple(2,3));
-  x0.push_back(make_Tuple(0,0));
-  x0.push_back(make_Tuple(2,1));
-  x0.push_back(make_Tuple(1,1));
 
-//  vector<Tuple> y0;
-//  y0.reserve(4);
-//  y0.push_back(make_Tuple(5,3));
-//  y0.push_back(make_Tuple(2,0));
-//  y0.push_back(make_Tuple(2,7));
-//  y0.push_back(make_Tuple(1,1));
+  std::ifstream input2("/home/gg/Work/cprel/tests/ground-relations/small-rel.txt");
+  GRelation w = read(input2,3);
+  cout << "The relation: " << w << endl;
 
-//  using namespace CPRel::BDDImpl;
-//  GRelation empty(2);
- // GRelation r(create(x0));
- // GRelation s(create(y0));
+//  PermDescriptor d;
+//  d.permute(0,1);
 
-/*
-  cout << "Relation r: " << r << endl;
-  GRelation z(r);
-  cout << "Relation z: " << z << endl;
-  make_Tuple t(5,11);
-  z.add(t);
+  GRelation x = w.unique(0);//.project(1);
+  cout << x << endl;
 
-  cout << "Relation r: " << r << endl;
-  cout << "Relation z: " << z << endl;
-*/
-//  GRelationIter it(r);
-//  assert(it());
-//  cout << it.val() << endl;
-//  ++it;
-//  cout << it.val() << endl;
-//  ++it;
-//  cout << it.val() << endl;
-//  ++it;
-//  cout << it.val() << endl;
-//  ++it;
-//  assert(!it());
-//  cout << endl;
-//  GRelationIter it2(s);
-//  for (; it2(); ++it2)
-//    cout << it2.val() << endl;
-
-//  GRelationIter it3(empty);
-//  assert(!it3());
-
-//  it3 = GRelationIter(r);
-//  assert(it3());
-//  for (; it3(); ++it3)
-//    cout << it3.val() << endl;
 
   return 0;
 }

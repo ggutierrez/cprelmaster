@@ -149,6 +149,13 @@ GRelation GRelation::exists(int c) const {
         );
 }
 
+GRelation GRelation::unique(int c) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->unique(c)))
+        );
+}
+
 GRelation GRelation::project(int p) const {
   typedef boost::error_info<struct tag_projection,std::string>
       projection;
@@ -178,6 +185,11 @@ GRelation create_full(int a) {
 GRelation read(std::istream& is, int arity) {
   typedef boost::error_info<struct tag_invalid_source,std::string>
       invalid_source;
+
+  if (arity > Limits::arity)
+    throw InvalidAritySource()
+        << errno_code(errno)
+        << invalid_source("Invalid arity to read the relation");
 
   if (!is.good() || is.fail()) {
     throw InvalidRelationSource()
@@ -224,7 +236,7 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
   }
 
   for(GRelationIter it(r); it(); ++it)
-    os << it.val() << " ";
+    os << it.val() << std::endl; //" ";
 
   return os;
 }

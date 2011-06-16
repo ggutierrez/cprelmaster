@@ -104,6 +104,11 @@ public:
    */
   RelationImpl exists(int c) const;
   /**
+   * \brief Returns the relation resulting from uniquely quantifying the column
+   * \a c of the represented relation.
+   */
+  RelationImpl unique(int c) const;
+  /**
    * \brief Returns \f$ \Pi_{\{0,\ldots,p\}}this \f$.
    *
    * The projection of this on the \a p rightmost columns.

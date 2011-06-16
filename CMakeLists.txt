@@ -142,6 +142,9 @@ set(CUDD_SRCS
   cudd/cuddZddSymm.c
   cudd/cuddZddUtil.c
 
+  bdddomain/unique.c
+  bdddomain/unique.h
+
 #Headers:
   cudd/cuddCdd.h
   cudd/cudd.h

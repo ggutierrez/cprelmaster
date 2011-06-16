@@ -18,6 +18,8 @@ namespace MPG { namespace CPRel {
 
 /// Exception indicating invalid stream containing relation
 struct InvalidRelationSource : virtual ExceptionBase {};
+/// Exception indicating invalid arity according to configuration
+struct InvalidAritySource : virtual ExceptionBase {};
 /// Exception indicating invalid projection
 struct InvalidProjection : virtual ExceptionBase {};
 /// Exception indicating invalid join
@@ -124,6 +126,8 @@ public:
   GRelation times(const GRelation& r) const;
   /// Returns the relation resulting from existencially quantifying on column \a c
   GRelation exists(int c) const;
+  /// Returns the relation resulting from uniquely quantifying on column \a c
+  GRelation unique(int c) const;
   /**
    * \brief Returns: \f$ \Pi_{p} this \f$.
    *
