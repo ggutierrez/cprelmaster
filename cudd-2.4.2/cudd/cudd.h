@@ -223,8 +223,7 @@ typedef enum {
     CUDD_TOO_MANY_NODES,
     CUDD_MAX_MEM_EXCEEDED,
     CUDD_INVALID_ARG,
-    CUDD_INTERNAL_ERROR,
-    CDD_FAIL
+    CUDD_INTERNAL_ERROR
 } Cudd_ErrorType;
 
 

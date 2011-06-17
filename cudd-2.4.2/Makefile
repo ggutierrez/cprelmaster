@@ -7,7 +7,7 @@
 # be overridden from the command line.
 
 # C++ compiler
-CPP	= clang++
+CPP	= g++
 #CPP	= icpc
 #CPP	= ecpc
 #CPP	= CC
@@ -27,7 +27,7 @@ CPPFLAGS =
 # C compiler used for all targets except optimize_dec, which always uses cc.
 #CC	= cc
 #CC	= /usr/local/opt/SUNWspro/bin/cc
-CC	= clang
+CC	= gcc
 #CC	= icc
 #CC	= ecc
 #CC	= /usr/ucb/cc
@@ -50,7 +50,7 @@ RANLIB	= ranlib
 # These four are typical settings for optimized code with gcc.  The
 # last two also work with icc/ecc.
 #ICFLAGS	= -g -O6 -Wall
-ICFLAGS	= -g -O3
+ICFLAGS	= -g -O6
 #ICFLAGS	= -g -O3 -Wall
 #ICFLAGS	= -g -O3
 
@@ -62,11 +62,11 @@ ICFLAGS	= -g -O3
 #  Linux
 #
 # Gcc 3.2.2 or higher on i686.
-# XCFLAGS = -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD
+XCFLAGS	= -mtune=pentium4 -malign-double -DHAVE_IEEE_754 -DBSD
 # Gcc 2.8.1 on i686.
 #XCFLAGS	= -mcpu=pentiumpro -malign-double -DHAVE_IEEE_754 -DBSD
 # Gcc 4.2.4 or higher on x86_64 (64-bit compilation)
-XCFLAGS = -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8
+#XCFLAGS	= -mtune=native -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8
 # Gcc 4.2.4 or higher on x86_64 (32-bit compilation)
 #XCFLAGS	= -m32 -mtune=native -malign-double -DHAVE_IEEE_754 -DBSD
 # Icc on i686 (older versions may not support -xHost).

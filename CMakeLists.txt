@@ -148,7 +148,7 @@ set(CUDD_SRCS
   bdddomain/unique.h
 
 #Headers:
-  ${CUDD_SOURCES}/cudd/cuddCdd.h
+#  ${CUDD_SOURCES}/cudd/cuddCdd.h
   ${CUDD_SOURCES}/cudd/cudd.h
   ${CUDD_SOURCES}/cudd/cuddInt.h
 )

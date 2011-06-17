@@ -21,7 +21,7 @@ extern int end, etext, edata;
 void
 util_print_cpu_stats(FILE *fp)
 {
-#ifdef BSDXX
+#ifdef BSD
     struct rusage rusage;
     struct rlimit rlp;
     long text, data, vm_limit, vm_soft_limit;
