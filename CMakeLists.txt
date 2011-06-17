@@ -72,120 +72,122 @@ add_definitions(-O0 -g)
 ##########################################################################
 # Cudd library
 ##########################################################################
-include_directories("${CMAKE_SOURCE_DIR}/mtr")
-include_directories("${CMAKE_SOURCE_DIR}/epd")
-include_directories("${CMAKE_SOURCE_DIR}/st")
-include_directories("${CMAKE_SOURCE_DIR}/util")
-include_directories("${CMAKE_SOURCE_DIR}/cudd")
+set(CUDD_SOURCES "cudd-2.4.2")
+include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/mtr")
+include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/epd")
+include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/st")
+include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/util")
+include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/cudd")
+include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}")
 
 set(CUDD_SRCS
-  cudd/cuddAddAbs.c
-  cudd/cuddAddApply.c
-  cudd/cuddAddFind.c
-  cudd/cuddAddInv.c
-  cudd/cuddAddIte.c
-  cudd/cuddAddNeg.c
-  cudd/cuddAddWalsh.c
-  cudd/cuddAndAbs.c
-  cudd/cuddAnneal.c
-  cudd/cuddApa.c
-  cudd/cuddAPI.c
-  cudd/cuddApprox.c
-  cudd/cuddBddAbs.c
-  cudd/cuddBddCorr.c
-  cudd/cuddBddIte.c
-  cudd/cuddBridge.c
-  cudd/cuddCache.c
+  ${CUDD_SOURCES}/cudd/cuddAddAbs.c
+  ${CUDD_SOURCES}/cudd/cuddAddApply.c
+  ${CUDD_SOURCES}/cudd/cuddAddFind.c
+  ${CUDD_SOURCES}/cudd/cuddAddInv.c
+  ${CUDD_SOURCES}/cudd/cuddAddIte.c
+  ${CUDD_SOURCES}/cudd/cuddAddNeg.c
+  ${CUDD_SOURCES}/cudd/cuddAddWalsh.c
+  ${CUDD_SOURCES}/cudd/cuddAndAbs.c
+  ${CUDD_SOURCES}/cudd/cuddAnneal.c
+  ${CUDD_SOURCES}/cudd/cuddApa.c
+  ${CUDD_SOURCES}/cudd/cuddAPI.c
+  ${CUDD_SOURCES}/cudd/cuddApprox.c
+  ${CUDD_SOURCES}/cudd/cuddBddAbs.c
+  ${CUDD_SOURCES}/cudd/cuddBddCorr.c
+  ${CUDD_SOURCES}/cudd/cuddBddIte.c
+  ${CUDD_SOURCES}/cudd/cuddBridge.c
+  ${CUDD_SOURCES}/cudd/cuddCache.c
 #  cudd/cuddCdd.c
-  cudd/cuddCheck.c
-  cudd/cuddClip.c
-  cudd/cuddCof.c
-  cudd/cuddCompose.c
-  cudd/cuddDecomp.c
-  cudd/cuddEssent.c
-  cudd/cuddExact.c
-  cudd/cuddExport.c
-  cudd/cuddGenCof.c
-  cudd/cuddGenetic.c
-  cudd/cuddGroup.c
-  cudd/cuddHarwell.c
-  cudd/cuddInit.c
-  cudd/cuddInteract.c
-  cudd/cuddLCache.c
-  cudd/cuddLevelQ.c
-  cudd/cuddLinear.c
-  cudd/cuddLiteral.c
-  cudd/cuddMatMult.c
-  cudd/cuddPriority.c
-  cudd/cuddRead.c
-  cudd/cuddRef.c
-  cudd/cuddReorder.c
-  cudd/cuddSat.c
-  cudd/cuddSign.c
-  cudd/cuddSolve.c
-  cudd/cuddSplit.c
-  cudd/cuddSubsetHB.c
-  cudd/cuddSubsetSP.c
-  cudd/cuddSymmetry.c
-  cudd/cuddTable.c
-  cudd/cuddUtil.c
-  cudd/cuddWindow.c
-  cudd/cuddZddCount.c
-  cudd/cuddZddFuncs.c
-  cudd/cuddZddGroup.c
-  cudd/cuddZddIsop.c
-  cudd/cuddZddLin.c
-  cudd/cuddZddMisc.c
-  cudd/cuddZddPort.c
-  cudd/cuddZddReord.c
-  cudd/cuddZddSetop.c
-  cudd/cuddZddSymm.c
-  cudd/cuddZddUtil.c
+  ${CUDD_SOURCES}/cudd/cuddCheck.c
+  ${CUDD_SOURCES}/cudd/cuddClip.c
+  ${CUDD_SOURCES}/cudd/cuddCof.c
+  ${CUDD_SOURCES}/cudd/cuddCompose.c
+  ${CUDD_SOURCES}/cudd/cuddDecomp.c
+  ${CUDD_SOURCES}/cudd/cuddEssent.c
+  ${CUDD_SOURCES}/cudd/cuddExact.c
+  ${CUDD_SOURCES}/cudd/cuddExport.c
+  ${CUDD_SOURCES}/cudd/cuddGenCof.c
+  ${CUDD_SOURCES}/cudd/cuddGenetic.c
+  ${CUDD_SOURCES}/cudd/cuddGroup.c
+  ${CUDD_SOURCES}/cudd/cuddHarwell.c
+  ${CUDD_SOURCES}/cudd/cuddInit.c
+  ${CUDD_SOURCES}/cudd/cuddInteract.c
+  ${CUDD_SOURCES}/cudd/cuddLCache.c
+  ${CUDD_SOURCES}/cudd/cuddLevelQ.c
+  ${CUDD_SOURCES}/cudd/cuddLinear.c
+  ${CUDD_SOURCES}/cudd/cuddLiteral.c
+  ${CUDD_SOURCES}/cudd/cuddMatMult.c
+  ${CUDD_SOURCES}/cudd/cuddPriority.c
+  ${CUDD_SOURCES}/cudd/cuddRead.c
+  ${CUDD_SOURCES}/cudd/cuddRef.c
+  ${CUDD_SOURCES}/cudd/cuddReorder.c
+  ${CUDD_SOURCES}/cudd/cuddSat.c
+  ${CUDD_SOURCES}/cudd/cuddSign.c
+  ${CUDD_SOURCES}/cudd/cuddSolve.c
+  ${CUDD_SOURCES}/cudd/cuddSplit.c
+  ${CUDD_SOURCES}/cudd/cuddSubsetHB.c
+  ${CUDD_SOURCES}/cudd/cuddSubsetSP.c
+  ${CUDD_SOURCES}/cudd/cuddSymmetry.c
+  ${CUDD_SOURCES}/cudd/cuddTable.c
+  ${CUDD_SOURCES}/cudd/cuddUtil.c
+  ${CUDD_SOURCES}/cudd/cuddWindow.c
+  ${CUDD_SOURCES}/cudd/cuddZddCount.c
+  ${CUDD_SOURCES}/cudd/cuddZddFuncs.c
+  ${CUDD_SOURCES}/cudd/cuddZddGroup.c
+  ${CUDD_SOURCES}/cudd/cuddZddIsop.c
+  ${CUDD_SOURCES}/cudd/cuddZddLin.c
+  ${CUDD_SOURCES}/cudd/cuddZddMisc.c
+  ${CUDD_SOURCES}/cudd/cuddZddPort.c
+  ${CUDD_SOURCES}/cudd/cuddZddReord.c
+  ${CUDD_SOURCES}/cudd/cuddZddSetop.c
+  ${CUDD_SOURCES}/cudd/cuddZddSymm.c
+  ${CUDD_SOURCES}/cudd/cuddZddUtil.c
 
   bdddomain/unique.c
   bdddomain/unique.h
 
 #Headers:
-  cudd/cuddCdd.h
-  cudd/cudd.h
-  cudd/cuddInt.h
+  ${CUDD_SOURCES}/cudd/cuddCdd.h
+  ${CUDD_SOURCES}/cudd/cudd.h
+  ${CUDD_SOURCES}/cudd/cuddInt.h
 )
 
 set(MTR_SRCS
-  mtr/mtrBasic.c
-  mtr/mtrGroup.c
+  ${CUDD_SOURCES}/mtr/mtrBasic.c
+  ${CUDD_SOURCES}/mtr/mtrGroup.c
 #Headers:
-  mtr/mtr.h
+  ${CUDD_SOURCES}/mtr/mtr.h
 )
 
 set(ST_SRCS
-  st/st.c
+  ${CUDD_SOURCES}/st/st.c
 #Headers:
-  st/st.h
+  ${CUDD_SOURCES}/st/st.h
 )
 
 set(EPD_SRCS
-  epd/epd.c
+  ${CUDD_SOURCES}/epd/epd.c
 #Headers:
-  epd/epd.h
+  ${CUDD_SOURCES}/epd/epd.h
 )
 
 set(UTIL_SRCS
-  util/cpu_time.c
-  util/cpu_stats.c
-  util/getopt.c
-  util/safe_mem.c
-  util/strsav.c
-  util/texpand.c
-  util/ptime.c
-  util/prtime.c
-  util/pipefork.c
-  util/pathsearch.c
-  util/stub.c
-  util/tmpfile.c
-  util/datalimit.c
+  ${CUDD_SOURCES}/util/cpu_time.c
+  ${CUDD_SOURCES}/util/cpu_stats.c
+  ${CUDD_SOURCES}/util/getopt.c
+  ${CUDD_SOURCES}/util/safe_mem.c
+  ${CUDD_SOURCES}/util/strsav.c
+  ${CUDD_SOURCES}/util/texpand.c
+  ${CUDD_SOURCES}/util/ptime.c
+  ${CUDD_SOURCES}/util/prtime.c
+  ${CUDD_SOURCES}/util/pipefork.c
+  ${CUDD_SOURCES}/util/pathsearch.c
+  ${CUDD_SOURCES}/util/stub.c
+  ${CUDD_SOURCES}/util/tmpfile.c
+  ${CUDD_SOURCES}/util/datalimit.c
 #Headers
-  util/util.h
+  ${CUDD_SOURCES}/util/util.h
 )
 
 add_library(cudd ${CUDD_SRCS})
