@@ -33,24 +33,26 @@ static int bddCheckPositiveCube(DdManager* manager, DdNode* cube) {
  * the CUDD implementation at cudd/cuddBddAbs.c
  */
 DdNode* cuddBddUniqueAbstractRecur(DdManager* manager, DdNode* f, DdNode* cube) {
-  DdNode	*F, *T, *E, *res, *res1, *res2, *one;
+  DdNode	*F, *T, *E, *res, *res1, *res2, *one, *zero;
 
   statLine(manager);
   one = DD_ONE(manager);
+  zero = Cudd_Not(one);
   F = Cudd_Regular(f);
 
   /* Cube is guaranteed to be a cube at this point. */
-  if (cube == one || F == one) {
+  
+  /* base case */
+  if (F == one || cube == one) {
     return(f);
   }
+  
   /* From now on, f and cube are non-constant. */
-
-  /* Abstract a variable that does not appear in f. */
-  while (manager->perm[F->index] > manager->perm[cube->index]) {
-    cube = cuddT(cube);
-    if (cube == one) return(f);
-  }
-
+  
+  /* abstracting a variable that does not exist */
+  if (manager->perm[F->index] > manager->perm[cube->index])
+    return zero;
+  
   /* Check the cache. */
   if (F->ref != 1 &&
       (res = cuddCacheLookup2(manager, Cudd_bddUniqueAbstract, f, cube)) != NULL) {
@@ -65,16 +67,8 @@ DdNode* cuddBddUniqueAbstractRecur(DdManager* manager, DdNode* f, DdNode* cube) 
 
   /* If the two indices are the same, so are their levels. */
   if (F->index == cube->index) {
-    if (T == one || E == one || T == Cudd_Not(E)) {
-      return(one);
-    }
     res1 = cuddBddUniqueAbstractRecur(manager, T, cuddT(cube));
     if (res1 == NULL) return(NULL);
-    if (res1 == one) {
-      if (F->ref != 1)
-        cuddCacheInsert2(manager, Cudd_bddUniqueAbstract, f, cube, one);
-      return(one);
-    }
     cuddRef(res1);
     res2 = cuddBddUniqueAbstractRecur(manager, E, cuddT(cube));
     if (res2 == NULL) {
@@ -82,14 +76,12 @@ DdNode* cuddBddUniqueAbstractRecur(DdManager* manager, DdNode* f, DdNode* cube) 
       return(NULL);
     }
     cuddRef(res2);
-//    res = cuddBddAndRecur(manager, Cudd_Not(res1), Cudd_Not(res2));
     res = cuddBddXorRecur(manager, res1, res2);
     if (res == NULL) {
       Cudd_IterDerefBdd(manager, res1);
       Cudd_IterDerefBdd(manager, res2);
       return(NULL);
     }
-//    res = Cudd_Not(res);
     cuddRef(res);
     Cudd_IterDerefBdd(manager, res1);
     Cudd_IterDerefBdd(manager, res2);
