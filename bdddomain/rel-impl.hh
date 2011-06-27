@@ -109,6 +109,11 @@ public:
    */
   RelationImpl unique(int c) const;
   /**
+   * \brief Returns the relation resulting from uniquely quantifying the columns
+   * in \a c of the represented relation.
+   */
+  RelationImpl unique(const std::vector<int>& c) const;
+  /**
    * \brief Returns \f$ \Pi_{\{0,\ldots,p\}}this \f$.
    *
    * The projection of this on the \a p rightmost columns.

@@ -159,6 +159,10 @@ RelationImpl RelationImpl::unique(int c) const {
  return RelationImpl(VarImpl::unique(c, bdd_), arity_);
 }
 
+RelationImpl RelationImpl::unique(const std::vector<int>& c) const {
+  return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+}
+
 RelationImpl RelationImpl::projectBut(int c) const {
   RelationImpl q(exists(c));
 

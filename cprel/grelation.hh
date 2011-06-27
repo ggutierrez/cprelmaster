@@ -129,6 +129,11 @@ public:
   /// Returns the relation resulting from uniquely quantifying on column \a c
   GRelation unique(int c) const;
   /**
+   * \brief Returns the relation resulting from uniquely quantifying on all the
+   * columns in \a c
+   */
+  GRelation unique(const std::vector<int>& c) const;  
+  /**
    * \brief Returns: \f$ \Pi_{p} this \f$.
    *
    * This is, the projection of \a this on the \a p rightmost columns.

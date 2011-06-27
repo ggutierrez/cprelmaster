@@ -90,6 +90,17 @@ public:
     GECODE_ME_CHECK(a_.exclude(home,maxIntersection.complement()));
 
     /// \todo Missing 1/4 of the propagator: unique quantifier.
+    
+    // prune the lower bound of a by unique quantification
+    GRelation lubA = a_.lub();
+    std::vector<int> q;
+    for (int i = a_.arity()-1; i >= p_; i++)
+      q.push_back(i);
+    
+    GRelation QLubA = lubA.unique(q).intersect(lubA);
+    GRelation to_include = QLubA.intersect(b_.glb().timesU(a_.arity()-p_,true));
+    GECODE_ME_CHECK(a_.include(home,to_include));
+    
 
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned())

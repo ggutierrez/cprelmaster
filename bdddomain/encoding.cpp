@@ -109,5 +109,23 @@ DdNode* unique(int c, DdNode* r) {
   return q;
 }
 
+DdNode* unique(const std::vector<int>& c, DdNode* r) {
+  std::cout << "Called unique quant vector: " << c.size() << std::endl;
+  std::vector<int> indices;
+  indices.reserve(c.size() * Limits::bitsPerInteger);
+  for (unsigned int i = 0; i < c.size(); i++) {
+    std::vector<int> x = bddIndices(c.at(i));
+    for (unsigned int j = 0; j < x.size(); j++)
+      indices.push_back(x[j]);
+    
+  }
+   
+  DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
+  Cudd_Ref(cube);
+  DdNode *q = Cudd_bddUniqueAbstract(dd(),r,cube);
+  Cudd_RecursiveDeref(dd(),cube);
+  return q;
+}
+
 
 }}}

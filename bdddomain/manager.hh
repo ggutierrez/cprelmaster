@@ -20,7 +20,7 @@ namespace Limits {
  * - Setting this attribute to 5 will allow to represent positive integers
  *   of 32 bits.
  */
-const int bbv = 5;
+const int bbv = 3;
 /**
  * \brief Number of bits of the maximum arity that can be represented
  * \ingroup DomRepr
@@ -47,8 +47,9 @@ const int arity = 1 << ba;
  * int type to input and output values.
  * \ingroup DomRepr
  */
-BOOST_STATIC_ASSERT(std::numeric_limits<int>::digits <= bitsPerInteger
-                    && "The BDD configuration is wrong for this built");
+  
+//  BOOST_STATIC_ASSERT(std::numeric_limits<int>::digits <= bitsPerInteger
+//                      && "The BDD configuration is wrong for this built");
 }
 
 class BddManager;

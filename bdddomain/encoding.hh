@@ -57,5 +57,11 @@ std::vector<int> decodeCube(int* cube, int arity);
   */
  DdNode* unique(int c, DdNode* r);
 
+  /**
+   * \brief Unique quantification on the columns in \a c on relation \a r.
+   * \ingroup BDDEnc
+   */
+  DdNode* unique(const std::vector<int>& c, DdNode* r);
+
 }}}
 #endif
