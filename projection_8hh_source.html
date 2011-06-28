@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>/home/gg/Work/tmp/cprel/cprel/prop/projection.hh Source File</title>
+<title>/home/gg/Work/cprelmaster/cprel/prop/projection.hh Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script src="http://www.mathjax.org/mathjax/MathJax.js">
   MathJax.Hub.Config({
@@ -32,7 +32,7 @@
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>/home/gg/Work/tmp/cprel/cprel/prop/projection.hh</h1>  </div>
+<h1>/home/gg/Work/cprelmaster/cprel/prop/projection.hh</h1>  </div>
 </div>
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef __CPREL_PROP_PROJECTION_HH__</span>
@@ -41,87 +41,97 @@
 <a name="l00004"></a>00004 <span class="preprocessor">#include &lt;cprel/cprel.hh&gt;</span>
 <a name="l00005"></a>00005 
 <a name="l00006"></a>00006 <span class="keyword">namespace </span>MPG { <span class="keyword">namespace </span>CPRel { <span class="keyword">namespace </span>Prop {
-<a name="l00014"></a>00014 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ViewA, <span class="keyword">typename</span> ViewB&gt;
-<a name="l00015"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html">00015</a> <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html" title="Propagates: . and  is the number of columns on the right (counting from zero) to project on...">Project</a> : <span class="keyword">public</span> Gecode::Propagator {
-<a name="l00016"></a>00016 <span class="keyword">protected</span>:
-<a name="l00018"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3">00018</a>   ViewA <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>;
-<a name="l00020"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424">00020</a>   ViewB <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>;
-<a name="l00022"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a">00022</a>   <span class="keywordtype">int</span> <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>;
-<a name="l00023"></a>00023 <span class="keyword">public</span>:
-<a name="l00025"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f">00025</a>   <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(Gecode::Home home, <span class="keywordtype">int</span> p, ViewA a, ViewB b)
-<a name="l00026"></a>00026     : Gecode::Propagator(home), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>(a), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>(b), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>(p) {
-<a name="l00027"></a>00027     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.subscribe(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
-<a name="l00028"></a>00028     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.subscribe(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
-<a name="l00029"></a>00029   }
-<a name="l00031"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ae6b5912b27717aa81ce1dbd13e55279a">00031</a>   <span class="keyword">static</span> Gecode::ExecStatus <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ae6b5912b27717aa81ce1dbd13e55279a" title="Propagator posting.">post</a>(Gecode::Home home, <span class="keywordtype">int</span> p, ViewA a, ViewB b) {
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033     <span class="comment">// check that the relations has the right arities</span>
-<a name="l00034"></a>00034     <span class="keywordflow">if</span> (a.arity()-p != b.arity()) {
-<a name="l00035"></a>00035       std::cerr &lt;&lt; <span class="stringliteral">&quot;Invalid arity for the relations or the size of the descriptor&quot;</span>
-<a name="l00036"></a>00036                 &lt;&lt; std::endl;
-<a name="l00037"></a>00037       <span class="keywordflow">return</span> Gecode::ES_FAILED;
-<a name="l00038"></a>00038     }
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040     <span class="comment">// If left and right are the same variable then the constraint is eihter trivially</span>
-<a name="l00041"></a>00041     <span class="comment">// entailed (p refers to all the columns) or failed as there is no way to satisfy</span>
-<a name="l00042"></a>00042     <span class="comment">// it.</span>
-<a name="l00043"></a>00043     <span class="keywordflow">if</span> (same(a,b)) {
-<a name="l00044"></a>00044       <span class="keywordflow">if</span> (p != 0) <span class="keywordflow">return</span> Gecode::ES_FAILED;
-<a name="l00045"></a>00045       <span class="keywordflow">return</span> Gecode::ES_OK;
-<a name="l00046"></a>00046     }
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048     (void) <span class="keyword">new</span> (home) <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(home,p,a,b);
-<a name="l00049"></a>00049     <span class="keywordflow">return</span> Gecode::ES_OK;
-<a name="l00050"></a>00050   }
-<a name="l00052"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a8970a4c1959e396cecb8b976e7c112bb">00052</a>   <span class="keyword">virtual</span> <span class="keywordtype">size_t</span> <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a8970a4c1959e396cecb8b976e7c112bb" title="Propagator disposal.">dispose</a>(Gecode::Space&amp; home) {
-<a name="l00053"></a>00053     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.cancel(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
-<a name="l00054"></a>00054     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.cancel(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
-<a name="l00055"></a>00055     (void) Propagator::dispose(home);
-<a name="l00056"></a>00056     <span class="keywordflow">return</span> <span class="keyword">sizeof</span>(*this);
-<a name="l00057"></a>00057   }
-<a name="l00059"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a08a71a4f12bdcf952add83b2ebef173f">00059</a>   <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(Gecode::Space&amp; home, <span class="keywordtype">bool</span> share, <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html" title="Propagates: . and  is the number of columns on the right (counting from zero) to project on...">Project</a>&amp; p)
-<a name="l00060"></a>00060     : Gecode::Propagator(home,share,p), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>(p.<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>) {
-<a name="l00061"></a>00061     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.update(home,share,p.<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>);
-<a name="l00062"></a>00062     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.update(home,share,p.<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>);
-<a name="l00063"></a>00063   }
-<a name="l00065"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#afa2a27d2dc1a1c77f2f4fe2d9f56d7fa">00065</a>   <span class="keyword">virtual</span> Gecode::Propagator* <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#afa2a27d2dc1a1c77f2f4fe2d9f56d7fa" title="Copy.">copy</a>(Gecode::Space&amp; home, <span class="keywordtype">bool</span> share) {
-<a name="l00066"></a>00066     <span class="keywordflow">return</span> <span class="keyword">new</span> (home) <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(home,share,*<span class="keyword">this</span>);
-<a name="l00067"></a>00067   }
-<a name="l00069"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a9ae7a4e46309e77b975885ba4cca9ee1">00069</a>   <span class="keyword">virtual</span> Gecode::PropCost <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a9ae7a4e46309e77b975885ba4cca9ee1" title="Cost.">cost</a>(<span class="keyword">const</span> Gecode::Space&amp;,
-<a name="l00070"></a>00070                                 <span class="keyword">const</span> Gecode::ModEventDelta&amp;)<span class="keyword"> const </span>{
-<a name="l00071"></a>00071     <span class="keywordflow">return</span> Gecode::PropCost::binary(Gecode::PropCost::LO);
-<a name="l00072"></a>00072   }
-<a name="l00073"></a>00073 <span class="keyword">public</span>:
-<a name="l00075"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a17401e7da95c802e6ae7899fd7b7a399">00075</a>   <span class="keyword">virtual</span> Gecode::ExecStatus <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a17401e7da95c802e6ae7899fd7b7a399" title="Main propagation algorithm.">propagate</a>(Gecode::Space&amp; home,
-<a name="l00076"></a>00076                                        <span class="keyword">const</span> Gecode::ModEventDelta&amp;)  {
-<a name="l00077"></a>00077     <span class="comment">// implements: \Pi_{p}A = B</span>
-<a name="l00078"></a>00078     <span class="comment">// First part: \Pi_{p}A \implies B</span>
-<a name="l00079"></a>00079     <span class="comment">//    \Pi_{p}glb(A) \subseteq B</span>
-<a name="l00080"></a>00080     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> glbA_p = <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.glb().project(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>);
-<a name="l00081"></a>00081     GECODE_ME_CHECK(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.include(home,glbA_p));
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083     <span class="comment">//    \Pi_{p}lub(A) \supseteq B</span>
-<a name="l00084"></a>00084     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> lubA_p = <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.lub().project(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>);
-<a name="l00085"></a>00085     GECODE_ME_CHECK(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.exclude(home,lubA_p.complement()));
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087     <span class="comment">// lub(A) \subseteq (U_{B.arity()-p}\times lub(B)) \cap lub(B)</span>
-<a name="l00088"></a>00088     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> maxIntersection =
-<a name="l00089"></a>00089         <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.lub().timesU(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.arity()-<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>,<span class="keyword">true</span>).<a class="code" href="group__SetProp.html#ga0bf0736c265a9e20aa48d7915a3fce63" title="Posts: .">intersect</a>(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.lub());
-<a name="l00090"></a>00090     GECODE_ME_CHECK(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.exclude(home,maxIntersection.<a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a82b9d76d6b322f1c147693aaee7d6f16" title="Computes .">complement</a>()));
-<a name="l00091"></a>00091 
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094     <span class="comment">// Propagator subsumpiton</span>
-<a name="l00095"></a>00095     <span class="keywordflow">if</span> (<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.assigned() &amp;&amp; <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.assigned())
-<a name="l00096"></a>00096       <span class="keywordflow">return</span> home.ES_SUBSUMED(*<span class="keyword">this</span>);
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098     <span class="keywordflow">return</span> Gecode::ES_FIX;
-<a name="l00099"></a>00099   }
-<a name="l00100"></a>00100 };
-<a name="l00101"></a>00101 }}}
-<a name="l00102"></a>00102 <span class="preprocessor">#endif</span>
+<a name="l00011"></a>00011 <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ViewA, <span class="keyword">typename</span> ViewB&gt;
+<a name="l00012"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html">00012</a> <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html" title="Propagates: .">Project</a> : <span class="keyword">public</span> Gecode::Propagator {
+<a name="l00013"></a>00013 <span class="keyword">protected</span>:
+<a name="l00015"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3">00015</a>   ViewA <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>;
+<a name="l00017"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424">00017</a>   ViewB <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>;
+<a name="l00019"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a">00019</a>   <span class="keywordtype">int</span> <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>;
+<a name="l00020"></a>00020 <span class="keyword">public</span>:
+<a name="l00022"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f">00022</a>   <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(Gecode::Home home, <span class="keywordtype">int</span> p, ViewA a, ViewB b)
+<a name="l00023"></a>00023     : Gecode::Propagator(home), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>(a), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>(b), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>(p) {
+<a name="l00024"></a>00024     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.subscribe(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
+<a name="l00025"></a>00025     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.subscribe(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
+<a name="l00026"></a>00026   }
+<a name="l00028"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ae6b5912b27717aa81ce1dbd13e55279a">00028</a>   <span class="keyword">static</span> Gecode::ExecStatus <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ae6b5912b27717aa81ce1dbd13e55279a" title="Propagator posting.">post</a>(Gecode::Home home, <span class="keywordtype">int</span> p, ViewA a, ViewB b) {
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030     <span class="comment">// check that the relations has the right arities</span>
+<a name="l00031"></a>00031     <span class="keywordflow">if</span> (a.arity()-p != b.arity()) {
+<a name="l00032"></a>00032       std::cerr &lt;&lt; <span class="stringliteral">&quot;Invalid arity for the relations or the size of the descriptor&quot;</span>
+<a name="l00033"></a>00033                 &lt;&lt; std::endl;
+<a name="l00034"></a>00034       <span class="keywordflow">return</span> Gecode::ES_FAILED;
+<a name="l00035"></a>00035     }
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037     <span class="comment">// If left and right are the same variable then the constraint is eihter trivially</span>
+<a name="l00038"></a>00038     <span class="comment">// entailed (p refers to all the columns) or failed as there is no way to satisfy</span>
+<a name="l00039"></a>00039     <span class="comment">// it.</span>
+<a name="l00040"></a>00040     <span class="keywordflow">if</span> (same(a,b)) {
+<a name="l00041"></a>00041       <span class="keywordflow">if</span> (p != 0) <span class="keywordflow">return</span> Gecode::ES_FAILED;
+<a name="l00042"></a>00042       <span class="keywordflow">return</span> Gecode::ES_OK;
+<a name="l00043"></a>00043     }
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045     (void) <span class="keyword">new</span> (home) <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(home,p,a,b);
+<a name="l00046"></a>00046     <span class="keywordflow">return</span> Gecode::ES_OK;
+<a name="l00047"></a>00047   }
+<a name="l00049"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a8970a4c1959e396cecb8b976e7c112bb">00049</a>   <span class="keyword">virtual</span> <span class="keywordtype">size_t</span> <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a8970a4c1959e396cecb8b976e7c112bb" title="Propagator disposal.">dispose</a>(Gecode::Space&amp; home) {
+<a name="l00050"></a>00050     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.cancel(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
+<a name="l00051"></a>00051     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.cancel(home,*<span class="keyword">this</span>,CPRel::PC_CPREL_BND);
+<a name="l00052"></a>00052     (void) Propagator::dispose(home);
+<a name="l00053"></a>00053     <span class="keywordflow">return</span> <span class="keyword">sizeof</span>(*this);
+<a name="l00054"></a>00054   }
+<a name="l00056"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a08a71a4f12bdcf952add83b2ebef173f">00056</a>   <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(Gecode::Space&amp; home, <span class="keywordtype">bool</span> share, <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html" title="Propagates: .">Project</a>&amp; p)
+<a name="l00057"></a>00057     : Gecode::Propagator(home,share,p), <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>(p.<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>) {
+<a name="l00058"></a>00058     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.update(home,share,p.<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>);
+<a name="l00059"></a>00059     <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.update(home,share,p.<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>);
+<a name="l00060"></a>00060   }
+<a name="l00062"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#afa2a27d2dc1a1c77f2f4fe2d9f56d7fa">00062</a>   <span class="keyword">virtual</span> Gecode::Propagator* <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#afa2a27d2dc1a1c77f2f4fe2d9f56d7fa" title="Copy.">copy</a>(Gecode::Space&amp; home, <span class="keywordtype">bool</span> share) {
+<a name="l00063"></a>00063     <span class="keywordflow">return</span> <span class="keyword">new</span> (home) <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a66a90875104f9fa1a8218be04b23002f" title="Constructor.">Project</a>(home,share,*<span class="keyword">this</span>);
+<a name="l00064"></a>00064   }
+<a name="l00066"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a9ae7a4e46309e77b975885ba4cca9ee1">00066</a>   <span class="keyword">virtual</span> Gecode::PropCost <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a9ae7a4e46309e77b975885ba4cca9ee1" title="Cost.">cost</a>(<span class="keyword">const</span> Gecode::Space&amp;,
+<a name="l00067"></a>00067                                 <span class="keyword">const</span> Gecode::ModEventDelta&amp;)<span class="keyword"> const </span>{
+<a name="l00068"></a>00068     <span class="keywordflow">return</span> Gecode::PropCost::binary(Gecode::PropCost::LO);
+<a name="l00069"></a>00069   }
+<a name="l00070"></a>00070 <span class="keyword">public</span>:
+<a name="l00096"></a><a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a17401e7da95c802e6ae7899fd7b7a399">00096</a>   <span class="keyword">virtual</span> Gecode::ExecStatus <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#a17401e7da95c802e6ae7899fd7b7a399" title="Main propagation algorithm.">propagate</a>(Gecode::Space&amp; home,
+<a name="l00097"></a>00097                                        <span class="keyword">const</span> Gecode::ModEventDelta&amp;)  {
+<a name="l00098"></a>00098     <span class="comment">// implements: \Pi_{p}A = B</span>
+<a name="l00099"></a>00099     <span class="comment">// First part: \Pi_{p}A \implies B</span>
+<a name="l00100"></a>00100     <span class="comment">//    \Pi_{p}glb(A) \subseteq B</span>
+<a name="l00101"></a>00101     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> glbA_p = <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.glb().project(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>);
+<a name="l00102"></a>00102     GECODE_ME_CHECK(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.include(home,glbA_p));
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104     <span class="comment">//    \Pi_{p}lub(A) \supseteq B</span>
+<a name="l00105"></a>00105     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> lubA_p = <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.lub().project(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>);
+<a name="l00106"></a>00106     GECODE_ME_CHECK(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.exclude(home,lubA_p.complement()));
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108     <span class="comment">// lub(A) \subseteq (U_{A.arity()-p}\times lub(B)) \cap lub(A)</span>
+<a name="l00109"></a>00109     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> maxIntersection =
+<a name="l00110"></a>00110         <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.lub().timesU(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.arity()-<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>,<span class="keyword">true</span>).<a class="code" href="group__SetProp.html#ga0bf0736c265a9e20aa48d7915a3fce63" title="Posts: .">intersect</a>(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.lub());
+<a name="l00111"></a>00111     GECODE_ME_CHECK(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.exclude(home,maxIntersection.<a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a82b9d76d6b322f1c147693aaee7d6f16" title="Computes .">complement</a>()));
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113     <span class="comment">// prune the lower bound of a by unique quantification</span>
+<a name="l00114"></a>00114     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> lubA = <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.lub();
+<a name="l00115"></a>00115     std::vector&lt;int&gt; q;
+<a name="l00116"></a>00116     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.arity()-1; i &gt;= <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>; i++)
+<a name="l00117"></a>00117       q.push_back(i);
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> QLubA = lubA.<a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ae492c84df57480065ac192f5482fd82b" title="Returns the relation resulting from uniquely quantifying on column c.">unique</a>(q).<a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a6fae17567a12531b5030bba7c434efdd" title="Computes .">intersect</a>(lubA);
+<a name="l00120"></a>00120     <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> to_include = QLubA.<a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a6fae17567a12531b5030bba7c434efdd" title="Computes .">intersect</a>(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.glb().timesU(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.arity()-<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ab48d090bcd25376fb57f485722c3ea9a" title="Number of columns (on the right) to project on.">p_</a>,<span class="keyword">true</span>));
+<a name="l00121"></a>00121     GECODE_ME_CHECK(<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.include(home,to_include));
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124     <span class="comment">// Propagator subsumpiton</span>
+<a name="l00125"></a>00125     <span class="keywordflow">if</span> (<a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#ace9fb4bc66eab2ec4f6a30d16d1a99d3" title="Left relation of the contraint.">a_</a>.assigned() &amp;&amp; <a class="code" href="classMPG_1_1CPRel_1_1Prop_1_1Project.html#aae35002011ea9b89a2d0acb09601e424" title="Right relation of the constraint.">b_</a>.assigned())
+<a name="l00126"></a>00126       <span class="keywordflow">return</span> home.ES_SUBSUMED(*<span class="keyword">this</span>);
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128     <span class="keywordflow">return</span> Gecode::ES_FIX;
+<a name="l00129"></a>00129   }
+<a name="l00130"></a>00130 };
+<a name="l00131"></a>00131 }}}
+<a name="l00132"></a>00132 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jun 16 2011 22:04:58 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jun 28 2011 17:17:16 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

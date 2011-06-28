@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>/home/gg/Work/tmp/cprel/bdddomain/rel-impl.hh Source File</title>
+<title>/home/gg/Work/cprelmaster/bdddomain/rel-impl.hh Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script src="http://www.mathjax.org/mathjax/MathJax.js">
   MathJax.Hub.Config({
@@ -32,7 +32,7 @@
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>/home/gg/Work/tmp/cprel/bdddomain/rel-impl.hh</h1>  </div>
+<h1>/home/gg/Work/cprelmaster/bdddomain/rel-impl.hh</h1>  </div>
 </div>
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef __CPREL_BDDDOMAIN_REL_IMPL_HH__</span>
@@ -86,111 +86,112 @@
 <a name="l00100"></a>00100   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a559721e730b61880dc453dfd79924bcc" title="Performs .">join</a>(<span class="keywordtype">int</span> j, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r) <span class="keyword">const</span>;
 <a name="l00105"></a>00105   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a9a38ee2a2fe3ce5d67eea5db698491e2" title="Returns the relation resulting from existencially quantifying the column c of the represented relatio...">exists</a>(<span class="keywordtype">int</span> c) <span class="keyword">const</span>;
 <a name="l00110"></a>00110   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#aef073bdcc3b1ec57cb832531d5c5227b" title="Returns the relation resulting from uniquely quantifying the column c of the represented relation...">unique</a>(<span class="keywordtype">int</span> c) <span class="keyword">const</span>;
-<a name="l00116"></a>00116   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#abe6e47b16e81de874a83979b36ea0401" title="Returns .">project</a>(<span class="keywordtype">int</span> p) <span class="keyword">const</span>;
-<a name="l00122"></a>00122   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a1e95593e526269d5516c0d64f0bfe505" title="Returns .">projectBut</a>(<span class="keywordtype">int</span> c) <span class="keyword">const</span>;
-<a name="l00124"></a>00124 
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a47a43e703da0dc090d989f06f78987f7" title="Returns an iterator on the tuples of the relation.">tuples</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00128"></a>00128 };
+<a name="l00115"></a>00115   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#aef073bdcc3b1ec57cb832531d5c5227b" title="Returns the relation resulting from uniquely quantifying the column c of the represented relation...">unique</a>(<span class="keyword">const</span> std::vector&lt;int&gt;&amp; c) <span class="keyword">const</span>;
+<a name="l00121"></a>00121   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#abe6e47b16e81de874a83979b36ea0401" title="Returns .">project</a>(<span class="keywordtype">int</span> p) <span class="keyword">const</span>;
+<a name="l00127"></a>00127   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a1e95593e526269d5516c0d64f0bfe505" title="Returns .">projectBut</a>(<span class="keywordtype">int</span> c) <span class="keyword">const</span>;
 <a name="l00129"></a>00129 
-<a name="l00134"></a>00134 <span class="keyword">inline</span>
-<a name="l00135"></a><a class="code" href="group__DomRepr.html#gae68bafa41f6cf8cd2bfe9f5c267ceb05">00135</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#gae68bafa41f6cf8cd2bfe9f5c267ceb05" title="Tests whether two relations are the same.">operator==</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00136"></a>00136   <span class="keywordflow">return</span> r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a09392dbc319824b764d7501f15e77044" title="Tests if relation r represents the same elements.">equal</a>(s);
-<a name="l00137"></a>00137 }
-<a name="l00138"></a>00138 
-<a name="l00143"></a>00143 <span class="keyword">inline</span>
-<a name="l00144"></a><a class="code" href="group__DomRepr.html#ga25917a8867df865a934733d79e77b68a">00144</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga25917a8867df865a934733d79e77b68a" title="Tests whether two relations are different.">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00145"></a>00145   <span class="keywordflow">return</span> !r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a09392dbc319824b764d7501f15e77044" title="Tests if relation r represents the same elements.">equal</a>(s);
-<a name="l00146"></a>00146 }
-<a name="l00147"></a>00147 
-<a name="l00152"></a>00152 <span class="keyword">inline</span>
-<a name="l00153"></a><a class="code" href="group__DomRepr.html#ga2e6470b7418ff29f456e7c00bdc17080">00153</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="group__DomRepr.html#ga2e6470b7418ff29f456e7c00bdc17080" title="Returns the union of relations r and s.">Union</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00154"></a>00154   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
-<a name="l00155"></a>00155   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> u(r);
-<a name="l00156"></a>00156   u.add(s);
-<a name="l00157"></a>00157   <span class="keywordflow">return</span> u;
-<a name="l00158"></a>00158 }
-<a name="l00159"></a>00159 
-<a name="l00164"></a>00164 <span class="keyword">inline</span>
-<a name="l00165"></a><a class="code" href="namespaceMPG_1_1CPRel_1_1VarImpl.html#a8a8f805ba2bc7bc1883519e057a177c1">00165</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="namespaceMPG_1_1CPRel_1_1VarImpl.html#a8a8f805ba2bc7bc1883519e057a177c1" title="Returns the difference between relations r and s.">difference</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00166"></a>00166   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
-<a name="l00167"></a>00167   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> d(r);
-<a name="l00168"></a>00168   d.remove(s);
-<a name="l00169"></a>00169   <span class="keywordflow">return</span> d;
-<a name="l00170"></a>00170 }
-<a name="l00171"></a>00171 
-<a name="l00176"></a>00176 <span class="keyword">inline</span>
-<a name="l00177"></a><a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a">00177</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a" title="Returns the intersection between relations r and s.">intersect</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00178"></a>00178   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
-<a name="l00179"></a>00179   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> i(r);
-<a name="l00180"></a>00180   i.intersect(s);
-<a name="l00181"></a>00181   <span class="keywordflow">return</span> i;
-<a name="l00182"></a>00182 }
-<a name="l00183"></a>00183 
-<a name="l00188"></a>00188 <span class="keyword">inline</span>
-<a name="l00189"></a><a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79">00189</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79" title="Subset: .">subsetEq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00190"></a>00190   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
-<a name="l00191"></a>00191   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a" title="Returns the intersection between relations r and s.">intersect</a>(r,s) == r;
-<a name="l00192"></a>00192 }
-<a name="l00193"></a>00193 
-<a name="l00198"></a>00198 <span class="keyword">inline</span>
-<a name="l00199"></a><a class="code" href="group__DomRepr.html#ga75160386eb49fe1a094ec4593da0f1d8">00199</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga75160386eb49fe1a094ec4593da0f1d8" title="Superset: .">supersetEq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00200"></a>00200   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79" title="Subset: .">subsetEq</a>(s,r);
-<a name="l00201"></a>00201 }
-<a name="l00202"></a>00202 
-<a name="l00207"></a>00207 <span class="keyword">inline</span>
-<a name="l00208"></a><a class="code" href="group__DomRepr.html#ga29bd89e59191d79bf4f1df7554104b81">00208</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga29bd89e59191d79bf4f1df7554104b81" title="Proper subset: .">subset</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00209"></a>00209   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
-<a name="l00210"></a>00210   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79" title="Subset: .">subsetEq</a>(r,s) &amp;&amp; r != s;
-<a name="l00211"></a>00211 }
-<a name="l00212"></a>00212 
-<a name="l00217"></a>00217 <span class="keyword">inline</span>
-<a name="l00218"></a><a class="code" href="group__DomRepr.html#ga13d6b22060e90a23f2ab1fa1f731d9a1">00218</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga13d6b22060e90a23f2ab1fa1f731d9a1" title="Proper superset: .">superset</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00219"></a>00219   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#ga29bd89e59191d79bf4f1df7554104b81" title="Proper subset: .">subset</a>(s,r);
-<a name="l00220"></a>00220 }
-<a name="l00221"></a>00221 
-<a name="l00226"></a>00226 <span class="keyword">inline</span>
-<a name="l00227"></a><a class="code" href="group__DomRepr.html#ga90379fcc833c706ad987eea6ecd3da72">00227</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga90379fcc833c706ad987eea6ecd3da72" title="Disjoint: .">disjoint</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
-<a name="l00228"></a>00228   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a" title="Returns the intersection between relations r and s.">intersect</a>(r,s).<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a8f26081fc8698ecb3276704a7fa715f1" title="Tests if the represented relation is empty.">empty</a>();
-<a name="l00229"></a>00229 }
-<a name="l00230"></a>00230 
-<a name="l00235"></a>00235 <span class="keyword">inline</span>
-<a name="l00236"></a><a class="code" href="group__DomRepr.html#ga877d10098b27c217e740a189d4ca28a2">00236</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="group__DomRepr.html#ga877d10098b27c217e740a189d4ca28a2" title="Returns the complement of relation r.">complement</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r) {
-<a name="l00237"></a>00237   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> c(r);
-<a name="l00238"></a>00238   c.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a1b5867181bbba9611c1f574917aa3ea2" title="Complement the represented relation.">complement</a>();
-<a name="l00239"></a>00239   <span class="keywordflow">return</span> c;
-<a name="l00240"></a>00240 }
-<a name="l00241"></a>00241 
-<a name="l00252"></a><a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html">00252</a> <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a> {
-<a name="l00253"></a>00253 <span class="keyword">private</span>:
-<a name="l00255"></a>00255   DdNode *relation_;
-<a name="l00257"></a>00257   <span class="keywordtype">int</span> arity_;
-<a name="l00259"></a>00259   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>(<span class="keywordtype">void</span>);
-<a name="l00261"></a>00261   <span class="keywordtype">void</span> <span class="keyword">remove</span>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1Tuple.html" title="Class to abstract a tuple in a relation.">Tuple</a>&amp; t);
-<a name="l00262"></a>00262 <span class="keyword">public</span>:
-<a name="l00264"></a>00264   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>(DdNode *rel, <span class="keywordtype">int</span> a);
-<a name="l00266"></a>00266   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>&amp;);
-<a name="l00268"></a>00268   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html#aee60161cac2393058f3725bd8ef4e7c7" title="Destructor.">~RelationImplIter</a>(<span class="keywordtype">void</span>);
-<a name="l00270"></a>00270   <a class="code" href="classMPG_1_1CPRel_1_1Tuple.html" title="Class to abstract a tuple in a relation.">Tuple</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html#a8d889f1bb6cf4b82f7249556341909e7" title="Return a current tuple.">val</a>(<span class="keywordtype">void</span>);
-<a name="l00272"></a>00272   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html#a2e801c215a6eee5fb21201d0faf75fdf" title="Tests whether the iterator is still valid.">operator()</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00273"></a>00273 };
-<a name="l00274"></a>00274 
-<a name="l00279"></a>00279 <span class="keyword">inline</span>
-<a name="l00280"></a><a class="code" href="group__DomRepr.html#gadb41aed766e7f05c5add32d0f1385c08">00280</a> std::ostream&amp; <a class="code" href="group__DomRepr.html#gadb41aed766e7f05c5add32d0f1385c08" title="Output a relation implementation r in tuple format to os.">operator &lt;&lt; </a>(std::ostream&amp; os, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r) {
-<a name="l00281"></a>00281   os &lt;&lt; <span class="stringliteral">&quot;{&quot;</span>;
-<a name="l00282"></a>00282   <span class="keywordflow">for</span> (<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a> it = r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a47a43e703da0dc090d989f06f78987f7" title="Returns an iterator on the tuples of the relation.">tuples</a>(); it();)
-<a name="l00283"></a>00283     os &lt;&lt; it.val() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
-<a name="l00284"></a>00284 
-<a name="l00285"></a>00285   os &lt;&lt; <span class="stringliteral">&quot;}&quot;</span>;
-<a name="l00286"></a>00286   <span class="keywordflow">return</span> os;
-<a name="l00287"></a>00287 }
-<a name="l00288"></a>00288 
-<a name="l00289"></a>00289 }}}
-<a name="l00290"></a>00290 
-<a name="l00291"></a>00291 <span class="preprocessor">#endif</span>
+<a name="l00130"></a>00130 
+<a name="l00131"></a>00131   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a47a43e703da0dc090d989f06f78987f7" title="Returns an iterator on the tuples of the relation.">tuples</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00133"></a>00133 };
+<a name="l00134"></a>00134 
+<a name="l00139"></a>00139 <span class="keyword">inline</span>
+<a name="l00140"></a><a class="code" href="group__DomRepr.html#gae68bafa41f6cf8cd2bfe9f5c267ceb05">00140</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#gae68bafa41f6cf8cd2bfe9f5c267ceb05" title="Tests whether two relations are the same.">operator==</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00141"></a>00141   <span class="keywordflow">return</span> r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a09392dbc319824b764d7501f15e77044" title="Tests if relation r represents the same elements.">equal</a>(s);
+<a name="l00142"></a>00142 }
+<a name="l00143"></a>00143 
+<a name="l00148"></a>00148 <span class="keyword">inline</span>
+<a name="l00149"></a><a class="code" href="group__DomRepr.html#ga25917a8867df865a934733d79e77b68a">00149</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga25917a8867df865a934733d79e77b68a" title="Tests whether two relations are different.">operator!=</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00150"></a>00150   <span class="keywordflow">return</span> !r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a09392dbc319824b764d7501f15e77044" title="Tests if relation r represents the same elements.">equal</a>(s);
+<a name="l00151"></a>00151 }
+<a name="l00152"></a>00152 
+<a name="l00157"></a>00157 <span class="keyword">inline</span>
+<a name="l00158"></a><a class="code" href="group__DomRepr.html#ga2e6470b7418ff29f456e7c00bdc17080">00158</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="group__DomRepr.html#ga2e6470b7418ff29f456e7c00bdc17080" title="Returns the union of relations r and s.">Union</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00159"></a>00159   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
+<a name="l00160"></a>00160   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> u(r);
+<a name="l00161"></a>00161   u.add(s);
+<a name="l00162"></a>00162   <span class="keywordflow">return</span> u;
+<a name="l00163"></a>00163 }
+<a name="l00164"></a>00164 
+<a name="l00169"></a>00169 <span class="keyword">inline</span>
+<a name="l00170"></a><a class="code" href="namespaceMPG_1_1CPRel_1_1VarImpl.html#a8a8f805ba2bc7bc1883519e057a177c1">00170</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="namespaceMPG_1_1CPRel_1_1VarImpl.html#a8a8f805ba2bc7bc1883519e057a177c1" title="Returns the difference between relations r and s.">difference</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00171"></a>00171   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
+<a name="l00172"></a>00172   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> d(r);
+<a name="l00173"></a>00173   d.remove(s);
+<a name="l00174"></a>00174   <span class="keywordflow">return</span> d;
+<a name="l00175"></a>00175 }
+<a name="l00176"></a>00176 
+<a name="l00181"></a>00181 <span class="keyword">inline</span>
+<a name="l00182"></a><a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a">00182</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a" title="Returns the intersection between relations r and s.">intersect</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00183"></a>00183   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
+<a name="l00184"></a>00184   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> i(r);
+<a name="l00185"></a>00185   i.intersect(s);
+<a name="l00186"></a>00186   <span class="keywordflow">return</span> i;
+<a name="l00187"></a>00187 }
+<a name="l00188"></a>00188 
+<a name="l00193"></a>00193 <span class="keyword">inline</span>
+<a name="l00194"></a><a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79">00194</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79" title="Subset: .">subsetEq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00195"></a>00195   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
+<a name="l00196"></a>00196   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a" title="Returns the intersection between relations r and s.">intersect</a>(r,s) == r;
+<a name="l00197"></a>00197 }
+<a name="l00198"></a>00198 
+<a name="l00203"></a>00203 <span class="keyword">inline</span>
+<a name="l00204"></a><a class="code" href="group__DomRepr.html#ga75160386eb49fe1a094ec4593da0f1d8">00204</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga75160386eb49fe1a094ec4593da0f1d8" title="Superset: .">supersetEq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00205"></a>00205   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79" title="Subset: .">subsetEq</a>(s,r);
+<a name="l00206"></a>00206 }
+<a name="l00207"></a>00207 
+<a name="l00212"></a>00212 <span class="keyword">inline</span>
+<a name="l00213"></a><a class="code" href="group__DomRepr.html#ga29bd89e59191d79bf4f1df7554104b81">00213</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga29bd89e59191d79bf4f1df7554104b81" title="Proper subset: .">subset</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00214"></a>00214   assert(r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>() == s.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity of the relation.">arity</a>());
+<a name="l00215"></a>00215   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#ga5a1ffeaa74a6b66350b98f532c571c79" title="Subset: .">subsetEq</a>(r,s) &amp;&amp; r != s;
+<a name="l00216"></a>00216 }
+<a name="l00217"></a>00217 
+<a name="l00222"></a>00222 <span class="keyword">inline</span>
+<a name="l00223"></a><a class="code" href="group__DomRepr.html#ga13d6b22060e90a23f2ab1fa1f731d9a1">00223</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga13d6b22060e90a23f2ab1fa1f731d9a1" title="Proper superset: .">superset</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00224"></a>00224   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#ga29bd89e59191d79bf4f1df7554104b81" title="Proper subset: .">subset</a>(s,r);
+<a name="l00225"></a>00225 }
+<a name="l00226"></a>00226 
+<a name="l00231"></a>00231 <span class="keyword">inline</span>
+<a name="l00232"></a><a class="code" href="group__DomRepr.html#ga90379fcc833c706ad987eea6ecd3da72">00232</a> <span class="keywordtype">bool</span> <a class="code" href="group__DomRepr.html#ga90379fcc833c706ad987eea6ecd3da72" title="Disjoint: .">disjoint</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; s) {
+<a name="l00233"></a>00233   <span class="keywordflow">return</span> <a class="code" href="group__DomRepr.html#gaf890af423e68ee54951964241f3b184a" title="Returns the intersection between relations r and s.">intersect</a>(r,s).<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a8f26081fc8698ecb3276704a7fa715f1" title="Tests if the represented relation is empty.">empty</a>();
+<a name="l00234"></a>00234 }
+<a name="l00235"></a>00235 
+<a name="l00240"></a>00240 <span class="keyword">inline</span>
+<a name="l00241"></a><a class="code" href="group__DomRepr.html#ga877d10098b27c217e740a189d4ca28a2">00241</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> <a class="code" href="group__DomRepr.html#ga877d10098b27c217e740a189d4ca28a2" title="Returns the complement of relation r.">complement</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r) {
+<a name="l00242"></a>00242   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a> c(r);
+<a name="l00243"></a>00243   c.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a1b5867181bbba9611c1f574917aa3ea2" title="Complement the represented relation.">complement</a>();
+<a name="l00244"></a>00244   <span class="keywordflow">return</span> c;
+<a name="l00245"></a>00245 }
+<a name="l00246"></a>00246 
+<a name="l00257"></a><a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html">00257</a> <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a> {
+<a name="l00258"></a>00258 <span class="keyword">private</span>:
+<a name="l00260"></a>00260   DdNode *relation_;
+<a name="l00262"></a>00262   <span class="keywordtype">int</span> arity_;
+<a name="l00264"></a>00264   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>(<span class="keywordtype">void</span>);
+<a name="l00266"></a>00266   <span class="keywordtype">void</span> <span class="keyword">remove</span>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1Tuple.html" title="Class to abstract a tuple in a relation.">Tuple</a>&amp; t);
+<a name="l00267"></a>00267 <span class="keyword">public</span>:
+<a name="l00269"></a>00269   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>(DdNode *rel, <span class="keywordtype">int</span> a);
+<a name="l00271"></a>00271   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>&amp;);
+<a name="l00273"></a>00273   <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html#aee60161cac2393058f3725bd8ef4e7c7" title="Destructor.">~RelationImplIter</a>(<span class="keywordtype">void</span>);
+<a name="l00275"></a>00275   <a class="code" href="classMPG_1_1CPRel_1_1Tuple.html" title="Class to abstract a tuple in a relation.">Tuple</a> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html#a8d889f1bb6cf4b82f7249556341909e7" title="Return a current tuple.">val</a>(<span class="keywordtype">void</span>);
+<a name="l00277"></a>00277   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html#a2e801c215a6eee5fb21201d0faf75fdf" title="Tests whether the iterator is still valid.">operator()</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00278"></a>00278 };
+<a name="l00279"></a>00279 
+<a name="l00284"></a>00284 <span class="keyword">inline</span>
+<a name="l00285"></a><a class="code" href="group__DomRepr.html#gadb41aed766e7f05c5add32d0f1385c08">00285</a> std::ostream&amp; <a class="code" href="group__DomRepr.html#gadb41aed766e7f05c5add32d0f1385c08" title="Output a relation implementation r in tuple format to os.">operator &lt;&lt; </a>(std::ostream&amp; os, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html" title="Stores the representation of a relation using BDDs.">RelationImpl</a>&amp; r) {
+<a name="l00286"></a>00286   os &lt;&lt; <span class="stringliteral">&quot;{&quot;</span>;
+<a name="l00287"></a>00287   <span class="keywordflow">for</span> (<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a> it = r.<a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a47a43e703da0dc090d989f06f78987f7" title="Returns an iterator on the tuples of the relation.">tuples</a>(); it();)
+<a name="l00288"></a>00288     os &lt;&lt; it.val() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
+<a name="l00289"></a>00289 
+<a name="l00290"></a>00290   os &lt;&lt; <span class="stringliteral">&quot;}&quot;</span>;
+<a name="l00291"></a>00291   <span class="keywordflow">return</span> os;
+<a name="l00292"></a>00292 }
+<a name="l00293"></a>00293 
+<a name="l00294"></a>00294 }}}
+<a name="l00295"></a>00295 
+<a name="l00296"></a>00296 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jun 16 2011 22:04:58 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jun 28 2011 17:17:16 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

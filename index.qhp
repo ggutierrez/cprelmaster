@@ -95,27 +95,27 @@
         </section>
         <section title="Namespace Members" ref="namespacemembers.html" />
         <section title="File List" ref="files.html">
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/encoding.hh" />
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/exception.hh" />
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/manager.hh" />
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/perm-descriptor.hh" />
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/rel-impl.hh" />
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/relations.hh" />
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/tuple.hh" />
-          <section title="/home/gg/Work/tmp/cprel/bdddomain/unique.h" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/complement-view.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/const-view.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/cprel.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/grelation.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/permuted-view.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/var.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/varimp.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/view.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/prop/and.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/prop/equality.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/prop/join.hh" />
-          <section title="/home/gg/Work/tmp/cprel/cprel/prop/projection.hh" />
-          <section title="/home/gg/Work/tmp/cprel/doc/main.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/encoding.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/exception.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/manager.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/perm-descriptor.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/rel-impl.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/relations.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/tuple.hh" />
+          <section title="/home/gg/Work/cprelmaster/bdddomain/unique.h" />
+          <section title="/home/gg/Work/cprelmaster/cprel/complement-view.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/const-view.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/cprel.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/grelation.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/permuted-view.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/var.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/varimp.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/view.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/prop/and.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/prop/equality.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/prop/join.hh" />
+          <section title="/home/gg/Work/cprelmaster/cprel/prop/projection.hh" />
+          <section title="/home/gg/Work/cprelmaster/doc/main.hh" />
         </section>
       </section>
     </toc>
@@ -156,8 +156,8 @@
       <keyword name="exists" id="BDDEnc::exists" ref="group__BDDEnc.html#ga81623aca9ca418663e088867d05055f8" />
       <keyword name="forall" id="BDDEnc::forall" ref="group__BDDEnc.html#gadcd41da39f77ec87b0f866ec5e9380d3" />
       <keyword name="unique" id="BDDEnc::unique" ref="group__BDDEnc.html#gad0a0345ca95198fcc905e0f26c581eb5" />
+      <keyword name="unique" id="BDDEnc::unique" ref="group__BDDEnc.html#gafbe5b1f5c098ab7fe035baaee6d5eb0d" />
       <keyword name="Domain representation" id="Domain representation" ref="group__DomRepr.html" />
-      <keyword name="BOOST_STATIC_ASSERT" id="DomRepr::BOOST_STATIC_ASSERT" ref="group__DomRepr.html#ga5f205ebc452d30ae7f30d2166364a639" />
       <keyword name="dd" id="DomRepr::dd" ref="group__DomRepr.html#gafae4a22cb1b6d26e31466e6f7addd84d" />
       <keyword name="one" id="DomRepr::one" ref="group__DomRepr.html#ga15dda2c1c55f5d087d75845a65d36cf9" />
       <keyword name="zero" id="DomRepr::zero" ref="group__DomRepr.html#gace018779ad95273deb3bbaebda1068ee" />
@@ -249,6 +249,7 @@
       <keyword name="times" id="MPG::CPRel::GRelation::times" ref="classMPG_1_1CPRel_1_1GRelation.html#adaa7cfdf185d832f5b4b9e23b0db47d9" />
       <keyword name="exists" id="MPG::CPRel::GRelation::exists" ref="classMPG_1_1CPRel_1_1GRelation.html#ad0dc23419827df1b1d82e5004bd2106f" />
       <keyword name="unique" id="MPG::CPRel::GRelation::unique" ref="classMPG_1_1CPRel_1_1GRelation.html#ae492c84df57480065ac192f5482fd82b" />
+      <keyword name="unique" id="MPG::CPRel::GRelation::unique" ref="classMPG_1_1CPRel_1_1GRelation.html#a2762ddf1a8c695c4fb2b5877719ba833" />
       <keyword name="project" id="MPG::CPRel::GRelation::project" ref="classMPG_1_1CPRel_1_1GRelation.html#afcf16ce2b4cb3c75eb959584b190caf3" />
       <keyword name="subsetEq" id="MPG::CPRel::GRelation::subsetEq" ref="classMPG_1_1CPRel_1_1GRelation.html#a5a3e18e0feeafa1c470914bd6edd43be" />
       <keyword name="superset" id="MPG::CPRel::GRelation::superset" ref="classMPG_1_1CPRel_1_1GRelation.html#a020c4ee0760689350b8700b8aaa934a0" />
@@ -399,6 +400,7 @@
       <keyword name="swap_columns" id="MPG::CPRel::VarImpl::swap_columns" ref="namespaceMPG_1_1CPRel_1_1VarImpl.html#ga0905f7f1daeb4292bc4bc03157d9b6b9" />
       <keyword name="exists" id="MPG::CPRel::VarImpl::exists" ref="namespaceMPG_1_1CPRel_1_1VarImpl.html#ga81623aca9ca418663e088867d05055f8" />
       <keyword name="unique" id="MPG::CPRel::VarImpl::unique" ref="namespaceMPG_1_1CPRel_1_1VarImpl.html#gad0a0345ca95198fcc905e0f26c581eb5" />
+      <keyword name="unique" id="MPG::CPRel::VarImpl::unique" ref="namespaceMPG_1_1CPRel_1_1VarImpl.html#gafbe5b1f5c098ab7fe035baaee6d5eb0d" />
       <keyword name="forall" id="MPG::CPRel::VarImpl::forall" ref="namespaceMPG_1_1CPRel_1_1VarImpl.html#gadcd41da39f77ec87b0f866ec5e9380d3" />
       <keyword name="dd" id="MPG::CPRel::VarImpl::dd" ref="namespaceMPG_1_1CPRel_1_1VarImpl.html#gafae4a22cb1b6d26e31466e6f7addd84d" />
       <keyword name="one" id="MPG::CPRel::VarImpl::one" ref="namespaceMPG_1_1CPRel_1_1VarImpl.html#ga15dda2c1c55f5d087d75845a65d36cf9" />
@@ -439,6 +441,7 @@
       <keyword name="join" id="MPG::CPRel::VarImpl::RelationImpl::join" ref="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a559721e730b61880dc453dfd79924bcc" />
       <keyword name="exists" id="MPG::CPRel::VarImpl::RelationImpl::exists" ref="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a9a38ee2a2fe3ce5d67eea5db698491e2" />
       <keyword name="unique" id="MPG::CPRel::VarImpl::RelationImpl::unique" ref="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#aef073bdcc3b1ec57cb832531d5c5227b" />
+      <keyword name="unique" id="MPG::CPRel::VarImpl::RelationImpl::unique" ref="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#aa2a8a03984c9f10d1cd214c3cd3e6eb0" />
       <keyword name="project" id="MPG::CPRel::VarImpl::RelationImpl::project" ref="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#abe6e47b16e81de874a83979b36ea0401" />
       <keyword name="projectBut" id="MPG::CPRel::VarImpl::RelationImpl::projectBut" ref="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a1e95593e526269d5516c0d64f0bfe505" />
       <keyword name="tuples" id="MPG::CPRel::VarImpl::RelationImpl::tuples" ref="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html#a47a43e703da0dc090d989f06f78987f7" />

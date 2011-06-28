@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>/home/gg/Work/tmp/cprel/cprel/grelation.hh Source File</title>
+<title>/home/gg/Work/cprelmaster/cprel/grelation.hh Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script src="http://www.mathjax.org/mathjax/MathJax.js">
   MathJax.Hub.Config({
@@ -32,7 +32,7 @@
   </div>
 <div class="header">
   <div class="headertitle">
-<h1>/home/gg/Work/tmp/cprel/cprel/grelation.hh</h1>  </div>
+<h1>/home/gg/Work/cprelmaster/cprel/grelation.hh</h1>  </div>
 </div>
 <div class="contents">
 <div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef __CPREL_CPREL_GRELATION_HH__</span>
@@ -94,60 +94,61 @@
 <a name="l00126"></a>00126   <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#adaa7cfdf185d832f5b4b9e23b0db47d9" title="Returns the relation .">times</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
 <a name="l00128"></a>00128   <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ad0dc23419827df1b1d82e5004bd2106f" title="Returns the relation resulting from existencially quantifying on column c.">exists</a>(<span class="keywordtype">int</span> c) <span class="keyword">const</span>;
 <a name="l00130"></a>00130   <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ae492c84df57480065ac192f5482fd82b" title="Returns the relation resulting from uniquely quantifying on column c.">unique</a>(<span class="keywordtype">int</span> c) <span class="keyword">const</span>;
-<a name="l00139"></a>00139   <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#afcf16ce2b4cb3c75eb959584b190caf3" title="Returns: .">project</a>(<span class="keywordtype">int</span> p) <span class="keyword">const</span>;
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143 
-<a name="l00144"></a>00144   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a5a3e18e0feeafa1c470914bd6edd43be" title="Tests .">subsetEq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
-<a name="l00146"></a>00146   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a020c4ee0760689350b8700b8aaa934a0" title="Tests .">superset</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
-<a name="l00148"></a>00148   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ace8fd809738a19d8927f772bc2af7289" title="Tests .">disjoint</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
-<a name="l00150"></a>00150   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a97e1d1b8468f8e6e1fe1657d901455a2" title="Tests whether this represents the same relation as r.">eq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
-<a name="l00152"></a>00152   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a8f26081fc8698ecb3276704a7fa715f1" title="Tests whther the relation is empty.">empty</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00154"></a>00154   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ad228b3e91a6fbb99d55c2c55c9dc9a9b" title="Tests whther the relation represents the universe.">universe</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157 
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159   <span class="keywordtype">int</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity (i.e. number of columns) of the relation.">arity</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00161"></a>00161   <span class="keywordtype">double</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#afc93641943008f42f2421e8225fa6bef" title="Returns the cardinality (i.e. number of tuples) of the relation.">cardinality</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00135"></a>00135   <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ae492c84df57480065ac192f5482fd82b" title="Returns the relation resulting from uniquely quantifying on column c.">unique</a>(<span class="keyword">const</span> std::vector&lt;int&gt;&amp; c) <span class="keyword">const</span>;  
+<a name="l00144"></a>00144   <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#afcf16ce2b4cb3c75eb959584b190caf3" title="Returns: .">project</a>(<span class="keywordtype">int</span> p) <span class="keyword">const</span>;
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148 
+<a name="l00149"></a>00149   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a5a3e18e0feeafa1c470914bd6edd43be" title="Tests .">subsetEq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
+<a name="l00151"></a>00151   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a020c4ee0760689350b8700b8aaa934a0" title="Tests .">superset</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
+<a name="l00153"></a>00153   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ace8fd809738a19d8927f772bc2af7289" title="Tests .">disjoint</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
+<a name="l00155"></a>00155   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a97e1d1b8468f8e6e1fe1657d901455a2" title="Tests whether this represents the same relation as r.">eq</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r) <span class="keyword">const</span>;
+<a name="l00157"></a>00157   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a8f26081fc8698ecb3276704a7fa715f1" title="Tests whther the relation is empty.">empty</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00159"></a>00159   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#ad228b3e91a6fbb99d55c2c55c9dc9a9b" title="Tests whther the relation represents the universe.">universe</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00161"></a>00161 
+<a name="l00162"></a>00162 
 <a name="l00163"></a>00163 
-<a name="l00164"></a>00164 
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166   <span class="keyword">static</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a6eb4f9886476ab41bc47685f14628872" title="Creates the binary relation .">equalXY</a>(<span class="keywordtype">void</span>);
-<a name="l00168"></a>00168 };
+<a name="l00164"></a>00164   <span class="keywordtype">int</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a12713e1c2dd71c75066cfa6152d9bca8" title="Returns the arity (i.e. number of columns) of the relation.">arity</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00166"></a>00166   <span class="keywordtype">double</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#afc93641943008f42f2421e8225fa6bef" title="Returns the cardinality (i.e. number of tuples) of the relation.">cardinality</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00168"></a>00168 
 <a name="l00169"></a>00169 
-<a name="l00177"></a>00177 <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="group__GRelation.html#gae5ae8580e6e4758e8d1bda147ad73501" title="Creates a relation with the elements contained in dom.The arity of the created relation corresponds t...">create</a>(<span class="keyword">const</span> std::vector&lt;Tuple&gt;&amp; dom);
-<a name="l00178"></a>00178 
-<a name="l00183"></a>00183 <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="group__GRelation.html#ga421dc515e64c11d1ce8df7b12c05c6d1" title="Creates a full relation of arity a.">create_full</a>(<span class="keywordtype">int</span> a);
-<a name="l00184"></a>00184 
-<a name="l00199"></a>00199 <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="group__GRelation.html#gaa7c7d58d44c6087dc1c1bb3a18450158" title="Creates a relation of arity arity from the contents read from is.The expected format in is is:Differe...">read</a>(std::istream&amp; is, <span class="keywordtype">int</span> <a class="code" href="group__DomRepr.html#ga219bea797c7074b1373541a8836c64f7" title="Number of bits used to represent the arity.">arity</a>);
-<a name="l00200"></a>00200 
-<a name="l00208"></a>00208 std::ostream&amp; <a class="code" href="group__GRelation.html#ga401885fa6335db777bc80d52c61acd78" title="Outputs relation r to os.">operator&lt;&lt; </a>(std::ostream&amp; os, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r);
-<a name="l00209"></a>00209 
-<a name="l00210"></a>00210 <span class="keyword">namespace </span>VarImpl {
-<a name="l00211"></a>00211   <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>;
-<a name="l00212"></a>00212 }
-<a name="l00213"></a>00213 
-<a name="l00218"></a><a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html">00218</a> <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a> {
-<a name="l00219"></a>00219 <span class="keyword">private</span>:
-<a name="l00220"></a>00220   <span class="keyword">typedef</span> boost::shared_ptr&lt;VarImpl::RelationImplIter&gt; Impl;
-<a name="l00222"></a>00222   Impl pimpl_;
-<a name="l00223"></a>00223   <span class="keyword">typedef</span> boost::shared_ptr&lt;Tuple&gt; TuplePtr;
-<a name="l00230"></a>00230   TuplePtr current_;
-<a name="l00232"></a>00232   <span class="keywordtype">bool</span> valid_;
-<a name="l00234"></a>00234   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>(<span class="keywordtype">void</span>);
-<a name="l00235"></a>00235 <span class="keyword">public</span>:
-<a name="l00237"></a>00237   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r);
-<a name="l00239"></a>00239   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>&amp; it);
-<a name="l00241"></a>00241   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#ab25bb4c3436276ee51350ac5293deb27" title="Destructor.">~GRelationIter</a>(<span class="keywordtype">void</span>);
-<a name="l00243"></a>00243   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#a2e801c215a6eee5fb21201d0faf75fdf" title="Tests whether the iterator is still valid.">operator()</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00245"></a>00245   <a class="code" href="classMPG_1_1CPRel_1_1Tuple.html" title="Class to abstract a tuple in a relation.">Tuple</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#a1625e2dcd5f02d6530d63a22dda9e922" title="Returns the current value under iteration.">val</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00247"></a>00247   <span class="keywordtype">void</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#a070a3dd9679a5fe1d032a0f1c90282e8" title="Advances the iterator.">operator++</a>(<span class="keywordtype">void</span>);
-<a name="l00248"></a>00248 };
-<a name="l00249"></a>00249 }}
-<a name="l00250"></a>00250 <span class="preprocessor">#endif</span>
+<a name="l00170"></a>00170 
+<a name="l00171"></a>00171   <span class="keyword">static</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html#a6eb4f9886476ab41bc47685f14628872" title="Creates the binary relation .">equalXY</a>(<span class="keywordtype">void</span>);
+<a name="l00173"></a>00173 };
+<a name="l00174"></a>00174 
+<a name="l00182"></a>00182 <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="group__GRelation.html#gae5ae8580e6e4758e8d1bda147ad73501" title="Creates a relation with the elements contained in dom.The arity of the created relation corresponds t...">create</a>(<span class="keyword">const</span> std::vector&lt;Tuple&gt;&amp; dom);
+<a name="l00183"></a>00183 
+<a name="l00188"></a>00188 <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="group__GRelation.html#ga421dc515e64c11d1ce8df7b12c05c6d1" title="Creates a full relation of arity a.">create_full</a>(<span class="keywordtype">int</span> a);
+<a name="l00189"></a>00189 
+<a name="l00204"></a>00204 <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a> <a class="code" href="group__GRelation.html#gaa7c7d58d44c6087dc1c1bb3a18450158" title="Creates a relation of arity arity from the contents read from is.The expected format in is is:Differe...">read</a>(std::istream&amp; is, <span class="keywordtype">int</span> <a class="code" href="group__DomRepr.html#ga219bea797c7074b1373541a8836c64f7" title="Number of bits used to represent the arity.">arity</a>);
+<a name="l00205"></a>00205 
+<a name="l00213"></a>00213 std::ostream&amp; <a class="code" href="group__GRelation.html#ga401885fa6335db777bc80d52c61acd78" title="Outputs relation r to os.">operator&lt;&lt; </a>(std::ostream&amp; os, <span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r);
+<a name="l00214"></a>00214 
+<a name="l00215"></a>00215 <span class="keyword">namespace </span>VarImpl {
+<a name="l00216"></a>00216   <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html" title="Class to iterate on tuples of a relation implementation.">RelationImplIter</a>;
+<a name="l00217"></a>00217 }
+<a name="l00218"></a>00218 
+<a name="l00223"></a><a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html">00223</a> <span class="keyword">class </span><a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a> {
+<a name="l00224"></a>00224 <span class="keyword">private</span>:
+<a name="l00225"></a>00225   <span class="keyword">typedef</span> boost::shared_ptr&lt;VarImpl::RelationImplIter&gt; Impl;
+<a name="l00227"></a>00227   Impl pimpl_;
+<a name="l00228"></a>00228   <span class="keyword">typedef</span> boost::shared_ptr&lt;Tuple&gt; TuplePtr;
+<a name="l00235"></a>00235   TuplePtr current_;
+<a name="l00237"></a>00237   <span class="keywordtype">bool</span> valid_;
+<a name="l00239"></a>00239   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>(<span class="keywordtype">void</span>);
+<a name="l00240"></a>00240 <span class="keyword">public</span>:
+<a name="l00242"></a>00242   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelation.html" title="Class representing a ground relation.This class provides a way to represent a relation along with ope...">GRelation</a>&amp; r);
+<a name="l00244"></a>00244   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>(<span class="keyword">const</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html" title="Iterator on the tuples of a ground relation.">GRelationIter</a>&amp; it);
+<a name="l00246"></a>00246   <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#ab25bb4c3436276ee51350ac5293deb27" title="Destructor.">~GRelationIter</a>(<span class="keywordtype">void</span>);
+<a name="l00248"></a>00248   <span class="keywordtype">bool</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#a2e801c215a6eee5fb21201d0faf75fdf" title="Tests whether the iterator is still valid.">operator()</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00250"></a>00250   <a class="code" href="classMPG_1_1CPRel_1_1Tuple.html" title="Class to abstract a tuple in a relation.">Tuple</a> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#a1625e2dcd5f02d6530d63a22dda9e922" title="Returns the current value under iteration.">val</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00252"></a>00252   <span class="keywordtype">void</span> <a class="code" href="classMPG_1_1CPRel_1_1GRelationIter.html#a070a3dd9679a5fe1d032a0f1c90282e8" title="Advances the iterator.">operator++</a>(<span class="keywordtype">void</span>);
+<a name="l00253"></a>00253 };
+<a name="l00254"></a>00254 }}
+<a name="l00255"></a>00255 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jun 16 2011 22:04:58 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jun 28 2011 17:17:16 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -52,7 +52,7 @@
 </div>
 <div class="contents">
 <!-- doxytag: class="MPG::CPRel::Prop::Project" -->
-<p>Propagates: \( \Pi_{p}A = B \).\( A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \) and \(p\) is the number of columns on the right (counting from zero) to project on.  
+<p>Propagates: \( \Pi_{p}A = B \).  
 <a href="#_details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="projection_8hh_source.html">projection.hh</a>&gt;</code></p>
@@ -99,8 +99,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <div class="textblock"><h3>template&lt;typename ViewA, typename ViewB&gt;<br/>
  class MPG::CPRel::Prop::Project&lt; ViewA, ViewB &gt;</h3>
 
-<p>Propagates: \( \Pi_{p}A = B \).</p>
-<p>\( A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \) and \(p\) is the number of columns on the right (counting from zero) to project on. </p>
+<p>Propagates: \( \Pi_{p}A = B \). </p>
 </div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a17401e7da95c802e6ae7899fd7b7a399"></a><!-- doxytag: member="MPG::CPRel::Prop::Project::propagate" ref="a17401e7da95c802e6ae7899fd7b7a399" args="(Gecode::Space &amp;home, const Gecode::ModEventDelta &amp;)" -->
 <div class="memitem">
@@ -128,17 +127,39 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <div class="memdoc">
 
 <p>Main propagation algorithm. </p>
-
-<p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Missing 1/4 of the propagator: unique quantifier. </dd></dl>
-</p>
+<p>Implements: \(\Pi_{p}A=B\)</p>
+<p>Where:</p>
+<ul>
+<li>\(A \subseteq \mathcal{U}_{n}\)</li>
+<li>\(p \in \{x : 0 \leq x \leq n\}\)</li>
+<li>\(B \subseteq \mathcal{U}_{p}\)</li>
+</ul>
+<p>Conventions:</p>
+<ul>
+<li>\(\mathcal{U}_{n}\) denotes the universe of all the tuples with arity \(n\)</li>
+<li>\(A_{\text{glb}} = \text{glb}(A)\)</li>
+<li>\(A_{\text{lub}} = \text{lub}(A)\)</li>
+<li>\(\Pi_{p}^{*}R\) denotes the projection operation on ground relation \(R\)</li>
+</ul>
+<p>Propagation rules:</p>
+<ul>
+<li>\(\Pi_{p}^{*}A_{\text{glb}} \subseteq B \subseteq \Pi_{p}^{*}A_{\text{lub}}\)</li>
+<li>\((U_{n-p}\times B_{\text{lub}}) \cap A_{\text{lub}} \supseteq A\)</li>
+<li>\(A \subseteq U_{q}\cap (U_{n-p}\times B_{\text{glb}})\)</li>
+</ul>
+<p>Where:</p>
+<ul>
+<li>\(q \subseteq \{x:p\leq x \leq n-1\}\)</li>
+<li>\(U_{q} = A_{\text{lub}}\cap\exists !_{q}A_{\text{lub}}\) </li>
+</ul>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/gg/Work/tmp/cprel/cprel/prop/<a class="el" href="projection_8hh_source.html">projection.hh</a></li>
+<li>/home/gg/Work/cprelmaster/cprel/prop/<a class="el" href="projection_8hh_source.html">projection.hh</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jun 16 2011 22:04:58 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jun 28 2011 17:17:17 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

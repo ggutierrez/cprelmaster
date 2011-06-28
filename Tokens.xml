@@ -346,21 +346,21 @@
   </Token>
   <Token>
     <TokenIdentifier>
+      <Name>unique</Name>
+      <APILanguage>cpp</APILanguage>
+      <Type>func</Type>
+      <Scope>MPG::CPRel::VarImpl</Scope>
+    </TokenIdentifier>
+    <Path>group__BDDEnc.html</Path>
+    <Anchor>gafbe5b1f5c098ab7fe035baaee6d5eb0d</Anchor>
+    <Abstract>Unique quantification on the columns in c on relation r.</Abstract>
+  </Token>
+  <Token>
+    <TokenIdentifier>
       <Name>DomRepr</Name>
       <APILanguage>c</APILanguage>
     </TokenIdentifier>
     <Path>group__DomRepr.html</Path>
-  </Token>
-  <Token>
-    <TokenIdentifier>
-      <Name>BOOST_STATIC_ASSERT</Name>
-      <APILanguage>cpp</APILanguage>
-      <Type>func</Type>
-      <Scope>MPG::CPRel::VarImpl::Limits</Scope>
-    </TokenIdentifier>
-    <Path>group__DomRepr.html</Path>
-    <Anchor>ga5f205ebc452d30ae7f30d2166364a639</Anchor>
-    <Abstract>Ensures that the library is compiled on an architecture in which the bits in an integer fits in the b...</Abstract>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -1292,6 +1292,17 @@
     <Path>classMPG_1_1CPRel_1_1GRelation.html</Path>
     <Anchor>ae492c84df57480065ac192f5482fd82b</Anchor>
     <Abstract>Returns the relation resulting from uniquely quantifying on column c.</Abstract>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>unique</Name>
+      <APILanguage>cpp</APILanguage>
+      <Type>instm</Type>
+      <Scope>MPG::CPRel::GRelation</Scope>
+    </TokenIdentifier>
+    <Path>classMPG_1_1CPRel_1_1GRelation.html</Path>
+    <Anchor>a2762ddf1a8c695c4fb2b5877719ba833</Anchor>
+    <Abstract>Returns the relation resulting from uniquely quantifying on all the columns in c.</Abstract>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -2477,7 +2488,7 @@
       <Scope>MPG::CPRel::Prop::Project</Scope>
     </TokenIdentifier>
     <Path>classMPG_1_1CPRel_1_1Prop_1_1Project.html</Path>
-    <Abstract>Propagates: . and  is the number of columns on the right (counting from zero) to project on...</Abstract>
+    <Abstract>Propagates: .</Abstract>
     <DeclaredIn>projection.hh</DeclaredIn>
   </Token>
   <Token>
@@ -2665,6 +2676,17 @@
     <Path>group__BDDEnc.html</Path>
     <Anchor>gad0a0345ca95198fcc905e0f26c581eb5</Anchor>
     <Abstract>Unique quantification of column c on relation r.</Abstract>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>unique</Name>
+      <APILanguage>cpp</APILanguage>
+      <Type>func</Type>
+      <Scope>MPG::CPRel::VarImpl</Scope>
+    </TokenIdentifier>
+    <Path>group__BDDEnc.html</Path>
+    <Anchor>gafbe5b1f5c098ab7fe035baaee6d5eb0d</Anchor>
+    <Abstract>Unique quantification on the columns in c on relation r.</Abstract>
   </Token>
   <Token>
     <TokenIdentifier>
@@ -3105,6 +3127,17 @@
     <Path>classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html</Path>
     <Anchor>aef073bdcc3b1ec57cb832531d5c5227b</Anchor>
     <Abstract>Returns the relation resulting from uniquely quantifying the column c of the represented relation...</Abstract>
+  </Token>
+  <Token>
+    <TokenIdentifier>
+      <Name>unique</Name>
+      <APILanguage>cpp</APILanguage>
+      <Type>instm</Type>
+      <Scope>MPG::CPRel::VarImpl::RelationImpl</Scope>
+    </TokenIdentifier>
+    <Path>classMPG_1_1CPRel_1_1VarImpl_1_1RelationImpl.html</Path>
+    <Anchor>aa2a8a03984c9f10d1cd214c3cd3e6eb0</Anchor>
+    <Abstract>Returns the relation resulting from uniquely quantifying the columns in c of the represented relation...</Abstract>
   </Token>
   <Token>
     <TokenIdentifier>

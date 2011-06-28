@@ -44,9 +44,6 @@ Classes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Class to iterate on tuples of a relation implementation.  <a href="classMPG_1_1CPRel_1_1VarImpl_1_1RelationImplIter.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga5f205ebc452d30ae7f30d2166364a639"></a><!-- doxytag: member="DomRepr::BOOST_STATIC_ASSERT" ref="ga5f205ebc452d30ae7f30d2166364a639" args="(std::numeric_limits&lt; int &gt;::digits&lt;=bitsPerInteger &amp;&amp;&quot;The BDD configuration is wrong for this built&quot;)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__DomRepr.html#ga5f205ebc452d30ae7f30d2166364a639">BOOST_STATIC_ASSERT</a> (std::numeric_limits&lt; int &gt;::digits&lt;=bitsPerInteger &amp;&amp;&quot;The BDD configuration is wrong for this built&quot;)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Ensures that the library is compiled on an architecture in which the bits in an integer fits in the bdd representation. This is because most of the operations on tuples or anything that has a bdd representation behind use the int type to input and output values. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gafae4a22cb1b6d26e31466e6f7addd84d"></a><!-- doxytag: member="DomRepr::dd" ref="gafae4a22cb1b6d26e31466e6f7addd84d" args="(void)" -->
 DdManager *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__DomRepr.html#gafae4a22cb1b6d26e31466e6f7addd84d">dd</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the manager. <br/></td></tr>
@@ -98,7 +95,7 @@ RelationImpl&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr><td colspan="2"><h2><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gac782f61ff458bae6be56ae139acf5f2f"></a><!-- doxytag: member="DomRepr::bbv" ref="gac782f61ff458bae6be56ae139acf5f2f" args="" -->
-const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__DomRepr.html#gac782f61ff458bae6be56ae139acf5f2f">bbv</a> = 5</td></tr>
+const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__DomRepr.html#gac782f61ff458bae6be56ae139acf5f2f">bbv</a> = 3</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of bits to represent an element inside a relation tuple.The maximum number that can be part of relation's tuple is 2^bbv.</p>
 <ul>
 <li>Setting this attribute to 5 will allow to represent positive integers of 32 bits. </li>
@@ -121,7 +118,7 @@ const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>This module provides the support to represent relation domains. </p>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jun 16 2011 22:04:58 by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jun 28 2011 17:17:16 by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>
