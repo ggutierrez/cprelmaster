@@ -7,9 +7,6 @@ namespace MPG { namespace CPRel { namespace Prop {
 /**
  * \brief Propagates: \f$ \Pi_{p}A = B \f$.
  * \ingroup RelProp
- *
- * \f$ A \subseteq \mathcal{U}_{n},\; B \subseteq \mathcal{U}_{n-p} \f$ and \f$p\f$
- * is the number of columns on the right (counting from zero) to project on.
  */
 template <typename ViewA, typename ViewB>
 class Project : public Gecode::Propagator {
@@ -71,7 +68,31 @@ public:
     return Gecode::PropCost::binary(Gecode::PropCost::LO);
   }
 public:
-  /// Main propagation algorithm
+  /**
+   * \brief Main propagation algorithm.
+   *
+   * Implements: \f$\Pi_{p}A=B\f$
+   *
+   * Where:
+   * - \f$A \subseteq \mathcal{U}_{n}\f$
+   * - \f$p \in \{x : 0 \leq x \leq n\}\f$
+   * - \f$B \subseteq \mathcal{U}_{p}\f$
+   *
+   * Conventions:
+   * - \f$\mathcal{U}_{n}\f$ denotes the universe of all the tuples with arity \f$n\f$
+   * - \f$A_{\text{glb}} = \text{glb}(A)\f$
+   * - \f$A_{\text{lub}} = \text{lub}(A)\f$
+   * - \f$\Pi_{p}^{*}R\f$ denotes the projection operation on ground relation \f$R\f$
+   *
+   * Propagation rules:
+   * - \f$\Pi_{p}^{*}A_{\text{glb}} \subseteq B \subseteq \Pi_{p}^{*}A_{\text{lub}}\f$
+   * - \f$(U_{n-p}\times B_{\text{lub}}) \cap A_{\text{lub}} \supseteq A\f$
+   * - \f$A \subseteq U_{q}\cap (U_{n-p}\times B_{\text{glb}})\f$
+   *
+   * Where:
+   * -\f$q \subseteq \{x:p\leq x \leq n-1\}\f$
+   * -\f$U_{q} = A_{\text{lub}}\cap\exists !_{q}A_{\text{lub}}\f$
+   */
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
     // implements: \Pi_{p}A = B
@@ -84,23 +105,21 @@ public:
     GRelation lubA_p = a_.lub().project(p_);
     GECODE_ME_CHECK(b_.exclude(home,lubA_p.complement()));
 
-    // lub(A) \subseteq (U_{B.arity()-p}\times lub(B)) \cap lub(B)
+    // lub(A) \subseteq (U_{A.arity()-p}\times lub(B)) \cap lub(A)
     GRelation maxIntersection =
         b_.lub().timesU(a_.arity()-p_,true).intersect(a_.lub());
     GECODE_ME_CHECK(a_.exclude(home,maxIntersection.complement()));
 
-    /// \todo Missing 1/4 of the propagator: unique quantifier.
-    
     // prune the lower bound of a by unique quantification
     GRelation lubA = a_.lub();
     std::vector<int> q;
     for (int i = a_.arity()-1; i >= p_; i++)
       q.push_back(i);
-    
+
     GRelation QLubA = lubA.unique(q).intersect(lubA);
     GRelation to_include = QLubA.intersect(b_.glb().timesU(a_.arity()-p_,true));
     GECODE_ME_CHECK(a_.include(home,to_include));
-    
+
 
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned())

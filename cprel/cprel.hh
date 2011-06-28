@@ -231,6 +231,8 @@ void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B,
  * @param p is the number of columns on the right of \a A to project on.
  * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
  * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n-p}\f$
+ *
+ * For more details see @see MPG::CPRel::Prop::Project::propagate
  */
 void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B);
 /**
