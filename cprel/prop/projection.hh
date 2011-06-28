@@ -111,16 +111,19 @@ public:
     GECODE_ME_CHECK(a_.exclude(home,maxIntersection.complement()));
 
     // prune the lower bound of a by unique quantification
+    
     GRelation lubA = a_.lub();
+
     std::vector<int> q;
-    for (int i = a_.arity()-1; i >= p_; i++)
+    q.reserve(a_.arity()-p_);
+    for (int i = p_; i < a_.arity(); i++) {
       q.push_back(i);
-
-    GRelation QLubA = lubA.unique(q).intersect(lubA);
-    GRelation to_include = QLubA.intersect(b_.glb().timesU(a_.arity()-p_,true));
+    }
+    
+    GRelation Uq = lubA.unique(q).intersect(a_.lub());
+    GRelation to_include = Uq.intersect(b_.glb().timesU(a_.arity()-p_,true));
     GECODE_ME_CHECK(a_.include(home,to_include));
-
-
+    
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned())
       return home.ES_SUBSUMED(*this);

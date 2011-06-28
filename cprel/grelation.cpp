@@ -237,14 +237,15 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
   }
 
   if (r.cardinality() > 1000) {
-//    os << "compl(" << r.complement() << ")";
+    //os << "compl(" << r.complement() << ")";
     os << "BIGsc(" << r.complement().cardinality() << ")";
     return os;
   }
 
-  for(GRelationIter it(r); it(); ++it)
-    os << it.val() << std::endl; //" ";
-
+  for(GRelationIter it(r); it(); ++it) {
+    os << it.val() << " ";
+    //os << it.val() << std::endl; //" ";
+  }
   return os;
 }
 

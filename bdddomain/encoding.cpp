@@ -110,7 +110,6 @@ DdNode* unique(int c, DdNode* r) {
 }
 
 DdNode* unique(const std::vector<int>& c, DdNode* r) {
-  std::cout << "Called unique quant vector: " << c.size() << std::endl;
   std::vector<int> indices;
   indices.reserve(c.size() * Limits::bitsPerInteger);
   for (unsigned int i = 0; i < c.size(); i++) {
