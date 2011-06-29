@@ -158,6 +158,7 @@
  * Contacting the authors is also possible:
  * \authors Gustavo Gutierrez: <tt>gustavo.ggutierrez</tt> <b>at</b> gmail.com
  * \authors Yves Jaradin.
+ * \authors Peter Van roy.
  *
  */
 
