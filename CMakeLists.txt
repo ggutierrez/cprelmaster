@@ -80,78 +80,25 @@ include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/util")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/cudd")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}")
 
-set(CUDD_SRCS
-  ${CUDD_SOURCES}/cudd/cuddAddAbs.c
-  ${CUDD_SOURCES}/cudd/cuddAddApply.c
-  ${CUDD_SOURCES}/cudd/cuddAddFind.c
-  ${CUDD_SOURCES}/cudd/cuddAddInv.c
-  ${CUDD_SOURCES}/cudd/cuddAddIte.c
-  ${CUDD_SOURCES}/cudd/cuddAddNeg.c
-  ${CUDD_SOURCES}/cudd/cuddAddWalsh.c
-  ${CUDD_SOURCES}/cudd/cuddAndAbs.c
-  ${CUDD_SOURCES}/cudd/cuddAnneal.c
-  ${CUDD_SOURCES}/cudd/cuddApa.c
-  ${CUDD_SOURCES}/cudd/cuddAPI.c
-  ${CUDD_SOURCES}/cudd/cuddApprox.c
-  ${CUDD_SOURCES}/cudd/cuddBddAbs.c
-  ${CUDD_SOURCES}/cudd/cuddBddCorr.c
-  ${CUDD_SOURCES}/cudd/cuddBddIte.c
-  ${CUDD_SOURCES}/cudd/cuddBridge.c
-  ${CUDD_SOURCES}/cudd/cuddCache.c
-#  cudd/cuddCdd.c
-  ${CUDD_SOURCES}/cudd/cuddCheck.c
-  ${CUDD_SOURCES}/cudd/cuddClip.c
-  ${CUDD_SOURCES}/cudd/cuddCof.c
-  ${CUDD_SOURCES}/cudd/cuddCompose.c
-  ${CUDD_SOURCES}/cudd/cuddDecomp.c
-  ${CUDD_SOURCES}/cudd/cuddEssent.c
-  ${CUDD_SOURCES}/cudd/cuddExact.c
-  ${CUDD_SOURCES}/cudd/cuddExport.c
-  ${CUDD_SOURCES}/cudd/cuddGenCof.c
-  ${CUDD_SOURCES}/cudd/cuddGenetic.c
-  ${CUDD_SOURCES}/cudd/cuddGroup.c
-  ${CUDD_SOURCES}/cudd/cuddHarwell.c
-  ${CUDD_SOURCES}/cudd/cuddInit.c
-  ${CUDD_SOURCES}/cudd/cuddInteract.c
-  ${CUDD_SOURCES}/cudd/cuddLCache.c
-  ${CUDD_SOURCES}/cudd/cuddLevelQ.c
-  ${CUDD_SOURCES}/cudd/cuddLinear.c
-  ${CUDD_SOURCES}/cudd/cuddLiteral.c
-  ${CUDD_SOURCES}/cudd/cuddMatMult.c
-  ${CUDD_SOURCES}/cudd/cuddPriority.c
-  ${CUDD_SOURCES}/cudd/cuddRead.c
-  ${CUDD_SOURCES}/cudd/cuddRef.c
-  ${CUDD_SOURCES}/cudd/cuddReorder.c
-  ${CUDD_SOURCES}/cudd/cuddSat.c
-  ${CUDD_SOURCES}/cudd/cuddSign.c
-  ${CUDD_SOURCES}/cudd/cuddSolve.c
-  ${CUDD_SOURCES}/cudd/cuddSplit.c
-  ${CUDD_SOURCES}/cudd/cuddSubsetHB.c
-  ${CUDD_SOURCES}/cudd/cuddSubsetSP.c
-  ${CUDD_SOURCES}/cudd/cuddSymmetry.c
-  ${CUDD_SOURCES}/cudd/cuddTable.c
-  ${CUDD_SOURCES}/cudd/cuddUtil.c
-  ${CUDD_SOURCES}/cudd/cuddWindow.c
-  ${CUDD_SOURCES}/cudd/cuddZddCount.c
-  ${CUDD_SOURCES}/cudd/cuddZddFuncs.c
-  ${CUDD_SOURCES}/cudd/cuddZddGroup.c
-  ${CUDD_SOURCES}/cudd/cuddZddIsop.c
-  ${CUDD_SOURCES}/cudd/cuddZddLin.c
-  ${CUDD_SOURCES}/cudd/cuddZddMisc.c
-  ${CUDD_SOURCES}/cudd/cuddZddPort.c
-  ${CUDD_SOURCES}/cudd/cuddZddReord.c
-  ${CUDD_SOURCES}/cudd/cuddZddSetop.c
-  ${CUDD_SOURCES}/cudd/cuddZddSymm.c
-  ${CUDD_SOURCES}/cudd/cuddZddUtil.c
-
-  bdddomain/unique.c
-  bdddomain/unique.h
-
+set(CUDD_SRCS 
+ cuddAddAbs.c cuddAddApply.c cuddAddFind.c cuddAddInv.c cuddAddIte.c
+ cuddAddNeg.c cuddAddWalsh.c cuddAndAbs.c cuddAnneal.c cuddApa.c
+ cuddAPI.c cuddApprox.c cuddBddAbs.c cuddBddCorr.c cuddBddIte.c
+ cuddBridge.c cuddCache.c cuddCheck.c cuddClip.c cuddCof.c
+ cuddCompose.c cuddDecomp.c cuddEssent.c cuddExact.c cuddExport.c
+ cuddGenCof.c cuddGenetic.c cuddGroup.c cuddHarwell.c cuddInit.c
+ cuddInteract.c cuddLCache.c cuddLevelQ.c cuddLinear.c cuddLiteral.c
+ cuddMatMult.c cuddPriority.c cuddRead.c cuddRef.c cuddReorder.c
+ cuddSat.c cuddSign.c cuddSolve.c cuddSplit.c cuddSubsetHB.c
+ cuddSubsetSP.c cuddSymmetry.c cuddTable.c cuddUtil.c cuddWindow.c
+ cuddZddCount.c cuddZddFuncs.c cuddZddGroup.c cuddZddIsop.c
+ cuddZddLin.c cuddZddMisc.c cuddZddPort.c cuddZddReord.c
+ cuddZddSetop.c cuddZddSymm.c cuddZddUtil.c
 #Headers:
-#  ${CUDD_SOURCES}/cudd/cuddCdd.h
-  ${CUDD_SOURCES}/cudd/cudd.h
-  ${CUDD_SOURCES}/cudd/cuddInt.h
+  cudd.h cuddInt.h
 )
+
+set(EXTRA_CUDD_SRCS bdddomain/unique.c bdddomain/unique.h)
 
 set(MTR_SRCS
   ${CUDD_SOURCES}/mtr/mtrBasic.c
@@ -173,25 +120,25 @@ set(EPD_SRCS
 )
 
 set(UTIL_SRCS
-  ${CUDD_SOURCES}/util/cpu_time.c
-  ${CUDD_SOURCES}/util/cpu_stats.c
-  ${CUDD_SOURCES}/util/getopt.c
-  ${CUDD_SOURCES}/util/safe_mem.c
-  ${CUDD_SOURCES}/util/strsav.c
-  ${CUDD_SOURCES}/util/texpand.c
-  ${CUDD_SOURCES}/util/ptime.c
-  ${CUDD_SOURCES}/util/prtime.c
-  ${CUDD_SOURCES}/util/pipefork.c
-  ${CUDD_SOURCES}/util/pathsearch.c
-  ${CUDD_SOURCES}/util/stub.c
-  ${CUDD_SOURCES}/util/tmpfile.c
-  ${CUDD_SOURCES}/util/datalimit.c
+ cpu_time.c cpu_stats.c getopt.c safe_mem.c strsav.c texpand.c ptime.c
+ prtime.c pipefork.c pathsearch.c stub.c tmpfile.c datalimit.c
 #Headers
-  ${CUDD_SOURCES}/util/util.h
+  util.h
 )
 
-add_library(cudd ${CUDD_SRCS})
-add_library(util ${UTIL_SRCS})
+# Cudd libraries definition
+set(CUDD_SRCS_)
+foreach(file ${CUDD_SRCS})
+  list(APPEND CUDD_SRCS_ ${CUDD_SOURCES}/cudd/${file})
+endforeach()
+add_library(cudd ${CUDD_SRCS_} ${EXTRA_CUDD_SRCS})
+
+set(UTIL_SRCS_)
+foreach(file ${UTIL_SRCS})
+  list(APPEND UTIL_SRCS_ ${CUDD_SOURCES}/util/${file})
+endforeach()
+add_library(util ${UTIL_SRCS_})
+
 add_library(st ${ST_SRCS})
 add_library(mpr ${MTR_SRCS})
 add_library(epd ${EPD_SRCS})
@@ -255,7 +202,7 @@ else()
 endif()
 
 set_source_files_properties(
-    ${CUDD_SRCS} ${UTIL_SRCS} ${ST_SRCS} ${MTR_SRCS} ${EPD_SRCS}
+    ${CUDD_SRCS_} ${UTIL_SRCS_} ${ST_SRCS} ${MTR_SRCS} ${EPD_SRCS}
     PROPERTIES COMPILE_FLAGS ${CUDD_SPECIFIC_FLAGS}
 )
 set(CUDD_LIBS cudd util st mpr epd)
@@ -281,22 +228,21 @@ endif()
 # Domain representation using BDDs
 ##########################################################################
 include_directories(${CMAKE_SOURCE_DIR})
+
 set(BDDDOMAIN_SRCS
-  bdddomain/encoding.cpp
-  bdddomain/encoding.hh
-  bdddomain/exception.hh
-  bdddomain/manager.cpp
-  bdddomain/manager.hh
-  bdddomain/perm-descriptor.hh
-  bdddomain/rel-impl.cpp
-  bdddomain/rel-impl.hh
-  bdddomain/relations.cpp
-  bdddomain/relations.hh
-  bdddomain/tuple.cpp
-  bdddomain/tuple.hh
+encoding.cpp encoding.hh exception.hh manager.cpp manager.hh
+perm-descriptor.hh rel-impl.cpp rel-impl.hh relations.cpp relations.hh
+tuple.cpp tuple.hh
 )
-add_library(bdddomain ${BDDDOMAIN_SRCS})
+
+
+set(BDDDOMAIN_SRCS_)
+foreach(file ${BDDDOMAIN_SRCS})
+  list(APPEND BDDDOMAIN_SRCS_ "bdddomain/${file}")
+endforeach()
+add_library(bdddomain ${BDDDOMAIN_SRCS_})
 target_link_libraries(bdddomain ${CUDD_LIBS})
+
 if(UNIT_TEST)
   list(APPEND TEST_SOURCES bdddomain/tests/bddrel.cpp)
   list(APPEND TEST_LIBRARIES bdddomain)
