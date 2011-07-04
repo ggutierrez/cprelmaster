@@ -7,6 +7,7 @@ set(PROJECT_VERSION "0.9.0")
 # Command line options
 ##########################################################################
 option(UNIT_TEST "Build unit tests (requires boost unit_test)" NO)
+option(BUILD_GELISP "Build gelisp interface" NO)
 
 ##########################################################################
 # Compiler information
@@ -80,7 +81,7 @@ include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/util")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/cudd")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}")
 
-set(CUDD_SRCS 
+set(CUDD_SRCS
  cuddAddAbs.c cuddAddApply.c cuddAddFind.c cuddAddInv.c cuddAddIte.c
  cuddAddNeg.c cuddAddWalsh.c cuddAndAbs.c cuddAnneal.c cuddApa.c
  cuddAPI.c cuddApprox.c cuddBddAbs.c cuddBddCorr.c cuddBddIte.c
@@ -234,7 +235,6 @@ encoding.cpp encoding.hh exception.hh manager.cpp manager.hh
 perm-descriptor.hh rel-impl.cpp rel-impl.hh relations.cpp relations.hh
 tuple.cpp tuple.hh
 )
-
 
 set(BDDDOMAIN_SRCS_)
 foreach(file ${BDDDOMAIN_SRCS})
@@ -400,25 +400,18 @@ endif()
 ##########################################################################
 # Swig
 ##########################################################################
-find_package(SWIG 1.3.31)
-set(BUILD_LISP_INTERFACE No)
-if (SWIG_FOUND)
-  set(BUILD_LISP_INTERFACE Yes)
-  include(${SWIG_USE_FILE})
-  message(STATUS "Swig information:")
-  message(STATUS "   program: ${SWIG_EXECUTABLE}")
-else()
-  message(STATUS "Swig interface cannot be build")
+set(BUILD_LISP_INTERFACE NO)
+if(BUILD_GELISP)
+  find_package(SWIG 1.3.31)
+  if (SWIG_FOUND)
+    set(BUILD_LISP_INTERFACE Yes)
+    include(${SWIG_USE_FILE})
+    message(STATUS "Swig information:")
+    message(STATUS "   program: ${SWIG_EXECUTABLE}")
+  else()
+    message(STATUS "Swig interface cannot be build")
+  endif()
 endif()
-##########################################################################
-# Lisp
-##########################################################################
-#find_program(LISPINT sbcl)
-#if (NOT LISPINT)
-#  message(FATAL_ERROR "Lisp interpreter not found")
-#else()
-#  message(STATUS "Lisp interpreter: ${LISPINT}")
-#endif()
 ##########################################################################
 # Test
 ##########################################################################
@@ -477,20 +470,20 @@ add_custom_target(dist
 # Executables
 ##########################################################################
 # test for the equality propagator
-add_executable(eq tests/equality.cpp)
-target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
+#add_executable(eq tests/equality.cpp)
+#target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
 
 # test for the and propagator
-add_executable(and tests/and.cpp)
-target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
+#add_executable(and tests/and.cpp)
+#target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
 
 # test for the projection propagator
-add_executable(projection tests/projection.cpp)
-target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
+#add_executable(projection tests/projection.cpp)
+#target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
 
 # test for the join propagator
-add_executable(join tests/join.cpp)
-target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+#add_executable(join tests/join.cpp)
+#target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
@@ -498,18 +491,18 @@ target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
 add_executable(domain-test tests/domain-test.cc)
 target_link_libraries(domain-test bdddomain)
 
-add_executable(grel-test tests/grel-test.cpp)
-target_link_libraries(grel-test gecodecprel)
+#add_executable(grel-test tests/grel-test.cpp)
+#target_link_libraries(grel-test gecodecprel)
 
 
-add_executable(swap-test tests/swap-test.cpp)
-  target_link_libraries(swap-test gecodecprel)
+#add_executable(swap-test tests/swap-test.cpp)
+#  target_link_libraries(swap-test gecodecprel)
 
-add_executable(join-test tests/join-test.cpp)
-  target_link_libraries(join-test gecodecprel)
+#add_executable(join-test tests/join-test.cpp)
+#  target_link_libraries(join-test gecodecprel)
 
-add_executable(proj-test tests/proj-test.cpp)
-  target_link_libraries(proj-test gecodecprel)
+#add_executable(proj-test tests/proj-test.cpp)
+#  target_link_libraries(proj-test gecodecprel)
 
-add_executable(midi-4seasons-test tests/midi-four-seasons.cpp)
-  target_link_libraries(midi-4seasons-test gecodecprel)
+#add_executable(midi-4seasons-test tests/midi-four-seasons.cpp)
+#  target_link_libraries(midi-4seasons-test gecodecprel)

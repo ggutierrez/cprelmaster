@@ -85,6 +85,8 @@ public:
    *
    */
   RelationImpl permute(const PermDescriptor& permDesc) const;
+
+  RelationImpl shiftLeft(int n) const;
   /**
    * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
    *
@@ -114,7 +116,7 @@ public:
    */
   RelationImpl unique(const std::vector<int>& c) const;
   /**
-   * \brief Returns \f$ \Pi_{\{0,\ldots,p\}}this \f$.
+   * \brief Returns \f$ \Pi_{\{0,\ldots,p-1\}}\text{this}\f$.
    *
    * The projection of this on the \a p rightmost columns.
    */

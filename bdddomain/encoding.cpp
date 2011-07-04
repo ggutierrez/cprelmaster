@@ -91,6 +91,47 @@ DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
   return Cudd_bddSwapVariables(dd(),r,&orig[0],&perm[0],orig.size());
 }
 
+DdNode* shiftLeft(DdNode *r, int arity, const int n) {
+  const int numberOfVars = Limits::bitsPerInteger * Limits::arity;
+  //std::cout << "Number of variables in the bdd " << numberOfVars << std::endl;
+  assert( (n + arity) <= numberOfVars && "The shift cannot be carried out");
+
+  // This array is used to store the definition of the permutation
+  int perm[numberOfVars];
+  // A vector used for the quantification
+  //std::vector<int> quant;
+  //quant.reserve(n*Limits::bitsPerInteger);
+
+  // Move the variables of the relation itself
+  for (int i = 0; i < Limits::arity; i++) {
+    //std::cout << "Column " << i << ": ";
+    for (int j = i; j < numberOfVars;) {
+      //std::cout << " " << j;
+      if (i < arity) {
+        // The current j is part of the representation of column i in the relation
+        perm[j] = j + n;
+        //std::cout << "->" << perm[j] << " ";
+      } else if (i >= arity && i < arity+n) {
+        perm[j] = j - n;
+        //std::cout << "->" << perm[j] << " ";
+        //quant.push_back(j-n);
+      } else {
+        perm[j] = j;
+        //std::cout << "->" << perm[j] << " ";
+      }
+      j += Limits::arity;
+    }
+    //std::cout << std::endl;
+  }
+
+  // perform the permutation
+  DdNode *p = Cudd_bddPermute(dd(),r,perm);
+  assert(p && "Permutation resulted in invalid bdd");
+
+  /// \todo Do I have to existentially quantify on the first n columns of p?
+  return p;
+}
+
 DdNode* exists(int c, DdNode* r) {
   std::vector<int> indices = bddIndices(c);
   DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
@@ -116,9 +157,9 @@ DdNode* unique(const std::vector<int>& c, DdNode* r) {
     std::vector<int> x = bddIndices(c.at(i));
     for (unsigned int j = 0; j < x.size(); j++)
       indices.push_back(x[j]);
-    
+
   }
-   
+
   DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
   Cudd_Ref(cube);
   DdNode *q = Cudd_bddUniqueAbstract(dd(),r,cube);
@@ -128,3 +169,4 @@ DdNode* unique(const std::vector<int>& c, DdNode* r) {
 
 
 }}}
+

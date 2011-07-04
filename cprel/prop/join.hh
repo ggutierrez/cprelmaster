@@ -11,6 +11,9 @@ namespace MPG { namespace CPRel { namespace Prop {
  */
 template <typename ViewA, typename ViewB, typename ViewC>
 class Join : public Gecode::Propagator {
+private:
+  struct lower_bound {};
+  struct upper_bound {};
 protected:
   /// First relation
   ViewA a_;
@@ -61,6 +64,27 @@ public:
                                 const Gecode::ModEventDelta&) const {
     return Gecode::PropCost::binary(Gecode::PropCost::LO);
   }
+  GRelation compute_bc(lower_bound) const {
+    return c_.glb().project(b_.arity());
+  }
+  GRelation compute_bc(upper_bound) const {
+    return c_.lub().project(b_.arity());
+  }
+  GRelation compute_ac(upper_bound) const {
+    std::cout << "C" << std::endl << c_.lub() << std::endl;
+    GRelation ac(c_.lub());
+    //for (int i = 0; i < )
+//    PermDescriptor d;
+//    d.permute(1,0);
+//    ac = ac.permute(d);
+    /*for (int i = j_; i < c_.arity();i++) {
+      std::cout << "column: " << i << " will be " << i-j_ << std::endl;
+      d.permute(i,i-j_);
+    }*/
+     //std::cout << "C" << std::endl << c_.lub() << std::endl;
+
+    return ac;//.project(a_.arity());
+  }
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
@@ -75,6 +99,10 @@ public:
     GECODE_ME_CHECK(c_.exclude(home,lubJ.complement()));
 
     /// \todo Add other direction of the constraint.
+
+    std::cout << "bc: " << std::endl << compute_bc(upper_bound()) << std::endl;
+    std::cout << "ac: " << std::endl << compute_ac(upper_bound()) << std::endl;
+
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned() && c_.assigned())
       return home.ES_SUBSUMED(*this);

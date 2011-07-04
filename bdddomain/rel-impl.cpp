@@ -128,6 +128,10 @@ RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
   return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
 }
 
+RelationImpl RelationImpl::shiftLeft(int n) const {
+  return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
+}
+
 RelationImpl RelationImpl::timesU(int n, bool left) const {
   if (left)
     return RelationImpl(bdd_,arity_+n);

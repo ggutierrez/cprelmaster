@@ -20,7 +20,7 @@ namespace Limits {
  * - Setting this attribute to 5 will allow to represent positive integers
  *   of 32 bits.
  */
-const int bbv = 3;
+const int bbv = 2;
 /**
  * \brief Number of bits of the maximum arity that can be represented
  * \ingroup DomRepr
@@ -47,7 +47,7 @@ const int arity = 1 << ba;
  * int type to input and output values.
  * \ingroup DomRepr
  */
-  
+
 //  BOOST_STATIC_ASSERT(std::numeric_limits<int>::digits <= bitsPerInteger
 //                      && "The BDD configuration is wrong for this built");
 }
@@ -77,10 +77,13 @@ private:
   //@{
   /// Constructor that initializes the BDD manager of CUDD
   BddManager (void)
-    : dd(Cudd_Init(0,0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
+    : dd(Cudd_Init(Limits::bitsPerInteger * Limits::arity,
+                   0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
     , one_(DD_ONE(dd))
     , zero_(Cudd_Not(DD_ONE(dd)))
   {
+    /// \todo: The existence of shiftLeft needs that the manager is initialized
+    /// with the number of variables. Fix that method in order to permute only existent vars
     std::cout << "Created bdd manager" << std::endl;
   }
   /// Creates an instace of this object
