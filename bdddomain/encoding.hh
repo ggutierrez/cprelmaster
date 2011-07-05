@@ -39,8 +39,11 @@ std::vector<int> decodeCube(int* cube, int arity);
  */
  DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc);
 
- /// Moves all the columns of \a r one column to the left.
+ /// Moves all the columns of \a r \a n columns to the left.
  DdNode* shiftLeft(DdNode *r, int arity, int n);
+
+ /// Moves all the columns of \a r \a n columns to the right.
+ DdNode* shiftRight(DdNode *r, int arity, int n);
 
  /**
   * \brief Existensial quantification of column \a c on relation \a r.

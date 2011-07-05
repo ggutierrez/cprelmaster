@@ -87,6 +87,7 @@ public:
   RelationImpl permute(const PermDescriptor& permDesc) const;
 
   RelationImpl shiftLeft(int n) const;
+  RelationImpl shiftRight(int n) const;
   /**
    * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
    *

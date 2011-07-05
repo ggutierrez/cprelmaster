@@ -132,6 +132,52 @@ DdNode* shiftLeft(DdNode *r, int arity, const int n) {
   return p;
 }
 
+DdNode* shiftRight(DdNode *r, int arity, const int n) {
+  const int numberOfVars = Limits::bitsPerInteger * Limits::arity;
+  assert( arity >= n && "The shift cannot be carried out");
+
+  // This array is used to store the definition of the permutation
+  int perm[numberOfVars];
+  std::vector<int> quantIndices;
+  quantIndices.reserve(n*Limits::bitsPerInteger);
+
+  // Move the variables of the relation itself
+  for (int i = 0; i < Limits::arity; i++) {
+    //std::cout << "Column " << i << ": ";
+    for (int j = i; j < numberOfVars;) {
+      //std::cout << " " << j;
+      if (i < n) {
+        perm[j] = j + arity;
+        quantIndices.push_back(j + arity);
+        //std::cout << "->*" << perm[j] << " ";
+      } else if (i < arity) {
+        // The current j is part of the representation of column i in the relation
+        perm[j] = j - n;
+        //std::cout << "->" << perm[j] << " ";
+      } else {
+        perm[j] = j;
+        //std::cout << "->" << perm[j] << " ";
+      }
+      j += Limits::arity;
+    }
+    //std::cout << std::endl;
+  }
+
+  // perform the permutation
+  DdNode *p = Cudd_bddPermute(dd(),r,perm);
+  assert(p && "Permutation resulted in invalid bdd");
+  Cudd_Ref(p);
+
+  // quantify on the variables that were "removed" from the relation
+  DdNode *cube = Cudd_IndicesToCube(dd(),&quantIndices[0],quantIndices.size());
+  Cudd_Ref(cube);
+
+  DdNode *q = Cudd_bddExistAbstract(dd(),p,cube);
+  Cudd_RecursiveDeref(dd(),cube);
+  Cudd_RecursiveDeref(dd(),p);
+  return q;
+}
+
 DdNode* exists(int c, DdNode* r) {
   std::vector<int> indices = bddIndices(c);
   DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());

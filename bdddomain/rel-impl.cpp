@@ -129,7 +129,14 @@ RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
 }
 
 RelationImpl RelationImpl::shiftLeft(int n) const {
+  if (n == 0) return RelationImpl(*this);
   return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
+}
+
+RelationImpl RelationImpl::shiftRight(int n) const {
+  if (n == 0) return RelationImpl(*this);
+  if (n == arity_) return RelationImpl(0);
+  return RelationImpl(VarImpl::shiftRight(bdd_,arity_,n),arity_-n);
 }
 
 RelationImpl RelationImpl::timesU(int n, bool left) const {
