@@ -10,13 +10,13 @@ using namespace MPG;
 using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
-  std::ifstream inputL("/home/gg/Work/cprel/tests/ground-relations/r3.txt");
+  std::ifstream inputL("/Users/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
   GRelation ub = read(inputL,3);
   return make_pair(GRelation(3),ub);
 }
 
 pair<GRelation,GRelation> domS(void) {
-  std::ifstream inputR("/home/gg/Work/cprel/tests/ground-relations/s2.txt");
+  std::ifstream inputR("/Users/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
   GRelation ub = read(inputR,2);
   return make_pair(GRelation(2),ub);
 }
@@ -42,8 +42,8 @@ public:
    t = CPRelVar(*this,dt.first,dt.second);
 
    join(*this,r,1,s,t);
-   branch(*this,r);
-   branch(*this,s);
+   //branch(*this,r);
+   //branch(*this,s);
    branch(*this,t);
   }
   void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {

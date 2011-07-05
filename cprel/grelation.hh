@@ -108,6 +108,20 @@ public:
    */
   GRelation permute(const PermDescriptor& desc) const;
   /**
+   * \brief Computes the relation resulting by shifting all the columns in \a r
+   * \a n possitions to the right.
+   *
+   * The first \a n columns of \a r does not appear in the final relation.
+   */
+  GRelation shiftRight(int n) const;
+  /**
+   * \brief Computes the relation resulting by shifting all the columns in \a r
+   * \a n possitions to the left.
+   *
+   * The new columns in the resulting relation are existentially quantified.
+   */
+  GRelation shiftLeft(int n) const;
+  /**
    * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
    *
    * As the cross product operation is not conmutative, the \a left parameter
@@ -132,7 +146,7 @@ public:
    * \brief Returns the relation resulting from uniquely quantifying on all the
    * columns in \a c
    */
-  GRelation unique(const std::vector<int>& c) const;  
+  GRelation unique(const std::vector<int>& c) const;
   /**
    * \brief Returns: \f$ \Pi_{p} this \f$.
    *

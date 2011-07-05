@@ -69,10 +69,13 @@ public:
     const RelChoice& ch = static_cast<const RelChoice&>(c);
     GRelation r(ch.t_.arity());
     r.add(ch.t_);
-    if (a == 0)
+    if (a == 0) {
+      std::cout << "-> Brancher adding: " << r << std::endl;
       return Gecode::me_failed(x_.include(home,r)) ? ES_FAILED : ES_OK;
-    else
+    } else {
+      std::cout << "-> Brancher removing: " << r << std::endl;
       return Gecode::me_failed(x_.exclude(home,r)) ? ES_FAILED : ES_OK;
+    }
   }
 };
 }}

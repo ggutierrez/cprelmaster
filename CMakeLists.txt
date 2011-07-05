@@ -482,8 +482,8 @@ add_custom_target(dist
 #target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
 
 # test for the join propagator
-#add_executable(join tests/join.cpp)
-#target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+add_executable(join tests/join.cpp)
+target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
@@ -498,8 +498,8 @@ target_link_libraries(domain-test bdddomain)
 #add_executable(swap-test tests/swap-test.cpp)
 #  target_link_libraries(swap-test gecodecprel)
 
-#add_executable(join-test tests/join-test.cpp)
-#  target_link_libraries(join-test gecodecprel)
+add_executable(join-test tests/join-test.cpp)
+  target_link_libraries(join-test gecodecprel)
 
 #add_executable(proj-test tests/proj-test.cpp)
 #  target_link_libraries(proj-test gecodecprel)

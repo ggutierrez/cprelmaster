@@ -16,21 +16,21 @@ using namespace MPG::CPRel::VarImpl;
 
 RelationImpl test0(void) {
   RelationImpl ub(2);
-  ub.add(make_Tuple(0,0));
-  ub.add(make_Tuple(1,0));
-  ub.add(make_Tuple(2,0));
-  ub.add(make_Tuple(3,0));
-  ub.add(make_Tuple(4,0));
-  ub.add(make_Tuple(5,0));
+  //ub.add(make_Tuple(0,3));
+  ub.add(make_Tuple(1,2));
+//  ub.add(make_Tuple(2,1));
+//  ub.add(make_Tuple(3,0));
+  //ub.add(make_Tuple(4,0));
+  //ub.add(make_Tuple(5,0));
   return ub;
 }
-
 
 int main(void) {
   cout << "Tests starts" << endl;
   {
-    Tuple t = make_Tuple(1,2);
-    cout << "Tuple " << t << endl;
+    RelationImpl r = test0();
+    cout << r << endl;
+    cout << r.shiftLeft(2) << endl;
 //    PermDescriptor desc;
 //    desc.permute(0,1);
 

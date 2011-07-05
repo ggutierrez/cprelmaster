@@ -116,6 +116,22 @@ GRelation GRelation::permute(const PermDescriptor& desc) const {
         );
 }
 
+GRelation GRelation::shiftRight(int n) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->shiftRight(n)))
+        );
+}
+
+GRelation GRelation::shiftLeft(int n) const {
+  /// \todo Throw an exception if there are not enough room in the manager to
+  /// perform the operation
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->shiftLeft(n)))
+        );
+}
+
 GRelation GRelation::timesU(int n, bool left) const {
   return
       GRelation(

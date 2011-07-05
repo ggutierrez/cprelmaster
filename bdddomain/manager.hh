@@ -20,7 +20,7 @@ namespace Limits {
  * - Setting this attribute to 5 will allow to represent positive integers
  *   of 32 bits.
  */
-const int bbv = 5;
+const int bbv = 2;
 /**
  * \brief Number of bits of the maximum arity that can be represented
  * \ingroup DomRepr
