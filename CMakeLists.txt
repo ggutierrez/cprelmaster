@@ -258,6 +258,7 @@ install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
 ##########################################################################
 # Gecode
 ##########################################################################
+set(GECODE_BREL_SUPPORT NO)
 find_package(Gecode)
 if(GECODE_FOUND)
   message(STATUS "Found Gecode version: ${GECODE_VERSION}")
@@ -274,27 +275,23 @@ if(GECODE_FOUND)
     message(STATUS "Gecode class: ${GECODE_LINE_BREL_CLASS}")
     list(LENGTH GECODE_LINE_BREL_CLASS GECODE_BREL_SUPPORT)
     if(GECODE_BREL_SUPPORT)
-      message(STATUS "  Gecode was built with support for the BRel type of variable.")
-      set(WORKING_GECODE Yes)
+      message(STATUS  "  Gecode was built with support for the BRel type of variable.")
     endif()
   endif()
-else()
+endif()
+
+if(NOT GECODE_BREL_SUPPORT)
   message(STATUS "No compatible version of gecode was found.")
   message(STATUS "  To build this library Gecode you need at least version ${MIN_GECODE_REQUIRED}")
   message(STATUS "  and built with support for the relational constraint system.")
   message(STATUS "  To build the gecode you need please execute make GECODE_INSTALL.")
   message(STATUS "  and reconfigure with option -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}")
   include(ExternalProject)
+  ## configure options used to build gecode
   set(CONFIGURE_OPTIONS)
   list(APPEND CONFIGURE_OPTIONS "CXXFLAGS=-DGECODE_HAS_VAR_DISPOSE")
   list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_VAR_DISPOSE")
   list(APPEND CONFIGURE_OPTIONS "--with-vis=${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
-
-  #list(APPEND CONFIGURE_OPTIONS "CXXFLAGS=-DGECODE_HAS_GRAPH_VARS -DGECODE_HAS_VAR_DISPOSE")
-  #list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_GRAPH_VARS  -DGECODE_HAS_VAR_DISPOSE")
-  #list(APPEND CONFIGURE_OPTIONS "--with-vis=/home/gg1/Work/temp-build/graph-vars/graph.vis")
-
-  #list(APPEND CONFIGURE_OPTIONS "--disable-gist")
   list(APPEND CONFIGURE_OPTIONS "--with-architectures=${CMAKE_OSX_ARCHITECTURES}")
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
