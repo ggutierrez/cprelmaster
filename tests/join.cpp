@@ -1,4 +1,6 @@
 #include <fstream>
+#include <sstream>
+#include <string>
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
 #include <cprel/cprel.hh>
@@ -10,13 +12,13 @@ using namespace MPG;
 using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
-  std::ifstream inputL("/Users/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
+  std::ifstream inputL("/Users/ggutierrez/Work2/cprelmaster/tests/ground-relations/r3.txt");
   GRelation ub = read(inputL,3);
   return make_pair(GRelation(3),ub);
 }
 
 pair<GRelation,GRelation> domS(void) {
-  std::ifstream inputR("/Users/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
+  std::ifstream inputR("/Users/ggutierrez/Work2/cprelmaster/tests/ground-relations/s2.txt");
   GRelation ub = read(inputR,2);
   return make_pair(GRelation(2),ub);
 }
@@ -26,11 +28,11 @@ pair<GRelation,GRelation> domT(void) {
   return make_pair(GRelation(4),ub);
 }
 
-class AndTest : public Gecode::Space {
+class JoinTest : public Gecode::Space {
 protected:
   CPRelVar r,s,t;
 public:
-  AndTest(void)  {
+  JoinTest(void)  {
 
    pair<GRelation,GRelation> dr = domR();
    r = CPRelVar(*this,dr.first,dr.second);
@@ -53,31 +55,36 @@ public:
        << (v.assigned()? "Yes" : "NO") << "</td></tr>";
   }
   void print(std::ostream& os) const {
-    os << "<b>Space</b>" << std::endl;
-    os << "<table border=\"1\">"
+    std::string str;
+    std::stringstream ss(str);
+    
+    ss << "<b>Space</b>";
+    ss << "<table border=\"1\">" 
        << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>";
 
-    printHtml(os,"R",r);
-    printHtml(os,"S",s);
-    printHtml(os,"T",t);
-    os << "</table>" << std::endl;
+    printHtml(ss,"R",r);
+    printHtml(ss,"S",s);
+    printHtml(ss,"T",t);
+    ss << "</table>";
+    
+    os << ss.str() << std::endl;
 
   }
-  AndTest(bool share, AndTest& sp)
+  JoinTest(bool share, JoinTest& sp)
     : Gecode::Space(share,sp) {
     r.update(*this, share, sp.r);
     t.update(*this, share, sp.t);
     s.update(*this, share, sp.s);
   }
   virtual Space* copy(bool share) {
-    return new AndTest(share,*this);
+    return new JoinTest(share,*this);
   }
 };
 
 int main(int, char**) {
-  AndTest* g = new AndTest();
+  JoinTest* g = new JoinTest();
 
-  Gist::Print<AndTest> p("Print solution");
+  Gist::Print<JoinTest> p("Print solution");
   Gist::Options o;
   o.inspect.click(&p);
   Gist::dfs(g,o);
