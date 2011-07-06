@@ -291,7 +291,13 @@ if(NOT GECODE_BREL_SUPPORT)
   set(CONFIGURE_OPTIONS)
   list(APPEND CONFIGURE_OPTIONS "CXXFLAGS=-DGECODE_HAS_VAR_DISPOSE")
   list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_VAR_DISPOSE")
-  list(APPEND CONFIGURE_OPTIONS "--with-vis=${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
+
+  set(VIS_INPUTS ${CMAKE_SOURCE_DIR}/cprel/cprel.vis)
+  list(APPEND VIS_INPUTS ${EXTRA_VIS})
+  #list(APPEND CONFIGURE_OPTIONS "--with-vis=${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
+  message(STATUS "VIS sources: ${VIS_INPUTS}")
+  list(APPEND CONFIGURE_OPTIONS  "--with-vis=${VIS_INPUTS}")
+
   list(APPEND CONFIGURE_OPTIONS "--with-architectures=${CMAKE_OSX_ARCHITECTURES}")
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
@@ -301,7 +307,7 @@ if(NOT GECODE_BREL_SUPPORT)
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j4 INSTALL_COMMAND make install
+    BUILD_COMMAND make -j10 INSTALL_COMMAND make install
   )
 endif()
 ##########################################################################
