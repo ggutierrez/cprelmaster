@@ -125,7 +125,11 @@ RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
   // some circumstances this method is used to move columns in the representation
   // to places that are outside of the arity of the relation. For instance,
   // this \times U^n is implemented by doing the shift of n columns to the right.
-  return RelationImpl(VarImpl::swap_columns(bdd_,permDesc),arity_);
+
+  RelationImpl ret(VarImpl::swap_columns(bdd_,permDesc),arity_);
+  assert(ret.cardinality() == cardinality());
+  assert(ret.arity() == arity());
+  return ret;
 }
 
 RelationImpl RelationImpl::shiftLeft(int n) const {
@@ -152,6 +156,9 @@ RelationImpl RelationImpl::timesU(int n, bool left) const {
 RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
   const RelationImpl& l = *this;
 
+//  std::cout << "Join input: this " << arity() << " -- " << cardinality() << std::endl;
+//  std::cout << "****Join input: r " << r.bdd_ << "  " << r.arity() << " -- " << r.cardinality() << std::endl;
+
   assert(l.arity() >= j && r.arity() >= j
          && "There are not enough columns for the join");
 
@@ -159,6 +166,9 @@ RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
   RelationImpl rxu = r.timesU(l.arity() - j,true);
 
   lxu.intersect(rxu);
+
+//  std::cout << "Join result: lxu " << lxu.arity() << " -- " << lxu.cardinality() << std::endl;
+
   return lxu;
 }
 
@@ -178,18 +188,34 @@ RelationImpl RelationImpl::projectBut(int c) const {
   RelationImpl q(exists(c));
 
   PermDescriptor d;
-  for (int i = arity_ -1; i > c; i--) d.permute(i,i-1);
-  return RelationImpl(q.permute(d).bdd_,arity_-1);
+  for (int i = arity_ -1; i > c; i--) {
+    d.permute(i,i-1);
+  }
+  RelationImpl perm(q.permute(d));
+
+  RelationImpl ret(perm.bdd_,arity_-1);
+
+  assert(ret.cardinality() == cardinality());
+  assert(ret.arity() == arity()-1);
+
+  return ret;
 }
 
 RelationImpl RelationImpl::project(int p) const {
-  RelationImpl r = *this;
+  RelationImpl r(*this);
+  assert(r.cardinality() == cardinality() && "Something bad happend at CC");
+  assert(r.arity() == arity() && "Something bad happend at CC");
+
   if (p == arity_) return r;
 
-  for (int i = p; i < arity_; i++) {
-    r = r.projectBut(i);
-  }
-  return r;
+  RelationImpl result(VarImpl::exists(arity()-1,p+1,r.bdd_),p);
+
+//  for (int i = p; i < arity_; i++) {
+//    RelationImpl tmp = r.projectBut(i);
+//    r = tmp;
+//  }
+//  assert(r.arity() == arity() && "Error performing projection");
+  return result;
 }
 
 RelationImplIter RelationImpl::tuples(void) const {

@@ -71,7 +71,9 @@ void GRelation::unionAssign(const GRelation &r) {
 }
 
 void GRelation::differenceAssign(const GRelation &r) {
+  std::cout << "-x- before " << cardinality() << std::endl;
   pimpl_->remove(*(r.pimpl_));
+  std::cout << "-x- after " << cardinality() << std::endl;
 }
 
 GRelation GRelation::difference(const GRelation &r) const {
@@ -143,6 +145,7 @@ GRelation GRelation::join(int j,const GRelation& r) const {
   typedef boost::error_info<struct tag_invalid_join,std::string>
       invalid_join;
 
+//  std::cout << "Middle join call r cardinality " << r.cardinality() << std::endl;
   if (arity() < j || r.arity() < j)
     throw InvalidJoin()
       << errno_code(errno)
