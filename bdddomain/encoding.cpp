@@ -88,7 +88,9 @@ DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
          static_cast<int>(perm.size()) == descSize * Limits::bitsPerInteger &&
          "size of the bddVar vector is not correct");
 
-  return Cudd_bddSwapVariables(dd(),r,&orig[0],&perm[0],orig.size());
+  DdNode *ret = Cudd_bddSwapVariables(dd(),r,&orig[0],&perm[0],orig.size());
+  assert(ret && "swap_columns returned invalid bdd");
+  return ret;
 }
 
 DdNode* shiftLeft(DdNode *r, int arity, const int n) {
@@ -178,13 +180,33 @@ DdNode* shiftRight(DdNode *r, int arity, const int n) {
   return q;
 }
 
-DdNode* exists(int c, DdNode* r) {
-  std::vector<int> indices = bddIndices(c);
+DdNode * exists(std::vector<int>& indices, DdNode* r) {
   DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
   Cudd_Ref(cube);
   DdNode *q = Cudd_bddExistAbstract(dd(),r,cube);
   Cudd_RecursiveDeref(dd(),cube);
   return q;
+}
+
+DdNode* exists(int c, DdNode* r) {
+  std::vector<int> indices = bddIndices(c);
+  return exists(indices,r);
+}
+
+DdNode* exists(int last, int first, DdNode* r) {
+  assert(first <= last && "emtpy column identifier set");
+  std::vector<int> indices = bddIndices(first);
+
+  for(int i = last; i > first; i--) {
+    std::vector<int> idx = bddIndices(i);
+    std::copy(idx.begin(),idx.end(),std::back_inserter(indices));
+  }
+
+  for (unsigned int i = 0; i < indices.size(); i++) {
+    std::cout << "Exist on index " << indices[i] << std::endl;
+  }
+
+  return exists(indices,r);
 }
 
 DdNode* unique(int c, DdNode* r) {
@@ -213,6 +235,52 @@ DdNode* unique(const std::vector<int>& c, DdNode* r) {
   return q;
 }
 
+#ifndef NDEBUG
+void debug_bdd(DdNode* node, int a) {
+    if (node == one()) {
+      std::cerr << "Universe";
+      return;
+    }
+    if (node == zero()) {
+      std::cerr << "Empty";
+      return;
+    }
+
+    DdGen* gen;
+    int *cube = (int*) malloc (sizeof(int)*(1<<(Limits::bbv + Limits::ba)));
+    int tuple[1<<Limits::ba];
+    CUDD_VALUE_TYPE val;
+    int done;
+    int i,k,j;
+    std::cerr << "#(" << Cudd_CountMinterm(dd(),node,a << Limits::bbv) << "){";
+    //printf("Cardinality: %f\n", Cudd_CountMinterm(Cudd::dd,node,a<<BBV));
+    for(k=0;k<1<<Limits::ba;k++)tuple[k]=0;
+    Cudd_ForeachCube(dd(),node,gen,cube,val){
+      done=0;
+      while(!done){
+        done=1;
+        for(i=(1<<(Limits::bbv+Limits::ba))-1;i>=0;i--){
+          if((i&((1<<Limits::ba)-1))<a){
+            tuple[i&((1<<Limits::ba)-1)]&=~(1<<((1<<Limits::bbv)-1-(i>>Limits::ba)));
+            tuple[i&((1<<Limits::ba)-1)]|=(cube[i]&1)<<((1<<Limits::bbv)-1-(i>>Limits::ba));
+            if((cube[i]&2)&&done){
+              done&=cube[i]&1;
+              cube[i]^=1;
+            }
+          }
+        }
+        std::cerr << "<";
+        for(j = 0; j < a; j++) {
+          std::cerr << tuple[j] << ",";//printf("%d,",tuple[j]);
+        }
+        //printf(">\n");
+        std::cerr << ">, ";
+      }
+    }
+    std::cerr << "}";
+}
+
+#endif
 
 }}}
 

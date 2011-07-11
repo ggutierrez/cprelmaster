@@ -51,6 +51,8 @@ std::vector<int> decodeCube(int* cube, int arity);
   */
  DdNode* exists(int c, DdNode* r);
 
+ DdNode* exists(int last, int first, DdNode* r);
+
  /**
   * \brief Universal quantification of column \a c on relation \a r.
   * \ingroup BDDEnc
@@ -69,5 +71,9 @@ std::vector<int> decodeCube(int* cube, int arity);
    */
   DdNode* unique(const std::vector<int>& c, DdNode* r);
 
+#ifndef NDEBUG
+  /// Prints relation \a r to standard output
+  void debug_bdd(DdNode* r, int arity);
+#endif
 }}}
 #endif
