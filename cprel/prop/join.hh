@@ -78,17 +78,16 @@ public:
                                 const Gecode::ModEventDelta&) const {
     return Gecode::PropCost::binary(Gecode::PropCost::LO);
   }
-  GRelation compute_bc(lower_bound) const {
+  GRelation compute_bc_glb(void) const {
     return c_.glb().project(b_.arity());
   }
   GRelation compute_bc_lub(void) const {
-    GRelation r = c_.lub().project(b_.arity());
-    return r;
+    return c_.lub().project(b_.arity());
   }
-  GRelation compute_ac(upper_bound) const {
+  GRelation compute_ac_lub(void) const {
     return c_.lub().shiftRight(b_.arity()-j_);
   }
-  GRelation compute_ac(lower_bound) const {
+  GRelation compute_ac_glb(void) const {
     return c_.glb().shiftRight(b_.arity()-j_);
   }
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
@@ -104,17 +103,21 @@ public:
     GRelation lubJ = a_.lub().join(j_,b_.lub());
     GECODE_ME_CHECK(c_.exclude(home,lubJ.complement()));
 
-    std::cout << "middle..... " << b_.lub().cardinality() << std::endl;
-    GRelation bc = compute_bc_lub();
-    std::cout << "The resulting bc: " << bc  << " with cardinality: " << bc.cardinality() << std::endl;
-
-    std::cout << "after comp bc..... " << b_.lub().cardinality() << std::endl;
-    GRelation y = b_.lub().intersect(bc);
-
-    std::cout << "The resulting y: " << y  << " with cardinality: " << y.cardinality() << std::endl;
+    // Second, pruning B
+    GRelation bc_lub = compute_bc_lub();
+    GRelation y = b_.lub().intersect(bc_lub);
     GECODE_ME_CHECK(b_.exclude(home,y.complement()));
 
-    std::cout << "Empty? " << b_.lub().empty() << " end..... " << b_.lub().cardinality() << std::endl;
+    GRelation bc_glb = compute_bc_glb();
+    GECODE_ME_CHECK(b_.include(home,bc_glb));
+
+    // First, pruning A
+    GRelation ac_glb = compute_ac_glb();
+    GECODE_ME_CHECK(a_.include(home,ac_glb));
+
+    GRelation ac_lub = compute_ac_lub();
+    GRelation z = a_.lub().intersect(ac_lub);
+    GECODE_ME_CHECK(a_.exclude(home,z.complement()));
 
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned() && c_.assigned())

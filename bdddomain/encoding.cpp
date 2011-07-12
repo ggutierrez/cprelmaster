@@ -193,7 +193,7 @@ DdNode* exists(int c, DdNode* r) {
   return exists(indices,r);
 }
 
-DdNode* exists(int last, int first, DdNode* r) {
+DdNode* exists(int first, int last, DdNode* r) {
   assert(first <= last && "emtpy column identifier set");
   std::vector<int> indices = bddIndices(first);
 

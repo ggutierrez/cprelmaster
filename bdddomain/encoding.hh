@@ -51,7 +51,7 @@ std::vector<int> decodeCube(int* cube, int arity);
   */
  DdNode* exists(int c, DdNode* r);
 
- DdNode* exists(int last, int first, DdNode* r);
+ DdNode* exists(int first, int last, DdNode* r);
 
  /**
   * \brief Universal quantification of column \a c on relation \a r.

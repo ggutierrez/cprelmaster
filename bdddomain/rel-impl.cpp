@@ -202,19 +202,24 @@ RelationImpl RelationImpl::projectBut(int c) const {
 }
 
 RelationImpl RelationImpl::project(int p) const {
-  RelationImpl r(*this);
-  assert(r.cardinality() == cardinality() && "Something bad happend at CC");
-  assert(r.arity() == arity() && "Something bad happend at CC");
+  // p indicates the columns on the right that will remain at the end.
+  //  std::cout << "Projecting " << *this << " on " << p << " columns(right)" << std::endl;
 
+  // it is a mistake to project in more columns that the ones in the relation
+  assert(p <= arity_ && "Projecting in more columns that the onse in the relation");
+
+  RelationImpl r(*this);
+  // Project on 0 columns is the empty relation
+  if (p == 0) return RelationImpl(0);
+  // Project on all the columns of a relation is the relation itself
   if (p == arity_) return r;
 
-  RelationImpl result(VarImpl::exists(arity()-1,p+1,r.bdd_),p);
-
-//  for (int i = p; i < arity_; i++) {
-//    RelationImpl tmp = r.projectBut(i);
-//    r = tmp;
-//  }
-//  assert(r.arity() == arity() && "Error performing projection");
+  // 1) existentially quantify on all the columns but the ones from 0 (right most)
+  //    to p (not including).
+  int first = p;
+  int last = arity_ - 1;
+  RelationImpl result(VarImpl::exists(first,last,r.bdd_),p);
+  // Todo: missing changin the arity of the relation
   return result;
 }
 

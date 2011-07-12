@@ -12,13 +12,13 @@ using namespace MPG;
 using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
-  std::ifstream inputL("/Users/ggutierrez/Work2/cprelmaster/tests/ground-relations/r3.txt");
+  std::ifstream inputL("/home/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
   GRelation ub = read(inputL,3);
   return make_pair(GRelation(3),ub);
 }
 
 pair<GRelation,GRelation> domS(void) {
-  std::ifstream inputR("/Users/ggutierrez/Work2/cprelmaster/tests/ground-relations/s2.txt");
+  std::ifstream inputR("/home/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
   GRelation ub = read(inputR,2);
   return make_pair(GRelation(2),ub);
 }
@@ -57,16 +57,16 @@ public:
   void print(std::ostream& os) const {
     std::string str;
     std::stringstream ss(str);
-    
+
     ss << "<b>Space</b>";
-    ss << "<table border=\"1\">" 
+    ss << "<table border=\"1\">"
        << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>";
 
     printHtml(ss,"R",r);
     printHtml(ss,"S",s);
     printHtml(ss,"T",t);
     ss << "</table>";
-    
+
     os << ss.str() << std::endl;
 
   }

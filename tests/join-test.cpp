@@ -30,24 +30,25 @@ int main(void) {
     cout << "Cardinality of the created relation: " << r.cardinality() << endl;
 */
 
-    ifstream inputL("/Users/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
+    ifstream inputL("/home/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
     GRelation w = read(inputL,3);
     cout << "Left relation: " << w << endl << endl;
 
-    ifstream inputR("/Users/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
-    GRelation x = read(inputR,2);
-    cout << "Right relation: " << x << endl << endl;
+//    ifstream inputR("/home/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
+//    GRelation x = read(inputR,2);
+//    cout << "Right relation: " << x << endl << endl;
 
-    GRelation j = w.join(1,x);
-    cout << "Join relation: " << j << endl << endl;
+//    GRelation j = w.join(1,x);
+//    cout << "Join relation: " << j << endl << endl;
 
     /*
     GRelation k = j.shiftRight(1);
     cout << "Ca: " << k << endl << endl;
 
-    GRelation l = j.project(2);
-    cout << "Cb: " << l << endl << endl;
+
     */
+    GRelation l = w.project(2);
+    cout << "Cb: " << l << " with cardinality " << l.cardinality() << endl << endl;
   }
   return 0;
 }
