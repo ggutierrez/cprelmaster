@@ -201,11 +201,6 @@ DdNode* exists(int first, int last, DdNode* r) {
     std::vector<int> idx = bddIndices(i);
     std::copy(idx.begin(),idx.end(),std::back_inserter(indices));
   }
-
-  for (unsigned int i = 0; i < indices.size(); i++) {
-    std::cout << "Exist on index " << indices[i] << std::endl;
-  }
-
   return exists(indices,r);
 }
 

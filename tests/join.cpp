@@ -25,8 +25,12 @@ pair<GRelation,GRelation> domS(void) {
 
 pair<GRelation,GRelation> domT(void) {
   GRelation ub = create_full(4);
+  //GRelation lb(4);
+  //lb.add(Tuple({1,3,2,9}));
+  //lb.add(Tuple({8,2,2,8}));
   return make_pair(GRelation(4),ub);
-}
+  //return make_pair(lb,ub);
+  }
 
 class JoinTest : public Gecode::Space {
 protected:
@@ -51,7 +55,7 @@ public:
   void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
     os << "<tr><td><b>" << varName << "</b></td>";
     os << "<td>" << v.glb() << "</td><td>"
-       << v.unk() << "</td><td>" << v.oob() << "</td><td>"
+       << v.unk() << "</td><td>" /*<< v.oob() */ << "</td><td>"
        << (v.assigned()? "Yes" : "NO") << "</td></tr>";
   }
   void print(std::ostream& os) const {

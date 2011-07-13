@@ -32,11 +32,11 @@ public:
     b_.subscribe(home,*this,CPRel::PC_CPREL_BND);
     c_.subscribe(home,*this,CPRel::PC_CPREL_BND);
 
-    std::cout << "Constructor of join: " << b_.lub()
-              << b_.lub().cardinality() << std::endl;
+//    std::cout << "Constructor of join: " << b_.lub()
+//              << b_.lub().cardinality() << std::endl;
 
-    std::cout << "Constructor of join(a): " << a_.lub()
-              << a_.lub().cardinality() << std::endl;
+//    std::cout << "Constructor of join(a): " << a_.lub()
+//              << a_.lub().cardinality() << std::endl;
   }
   /**
    * \brief Join propagator posting
@@ -62,14 +62,6 @@ public:
     a_.update(home,share,p.a_);
     b_.update(home,share,p.b_);
     c_.update(home,share,p.c_);
-
-//    std::cout << "--??--Copied b_ " << b_.lub() << std::endl
-//              << b_.lub().cardinality() << std::endl
-//              << p.b_.lub() << std::endl
-//              << p.b_.lub().cardinality() << std::endl;
-//
-//    std::cout << "--??--Copied (a): " << a_.lub()
-//              << a_.lub().cardinality() << std::endl;
   }
   virtual Gecode::Propagator* copy(Gecode::Space& home, bool share) {
     return new (home) Join(home,share,*this);
@@ -100,6 +92,8 @@ public:
     GRelation glbJ = a_.glb().join(j_,b_.glb());
     GECODE_ME_CHECK(c_.include(home,glbJ));
 
+//    std::cout << "should include: " << glbJ << " cardinality " << glbJ.cardinality() << std::endl;
+
     GRelation lubJ = a_.lub().join(j_,b_.lub());
     GECODE_ME_CHECK(c_.exclude(home,lubJ.complement()));
 
@@ -119,11 +113,13 @@ public:
     GRelation z = a_.lub().intersect(ac_lub);
     GECODE_ME_CHECK(a_.exclude(home,z.complement()));
 
-    // Propagator subsumpiton
-    if (a_.assigned() && b_.assigned() && c_.assigned())
+    // Propagator subsumption
+    if (a_.assigned() && b_.assigned() && c_.assigned()) {
+      /// \todo is it possible to get another subsumption condition??
       return home.ES_SUBSUMED(*this);
+    }
 
-    return Gecode::ES_FIX;
+    return Gecode::ES_NOFIX;
   }
 };
 }}}

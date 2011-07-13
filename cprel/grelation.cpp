@@ -71,9 +71,7 @@ void GRelation::unionAssign(const GRelation &r) {
 }
 
 void GRelation::differenceAssign(const GRelation &r) {
-  std::cout << "-x- before " << cardinality() << std::endl;
   pimpl_->remove(*(r.pimpl_));
-  std::cout << "-x- after " << cardinality() << std::endl;
 }
 
 GRelation GRelation::difference(const GRelation &r) const {
