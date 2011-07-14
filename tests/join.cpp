@@ -11,6 +11,9 @@ using std::make_pair;
 using namespace MPG;
 using namespace MPG::CPRel;
 
+GRelationIO custom("<table><tr>","</tr></table>","","</tr><tr>");
+
+
 pair<GRelation,GRelation> domR(void) {
   std::ifstream inputL("/home/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
   GRelation ub = read(inputL,3);

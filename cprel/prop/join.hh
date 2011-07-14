@@ -31,12 +31,6 @@ public:
     a_.subscribe(home,*this,CPRel::PC_CPREL_BND);
     b_.subscribe(home,*this,CPRel::PC_CPREL_BND);
     c_.subscribe(home,*this,CPRel::PC_CPREL_BND);
-
-//    std::cout << "Constructor of join: " << b_.lub()
-//              << b_.lub().cardinality() << std::endl;
-
-//    std::cout << "Constructor of join(a): " << a_.lub()
-//              << a_.lub().cardinality() << std::endl;
   }
   /**
    * \brief Join propagator posting
@@ -90,28 +84,37 @@ public:
     // First part: C \subseteq A \bowtie_{j} B
 
     GRelation glbJ = a_.glb().join(j_,b_.glb());
+    std::cout << "a glb " << a_.glb() << std::endl;
+    std::cout << "g glb " << b_.glb() << std::endl;
+    std::cout << "should include: " << glbJ << " cardinality " << glbJ.cardinality() << std::endl;
+    std::cout << "c lub: " << c_.lub() << " cardinality " << c_.lub().cardinality() << std::endl;
     GECODE_ME_CHECK(c_.include(home,glbJ));
 
-//    std::cout << "should include: " << glbJ << " cardinality " << glbJ.cardinality() << std::endl;
+    std::cout << "0" << std::endl;
 
     GRelation lubJ = a_.lub().join(j_,b_.lub());
     GECODE_ME_CHECK(c_.exclude(home,lubJ.complement()));
+    std::cout << "1" << std::endl;
 
     // Second, pruning B
     GRelation bc_lub = compute_bc_lub();
     GRelation y = b_.lub().intersect(bc_lub);
     GECODE_ME_CHECK(b_.exclude(home,y.complement()));
+    std::cout << "2" << std::endl;
 
     GRelation bc_glb = compute_bc_glb();
     GECODE_ME_CHECK(b_.include(home,bc_glb));
+    std::cout << "3" << std::endl;
 
     // First, pruning A
     GRelation ac_glb = compute_ac_glb();
     GECODE_ME_CHECK(a_.include(home,ac_glb));
+    std::cout << "4" << std::endl;
 
     GRelation ac_lub = compute_ac_lub();
     GRelation z = a_.lub().intersect(ac_lub);
     GECODE_ME_CHECK(a_.exclude(home,z.complement()));
+    std::cout << "5" << std::endl;
 
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {

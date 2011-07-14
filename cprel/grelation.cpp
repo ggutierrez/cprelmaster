@@ -259,12 +259,29 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
     return os;
   }
 
+  // output of the relation
+  os << GRelationIO::curr_start_;
   for(GRelationIter it(r); it(); ++it) {
-    os << it.val() << " ";
-    //os << it.val() << std::endl; //" ";
+    os << it.val() << GRelationIO::curr_row_separator_;
   }
+  os << GRelationIO::curr_end_;
+
   return os;
 }
+
+std::string GRelationIO::curr_row_separator_ = "";
+std::string GRelationIO::curr_value_separator_ = "";
+std::string GRelationIO::curr_start_ = "";
+std::string GRelationIO::curr_end_ = "";
+
+std::ostream& operator<< (std::ostream& os, const GRelationIO& f) {
+  GRelationIO::curr_row_separator_ = f.row_separator_;
+  GRelationIO::curr_value_separator_ = f.value_separator_;
+  GRelationIO::curr_start_ = f.start_;
+  GRelationIO::curr_end_ = f.end_;
+  return os;
+}
+
 
 GRelationIter::GRelationIter(const GRelation& r)
   : pimpl_(new VarImpl::RelationImplIter(r.pimpl_->tuples()))

@@ -6,6 +6,8 @@
 #include <fstream>
 //#include <tests/ground-relations/midi-small.hh>
 
+
+
 using std::cout;
 using std::endl;
 using std::pair;
@@ -13,13 +15,23 @@ using std::vector;
 using std::make_pair;
 using std::ifstream;
 
+
+#include <algorithm>
+#include <cassert>
+#include <climits>
+#include <iomanip>
+#include <iostream>
+#include <locale>
+
 using namespace MPG::CPRel;
 using namespace MPG::CPRel::VarImpl;
+
+GRelationIO custom("<table><tr>","</tr></table>","","</tr><tr>");
 
 int main(void) {
   cout << "Tests starts" << endl;
   {
-/*
+    /*
     ifstream input("/home/gg/Work/cprel/tests/ground-relations/midi-medium.txt");
     GRelation r = read(input,5);
     PermDescriptor pd;
@@ -32,14 +44,14 @@ int main(void) {
 
     ifstream inputL("/home/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
     GRelation w = read(inputL,3);
-    cout << "Left relation: " << w << endl << endl;
+    cout << custom << "Left relation: " << w << endl << endl;
 
-//    ifstream inputR("/home/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
-//    GRelation x = read(inputR,2);
-//    cout << "Right relation: " << x << endl << endl;
+    //    ifstream inputR("/home/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
+    //    GRelation x = read(inputR,2);
+    //    cout << "Right relation: " << x << endl << endl;
 
-//    GRelation j = w.join(1,x);
-//    cout << "Join relation: " << j << endl << endl;
+    //    GRelation j = w.join(1,x);
+    //    cout << "Join relation: " << j << endl << endl;
 
     /*
     GRelation k = j.shiftRight(1);
@@ -47,8 +59,8 @@ int main(void) {
 
 
     */
-    GRelation l = w.project(2);
-    cout << "Cb: " << l << " with cardinality " << l.cardinality() << endl << endl;
+//    GRelation l = w.project(2);
+//    cout << "Cb: " << l << " with cardinality " << l.cardinality() << endl << endl;
   }
   return 0;
 }
