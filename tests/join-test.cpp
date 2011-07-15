@@ -26,8 +26,6 @@ using std::ifstream;
 using namespace MPG::CPRel;
 using namespace MPG::CPRel::VarImpl;
 
-GRelationIO custom("<table><tr>","</tr></table>","","</tr><tr>");
-
 int main(void) {
   cout << "Tests starts" << endl;
   {
@@ -44,7 +42,6 @@ int main(void) {
 
     ifstream inputL("/home/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
     GRelation w = read(inputL,3);
-    cout << custom << "Left relation: " << w << endl << endl;
 
     //    ifstream inputR("/home/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
     //    GRelation x = read(inputR,2);

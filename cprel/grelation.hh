@@ -237,29 +237,28 @@ private:
   std::string start_;
   /// String output at the end
   std::string end_;
-  /// String used to separate the values
-  std::string value_separator_;
-  /// String used to separate the rows
-  std::string row_separator_;
+  /// String used at the start of every value (tuple)
+  std::string value_start_;
+  /// String used at the end of every value (tuple)
+  std::string value_end_;
   /// \name Current values for the output
   //@{
   /// Current string used at the begining of every value
   static std::string curr_start_;
   /// Current string when ending the printing
   static std::string curr_end_;
-  /// Current separator for values
-  static std::string curr_value_separator_;
-  /// Current separator for rows
-  static std::string curr_row_separator_;
+  /// Current string start value
+  static std::string curr_value_start_;
+  /// Current string end value
+  static std::string curr_value_end_;
   //@}
   // Avoid default construction
   GRelationIO(void);
 public:
   /// Constructor
-  GRelationIO(const char* valStart, const char* valEnd, const char* valSep,
-              const char* rowSep)
-    : start_(valStart), end_(valEnd), value_separator_(valSep),
-      row_separator_(rowSep) {}
+  GRelationIO(const char* relStart, const char* relEnd, const char* valStart,
+              const char* valEnd)
+    : start_(relStart), end_(relEnd), value_start_(valStart), value_end_(valEnd) {}
   friend std::ostream& operator<< (std::ostream& os, const GRelation& r);
   friend std::ostream& operator<< (std::ostream& os, const GRelationIO& r);
 };

@@ -11,9 +11,6 @@ using std::make_pair;
 using namespace MPG;
 using namespace MPG::CPRel;
 
-GRelationIO custom("<table><tr>","</tr></table>","","</tr><tr>");
-
-
 pair<GRelation,GRelation> domR(void) {
   std::ifstream inputL("/home/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
   GRelation ub = read(inputL,3);
@@ -56,36 +53,19 @@ public:
    branch(*this,t);
   }
   void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
-    os << "<tr><td><b>" << varName << "</b></td>";
-    os << "<td>" << v.glb() << "</td><td>"
-       << v.unk() << "</td><td>" /*<< v.oob() */ << "</td><td>"
-       << (v.assigned()? "Yes" : "NO") << "</td></tr>";
+    os << "<tr><td><b>" << varName << "</b></td>"
+       << "<td>" << v.glb() << "</td>"
+       << "<td>" << v.unk() << "</td>"
+       << "<td>" << (v.assigned()? "Yes" : "NO") << "</td>";
   }
   void print(std::ostream& os) const {
-    std::string str;
-    std::stringstream ss(str);
-
-    ss << "<b>Space</b>";
-    ss << "<table border=\"1\">"
-       << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>";
-
-    printHtml(ss,"R",r);
-    printHtml(ss,"S",s);
-    printHtml(ss,"T",t);
-    ss << "</table>";
-
-    GRelation left = r.lub().join(1,s.lub());
-    GRelation res = t.lub().difference(left);
-    ss << "<br> Diff: " << res;
-
-    GRelation btest = s.lub().difference(t.lub().project(2));
-    ss << "<br> Btest: " << btest;
-
-    GRelation atest = r.lub().difference(t.lub().shiftRight(1));
-    ss << "<br> Atest: " << atest;
-
-    os << ss.str() << std::endl;
-
+    os << "<b>Space</b>";
+    os << "<table border=\"1\">"
+       << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>ASG?</th></tr>";
+    printHtml(os,"R",r);
+    printHtml(os,"S",s);
+    printHtml(os,"T",t);
+    os << "</table>" << std::endl;
   }
   JoinTest(bool share, JoinTest& sp)
     : Gecode::Space(share,sp) {
@@ -99,6 +79,10 @@ public:
 };
 
 int main(int, char**) {
+  // Set up the way tuples are printed
+  std::cout << TupleIO("<td>","</td>"," ");
+  std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
+
   JoinTest* g = new JoinTest();
 
   Gist::Print<JoinTest> p("Print solution");

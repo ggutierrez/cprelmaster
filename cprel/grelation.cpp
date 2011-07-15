@@ -262,21 +262,23 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r) {
   // output of the relation
   os << GRelationIO::curr_start_;
   for(GRelationIter it(r); it(); ++it) {
-    os << it.val() << GRelationIO::curr_row_separator_;
+    os << GRelationIO::curr_value_start_
+       << it.val()
+       << GRelationIO::curr_value_end_;
   }
   os << GRelationIO::curr_end_;
 
   return os;
 }
 
-std::string GRelationIO::curr_row_separator_ = "";
-std::string GRelationIO::curr_value_separator_ = "";
+std::string GRelationIO::curr_value_start_ = "";
+std::string GRelationIO::curr_value_end_ = "";
 std::string GRelationIO::curr_start_ = "";
 std::string GRelationIO::curr_end_ = "";
 
 std::ostream& operator<< (std::ostream& os, const GRelationIO& f) {
-  GRelationIO::curr_row_separator_ = f.row_separator_;
-  GRelationIO::curr_value_separator_ = f.value_separator_;
+  GRelationIO::curr_value_start_ = f.value_start_;
+  GRelationIO::curr_value_end_ = f.value_end_;
   GRelationIO::curr_start_ = f.start_;
   GRelationIO::curr_end_ = f.end_;
   return os;
