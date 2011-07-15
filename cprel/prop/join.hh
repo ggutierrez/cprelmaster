@@ -90,11 +90,13 @@ public:
     GECODE_ME_CHECK(c_.exclude(home,max_possile_left.complement()));
 
     GRelation needed_by_blub = a_.glb().join(j_,b_.lub());
-    GRelation no_support_c_blub = needed_by_blub.difference(c_.lub()).project(b_.arity());
+    GRelation no_support_c_blub =
+        needed_by_blub.difference(c_.lub()).project(b_.arity());
     GECODE_ME_CHECK(b_.exclude(home,no_support_c_blub));
 
     GRelation needed_by_alub = a_.lub().join(j_,b_.glb());
-    GRelation no_support_c_alub = needed_by_alub.difference(c_.lub()).shiftRight(b_.arity()-j_);
+    GRelation no_support_c_alub =
+        needed_by_alub.difference(c_.lub()).shiftRight(b_.arity()-j_);
     GECODE_ME_CHECK(a_.exclude(home,no_support_c_alub));
 
     GRelation bc_lub = compute_bc_lub();

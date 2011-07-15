@@ -94,4 +94,29 @@ vector<int> Tuple::value(void) const {
 
   return tuple;
 }
+
+std::string TupleIO::curr_value_separator_ = ",";
+std::string TupleIO::curr_start_ = "[";
+std::string TupleIO::curr_end_ = "]";
+
+std::ostream& operator<< (std::ostream& os, const TupleIO& f) {
+  TupleIO::curr_value_separator_ = f.value_separator_;
+  TupleIO::curr_start_ = f.start_;
+  TupleIO::curr_end_ = f.end_;
+  return os;
+}
+
+std::ostream& operator << (std::ostream& os, const Tuple& t) {
+  os << TupleIO::curr_start_;
+  const std::vector<int>& v = t.value();
+  for (unsigned int i = 0; i < v.size(); i++) {
+    os << v.at(i);
+    if (i < v.size()-1)
+      os << TupleIO::curr_value_separator_;
+  }
+  os << TupleIO::curr_end_;
+  return os;
+
+}
+
 }}

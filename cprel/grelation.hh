@@ -229,26 +229,29 @@ std::ostream& operator<< (std::ostream& os, const GRelation& r);
 /**
  * \brief Iostream printing
  *
- * This class defines basic properties the influence ground relation output.
+ * Basic properties the influence ground relation output.
  */
 class GRelationIO {
 private:
   /// String output when starting the printing
   std::string start_;
-  /// Current string used at the begining of every value
-  static std::string curr_start_;
   /// String output at the end
   std::string end_;
-  /// Current string when ending the printing
-  static std::string curr_end_;
   /// String used to separate the values
   std::string value_separator_;
-  /// Current separator for values
-  static std::string curr_value_separator_;
   /// String used to separate the rows
   std::string row_separator_;
+  /// \name Current values for the output
+  //@{
+  /// Current string used at the begining of every value
+  static std::string curr_start_;
+  /// Current string when ending the printing
+  static std::string curr_end_;
+  /// Current separator for values
+  static std::string curr_value_separator_;
   /// Current separator for rows
   static std::string curr_row_separator_;
+  //@}
   // Avoid default construction
   GRelationIO(void);
 public:
@@ -257,7 +260,6 @@ public:
               const char* rowSep)
     : start_(valStart), end_(valEnd), value_separator_(valSep),
       row_separator_(rowSep) {}
-
   friend std::ostream& operator<< (std::ostream& os, const GRelation& r);
   friend std::ostream& operator<< (std::ostream& os, const GRelationIO& r);
 };

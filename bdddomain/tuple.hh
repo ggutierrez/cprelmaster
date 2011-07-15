@@ -15,8 +15,6 @@ namespace MPG { namespace CPRel {
  *
  * Tuples are the abstraction for the elements of relations.
  */
-/// Exception indicating invalid permutation description
-
 namespace VarImpl {
 /*
   These forward declarations are needed because of the friend relation between
@@ -118,21 +116,44 @@ Tuple make_Tuple(int a, int b, int c) {
 }
 
 /**
+ * \brief Iostream printing of tuples
+ *
+ * Basic properties the influence tuple output.
+ */
+class TupleIO {
+private:
+  /// String output when starting the printing
+  std::string start_;
+  /// String output at the end
+  std::string end_;
+  /// String used to separate the values
+  std::string value_separator_;
+  /// \name Current values for the output
+  //@{
+  /// Current string used at the begining of every value
+  static std::string curr_start_;
+  /// Current string when ending the printing
+  static std::string curr_end_;
+  /// Current separator for values
+  static std::string curr_value_separator_;
+  //@}
+  // Avoid default construction
+  TupleIO(void);
+public:
+  /// Constructor
+  TupleIO(const char* valStart, const char* valEnd, const char* valSep)
+    : start_(valStart), end_(valEnd), value_separator_(valSep) {}
+  friend std::ostream& operator<< (std::ostream& os, const Tuple& r);
+  friend std::ostream& operator<< (std::ostream& os, const TupleIO& r);
+};
+
+/// Operator to change the ouput format of ground relations
+std::ostream& operator<< (std::ostream& os, const TupleIO& f);
+
+/**
  * \brief Outputs tuple \a t to \a os
  * \ingroup TupleGroup
  */
-inline
-std::ostream& operator << (std::ostream& os, const Tuple& t) {
-  os << "[";
-  const std::vector<int>& v = t.value();
-  for (unsigned int i = 0; i < v.size(); i++) {
-    os << v.at(i);
-    if (i < v.size()-1)
-      os << ",";
-  }
-  os << "]";
-  return os;
-
-}
+std::ostream& operator << (std::ostream& os, const Tuple& t);
 }}
 #endif

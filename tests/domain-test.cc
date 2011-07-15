@@ -14,6 +14,8 @@ using std::make_pair;
 using namespace MPG::CPRel;
 using namespace MPG::CPRel::VarImpl;
 
+
+
 RelationImpl test0(void) {
   RelationImpl ub(3);
   ub.add(make_Tuple(0,3,9));
@@ -26,6 +28,9 @@ RelationImpl test0(void) {
 }
 
 int main(void) {
+
+  cout << TupleIO("(",")"," ");
+
   cout << "Tests starts" << endl;
   {
     RelationImpl r = test0();
