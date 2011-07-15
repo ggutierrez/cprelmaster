@@ -74,6 +74,16 @@ public:
     printHtml(ss,"T",t);
     ss << "</table>";
 
+    GRelation left = r.lub().join(1,s.lub());
+    GRelation res = t.lub().difference(left);
+    ss << "<br> Diff: " << res;
+
+    GRelation btest = s.lub().difference(t.lub().project(2));
+    ss << "<br> Btest: " << btest;
+
+    GRelation atest = r.lub().difference(t.lub().shiftRight(1));
+    ss << "<br> Atest: " << atest;
+
     os << ss.str() << std::endl;
 
   }

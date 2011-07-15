@@ -79,42 +79,37 @@ public:
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
-    std::cout << "Propagating join!" << std::endl;
+//    std::cout << "Propagating join!" << std::endl;
     // implements: A \bowtie_{j} B = C
     // First part: C \subseteq A \bowtie_{j} B
 
     GRelation glbJ = a_.glb().join(j_,b_.glb());
-    std::cout << "a glb " << a_.glb() << std::endl;
-    std::cout << "g glb " << b_.glb() << std::endl;
-    std::cout << "should include: " << glbJ << " cardinality " << glbJ.cardinality() << std::endl;
-    std::cout << "c lub: " << c_.lub() << " cardinality " << c_.lub().cardinality() << std::endl;
     GECODE_ME_CHECK(c_.include(home,glbJ));
 
-    std::cout << "0" << std::endl;
+    GRelation max_possile_left = a_.lub().join(j_,b_.lub());
+    GECODE_ME_CHECK(c_.exclude(home,max_possile_left.complement()));
 
-    GRelation lubJ = a_.lub().join(j_,b_.lub());
-    GECODE_ME_CHECK(c_.exclude(home,lubJ.complement()));
-    std::cout << "1" << std::endl;
+    GRelation needed_by_blub = a_.glb().join(j_,b_.lub());
+    GRelation no_support_c_blub = needed_by_blub.difference(c_.lub()).project(b_.arity());
+    GECODE_ME_CHECK(b_.exclude(home,no_support_c_blub));
 
-    // Second, pruning B
+    GRelation needed_by_alub = a_.lub().join(j_,b_.glb());
+    GRelation no_support_c_alub = needed_by_alub.difference(c_.lub()).shiftRight(b_.arity()-j_);
+    GECODE_ME_CHECK(a_.exclude(home,no_support_c_alub));
+
     GRelation bc_lub = compute_bc_lub();
     GRelation y = b_.lub().intersect(bc_lub);
     GECODE_ME_CHECK(b_.exclude(home,y.complement()));
-    std::cout << "2" << std::endl;
 
     GRelation bc_glb = compute_bc_glb();
     GECODE_ME_CHECK(b_.include(home,bc_glb));
-    std::cout << "3" << std::endl;
 
-    // First, pruning A
     GRelation ac_glb = compute_ac_glb();
     GECODE_ME_CHECK(a_.include(home,ac_glb));
-    std::cout << "4" << std::endl;
 
     GRelation ac_lub = compute_ac_lub();
     GRelation z = a_.lub().intersect(ac_lub);
     GECODE_ME_CHECK(a_.exclude(home,z.complement()));
-    std::cout << "5" << std::endl;
 
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {
