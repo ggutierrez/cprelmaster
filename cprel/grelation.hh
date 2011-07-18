@@ -78,6 +78,12 @@ public:
    * remains unchanged.
    */
   void add(const Tuple& t);
+  #ifdef __GXX_EXPERIMENTAL_CXX0X__
+  /**
+   * \brief Adds the tuples contained in \a s to the relation.
+   */
+  void add(const std::vector<Tuple>& s);
+  #endif
   /**
    * \brief Union of relations: \f$ this = this \cup r \f$.
    */
@@ -214,6 +220,12 @@ GRelation create_full(int a);
  * either empty or failed.
  * \todo Perform some checking to guarantee that the elements that are read are
  * representable.
+ * \example
+ * \code
+   std::ifstream input("/path/r.txt");
+   // assumes that input contains a ternary relation
+   GRelation ub = read(input,3);
+ * \endcode
  */
 GRelation read(std::istream& is, int arity);
 

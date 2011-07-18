@@ -12,25 +12,31 @@ using namespace MPG;
 using namespace MPG::CPRel;
 
 pair<GRelation,GRelation> domR(void) {
-  std::ifstream inputL("/home/gg/Work/cprelmaster/tests/ground-relations/r3.txt");
-  GRelation ub = read(inputL,3);
+  GRelation ub(3);
+  ub.add({
+   {1,3,2},
+   {4,5,7},
+   {8,2,2},
+   {6,5,3}
+  });
   return make_pair(GRelation(3),ub);
 }
 
 pair<GRelation,GRelation> domS(void) {
-  std::ifstream inputR("/home/gg/Work/cprelmaster/tests/ground-relations/s2.txt");
-  GRelation ub = read(inputR,2);
+  GRelation ub(2);
+  ub.add({
+   {5,1},
+   {2,8},
+   {2,9},
+   {7,4}
+  });
   return make_pair(GRelation(2),ub);
 }
 
 pair<GRelation,GRelation> domT(void) {
   GRelation ub = create_full(4);
-  //GRelation lb(4);
-  //lb.add(Tuple({1,3,2,9}));
-  //lb.add(Tuple({8,2,2,8}));
   return make_pair(GRelation(4),ub);
-  //return make_pair(lb,ub);
-  }
+}
 
 class JoinTest : public Gecode::Space {
 protected:
@@ -52,19 +58,18 @@ public:
    //branch(*this,s);
    branch(*this,t);
   }
-  void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
+  void print(std::ostream& os, const char* varName, CPRelVar v) const {
     os << "<tr><td><b>" << varName << "</b></td>"
        << "<td>" << v.glb() << "</td>"
        << "<td>" << v.unk() << "</td>"
        << "<td>" << (v.assigned()? "Yes" : "NO") << "</td>";
   }
   void print(std::ostream& os) const {
-    os << "<b>Space</b>";
     os << "<table border=\"1\">"
        << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>ASG?</th></tr>";
-    printHtml(os,"R",r);
-    printHtml(os,"S",s);
-    printHtml(os,"T",t);
+    print(os,"R",r);
+    print(os,"S",s);
+    print(os,"T",t);
     os << "</table>" << std::endl;
   }
   JoinTest(bool share, JoinTest& sp)
@@ -79,8 +84,9 @@ public:
 };
 
 int main(int, char**) {
-  // Set up the way tuples are printed
+  // Setup the way tuples are printed
   std::cout << TupleIO("<td>","</td>"," ");
+  // Setup the way relations are printed
   std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
 
   JoinTest* g = new JoinTest();

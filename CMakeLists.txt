@@ -484,9 +484,11 @@ add_custom_target(dist
 #add_executable(projection tests/projection.cpp)
 #target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
 
-# test for the join propagator
-add_executable(join tests/join.cpp)
-target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+if(C0X_SUPPORT)
+  # test for the join propagator
+  add_executable(join tests/join.cpp)
+  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+endif()
 
 add_executable(minimal tests/minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})

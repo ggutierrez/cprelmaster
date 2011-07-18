@@ -33,6 +33,12 @@ GRelation GRelation::create_full(int a) {
 void GRelation::add(const Tuple &t) {
   pimpl_->add(t);
 }
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+void GRelation::add(const std::vector<Tuple>& s) {
+  std::for_each(s.begin(), s.end(),
+                [=](const Tuple& t) { pimpl_->add(t); });
+}
+#endif
 
 int GRelation::arity(void) const {
   return pimpl_->arity();
