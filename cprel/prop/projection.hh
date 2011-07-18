@@ -27,10 +27,10 @@ public:
   /// Propagator posting
   static Gecode::ExecStatus post(Gecode::Home home, int p, ViewA a, ViewB b) {
 
+    /// \todo If the arity of a is j then this constraint should reduce to equality??
     // check that the relations has the right arities
-    if (a.arity()-p != b.arity()) {
-      std::cerr << "Invalid arity for the relations or the size of the descriptor"
-                << std::endl;
+    if (p > a.arity() || b.arity() != p) {
+      std::cerr << "Invalid arity for the relations" << std::endl;
       return Gecode::ES_FAILED;
     }
 
@@ -95,6 +95,9 @@ public:
    */
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
+
+    std::cout << "propagating projection" << std::endl;
+
     // implements: \Pi_{p}A = B
     // First part: \Pi_{p}A \implies B
     //    \Pi_{p}glb(A) \subseteq B
@@ -119,14 +122,16 @@ public:
       q.push_back(i);
     }
 
-    GRelation Uq = lubA.unique(q).intersect(a_.lub());
-    if (! Uq.empty()) {
-      GRelation to_include = Uq.intersect(b_.glb().timesU(a_.arity()-p_,true));
-      GECODE_ME_CHECK(a_.include(home,to_include));
-    }
+    //GRelation Uq = lubA.unique(q); //.intersect(a_.lub());
+    //std::cout << "Unique: " << Uq << " cardinality: " << Uq.cardinality() << std::endl;
+//    if (! Uq.empty()) {
+//      GRelation to_include = Uq.intersect(b_.glb().timesU(a_.arity()-p_,true));
+//      GECODE_ME_CHECK(a_.include(home,to_include));
+//    }
 
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned())
+      /// \todo b can be assigned before a!
       return home.ES_SUBSUMED(*this);
 
     return Gecode::ES_FIX;

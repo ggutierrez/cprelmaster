@@ -79,13 +79,11 @@ public:
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
-//    std::cout << "Propagating join!" << std::endl;
-    // implements: A \bowtie_{j} B = C
-    // First part: C \subseteq A \bowtie_{j} B
-
+    // C must have atleast the join of what is known in A and B
     GRelation glbJ = a_.glb().join(j_,b_.glb());
     GECODE_ME_CHECK(c_.include(home,glbJ));
 
+    // C can have atmost the join of what is possible in A and B
     GRelation max_possile_left = a_.lub().join(j_,b_.lub());
     GECODE_ME_CHECK(c_.exclude(home,max_possile_left.complement()));
 

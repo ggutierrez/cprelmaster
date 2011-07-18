@@ -6,7 +6,6 @@ using namespace CPRel::Prop;
 void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B) {
   if (home.failed()) return;
 
-  // p has to be a valid projection description for A
   typedef boost::error_info<struct tag_proj_descriptor,std::string>
       proj_descriptor;
   if (p > A.arity())

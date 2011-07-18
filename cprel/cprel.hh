@@ -6,6 +6,7 @@
 #include <climits>
 
 #include <gecode/kernel.hh>
+#include <gecode/set.hh> // for channel constraint
 #include <cprel/grelation.hh>
 
 using Gecode::Exception;
@@ -246,6 +247,17 @@ void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B);
  * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n+m-j}\f$
  */
 void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
+/**
+ * \brief Posts the constraint: \f$ R = S\f$
+ * \ingroup ChannelProp
+ *
+ * @param R a unary relation decision variable: \f$A\subseteq\mathcal{U}_{1}\f$
+ * @param S a set decision variable.
+ *
+ * \warning Throws an exception MPG::CPRel::ArityMissmatch if the arity of \a R
+ * is not 1.
+ */
+void channel(Gecode::Space& home, CPRelVar R, Gecode::SetVar S);
 
 void branch(Gecode::Home home, CPRelVar x);
 }

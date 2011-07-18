@@ -344,6 +344,10 @@ set(CPREL_SRCS
   cprel/prop/join.cpp
   cprel/prop/projection.cpp
   cprel/prop/projection.hh
+  cprel/prop/channel.cpp
+  cprel/prop/channel.hh
+
+
 
 # branchers
   cprel/branch/branch.cpp
@@ -486,15 +490,18 @@ add_custom_target(dist
 
 if(C0X_SUPPORT)
   # test for the join propagator
-  add_executable(join tests/join.cpp)
-  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+#  add_executable(join tests/join.cpp)
+#  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+  # test for the channel propagator
+  add_executable(channel tests/channel.cpp)
+  target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES})
 endif()
 
-add_executable(minimal tests/minimal.cpp)
-target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
+#add_executable(minimal tests/minimal.cpp)
+#target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
 
-add_executable(domain-test tests/domain-test.cc)
-target_link_libraries(domain-test bdddomain)
+#add_executable(domain-test tests/domain-test.cc)
+#target_link_libraries(domain-test bdddomain)
 
 #add_executable(grel-test tests/grel-test.cpp)
 #target_link_libraries(grel-test gecodecprel)
@@ -503,8 +510,8 @@ target_link_libraries(domain-test bdddomain)
 #add_executable(swap-test tests/swap-test.cpp)
 #  target_link_libraries(swap-test gecodecprel)
 
-add_executable(join-test tests/join-test.cpp)
-  target_link_libraries(join-test gecodecprel)
+#add_executable(join-test tests/join-test.cpp)
+#  target_link_libraries(join-test gecodecprel)
 
 #add_executable(proj-test tests/proj-test.cpp)
 #  target_link_libraries(proj-test gecodecprel)
