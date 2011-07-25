@@ -59,6 +59,38 @@ public:
 
     std::cout << "Propagating channel constraint" << std::endl;
 
+    /// \todo  The current implementation of this constraint iterates on the
+    /// tuples of the relation. It does not take any advantage from the domain
+    /// representation. It would be better if this can be improved.
+
+    // Pruning the set based on the information in the relation
+    // 1a Every knwon element in the relation must be known in the set
+    for (GRelationIter relKnown(rel_.glb()); relKnown(); ++relKnown) {
+      std::cout << "Should be known in set " << relKnown.val() << std::endl;
+    }
+
+    // 1b Every possible element in the relation must be possible in the set
+    for (GRelationIter relUnkwnon(rel_.unk()); relUnkwnon(); ++relUnkwnon) {
+      std::cout << "Should be possible in set " << relUnkwnon.val() << std::endl;
+    }
+
+    // Pruning the relation based on the information in the set
+    // 2a Every known element in the set must be known in the relation
+    auto knownRangesSet = Gecode::Set::GlbRanges<SetView>(set_);
+    auto knownValuesSet =
+        Gecode::Iter::Ranges::ToValues<decltype(knownRangesSet)>(knownRangesSet);
+    for (; knownValuesSet(); ++knownValuesSet) {
+      std::cout << "Should be possible in rel " << knownValuesSet.val() << std::endl;
+    }
+    // 2b Every possible element in the set must be possible in the relation
+    auto unknownRangesSet = Gecode::Set::UnknownRanges<SetView>(set_);
+    auto unknownValuesSet =
+        Gecode::Iter::Ranges::ToValues<decltype(unknownRangesSet)>(unknownRangesSet);
+    for (; unknownValuesSet(); ++unknownValuesSet) {
+      std::cout << "Should be possible in rel " << unknownValuesSet.val() << std::endl;
+    }
+
+
     // Propagator subsumpiton
     if (set_.assigned()) {
       assert(rel_.assigned());

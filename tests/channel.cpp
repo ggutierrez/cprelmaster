@@ -36,10 +36,11 @@ public:
 
    // b is the projection on the first column of a
    projection(*this,1,a,b);
-   //channel(*this,a,s);
+   channel(*this,b,s);
    branch(*this,b);
    Gist::stopBranch(*this);
    branch(*this,a);
+//   Gist::stopBranch(*this);
   }
   void print(std::ostream& os, const char* varName, CPRelVar v) const {
     os << "<tr><td><b>" << varName << "</b></td>"
@@ -53,6 +54,7 @@ public:
     print(os,"A",a);
     print(os,"B",b);
     os << "</table>";
+    os << "Set: " << s << std::endl;
   }
   ChannelTest(bool share, ChannelTest& sp)
     : Gecode::Space(share,sp) {
