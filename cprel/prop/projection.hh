@@ -122,12 +122,12 @@ public:
       q.push_back(i);
     }
 
-    //GRelation Uq = lubA.unique(q); //.intersect(a_.lub());
-    //std::cout << "Unique: " << Uq << " cardinality: " << Uq.cardinality() << std::endl;
-//    if (! Uq.empty()) {
-//      GRelation to_include = Uq.intersect(b_.glb().timesU(a_.arity()-p_,true));
-//      GECODE_ME_CHECK(a_.include(home,to_include));
-//    }
+    GRelation Uq = lubA.unique(q).intersect(a_.lub());
+    std::cout << "Unique: " << Uq << " cardinality: " << Uq.cardinality() << std::endl;
+    if (! Uq.empty()) {
+      GRelation to_include = Uq.intersect(b_.glb().timesU(a_.arity()-p_,true));
+      GECODE_ME_CHECK(a_.include(home,to_include));
+    }
 
     // Propagator subsumpiton
     if (a_.assigned() && b_.assigned())

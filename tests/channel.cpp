@@ -38,7 +38,8 @@ public:
    projection(*this,1,a,b);
    //channel(*this,a,s);
    branch(*this,b);
-//   branch(*this,b);
+   Gist::stopBranch(*this);
+   branch(*this,a);
   }
   void print(std::ostream& os, const char* varName, CPRelVar v) const {
     os << "<tr><td><b>" << varName << "</b></td>"
@@ -51,9 +52,7 @@ public:
        << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>ASG?</th></tr>";
     print(os,"A",a);
     print(os,"B",b);
-    //print(os,"T",t);
     os << "</table>";
-    os << "The set: " << s << std::endl;
   }
   ChannelTest(bool share, ChannelTest& sp)
     : Gecode::Space(share,sp) {

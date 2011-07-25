@@ -132,7 +132,13 @@ set(CUDD_SRCS_)
 foreach(file ${CUDD_SRCS})
   list(APPEND CUDD_SRCS_ ${CUDD_SOURCES}/cudd/${file})
 endforeach()
-add_library(cudd ${CUDD_SRCS_} ${EXTRA_CUDD_SRCS})
+
+list(APPEND CUDD_SRCS_ ${CMAKE_SOURCE_DIR}/bdddomain/unique.c)
+list(APPEND CUDD_SRCS_ ${CMAKE_SOURCE_DIR}/bdddomain/unique.h)
+
+  # list(APPEND CUDD_SRCS_ ${EXTRA CUDD_SOURCES}/cudd/${file})
+message(STATUS ${CUDD_SRCS_})
+add_library(cudd ${CUDD_SRCS_})
 
 set(UTIL_SRCS_)
 foreach(file ${UTIL_SRCS})
@@ -495,6 +501,9 @@ if(C0X_SUPPORT)
   # test for the channel propagator
   add_executable(channel tests/channel.cpp)
   target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES})
+
+  add_executable(proj-test tests/proj-test.cpp)
+  target_link_libraries(proj-test gecodecprel)
 endif()
 
 #add_executable(minimal tests/minimal.cpp)
@@ -513,8 +522,6 @@ endif()
 #add_executable(join-test tests/join-test.cpp)
 #  target_link_libraries(join-test gecodecprel)
 
-#add_executable(proj-test tests/proj-test.cpp)
-#  target_link_libraries(proj-test gecodecprel)
 
 #add_executable(midi-4seasons-test tests/midi-four-seasons.cpp)
 #  target_link_libraries(midi-4seasons-test gecodecprel)
