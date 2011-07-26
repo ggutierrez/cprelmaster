@@ -1,3 +1,4 @@
+#include <boost/chrono.hpp>
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
 #include <gecode/set.hh>
@@ -74,6 +75,9 @@ public:
 };
 
 int main(int, char**) {
+  boost::chrono::system_clock::time_point
+      start = boost::chrono::system_clock::now();
+
   // Setup the way tuples are printed
   std::cout << TupleIO("<td>","</td>"," ");
   // Setup the way relations are printed
@@ -87,5 +91,8 @@ int main(int, char**) {
   Gist::dfs(g,o);
   delete g;
 
+  boost::chrono::duration<double>
+      runtime = boost::chrono::system_clock::now() - start;
+  std::cout << "Took " << runtime.count() << " seconds\n";
   return 0;
 }

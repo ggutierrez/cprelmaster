@@ -135,9 +135,6 @@ endforeach()
 
 list(APPEND CUDD_SRCS_ ${CMAKE_SOURCE_DIR}/bdddomain/unique.c)
 list(APPEND CUDD_SRCS_ ${CMAKE_SOURCE_DIR}/bdddomain/unique.h)
-
-  # list(APPEND CUDD_SRCS_ ${EXTRA CUDD_SOURCES}/cudd/${file})
-message(STATUS ${CUDD_SRCS_})
 add_library(cudd ${CUDD_SRCS_})
 
 set(UTIL_SRCS_)
@@ -221,7 +218,11 @@ if(UNIT_TEST)
   message(STATUS "Building unit tests")
   list(APPEND BOOST_COMPONENTS unit_test_framework)
 endif()
-find_package(Boost 1.36.0 COMPONENTS ${BOOST_COMPONENTS})
+#add_definitions("-DBOOST_CHRONO_HEADER_ONLY")
+list(APPEND BOOST_COMPONENTS system)
+list(APPEND BOOST_COMPONENTS chrono)
+
+find_package(Boost 1.47.0 COMPONENTS ${BOOST_COMPONENTS})
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
   if(UNIT_TEST)
@@ -500,7 +501,7 @@ if(C0X_SUPPORT)
 #  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
   # test for the channel propagator
   add_executable(channel tests/channel.cpp)
-  target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES})
+  target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
   add_executable(proj-test tests/proj-test.cpp)
   target_link_libraries(proj-test gecodecprel)
