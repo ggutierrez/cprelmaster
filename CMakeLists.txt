@@ -286,24 +286,20 @@ find_package(Gecode)
 if(GECODE_FOUND)
   message(STATUS "Found Gecode version: ${GECODE_VERSION}")
   message(STATUS "Using gecode version: ${GECODE_VERSION}")
-  set(MIN_GECODE_REQUIRED 3.5.0)
-  set(GECODE_KERNEL_CLASS "CPRelVarImpBase")
-  if ((${GECODE_VERSION} VERSION_EQUAL ${MIN_GECODE_REQUIRED}) OR
+  set(MIN_GECODE_REQUIRED 3.6.0)
+  if((${GECODE_VERSION} VERSION_EQUAL ${MIN_GECODE_REQUIRED}) OR
       (${GECODE_VERSION} VERSION_GREATER ${MIN_GECODE_REQUIRED}))
     message(STATUS "  Gecode library version is OK")
-    # Detect if gecode was build to support the CPRel variable type
-    find_file(GECODE_VIMP gecode/kernel/var-imp.hpp)
-    file(STRINGS ${GECODE_VIMP} GECODE_LINE_BREL_CLASS
-      REGEX "^.*class ${GECODE_KERNEL_CLASS} .*")
-    message(STATUS "Gecode class: ${GECODE_LINE_BREL_CLASS}")
-    list(LENGTH GECODE_LINE_BREL_CLASS GECODE_BREL_SUPPORT)
-    if(GECODE_BREL_SUPPORT)
-      message(STATUS  "  Gecode was built with support for the BRel type of variable.")
-    endif()
+  endif()
+  if(GECODE_CPREL_SUPPORT)
+    message(STATUS  "  Gecode was built with support for the CPRel type of variable.")
+  endif()
+  if(GECODE_CPTUPLE_SUPPORT)
+    message(STATUS  "  Gecode was built with support for the CPTuple type of variable.")
   endif()
 endif()
 
-if(NOT GECODE_BREL_SUPPORT)
+if(NOT GECODE_CPREL_SUPPORT OR NOT GECODE_CPTUPLE_SUPPORT)
   message(STATUS "No compatible version of gecode was found.")
   message(STATUS "  To build the gecode you need please execute make GECODE_INSTALL.")
   message(STATUS "  and reconfigure with option -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}")
@@ -315,7 +311,7 @@ if(NOT GECODE_BREL_SUPPORT)
 
   set(VIS_INPUTS "${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
   set(VIS_INPUTS "${VIS_INPUTS} ${CMAKE_SOURCE_DIR}/cptuple/cptuple.vis")
-  
+
   list(APPEND VIS_INPUTS ${EXTRA_VIS})
   #list(APPEND CONFIGURE_OPTIONS "--with-vis=${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
   message(STATUS "VIS sources: ${VIS_INPUTS}")

@@ -54,6 +54,21 @@ if(GECODE_FOUND)
   if(GECODE_SET_LIBRARY)
     list(APPEND Gecode_LIBRARIES ${GECODE_SET_LIBRARY})
   endif()
+
+  find_file(GECODE_VIMP gecode/kernel/var-imp.hpp)
+  ## Detect if gecode has already support for CPRel. Sets variable GECODE_HAS_CPREL
+  ## to Yes
+  set(GECODE_CPREL_CLASS "CPRelVarImpBase")
+  file(STRINGS ${GECODE_VIMP} GECODE_LINE_CPREL_CLASS
+      REGEX "^.*class ${GECODE_CPREL_CLASS} .*")
+  message(STATUS "Gecode class: ${GECODE_LINE_CPREL_CLASS}")
+  list(LENGTH GECODE_LINE_CPREL_CLASS GECODE_CPREL_SUPPORT)
+
+  set(GECODE_CPTUPLE_CLASS "CPTupleVarImpBase")
+  file(STRINGS ${GECODE_VIMP} GECODE_LINE_CPTUPLE_CLASS
+      REGEX "^.*class ${GECODE_CPTUPLE_CLASS} .*")
+  message(STATUS "Gecode class: ${GECODE_LINE_CPTUPLE_CLASS}")
+  list(LENGTH GECODE_LINE_CPTUPLE_CLASS GECODE_CPTUPLE_SUPPORT)
 endif()
 
 
