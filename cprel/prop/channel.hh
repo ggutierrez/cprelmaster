@@ -57,21 +57,27 @@ public:
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
-    std::cout << "Propagating channel constraint" << std::endl;
-
     /// \todo  The current implementation of this constraint iterates on the
     /// tuples of the relation. It does not take any advantage from the domain
     /// representation. It would be better if this can be improved.
 
+    // Using the set cardinality to check the feasibility of the constraint
+    if (set_.cardMin() > rel_.lub().cardinality()) {
+      return Gecode::ES_FAILED;
+    }
+    if (set_.cardMax() < rel_.glb().cardinality()) {
+      return Gecode::ES_FAILED;
+    }
+
     // Pruning the set based on the information in the relation
     // 1a Every knwon element in the relation must be known in the set
     for (GRelationIter relKnown(rel_.glb()); relKnown(); ++relKnown) {
-      std::cout << "Should be known in set " << relKnown.val() << std::endl;
+      GECODE_ME_CHECK(set_.include(home,relKnown.val().value()[0]));
     }
 
     // 1b Every possible element in the relation must be possible in the set
-    for (GRelationIter relUnkwnon(rel_.unk()); relUnkwnon(); ++relUnkwnon) {
-      std::cout << "Should be possible in set " << relUnkwnon.val() << std::endl;
+    for (GRelationIter relOut(rel_.oob()); relOut(); ++relOut) {
+      GECODE_ME_CHECK(set_.exclude(home,relOut.val().value()[0]));
     }
 
     // Pruning the relation based on the information in the set
@@ -79,17 +85,21 @@ public:
     auto knownRangesSet = Gecode::Set::GlbRanges<SetView>(set_);
     auto knownValuesSet =
         Gecode::Iter::Ranges::ToValues<decltype(knownRangesSet)>(knownRangesSet);
+    GRelation known(1);
     for (; knownValuesSet(); ++knownValuesSet) {
-      std::cout << "Should be possible in rel " << knownValuesSet.val() << std::endl;
+      known.add(make_Tuple(knownValuesSet.val()));
     }
+    GECODE_ME_CHECK(rel_.include(home,known));
+
     // 2b Every possible element in the set must be possible in the relation
     auto unknownRangesSet = Gecode::Set::UnknownRanges<SetView>(set_);
     auto unknownValuesSet =
         Gecode::Iter::Ranges::ToValues<decltype(unknownRangesSet)>(unknownRangesSet);
+    GRelation possible(1);
     for (; unknownValuesSet(); ++unknownValuesSet) {
-      std::cout << "Should be possible in rel " << unknownValuesSet.val() << std::endl;
+      possible.add(make_Tuple(unknownValuesSet.val()));
     }
-
+    GECODE_ME_CHECK(rel_.exclude(home,known.Union(possible).complement()));
 
     // Propagator subsumpiton
     if (set_.assigned()) {

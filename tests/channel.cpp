@@ -32,15 +32,21 @@ public:
 
    b = CPRelVar(*this,GRelation(1),GRelation::create_full(1));
 
-   s = SetVar(*this,IntSet::empty,IntSet(0,5));
+   s = SetVar(*this,IntSet::empty,IntSet(0,7));
 
    // b is the projection on the first column of a
    projection(*this,1,a,b);
+   // Channel b with a set variable
    channel(*this,b,s);
+   // Constraint the cardinality of the set
+   cardinality(*this,s,2,2);
+
+   // branch on b
    branch(*this,b);
+   // visualize when branching on b is exhausted
    Gist::stopBranch(*this);
+   // branch on a
    branch(*this,a);
-//   Gist::stopBranch(*this);
   }
   void print(std::ostream& os, const char* varName, CPRelVar v) const {
     os << "<tr><td><b>" << varName << "</b></td>"

@@ -96,8 +96,6 @@ public:
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
-    std::cout << "propagating projection" << std::endl;
-
     // implements: \Pi_{p}A = B
     // First part: \Pi_{p}A \implies B
     //    \Pi_{p}glb(A) \subseteq B
@@ -123,7 +121,6 @@ public:
     }
 
     GRelation Uq = lubA.unique(q).intersect(a_.lub());
-    std::cout << "Unique: " << Uq << " cardinality: " << Uq.cardinality() << std::endl;
     if (! Uq.empty()) {
       GRelation to_include = Uq.intersect(b_.glb().timesU(a_.arity()-p_,true));
       GECODE_ME_CHECK(a_.include(home,to_include));
