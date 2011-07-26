@@ -245,10 +245,8 @@ else()
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND  ./bootstrap.sh ${BOOST_CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND ./b2 -j10 INSTALL_COMMAND ./b2 -j10 install
+    BUILD_COMMAND ./b2 -j${JOBS} INSTALL_COMMAND ./b2 -j${JOBS} install
   )
-
-********************
 endif()
 ##########################################################################
 # Domain representation using BDDs
@@ -307,8 +305,6 @@ endif()
 
 if(NOT GECODE_BREL_SUPPORT)
   message(STATUS "No compatible version of gecode was found.")
-  message(STATUS "  To build this library Gecode you need at least version ${MIN_GECODE_REQUIRED}")
-  message(STATUS "  and built with support for the relational constraint system.")
   message(STATUS "  To build the gecode you need please execute make GECODE_INSTALL.")
   message(STATUS "  and reconfigure with option -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}")
   include(ExternalProject)
@@ -332,7 +328,7 @@ if(NOT GECODE_BREL_SUPPORT)
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j10 INSTALL_COMMAND make install
+    BUILD_COMMAND make -j${JOBS} INSTALL_COMMAND make install
   )
 endif()
 ##########################################################################
