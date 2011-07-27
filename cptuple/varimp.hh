@@ -17,6 +17,11 @@ namespace MPG {
  */
 typedef CPRel::GRelation TupleSet;
 /**
+ * \brief Iterator on set of tuples
+ */
+typedef CPRel::GRelationIter TupleSetIter;
+
+/**
  * \brief The tuple concept is common to both systems and getting rid of the
  * namespace make the operations simpler to understand
  */
@@ -82,8 +87,7 @@ public:
   //@{
   /// Tests for assignment
   bool assigned(void) const {
-    assert(false);
-    return true;
+    return dom_.cardinality() == 1;
   }
   //@}
   /// \name Subscriptions handling

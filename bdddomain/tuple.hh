@@ -80,6 +80,8 @@ public:
   Tuple(const Tuple& t);
   /// Assignement operator
   Tuple& operator = (const Tuple& t);
+  /// Equality test
+  bool operator == (const Tuple& t) const;
   /// Destructor
   ~Tuple(void);
   /// Returns a vector with all the elements in the tuple

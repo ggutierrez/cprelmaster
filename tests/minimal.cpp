@@ -9,56 +9,59 @@ using namespace Gecode;
 using std::vector;
 using namespace MPG;
 using namespace MPG::CPRel;
+using namespace MPG::CPTuple;
 
-class GolombRuler : public Gecode::Space {
+class MinimalTest : public Gecode::Space {
 protected:
   CPRelVar r;
+  CPTupleVar t;
 public:
-  GolombRuler(void)  {
-    vector<Tuple> rl;
-    rl.reserve(4);
-    rl.push_back(make_Tuple(2,3)); rl.push_back(make_Tuple(0,0));
-    rl.push_back(make_Tuple(2,1)); rl.push_back(make_Tuple(1,1));
-
+  MinimalTest(void)  {
     CPRel::GRelation lb(2);// lb.add(make_Tuple(0,0));
-    CPRel::GRelation ub(CPRel::create(rl));
+    GRelation ub(2);
+    ub.add({{1,3}, {4,5}, {8,2}, {6,5}});
 
     r = CPRelVar(*this,lb,ub);
-    std::cerr << r << std::endl;
-    branch(*this,r);
+    t = CPTupleVar(*this,ub);
+//    std::cerr << "Relation: " << r << std::endl;
+    std::cerr << "Tuple: " << t << std::endl;
+    //branch(*this,r);
+    branch(*this,t);
   }
   virtual void constrain(const Gecode::Space&) {
 
   }
   void print(std::ostream& os) const {
-    os << "\tsol " << r << std::endl;
+    os << "\trel " << r << std::endl;
+    os << "\ttuple " << t << std::endl;
   }
-  GolombRuler(bool share, GolombRuler& s)
+  MinimalTest(bool share, MinimalTest& s)
     : Gecode::Space(share,s) {
     r.update(*this, share, s.r);
+    t.update(*this, share, s.t);
   }
   virtual Space* copy(bool share) {
-    return new GolombRuler(share,*this);
+    return new MinimalTest(share,*this);
   }
 };
 
 int main(int, char**) {
-  GolombRuler* g = new GolombRuler();
-
-  Gecode::BAB<GolombRuler> e(g);
+  MinimalTest* g = new MinimalTest();
+/*
+  Gecode::BAB<MinimalTest> e(g);
   delete g;
   std::cout << "Search will start" << std::endl;
   while (Gecode::Space* s = e.next()) {
-    static_cast<GolombRuler*>(s)->print(std::cout);
+    static_cast<MinimalTest*>(s)->print(std::cout);
     delete s;
   }
+*/
 
-  /*
-  Gist::Print<GolombRuler> p("Print solution");
+  Gist::Print<MinimalTest> p("Print solution");
   Gist::Options o;
   o.inspect.click(&p);
   Gist::dfs(g,o);
   delete g;
-*/
+
   return 0;
 }

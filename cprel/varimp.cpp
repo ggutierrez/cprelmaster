@@ -32,4 +32,4 @@ ModEvent CPRelVarImp::exclude(Space& home, const GRelation& r) {
 }}
 
 // Register a disposer for variable implementations
-Gecode::VarImpDisposer<MPG::CPRel::CPRelVarImp> d;
+Gecode::VarImpDisposer<MPG::CPRel::CPRelVarImp> rel_disposer;

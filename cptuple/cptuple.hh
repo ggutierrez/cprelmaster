@@ -20,11 +20,11 @@ namespace MPG { namespace CPTuple {
 //    : Exception(l,"Number out of limits") {}
 //};
 /// Exception indicating empty domain declaration
-//class VariableEmptyDomain : public Exception {
-//public:
-//  VariableEmptyDomain(const char* l)
-//    : Exception(l,"Attempt to create variable with empty domain") {}
-//};
+class VariableEmptyDomain : public Exception {
+public:
+  VariableEmptyDomain(const char* l)
+    : Exception(l,"Attempt to create variable with empty domain") {}
+};
 }}
 
 // Variable implementation definition
@@ -107,4 +107,7 @@ public:
 // View implementation
 #include <cptuple/view.hh>
 
+namespace MPG {
+void branch(Gecode::Home home, CPTupleVar x);
+}
 #endif

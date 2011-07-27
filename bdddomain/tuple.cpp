@@ -45,6 +45,10 @@ Tuple& Tuple::operator = (const Tuple& t) {
   return *this;
 }
 
+bool Tuple::operator == (const Tuple& t) const {
+  return arity_ == t.arity_ ? (data_ == t.data_) : false;
+}
+
 DdNode* Tuple::encode(int p, int a) {
   DdNode *f = one();
   DdNode *v, *tmp;

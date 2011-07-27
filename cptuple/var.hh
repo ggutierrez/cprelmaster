@@ -42,8 +42,8 @@ public:
     : Gecode::VarImpVar<CPTuple::CPTupleVarImp>
       (new (home) CPTuple::CPTupleVarImp(home,u)) {
     /// \todo Throw exception
-//    if (l.arity() != u.arity())
-//      throw CPRel::ArityMissmatch("CPTupleVar::CPTupleVar");
+    if (u.empty())
+      throw CPTuple::VariableEmptyDomain("CPTupleVar::CPTupleVar");
   }
   //@}
   /// \name Variable information

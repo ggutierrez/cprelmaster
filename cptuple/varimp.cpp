@@ -10,19 +10,26 @@ void CPTupleVarImp::dispose(Space&) {
 }
 
 ModEvent CPTupleVarImp::assign(Space& home, const CPRel::Tuple& t) {
-//  if (r.subsetEq(glb_)) return ME_CPREL_NONE;
-//  if (!r.subsetEq(lub_)) return ME_CPREL_FAILED;
-//  glb_.unionAssign(r);
-//  assert(glb_.subsetEq(lub_));
+  TupleSet s(t.arity());
+  s.add(t);
+
+  if (s.subsetEq(dom_))
+    dom_ = s;
+  else
+    return ME_CPTUPLE_FAILED;
+
   CPTupleDelta d(1,2);
-  return notify(home, assigned() ? ME_CPTUPLE_VAL : ME_CPTUPLE_MIN, d);
+  return notify(home, ME_CPTUPLE_VAL, d);
 }
 
 ModEvent CPTupleVarImp::exclude(Space& home, const CPRel::Tuple& t) {
-//  if (!r.disjoint(glb_)) return ME_CPREL_FAILED;
-//  if (r.disjoint(lub_)) return ME_CPREL_NONE;
-//  lub_.differenceAssign(r);
-//  assert(glb_.subsetEq(lub_));
+  TupleSet s(t.arity());
+  s.add(t);
+
+  if (s.disjoint(dom_)) return ME_CPTUPLE_NONE;
+  dom_.differenceAssign(s);
+  if (dom_.empty()) return ME_CPTUPLE_FAILED;
+
   CPTupleDelta d(1,2);
   return notify(home, assigned() ? ME_CPTUPLE_VAL : ME_CPTUPLE_MAX, d);
 }
@@ -30,4 +37,4 @@ ModEvent CPTupleVarImp::exclude(Space& home, const CPRel::Tuple& t) {
 }}
 
 // Register a disposer for variable implementations
-Gecode::VarImpDisposer<MPG::CPTuple::CPTupleVarImp> d;
+Gecode::VarImpDisposer<MPG::CPTuple::CPTupleVarImp> tuple_disposer;

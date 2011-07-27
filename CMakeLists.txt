@@ -392,7 +392,7 @@ set(CPTUPLE_SRCS
   cptuple/view.hh
 
 # branchers
-#  cprel/branch/branch.cpp
+  cptuple/branch/branch.cpp
 )
 add_library(gecodecptuple ${CPTUPLE_SRCS})
 target_link_libraries(gecodecptuple bdddomain ${Gecode_LIBRARIES})
