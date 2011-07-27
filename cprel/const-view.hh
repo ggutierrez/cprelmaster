@@ -3,7 +3,7 @@
 
 #include <gecode/kernel.hh>
 #include <cprel/cprel.hh>
-#include <cprel/grelation.hh>
+#include <rel/grelation.hh>
 
 namespace MPG { namespace CPRel {
 

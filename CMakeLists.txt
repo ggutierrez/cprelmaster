@@ -263,6 +263,14 @@ set(BDDDOMAIN_SRCS_)
 foreach(file ${BDDDOMAIN_SRCS})
   list(APPEND BDDDOMAIN_SRCS_ "bdddomain/${file}")
 endforeach()
+
+## This files are added to this module because it is shared by cprel and cptuple
+## and because so far, creating another module just for this does not make to much
+## sense.
+
+list(APPEND BDDDOMAIN_SRCS_ rel/grelation.cpp)
+list(APPEND BDDDOMAIN_SRCS_ rel/grelation.hh)
+
 add_library(bdddomain ${BDDDOMAIN_SRCS_})
 target_link_libraries(bdddomain ${CUDD_LIBS})
 
@@ -341,8 +349,6 @@ set(CPREL_SRCS
   cprel/permuted-view.hh
   cprel/const-view.hh
   cprel/cprel.hh
-  cprel/grelation.cpp
-  cprel/grelation.hh
   cprel/var.hh
   cprel/varimp.cpp
   cprel/varimp.hh

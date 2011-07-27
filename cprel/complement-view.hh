@@ -2,7 +2,7 @@
 #define __CPREL_CPREL_COMPLEMENT_VIEW_HH__
 
 #include <cprel/cprel.hh>
-#include <cprel/grelation.hh>
+#include <rel/grelation.hh>
 
 namespace MPG { namespace CPRel {
 

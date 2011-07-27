@@ -79,11 +79,11 @@ public:
 }}
 
 /**
- * \brief Naive brancher on relation \a R
+ * \brief Naive brancher on tuple \a R
  * \ingroup RelBranch
  *
- * Branches on \a R by selecting a tuple in it and creating a choice point that
- * includes and excludes that tuple.
+ * Branches on \a t by selecting a tuple in it and creating a choice point that
+ * assigns and excludes that tuple.
  */
 void branch(Home home, CPTupleVar t) {
   using namespace CPTuple::Branch;

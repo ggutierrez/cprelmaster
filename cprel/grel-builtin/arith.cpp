@@ -1,4 +1,4 @@
-#include <cprel/grelation.hh>
+#include <rel/grelation.hh>
 #include <bdddomain/relations.hh>
 
 namespace MPG { namespace CPRel {

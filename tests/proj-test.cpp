@@ -2,7 +2,7 @@
 #include <vector>
 #include <bdddomain/tuple.hh>
 #include <bdddomain/rel-impl.hh>
-#include <cprel/grelation.hh>
+#include <rel/grelation.hh>
 #include <fstream>
 //#include <tests/ground-relations/midi-small.hh>
 

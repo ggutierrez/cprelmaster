@@ -7,7 +7,7 @@
 
 #include <gecode/kernel.hh>
 #include <gecode/set.hh> // for channel constraint
-#include <cprel/grelation.hh>
+#include <rel/grelation.hh>
 
 using Gecode::Exception;
 using Gecode::VarArgArray;
