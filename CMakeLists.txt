@@ -371,8 +371,8 @@ set(CPREL_SRCS
   cprel/prop/projection.hh
   cprel/prop/channel.cpp
   cprel/prop/channel.hh
-
-
+  cprel/prop/tuple.cpp
+  cprel/prop/tuple.hh
 
 # branchers
   cprel/branch/branch.cpp
@@ -543,6 +543,10 @@ if(C0X_SUPPORT)
 
   add_executable(minimal tests/minimal.cpp)
   target_link_libraries(minimal gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+
+  add_executable(dom tests/dom.cpp)
+  target_link_libraries(dom gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+
 endif()
 
 

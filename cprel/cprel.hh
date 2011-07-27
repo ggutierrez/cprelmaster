@@ -7,6 +7,7 @@
 
 #include <gecode/kernel.hh>
 #include <gecode/set.hh> // for channel constraint
+#include <cptuple/cptuple.hh> // for the dom constraint
 #include <rel/grelation.hh>
 
 using Gecode::Exception;
@@ -257,6 +258,8 @@ void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
  * is not 1.
  */
 void channel(Gecode::Space& home, CPRelVar R, Gecode::SetVar S);
+
+void dom(Gecode::Space& home, CPTupleVar t, CPRelVar R);
 
 void branch(Gecode::Home home, CPRelVar x);
 }
