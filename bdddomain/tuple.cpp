@@ -4,7 +4,7 @@
 
 using std::vector;
 
-namespace MPG { namespace CPRel {
+namespace MPG {
 using namespace VarImpl;
 
 Tuple::Tuple(const std::vector<int>& v)
@@ -123,4 +123,4 @@ std::ostream& operator << (std::ostream& os, const Tuple& t) {
 
 }
 
-}}
+}

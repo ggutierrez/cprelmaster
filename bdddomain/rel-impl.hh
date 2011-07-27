@@ -7,7 +7,7 @@
 #include <bdddomain/exception.hh>
 #include <bdddomain/perm-descriptor.hh>
 
-namespace MPG { namespace CPRel { namespace VarImpl {
+namespace MPG { namespace VarImpl {
 /**
  * \defgroup DomRepr Domain representation
  *
@@ -294,6 +294,6 @@ std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
   return os;
 }
 
-}}}
+}}
 
 #endif

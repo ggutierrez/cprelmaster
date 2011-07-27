@@ -5,7 +5,7 @@
 #include <bdddomain/manager.hh>
 #include <bdddomain/perm-descriptor.hh>
 
-namespace MPG { namespace CPRel { namespace VarImpl {
+namespace MPG { namespace VarImpl {
 /**
  * \defgroup BDDEnc Ground relation encoding
  *
@@ -75,5 +75,5 @@ std::vector<int> decodeCube(int* cube, int arity);
   /// Prints relation \a r to standard output
   void debug_bdd(DdNode* r, int arity);
 #endif
-}}}
+}}
 #endif

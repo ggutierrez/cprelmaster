@@ -8,7 +8,7 @@
 #include <cudd/cuddInt.h>
 #include <limits>
 
-namespace MPG { namespace CPRel { namespace VarImpl {
+namespace MPG { namespace VarImpl {
 
 namespace Limits {
 /**
@@ -154,5 +154,5 @@ inline
 DdNode* zero(void) {
   return BddManager::instance()->zero();
 }
-}}}
+}}
 #endif

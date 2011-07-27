@@ -4,9 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include <bdddomain/tuple.hh>
 #include <bdddomain/perm-descriptor.hh>
-#include <boost/shared_ptr.hpp>
 
-namespace MPG { namespace CPRel {
+namespace MPG {
 /**
  * \defgroup GRelation Ground relations
  *
@@ -317,5 +316,5 @@ public:
   /// Advances the iterator
   void operator++(void);
 };
-}}
+}
 #endif

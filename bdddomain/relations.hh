@@ -3,7 +3,7 @@
 
 #include <bdddomain/rel-impl.hh>
 
-namespace MPG { namespace CPRel { namespace VarImpl {
+namespace MPG { namespace VarImpl {
 
 /**
  * \brief Creates the binary relation \f$R = \{t : t.1 = t.2 \} \f$
@@ -15,6 +15,6 @@ RelationImpl create_equalXY(void);
  * \ingroup DomRepr
  */
 RelationImpl create_greaterXY(void);
-}}}
+}}
 
 #endif

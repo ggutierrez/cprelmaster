@@ -5,7 +5,7 @@
 using std::pair;
 using std::vector;
 
-namespace MPG { namespace CPRel { namespace VarImpl {
+namespace MPG { namespace VarImpl {
 
 RelationImpl::RelationImpl(DdNode *n, int a)
   : bdd_(n), arity_(a) {
@@ -308,6 +308,4 @@ void RelationImplIter::remove(const Tuple& t) {
   relation_ = tmp;
 }
 
-}}}
-
-
+}}

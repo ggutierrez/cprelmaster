@@ -1,7 +1,7 @@
 #include <rel/grelation.hh>
 #include <bdddomain/rel-impl.hh>
 
-namespace MPG { namespace CPRel {
+namespace MPG {
 
 using namespace VarImpl;
 
@@ -321,4 +321,4 @@ void GRelationIter::operator ++(void) {
     current_ = TuplePtr(new Tuple(pimpl_->val()));
 }
 
-}}
+}

@@ -4,7 +4,7 @@
 #include <bdddomain/exception.hh>
 #include <set>
 
-namespace MPG { namespace CPRel {
+namespace MPG {
 
 /// Exception indicating invalid permutation description
 struct InvalidPermDescriptor : virtual ExceptionBase {};
@@ -99,6 +99,6 @@ public:
     return next_ < desc_.origin_.size();
   }
 };
-}}
+}
 
 #endif

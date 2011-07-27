@@ -9,7 +9,7 @@
 #endif
 #include <bdddomain/manager.hh>
 
-namespace MPG { namespace CPRel {
+namespace MPG {
 /**
  * \defgroup TupleGroup Tuples
  *
@@ -157,5 +157,5 @@ std::ostream& operator<< (std::ostream& os, const TupleIO& f);
  * \ingroup TupleGroup
  */
 std::ostream& operator << (std::ostream& os, const Tuple& t);
-}}
+}
 #endif

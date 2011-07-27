@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace MPG { namespace CPRel { namespace VarImpl {
+namespace MPG { namespace VarImpl {
 
 RelationImpl create_equalXY(void) {
   vector<DdNode*> c0 = bddVars(0);
@@ -23,4 +23,4 @@ RelationImpl create_greaterXY(void) {
         Cudd_Xgty(dd(),Limits::bitsPerInteger,NULL,&c0[0],&c1[0]),2
         );
 }
-}}}
+}}

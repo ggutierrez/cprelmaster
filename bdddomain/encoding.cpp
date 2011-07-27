@@ -1,7 +1,7 @@
 #include <bdddomain/encoding.hh>
 #include <bdddomain/unique.h>
 
-namespace MPG { namespace CPRel { namespace VarImpl {
+namespace MPG { namespace VarImpl {
 
 using std::pair;
 using std::vector;
@@ -277,5 +277,5 @@ void debug_bdd(DdNode* node, int a) {
 
 #endif
 
-}}}
+}}
 
