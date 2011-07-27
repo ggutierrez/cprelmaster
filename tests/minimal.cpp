@@ -17,7 +17,7 @@ protected:
   CPTupleVar t;
 public:
   MinimalTest(void)  {
-    CPRel::GRelation lb(2);// lb.add(make_Tuple(0,0));
+    GRelation lb(2);// lb.add(make_Tuple(0,0));
     GRelation ub(2);
     ub.add({{1,3}, {4,5}, {8,2}, {6,5}});
 

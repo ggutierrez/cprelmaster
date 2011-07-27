@@ -13,8 +13,8 @@ using std::vector;
 using std::make_pair;
 using std::ifstream;
 
-using namespace MPG::CPRel;
-using namespace MPG::CPRel::VarImpl;
+using namespace MPG;
+using namespace MPG::VarImpl;
 
 int main(void) {
   cout << "Tests starts" << endl;

@@ -15,17 +15,11 @@ namespace MPG {
 /**
  * \brief Conceptually a ground relation is a set of tuples.
  */
-typedef CPRel::GRelation TupleSet;
+typedef GRelation TupleSet;
 /**
  * \brief Iterator on set of tuples
  */
-typedef CPRel::GRelationIter TupleSetIter;
-
-/**
- * \brief The tuple concept is common to both systems and getting rid of the
- * namespace make the operations simpler to understand
- */
-//typedef CPRel::Tuple Tuple;
+typedef GRelationIter TupleSetIter;
 
 namespace CPTuple {
 // limits
@@ -77,9 +71,9 @@ public:
   /// \name Pruning operations
   //@{
   /// Assigns the variable to represent \a t
-  ModEvent assign(Space& home, const CPRel::Tuple& t);
+  ModEvent assign(Space& home, const Tuple& t);
   /// Excludes \a t as one of the possible tuples represented
-  ModEvent exclude(Space& home, const CPRel::Tuple& t);
+  ModEvent exclude(Space& home, const Tuple& t);
   /// Excludes the set of tuples \a s from the represented tuples
   ModEvent exclude(Space& home, const TupleSet& s);
   //@}

@@ -52,7 +52,7 @@ public:
    * \warning Throws a CPRel::VariableEmptyDomain if the provided bounds describe
    * an empty domain.
    */
-  CPRelVar(Space& home, const CPRel::GRelation& l, const CPRel::GRelation& u)
+  CPRelVar(Space& home, const GRelation& l, const GRelation& u)
     : Gecode::VarImpVar<CPRel::CPRelVarImp>
       (new (home) CPRel::CPRelVarImp(home,l,u)) {
     if (l.arity() != u.arity())
@@ -76,7 +76,7 @@ public:
    *
    * This relation contains the tuples that are known to be part of the variable.
    */
-  CPRel::GRelation glb(void) const {
+  GRelation glb(void) const {
     return x->glb();
   }
   /**
@@ -85,7 +85,7 @@ public:
    *
    * This relation contains the tuples that are possible part of the variable.
    */
-  CPRel::GRelation lub(void) const {
+  GRelation lub(void) const {
     return x->lub();
   }
   /**
@@ -94,7 +94,7 @@ public:
    * Returns a relation (copy) with the maximum relation that can be included in
    * the lower bound. \f$unk = lub \setminus glb \f$
    */
-  CPRel::GRelation unk(void) const {
+  GRelation unk(void) const {
     return x->unk();
   }
   /**
@@ -104,7 +104,7 @@ public:
    * represented by the variable. \f$oob = O \setminus lub \f$, wher \f$ O \f$ is
    * the full relation.
    */
-  CPRel::GRelation oob(void) const {
+  GRelation oob(void) const {
     return x->oob();
   }
   //@}

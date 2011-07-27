@@ -37,17 +37,17 @@ public:
   /// \name Access operations
   //@{
   /// Returns the set of possible tuples in the view
-  CPRel::GRelation domain(void) const {
+  GRelation domain(void) const {
     return x->domain();
   }
   //@}
   /// \name Modification operations
   //@{
-  ModEvent assign(Space& home, const CPRel::Tuple& t) {
+  ModEvent assign(Space& home, const Tuple& t) {
     return x->assign(home,t);
   }
   /// Excludes \a t as one of the possible tuples represented
-  ModEvent exclude(Space& home, const CPRel::Tuple& t) {
+  ModEvent exclude(Space& home, const Tuple& t) {
     return x->exclude(home,t);
   }
   /// Excludes the set of tuples \a s from the represented tuples

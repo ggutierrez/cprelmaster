@@ -9,7 +9,7 @@ void CPTupleVarImp::dispose(Space&) {
   dom_.~GRelation();
 }
 
-ModEvent CPTupleVarImp::assign(Space& home, const CPRel::Tuple& t) {
+ModEvent CPTupleVarImp::assign(Space& home, const Tuple& t) {
   TupleSet s(t.arity());
   s.add(t);
 
@@ -22,7 +22,7 @@ ModEvent CPTupleVarImp::assign(Space& home, const CPRel::Tuple& t) {
   return notify(home, ME_CPTUPLE_VAL, d);
 }
 
-ModEvent CPTupleVarImp::exclude(Space& home, const CPRel::Tuple& t) {
+ModEvent CPTupleVarImp::exclude(Space& home, const Tuple& t) {
   TupleSet s(t.arity());
   s.add(t);
 

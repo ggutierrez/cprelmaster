@@ -21,9 +21,9 @@ protected:
   class RelChoice : public Gecode::Choice {
   public:
     /// Tuple to branch on
-    CPRel::Tuple t_;
+    Tuple t_;
     /// Constructor
-    RelChoice(const NaiveBranch& b, const CPRel::Tuple& t)
+    RelChoice(const NaiveBranch& b, const Tuple& t)
       : Choice(b,2), t_(t) {}
     /// Returns the size of the object
     virtual size_t size(void) const {

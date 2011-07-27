@@ -94,7 +94,7 @@ public:
   CPRelVarArgs(const CPRelVarArgs& a) : VarArgArray<CPRelVar>(a) {}
   CPRelVarArgs(const VarArray<CPRelVar>& a) : VarArgArray<CPRelVar>(a) {}
   CPRelVarArgs(Space& home, int n,
-               const CPRel::GRelation& l, const CPRel::GRelation& u)
+               const GRelation& l, const GRelation& u)
     : VarArgArray<CPRelVar>(n) {
     for (int i=0; i<n; i++)
       (*this)[i] = CPRelVar(home,l,u);
@@ -105,8 +105,7 @@ public:
   CPRelVarArray(void) {}
   CPRelVarArray(const CPRelVarArray& a)
     : VarArray<CPRelVar>(a) {}
-  CPRelVarArray(Space& home, int n,
-                const CPRel::GRelation& l, const CPRel::GRelation& u)
+  CPRelVarArray(Space& home, int n, const GRelation& l, const GRelation& u)
     : VarArray<CPRelVar>(home,n) {
     for (int i=0; i<n; i++)
       (*this)[i] = CPRelVar(home,l,u);
@@ -224,7 +223,7 @@ void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
  * @see PermDescriptor
  */
 void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B,
-                 const CPRel::PermDescriptor& desc);
+                 const PermDescriptor& desc);
 /**
  * \brief Posts the constraint: \f$ \Pi_{p} A = B \f$.
  * \ingroup RelProp
