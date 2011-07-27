@@ -1,6 +1,7 @@
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
 #include <cprel/cprel.hh>
+#include <cptuple/cptuple.hh>
 #include <vector>
 
 using namespace Gecode;

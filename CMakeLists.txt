@@ -379,6 +379,23 @@ if(UNIT_TEST)
   list(APPEND TEST_SOURCES ${PROPAGATOR_TESTS})
   list(APPEND TEST_LIBRARIES gecodecprel)
 endif()
+##########################################################################
+# Tuple constraint system
+##########################################################################
+set(CPTUPLE_SRCS
+  cptuple/cptuple.hh
+  #cprel/grelation.cpp
+  #cprel/grelation.hh
+  cptuple/var.hh
+  cptuple/varimp.cpp
+  cptuple/varimp.hh
+  cptuple/view.hh
+
+# branchers
+#  cprel/branch/branch.cpp
+)
+add_library(gecodecptuple ${CPTUPLE_SRCS})
+target_link_libraries(gecodecptuple bdddomain ${Gecode_LIBRARIES})
 
 ##########################################################################
 # Installation                                                           #
@@ -517,10 +534,11 @@ if(C0X_SUPPORT)
 
   add_executable(proj-test tests/proj-test.cpp)
   target_link_libraries(proj-test gecodecprel)
+
+  add_executable(minimal tests/minimal.cpp)
+  target_link_libraries(minimal gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 endif()
 
-#add_executable(minimal tests/minimal.cpp)
-#target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES})
 
 #add_executable(domain-test tests/domain-test.cc)
 #target_link_libraries(domain-test bdddomain)
