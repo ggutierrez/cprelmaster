@@ -15,7 +15,7 @@ protected:
   CPTupleVar t;
 public:
   DomTest(void)  {
-    GRelation lb(2);// lb.add(make_Tuple(0,0));
+    GRelation lb(2);
     GRelation ub(2);
     ub.add({{1,3}, {4,5}, {8,2}, {6,5}});
 
@@ -55,9 +55,9 @@ public:
 
 int main(int, char**) {
   // Setup the way tuples are printed
-  std::cout << TupleIO("<td>","</td>"," ");
+//  std::cout << TupleIO("<td>","</td>"," ");
   // Setup the way relations are printed
-  std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
+//  std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
 
   DomTest* g = new DomTest();
 

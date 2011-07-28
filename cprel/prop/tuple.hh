@@ -20,19 +20,29 @@ public:
   /// Constructor for the propagator \f$ equal(left,right) \f$
   Dom(Gecode::Home home, TupleView tuple, RelView rel)
     : Gecode::Propagator(home), tuple_(tuple), rel_(rel) {
-    tuple_.subscribe(home,*this,CPTuple::PC_CPTUPLE_BND);
+    tuple_.subscribe(home,*this,CPTuple::PC_CPTUPLE_DOM);
     rel_.subscribe(home,*this,CPRel::PC_CPREL_BND);
   }
   /// Propagator posting
   static Gecode::ExecStatus post(Gecode::Home home, TupleView tuple,
                                  RelView rel) {
+    // The implemented constraint is entailed if the known part of the relation
+    // already contains the domain of tuple
+    if (tuple.domain().subsetEq(rel.glb())) {
+      return Gecode::ES_OK;
+    }
+    // The constraint is failed if no element in the domain of tuple is possible
+    // in the relation
+    if (tuple.domain().intersect(rel.lub()).empty()) {
+      return Gecode::ES_FAILED;
+    }
     /// \todo entailed if the possible of tuple is a subset of the relation
     (void) new (home) Dom(home,tuple,rel);
     return Gecode::ES_OK;
   }
   /// Propagator disposal
   virtual size_t dispose(Gecode::Space& home) {
-    tuple_.cancel(home,*this,CPTuple::PC_CPTUPLE_BND);
+    tuple_.cancel(home,*this,CPTuple::PC_CPTUPLE_DOM);
     rel_.cancel(home,*this,CPRel::PC_CPREL_BND);
     (void) Propagator::dispose(home);
     return sizeof(*this);
@@ -57,8 +67,24 @@ public:
                                        const Gecode::ModEventDelta&)  {
 
     std::cout << "Propagating Dom for tuples and relaion" << std::endl;
+//    std::cout << "Relation " << rel_ << std::endl;
+//    std::cout << "Tuple " << tuple_ << std::endl;
+
+    TupleSet possible = tuple_.domain().intersect(rel_.lub());
+    if (possible.empty()) {
+      return Gecode::ES_FAILED;
+    } else if(possible.cardinality() == 1) {
+      std::cout << "Possible " << possible << std::endl;
+      Tuple t = TupleSetIter(possible).val();
+      std::cout << "To insert: " << t << std::endl;
+      GECODE_ME_CHECK(tuple_.assign(home,t));
+      GECODE_ME_CHECK(rel_.include(home,possible));
+    } else {
+      GECODE_ME_CHECK(tuple_.exclude(home,possible.complement()));
+    }
+
     // Propagator subsumpiton
-    if (tuple_.assigned() && rel_.assigned())
+    if (tuple_.domain().subsetEq(rel_.glb()))
       return home.ES_SUBSUMED(*this);
 
     return Gecode::ES_FIX;

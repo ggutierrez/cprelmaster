@@ -14,6 +14,4 @@ void dom(Gecode::Space& home, CPTupleVar t, CPRelVar R) {
   CPTupleView tuple(t);
   CPRelView rel(R);
   GECODE_ES_FAIL((Dom<CPTupleView,CPRelView>::post(home,tuple,rel)));
-}
-
-}
+}}

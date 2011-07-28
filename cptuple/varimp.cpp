@@ -23,15 +23,17 @@ ModEvent CPTupleVarImp::assign(Space& home, const Tuple& t) {
 }
 
 ModEvent CPTupleVarImp::exclude(Space& home, const Tuple& t) {
-  TupleSet s(t.arity());
-  s.add(t);
+  TupleSet s(t.arity()); s.add(t);
+  return exclude(home,s);
+}
 
+ModEvent CPTupleVarImp::exclude(Space& home, const TupleSet& s) {
   if (s.disjoint(dom_)) return ME_CPTUPLE_NONE;
   dom_.differenceAssign(s);
   if (dom_.empty()) return ME_CPTUPLE_FAILED;
 
   CPTupleDelta d(1,2);
-  return notify(home, assigned() ? ME_CPTUPLE_VAL : ME_CPTUPLE_MAX, d);
+  return notify(home, assigned() ? ME_CPTUPLE_VAL : ME_CPTUPLE_DOM, d);
 }
 
 }}
