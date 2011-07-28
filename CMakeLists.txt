@@ -329,7 +329,7 @@ if(NOT GECODE_CPREL_SUPPORT OR NOT GECODE_CPTUPLE_SUPPORT)
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
-    SVN_REPOSITORY https://svn.gecode.org/svn/gecode/tags/release-3.5.0
+    SVN_REPOSITORY https://svn.gecode.org/svn/gecode/tags/release-3.6.0
     SVN_USERNAME anonymous
     SVN_PASSWORD user@gmail.com
     CONFIGURE_COMMAND ./configure ${CONFIGURE_OPTIONS}

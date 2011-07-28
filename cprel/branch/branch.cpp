@@ -29,6 +29,15 @@ protected:
     virtual size_t size(void) const {
       return sizeof(*this);
     }
+    virtual void archive(Gecode::Archive& e) const {
+      Choice::archive(e);
+      std::vector<int> t(t_.value());
+      // first the arity of the tuple and then the tuple itself
+      e << t_.arity();
+      for (int i = 0; i < t_.arity(); i++) {
+        e << t[i];
+      }
+    }
   };
 public:
   /// Constructor for a brancher on variable \a x
@@ -64,6 +73,19 @@ public:
     assert(it());
     return new RelChoice(*this,it.val());
   }
+  virtual Choice* choice(const Space&, Gecode::Archive& e) {
+    int arity;
+    e >> arity;
+    std::vector<int> t(arity,0);
+    for (int i = 0; i < arity; i++) {
+      int v;
+      e >> v;
+      t[i] = v;
+    }
+    Tuple x(t);
+    return new RelChoice(*this,x);
+  }
+
   /// Commit choice
   virtual ExecStatus commit(Space& home, const Choice& c, unsigned int a) {
     const RelChoice& ch = static_cast<const RelChoice&>(c);
