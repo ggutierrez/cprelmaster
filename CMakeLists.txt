@@ -7,8 +7,6 @@ set(PROJECT_VERSION "0.9.0")
 # Command line options
 ##########################################################################
 option(UNIT_TEST "Build unit tests (requires boost unit_test)" NO)
-option(BUILD_GELISP "Build gelisp interface" NO)
-
 ##########################################################################
 # Compiler information
 ##########################################################################
@@ -445,51 +443,6 @@ if(UNIT_TEST)
   add_executable(unit-test ${TEST_SOURCES})
   target_link_libraries(unit-test ${TEST_LIBRARIES})
   message(STATUS "Test libraries ${TEST_LIBRARIES}")
-endif()
-##########################################################################
-# Swig
-##########################################################################
-set(BUILD_LISP_INTERFACE NO)
-if(BUILD_GELISP)
-  find_package(SWIG 1.3.31)
-  if (SWIG_FOUND)
-    set(BUILD_LISP_INTERFACE Yes)
-    include(${SWIG_USE_FILE})
-    message(STATUS "Swig information:")
-    message(STATUS "   program: ${SWIG_EXECUTABLE}")
-  else()
-    message(STATUS "Swig interface cannot be build")
-  endif()
-endif()
-##########################################################################
-# Test
-##########################################################################
-if(BUILD_LISP_INTERFACE)
-  ## The foreign library
-  add_library(test gelisp/test.cpp gelisp/test.hh)
-  ## The swig part
-  set_source_files_properties(test.i PROPERTIES CPLUSPLUS ON)
-  #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
-  swig_add_module(lisptest cffi test.i)
-  swig_link_libraries(lisptest test)
-endif()
-##########################################################################
-# Gelisp
-##########################################################################
-if(BUILD_LISP_INTERFACE)
-  ## The foreign library
-  add_library(cxxgelisp gelisp/gelisp.cpp gelisp/gelisp.hh)
-  target_link_libraries(cxxgelisp gecodecprel ${Gecode_LIBRARIES})
-
-  ## The swig part
-  set_source_files_properties(gelisp.i PROPERTIES CPLUSPLUS ON)
-  #set_source_files_properties(example.i PROPERTIES SWIG_FLAGS "-includeall")
-  swig_add_module(gelisp cffi gelisp.i)
-  swig_link_libraries(gelisp cxxgelisp gecodecprel ${Gecode_LIBRARIES})
-
-
-  add_executable(gelispcl gelisp/gelispcl.cpp)
-  target_link_libraries(gelispcl cxxgelisp gecodecprel ${Gecode_LIBRARIES})
 endif()
 ##########################################################################
 # Source distribution
