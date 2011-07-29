@@ -259,7 +259,8 @@ void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
  */
 void channel(Gecode::Space& home, CPRelVar R, Gecode::SetVar S);
 
-void dom(Gecode::Space& home, CPTupleVar t, CPRelVar R);
+void included(Gecode::Space& home, CPTupleVar t, CPRelVar R);
+void excluded(Gecode::Space& home, CPTupleVar t, CPRelVar R);
 
 void branch(Gecode::Home home, CPRelVar x);
 }

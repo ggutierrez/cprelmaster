@@ -22,7 +22,8 @@ public:
 
     r = CPRelVar(*this,lb,ub);
     t = CPTupleVar(*this,ub);
-    dom(*this,t,r);
+    //included(*this,t,r);
+    excluded(*this,t,r);
 
     branch(*this,r);
     Gist::stopBranch(*this);
