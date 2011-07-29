@@ -66,20 +66,11 @@ public:
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
-    std::cout << "Propagating Dom for tuples and relaion" << std::endl;
-//    std::cout << "Relation " << rel_ << std::endl;
-//    std::cout << "Tuple " << tuple_ << std::endl;
-
     TupleSet possible = tuple_.domain().intersect(rel_.lub());
     if (possible.empty()) {
       return Gecode::ES_FAILED;
-    } else if(possible.cardinality() == 1) {
-      std::cout << "Possible " << possible << std::endl;
-      Tuple t = TupleSetIter(possible).val();
-      std::cout << "To insert: " << t << std::endl;
-      GECODE_ME_CHECK(tuple_.assign(home,t));
-      GECODE_ME_CHECK(rel_.include(home,possible));
-    } else {
+    }
+    if(possible.cardinality() == 1) {
       GECODE_ME_CHECK(tuple_.exclude(home,possible.complement()));
     }
 

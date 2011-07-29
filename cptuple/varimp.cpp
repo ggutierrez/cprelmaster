@@ -12,14 +12,7 @@ void CPTupleVarImp::dispose(Space&) {
 ModEvent CPTupleVarImp::assign(Space& home, const Tuple& t) {
   TupleSet s(t.arity());
   s.add(t);
-
-  if (s.subsetEq(dom_))
-    dom_ = s;
-  else
-    return ME_CPTUPLE_FAILED;
-
-  CPTupleDelta d(1,2);
-  return notify(home, ME_CPTUPLE_VAL, d);
+  return exclude(home,s.complement());
 }
 
 ModEvent CPTupleVarImp::exclude(Space& home, const Tuple& t) {
