@@ -66,11 +66,19 @@ public:
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
+    // For the tuple to be in the relation it can be at most the set of possible
+    // tuples in the relation, if this set is empty the constraint does not hold
     TupleSet possible = tuple_.domain().intersect(rel_.lub());
     if (possible.empty()) {
       return Gecode::ES_FAILED;
     }
     if(possible.cardinality() == 1) {
+      // if this set contains only one element the tuple has to be assigned to
+      // make the constraint hold and the tuple has to be included in the relation
+      Tuple t = TupleSetIter(possible).val();
+      GECODE_ME_CHECK(tuple_.assign(home,t));
+      GECODE_ME_CHECK(rel_.include(home,possible));
+    } else {
       GECODE_ME_CHECK(tuple_.exclude(home,possible.complement()));
     }
 

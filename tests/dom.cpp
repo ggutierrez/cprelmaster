@@ -16,13 +16,16 @@ protected:
 public:
   DomTest(void)  {
     GRelation lb(2);
+    lb.add({1,3});
     GRelation ub(2);
     ub.add({{1,3}, {4,5}, {8,2}, {6,5}});
 
     r = CPRelVar(*this,lb,ub);
     t = CPTupleVar(*this,ub);
     dom(*this,t,r);
-    //branch(*this,r);
+
+    branch(*this,r);
+    Gist::stopBranch(*this);
     branch(*this,t);
   }
   void print(std::ostream& os, const char* varName, CPRelVar v) const {
