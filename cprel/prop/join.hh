@@ -11,9 +11,6 @@ namespace MPG { namespace CPRel { namespace Prop {
  */
 template <typename ViewA, typename ViewB, typename ViewC>
 class Join : public Gecode::Propagator {
-private:
-  struct lower_bound {};
-  struct upper_bound {};
 protected:
   /// First relation
   ViewA a_;

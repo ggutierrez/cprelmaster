@@ -104,10 +104,27 @@ public:
 };
 }
 
+/**
+ * \defgroup TupleBranch Branchers (distribution strategies) on tuples
+ *
+ * This module contains the branchers that can be used on tuple domains.
+ */
+
 // View implementation
 #include <cptuple/view.hh>
 
 namespace MPG {
-void branch(Gecode::Home home, CPTupleVar x);
+/**
+ * \brief Simple branching on tuples.
+ * \ingroup TupleBranch
+ *
+ * Branches on tuple  \a t by selecting a tuple that is possible in the domain
+ * and creating a choice with the tuple as the value of the variable for the first
+ * alternative and the tuple as excluded from the domain as the second alternative.
+ *
+ * @param t a tuple decision variable.
+ *
+ */
+void branch(Gecode::Home home, CPTupleVar t);
 }
 #endif

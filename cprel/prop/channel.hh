@@ -6,9 +6,12 @@
 
 namespace MPG { namespace CPRel { namespace Prop {
 /**
- * \brief Propagates: \f$ \forall t : t \in A \iff t \in B \f$
+ * \brief Propagates: \f$ \forall t : t \in A \iff t \in B,\; \land A\subseteq\mathcal{U}_{1}\f$
  * \ingroup SetProp
- * \todo Documentation!
+ *
+ * This propagator serves as a channel between a relation and a set decission
+ * variable. As sets are just a particular case of unary relations then \a A is
+ * expected to have arity 1.
  */
 template <typename RelView, typename SetView>
 class Channel : public Gecode::Propagator {

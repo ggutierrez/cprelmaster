@@ -11,7 +11,7 @@ namespace MPG { namespace CPTuple { namespace Branch {
 
 /**
  * \brief Simple and naive brancher based on tuple inclusion and exclusion.
- * \ingroup RelBranch
+ * \ingroup TupleBranch
  */
 class NaiveBranch : public Gecode::Brancher {
 protected:

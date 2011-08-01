@@ -149,6 +149,13 @@ public:
  * This module contains the branchers that can be used on relation domains.
  */
 
+/**
+ * \defgroup ChannelProp Channel propagators on relation variables.
+ *
+ * Constraints that provide interaction between relation
+ * decision variables and variables from other constraint systems.
+ */
+
 namespace MPG {
 /**
  * \brief Posts: \f$ A = B \f$
@@ -258,10 +265,39 @@ void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
  * is not 1.
  */
 void channel(Gecode::Space& home, CPRelVar R, Gecode::SetVar S);
-
+/**
+ * \brief Posts the constraint: \f$ t \in R\f$
+ * \ingroup ChannelProp
+ *
+ * @param t a tuple decision variable which domain is a subset of \f$\mathcal{U}_{n}\f$
+ * @param R a relation decision variable: \f$R \subseteq \mathcal{U}_{n}\f$.
+ *
+ * \warning Throws an exception MPG::CPRel::ArityMissmatch if the arity of \a R
+ * and the arity of \a t is not the same.
+ */
 void included(Gecode::Space& home, CPTupleVar t, CPRelVar R);
+/**
+ * \brief Posts the constraint: \f$ t \notin R\f$
+ * \ingroup ChannelProp
+ *
+ * @param t a tuple decision variable which domain is a subset of \f$\mathcal{U}_{n}\f$
+ * @param R a relation decision variable: \f$R \subseteq \mathcal{U}_{n}\f$.
+ *
+ * \warning Throws an exception MPG::CPRel::ArityMissmatch if the arity of \a R
+ * and the arity of \a t is not the same.
+ */
 void excluded(Gecode::Space& home, CPTupleVar t, CPRelVar R);
-
-void branch(Gecode::Home home, CPRelVar x);
+/**
+ * \brief Simple branching on relations.
+ * \ingroup RelBranch
+ *
+ * Branches on relation  \a R by selecting a tuple in it and creating a choice with
+ * the tuple as part of the relation for the first alternative and the tuple as
+ * excluded from the relation as the second alternative.
+ *
+ * @param R a relation decision variable.
+ *
+ */
+void branch(Gecode::Home home, CPRelVar R);
 }
 #endif

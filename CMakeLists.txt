@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-support")
 
-project(cuddcp)
+set(PROJECT_NAME "CP(Rel+Tuple)")
 set(PROJECT_VERSION "0.9.0")
+project(${PROJECT_NAME})
 ##########################################################################
 # Command line options
 ##########################################################################
