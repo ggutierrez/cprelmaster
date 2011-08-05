@@ -95,35 +95,24 @@ DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
 
 DdNode* shiftLeft(DdNode *r, int arity, const int n) {
   const int numberOfVars = Limits::bitsPerInteger * Limits::arity;
-  //std::cout << "Number of variables in the bdd " << numberOfVars << std::endl;
   assert( (n + arity) <= numberOfVars && "The shift cannot be carried out");
 
   // This array is used to store the definition of the permutation
   int perm[numberOfVars];
-  // A vector used for the quantification
-  //std::vector<int> quant;
-  //quant.reserve(n*Limits::bitsPerInteger);
 
   // Move the variables of the relation itself
   for (int i = 0; i < Limits::arity; i++) {
-    //std::cout << "Column " << i << ": ";
     for (int j = i; j < numberOfVars;) {
-      //std::cout << " " << j;
       if (i < arity) {
         // The current j is part of the representation of column i in the relation
         perm[j] = j + n;
-        //std::cout << "->" << perm[j] << " ";
       } else if (i >= arity && i < arity+n) {
         perm[j] = j - n;
-        //std::cout << "->" << perm[j] << " ";
-        //quant.push_back(j-n);
       } else {
         perm[j] = j;
-        //std::cout << "->" << perm[j] << " ";
       }
       j += Limits::arity;
     }
-    //std::cout << std::endl;
   }
 
   // perform the permutation
@@ -185,7 +174,6 @@ DdNode* discard(DdNode *r, const int arity, const int left, const int right) {
   /// \todo Add code to handle the cases when left and right are mistaken
   //assert( arity >= left && arity >= right && "The shift cannot be carried out");
 
-  std::cout << "Called discard!!, from " << left << " .. " << right << std::endl;
   // This array is used to store the definition of the permutation
   int perm[numberOfVars];
   std::vector<int> quantIndices;
@@ -193,26 +181,21 @@ DdNode* discard(DdNode *r, const int arity, const int left, const int right) {
 
   // Move the variables of the relation itself
   for (int i = 0; i < Limits::arity; i++) {
-    //    std::cout << "Column " << i << ": ";
     for (int j = i; j < numberOfVars;) {
-//      std::cout << " " << j;
       if (i >= right && i <= left) {
         // The current variable is used to represent one of the columns that must
         // be discarded
         perm[j] = j + arity;
         quantIndices.push_back(j + arity);
-//        std::cout << "->*" << perm[j] << " ";
       } else if (i > left && i < arity) {
         // The current variable is after the range of columns that was moved.
         // it will be moved back to replace the discarded columns
         perm[j] = (j - left - right + 1);
-//        std::cout << "->" << perm[j] << " ";
       } else {
         perm[j] = j;
       }
       j += Limits::arity;
     }
-//    std::cout << std::endl;
   }
 
 // perform the permutation

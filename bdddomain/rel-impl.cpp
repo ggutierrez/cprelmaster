@@ -183,8 +183,6 @@ RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
   int rightMost = right.arity() - f;
 
   assert(leftMost >= rightMost && "Unexpected result for range of join columns");
-  std::cout << "Left column: " << leftMost << std::endl;
-  std::cout << "Right column: " << rightMost << std::endl;
 
   return RelationImpl(
         VarImpl::discard(join.bdd_,join.arity(), leftMost, rightMost),
