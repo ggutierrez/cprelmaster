@@ -68,6 +68,16 @@ public:
 
     std::cout << "Follow proagaor running" << std::endl;
 
+    // 1) pruning C from A and B
+    // C must have atleast the follow of what is known in A and B
+    GRelation glbF = a_.glb().follow(f_,b_.glb());
+    GECODE_ME_CHECK(c_.include(home,glbF));
+
+    // C can have atmost the join of what is possible in A and B
+    GRelation max_possile_c = a_.lub().follow(f_,b_.lub());
+    GECODE_ME_CHECK(c_.exclude(home,max_possile_c.complement()));
+
+
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {
       /// \todo is it possible to get another subsumption condition??

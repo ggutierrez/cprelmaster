@@ -490,6 +490,9 @@ if(C0X_SUPPORT)
   # test for the join propagator
   add_executable(join tests/join.cpp)
   target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+  # test for the follow propagator
+  add_executable(follow tests/follow.cpp)
+  target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
   # test for the channel propagator
   add_executable(channel tests/channel.cpp)
   target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
