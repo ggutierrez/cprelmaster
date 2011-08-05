@@ -156,9 +156,6 @@ RelationImpl RelationImpl::timesU(int n, bool left) const {
 RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
   const RelationImpl& l = *this;
 
-//  std::cout << "Join input: this " << arity() << " -- " << cardinality() << std::endl;
-//  std::cout << "****Join input: r " << r.bdd_ << "  " << r.arity() << " -- " << r.cardinality() << std::endl;
-
   assert(l.arity() >= j && r.arity() >= j
          && "There are not enough columns for the join");
 
@@ -166,9 +163,6 @@ RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
   RelationImpl rxu = r.timesU(l.arity() - j,true);
 
   lxu.intersect(rxu);
-
-//  std::cout << "Join result: lxu " << lxu.arity() << " -- " << lxu.cardinality() << std::endl;
-
   return lxu;
 }
 
@@ -203,7 +197,6 @@ RelationImpl RelationImpl::projectBut(int c) const {
 
 RelationImpl RelationImpl::project(int p) const {
   // p indicates the columns on the right that will remain at the end.
-  //  std::cout << "Projecting " << *this << " on " << p << " columns(right)" << std::endl;
 
   // it is a mistake to project in more columns that the ones in the relation
   assert(p <= arity_ && "Projecting in more columns that the onse in the relation");
@@ -218,9 +211,7 @@ RelationImpl RelationImpl::project(int p) const {
   //    to p (not including).
   int first = p;
   int last = arity_ - 1;
-  RelationImpl result(VarImpl::exists(first,last,r.bdd_),p);
-  // Todo: missing changin the arity of the relation
-  return result;
+  return RelationImpl(VarImpl::exists(first,last,r.bdd_),p);
 }
 
 RelationImplIter RelationImpl::tuples(void) const {
@@ -246,38 +237,6 @@ bool RelationImplIter::operator ()(void) const {
 }
 
 Tuple RelationImplIter::val(void) {
-/*
-  const int cube_size = 1<<(Limits::bbv + Limits::ba);
-  const int tuple_size = 1 << Limits::ba;
-
-  int cube_[cube_size];
-  int *cube = cube_;
-  int tuple[tuple_size];
-  CUDD_VALUE_TYPE val;
-
-  for(int k = 0; k < tuple_size; k++) tuple[k] = 0;
-
-  DdGen* gen = Cudd_FirstCube(dd(),relation_,&cube,&val);
-  assert(gen != NULL);
-  for(int i = cube_size -1; i>=0; i--){
-    if( (i & (tuple_size-1))<arity_){
-      tuple[i&(tuple_size-1)] &=
-          ~(1<<((1<<Limits::bbv)-1-(i>>Limits::ba)));
-      tuple[i&(tuple_size-1)] |=
-          (cube[i]&1)<<((1<<Limits::bbv)-1-(i>>Limits::ba));
-    }
-  }
-  Cudd_GenFree(gen);
-
-  // Prepare the output
-  vector<int> v;
-  for (int i = 0; i < arity_; i++) v.push_back(tuple[arity_-1-i]);
-  Tuple out(v);
-  // Affect the state of the iterator
-  remove(out);
-
-  return out;
-*/
   const int cube_size = 1<<(Limits::bbv + Limits::ba);
 
   int cube_[cube_size];
