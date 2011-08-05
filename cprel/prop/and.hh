@@ -28,7 +28,7 @@ public:
     c_.subscribe(home,*this,CPRel::PC_CPREL_BND);
   }
   /**
-   * \brief Intersect propagator posting 
+   * \brief Intersect propagator posting
    *
    * \todo In order to make this method smarter, we can detect if two
    * of the views are the same and in that case prefer to post the
@@ -38,6 +38,8 @@ public:
    */
   static Gecode::ExecStatus
   post(Gecode::Home home, View0 a, View1 b, View2 c) {
+    /// \todo This propagator will benefit from the existence of the same method
+    /// for different kind of views. Right now these metods are not implemented
     /*
     if (Gecode::same(a,b)) {
       return Equal<View0,View2>::post(home,a,c);
@@ -81,7 +83,7 @@ public:
       GRelation r(a_.glb().intersect(b_.glb()));
       GECODE_ME_CHECK(c_.include(home,r));
     }
-    
+
     // lub(_a) \cap lub(b) \subseteq lub(_c)
     {
       GRelation r(a_.lub().intersect(b_.lub()).intersect(c_.lub()));

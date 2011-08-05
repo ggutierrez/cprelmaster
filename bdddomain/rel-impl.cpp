@@ -153,17 +153,43 @@ RelationImpl RelationImpl::timesU(int n, bool left) const {
   return RelationImpl(r.bdd_,arity_+n);
 }
 
-RelationImpl RelationImpl::join(int j, const RelationImpl& r) const {
-  const RelationImpl& l = *this;
+RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
+  const RelationImpl& left = *this;
 
-  assert(l.arity() >= j && r.arity() >= j
+  assert(left.arity() >= j && right.arity() >= j
          && "There are not enough columns for the join");
 
-  RelationImpl lxu = l.timesU(r.arity() - j,false);
-  RelationImpl rxu = r.timesU(l.arity() - j,true);
+  RelationImpl lxu = left.timesU(right.arity() - j,false);
+  RelationImpl rxu = right.timesU(left.arity() - j,true);
 
   lxu.intersect(rxu);
   return lxu;
+}
+
+RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
+  const RelationImpl& left = *this;
+
+  /// \todo handle errors on arity of the relations with exceptions
+
+//  assert(left.arity() >= f && right.arity() >= f
+//         && "There are not enough columns for the join");
+
+  // 1) compute the join of the relations on f columns
+  RelationImpl join = left.join(f,right);
+
+  // 2) remove the "join" columns. These columns are in the range right.arity-1
+  //    to right.arity-f
+  int leftMost = right.arity() - 1;
+  int rightMost = right.arity() - f;
+
+  assert(leftMost >= rightMost && "Unexpected result for range of join columns");
+  std::cout << "Left column: " << leftMost << std::endl;
+  std::cout << "Right column: " << rightMost << std::endl;
+
+  return RelationImpl(
+        VarImpl::discard(join.bdd_,join.arity(), leftMost, rightMost),
+        join.arity()-f
+        );
 }
 
 RelationImpl RelationImpl::exists(int c) const {

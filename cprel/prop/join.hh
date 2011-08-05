@@ -2,7 +2,6 @@
 #define __CPREL_PROP_JOIN_HH__
 
 #include <cprel/cprel.hh>
-#include <cprel/prop/join.hh>
 
 namespace MPG { namespace CPRel { namespace Prop {
 /**

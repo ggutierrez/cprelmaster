@@ -149,7 +149,6 @@ GRelation GRelation::join(int j,const GRelation& r) const {
   typedef boost::error_info<struct tag_invalid_join,std::string>
       invalid_join;
 
-//  std::cout << "Middle join call r cardinality " << r.cardinality() << std::endl;
   if (arity() < j || r.arity() < j)
     throw InvalidJoin()
       << errno_code(errno)
@@ -158,6 +157,20 @@ GRelation GRelation::join(int j,const GRelation& r) const {
   return
       GRelation(
         Impl(new RelationImpl(pimpl_->join(j, *(r.pimpl_))))
+        );
+}
+
+GRelation GRelation::follow(int f,const GRelation& right) const {
+  /// \todo handle arity errors with exceptions
+
+//  if (arity() < j || r.arity() < j)
+//    throw InvalidJoin()
+//      << errno_code(errno)
+//      << invalid_join("There are not enough columns for the join");
+
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->follow(f, *(right.pimpl_))))
         );
 }
 

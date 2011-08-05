@@ -102,6 +102,11 @@ public:
    */
   RelationImpl join(int j, const RelationImpl& r) const;
   /**
+   * \brief Performs \f$ this_{\smile_{f}} r \f$
+   *
+   */
+  RelationImpl follow(int f, const RelationImpl& r) const;
+  /**
    * \brief Returns the relation resulting from existencially quantifying the
    * column \a c of the represented relation.
    */

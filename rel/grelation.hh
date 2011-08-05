@@ -143,6 +143,12 @@ public:
   GRelation join(int j,const GRelation& r) const;
   /// Returns the relation \f$ this \times r \f$
   GRelation times(const GRelation& r) const;
+  /**
+   * \brief Returns: \f$ \mathit{this}_{\smile_{f}}r \f$.
+   *
+   * \todo documentation
+   */
+  GRelation follow(int f,const GRelation& r) const;
   /// Returns the relation resulting from existencially quantifying on column \a c
   GRelation exists(int c) const;
   /// Returns the relation resulting from uniquely quantifying on column \a c

@@ -372,6 +372,8 @@ set(CPREL_SRCS
   cprel/prop/channel.hh
   cprel/prop/tuple.cpp
   cprel/prop/tuple.hh
+  cprel/prop/follow.hh
+  cprel/prop/follow.cpp
 
 # branchers
   cprel/branch/branch.cpp
@@ -486,18 +488,22 @@ add_custom_target(dist
 
 if(C0X_SUPPORT)
   # test for the join propagator
-#  add_executable(join tests/join.cpp)
-#  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+  add_executable(join tests/join.cpp)
+  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
   # test for the channel propagator
   add_executable(channel tests/channel.cpp)
   target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
-
+  # Test for the follow operation
+  add_executable(follow-test tests/follow-test.cpp)
+  target_link_libraries(follow-test gecodecprel)
+  # Test for the projection operation
   add_executable(proj-test tests/proj-test.cpp)
   target_link_libraries(proj-test gecodecprel)
-
+  # Minimal test that declares a tuple and a relation variable and branch on
+  # them to find all the possible combinations.
   add_executable(minimal tests/minimal.cpp)
   target_link_libraries(minimal gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
-
+  # Test for operations at the bdd level
   add_executable(dom tests/dom.cpp)
   target_link_libraries(dom gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 

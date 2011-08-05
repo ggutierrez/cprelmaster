@@ -46,6 +46,14 @@ std::vector<int> decodeCube(int* cube, int arity);
  DdNode* shiftRight(DdNode *r, int arity, int n);
 
  /**
+  * \brief Discards the columns in the range \a left .. \a right.
+  *
+  * The way this is done is by moving the columns to the left of the relation and
+  * to existentialy quantify on them.
+  */
+ DdNode* discard(DdNode *r, int arity, int left, int right);
+
+ /**
   * \brief Existensial quantification of column \a c on relation \a r.
   * \ingroup BDDEnc
   */
