@@ -287,6 +287,9 @@ void included(Gecode::Space& home, CPTupleVar t, CPRelVar R);
  * and the arity of \a t is not the same.
  */
 void excluded(Gecode::Space& home, CPTupleVar t, CPRelVar R);
+
+/// \todo Document!
+void follow(Gecode::Space& home, CPRelVar A, int f, CPRelVar B, CPRelVar C);
 /**
  * \brief Simple branching on relations.
  * \ingroup RelBranch

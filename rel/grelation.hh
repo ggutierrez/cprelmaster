@@ -23,6 +23,8 @@ struct InvalidAritySource : virtual ExceptionBase {};
 struct InvalidProjection : virtual ExceptionBase {};
 /// Exception indicating invalid join
 struct InvalidJoin: virtual ExceptionBase {};
+/// Exception indicating invalid follow
+struct InvalidFollow: virtual ExceptionBase {};
 
 namespace VarImpl {
   class RelationImpl;

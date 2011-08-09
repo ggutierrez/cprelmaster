@@ -5,14 +5,23 @@ namespace MPG {
 
 using namespace CPRel;
 using namespace CPRel::Prop;
-void follow(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C) {
+void follow(Gecode::Space& home, CPRelVar A, int f, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
 
-  /// \todo Handle cases of malformed relations with exceptions
+  typedef boost::error_info<struct tag_invalid_follow,std::string>
+      invalid_follow;
+
+  if (f > A.arity() ||
+      f > B.arity() ||
+      C.arity() != (A.arity()+B.arity()-(2*f)))
+    throw InvalidFollow()
+      << errno_code(errno)
+      << invalid_follow("Invalid arity of the variables.");
+
 
   CPRelView a(A);
   CPRelView b(B);
   CPRelView c(C);
-  GECODE_ES_FAIL((Follow<CPRelView,CPRelView,CPRelView>::post(home,a,j,b,c)));
+  GECODE_ES_FAIL((Follow<CPRelView,CPRelView,CPRelView>::post(home,a,f,b,c)));
 }
 }

@@ -34,8 +34,8 @@ pair<GRelation,GRelation> domS(void) {
 }
 
 pair<GRelation,GRelation> domT(void) {
-  GRelation ub = create_full(4);
-  return make_pair(GRelation(4),ub);
+  GRelation ub = create_full(3);
+  return make_pair(GRelation(3),ub);
 }
 
 class FollowTest : public Gecode::Space {
@@ -53,8 +53,9 @@ public:
    pair<GRelation,GRelation> dt = domT();
    t = CPRelVar(*this,dt.first,dt.second);
 
-   join(*this,r,1,s,t);
+   follow(*this,r,1,s,t);
    branch(*this,r);
+   Gist::stopBranch(*this);
    branch(*this,s);
    //branch(*this,t);
   }
@@ -85,9 +86,9 @@ public:
 
 int main(int, char**) {
   // Setup the way tuples are printed
-  std::cout << TupleIO("<td>","</td>"," ");
+//  std::cout << TupleIO("<td>","</td>"," ");
   // Setup the way relations are printed
-  std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
+//  std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
 
   FollowTest* g = new FollowTest();
 

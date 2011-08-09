@@ -71,12 +71,23 @@ public:
     // 1) pruning C from A and B
     // C must have atleast the follow of what is known in A and B
     GRelation glbF = a_.glb().follow(f_,b_.glb());
+    //std::cout << "This must be in C" << glbF << std::endl;
     GECODE_ME_CHECK(c_.include(home,glbF));
 
     // C can have atmost the join of what is possible in A and B
     GRelation max_possile_c = a_.lub().follow(f_,b_.lub());
     GECODE_ME_CHECK(c_.exclude(home,max_possile_c.complement()));
 
+    // 2) pruning A from C
+    GRelation CaGlb = c_.glb().shiftRight(b_.arity()-f_);
+    //std::cout << "CaGlb " << CaGlb << std::endl;
+
+    GRelation CaLub = c_.lub().shiftRight(b_.arity()-f_);
+    //std::cout << "CaLub " << CaLub << std::endl;
+
+    // 3) Pruning B from C
+    //GRelation CbGlb = c_.glb().project(b_.arity()-f_);
+    //std::cout << "CbGlb " << CbGlb << std::endl;
 
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {

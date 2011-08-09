@@ -8,6 +8,7 @@ project(${PROJECT_NAME})
 # Command line options
 ##########################################################################
 option(UNIT_TEST "Build unit tests (requires boost unit_test)" NO)
+option(BUILD_EXAMPLES "Build examples " NO)
 ##########################################################################
 # Compiler information
 ##########################################################################
@@ -474,25 +475,19 @@ add_custom_target(dist
 ##########################################################################
 # Executables
 ##########################################################################
-# test for the equality propagator
-#add_executable(eq tests/equality.cpp)
-#target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
-
-# test for the and propagator
-#add_executable(and tests/and.cpp)
-#target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
-
-# test for the projection propagator
-#add_executable(projection tests/projection.cpp)
-#target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
-
-if(C0X_SUPPORT)
+if(BUILD_EXAMPLES)
+  # test for the equality propagator
+  add_executable(eq tests/equality.cpp)
+  target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
+  # test for the and propagator
+  add_executable(and tests/and.cpp)
+  target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
+  # test for the projection propagator
+  add_executable(projection tests/projection.cpp)
+  target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
   # test for the join propagator
   add_executable(join tests/join.cpp)
   target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
-  # test for the follow propagator
-  add_executable(follow tests/follow.cpp)
-  target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
   # test for the channel propagator
   add_executable(channel tests/channel.cpp)
   target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
@@ -510,21 +505,26 @@ if(C0X_SUPPORT)
   add_executable(dom tests/dom.cpp)
   target_link_libraries(dom gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
+  add_executable(domain-test tests/domain-test.cc)
+  target_link_libraries(domain-test bdddomain)
+
+  add_executable(grel-test tests/grel-test.cpp)
+  target_link_libraries(grel-test gecodecprel)
+
+  add_executable(swap-test tests/swap-test.cpp)
+  target_link_libraries(swap-test gecodecprel)
+
+  add_executable(join-test tests/join-test.cpp)
+  target_link_libraries(join-test gecodecprel)
+endif()
+
+if(C0X_SUPPORT)
+  # test for the follow propagator
+  add_executable(follow tests/follow.cpp)
+  target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
 endif()
 
 
-#add_executable(domain-test tests/domain-test.cc)
-#target_link_libraries(domain-test bdddomain)
-
-#add_executable(grel-test tests/grel-test.cpp)
-#target_link_libraries(grel-test gecodecprel)
-
-
-#add_executable(swap-test tests/swap-test.cpp)
-#  target_link_libraries(swap-test gecodecprel)
-
-#add_executable(join-test tests/join-test.cpp)
-#  target_link_libraries(join-test gecodecprel)
 
 
 #add_executable(midi-4seasons-test tests/midi-four-seasons.cpp)
