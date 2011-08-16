@@ -16,7 +16,7 @@ protected:
 public:
   DomTest(void)  {
     GRelation lb(2);
-    lb.add({1,3});
+    lb.add(make_Tuple(1,3));
     GRelation ub(2);
     ub.add({{1,3}, {4,5}, {8,2}, {6,5}});
 

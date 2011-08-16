@@ -11,19 +11,15 @@ using std::pair;
 using std::vector;
 using std::make_pair;
 
-using namespace MPG::CPRel;
-using namespace MPG::CPRel::VarImpl;
+using namespace MPG;
+using namespace MPG::VarImpl;
 
 
 
 RelationImpl test0(void) {
   RelationImpl ub(3);
-  ub.add(make_Tuple(0,3,9));
-  ub.add(make_Tuple(1,2,8));
-  ub.add(make_Tuple(2,1,7));
-  ub.add(make_Tuple(3,0,6));
-  ub.add(make_Tuple(4,0,5));
-  ub.add(make_Tuple(5,0,4));
+  ub.add({0,3,9});
+//, {1,2,8}, {2,1,7}, {3,0,6}, {4,0,5}, {5,0,4}});
   return ub;
 }
 

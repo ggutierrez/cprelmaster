@@ -51,6 +51,8 @@ check_cxx_compiler_flag("-std=c++0x" C0X_SUPPORT)
 if(C0X_SUPPORT)
   message(STATUS "CXX has c++0x support")
   set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++0x")
+else()
+  message(FATAL_ERROR "c++0x capable compiler is needed to build this project at this time")
 endif()
 
 check_cxx_compiler_flag(-Wall FLAG_WALL)
@@ -475,7 +477,7 @@ add_custom_target(dist
 ##########################################################################
 # Executables
 ##########################################################################
-if(BUILD_EXAMPLES)
+#if(BUILD_EXAMPLES)
   # test for the equality propagator
   add_executable(eq tests/equality.cpp)
   target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
@@ -516,16 +518,8 @@ if(BUILD_EXAMPLES)
 
   add_executable(join-test tests/join-test.cpp)
   target_link_libraries(join-test gecodecprel)
-endif()
+#endif()
 
-if(C0X_SUPPORT)
-  # test for the follow propagator
-  add_executable(follow tests/follow.cpp)
-  target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
-endif()
-
-
-
-
-#add_executable(midi-4seasons-test tests/midi-four-seasons.cpp)
-#  target_link_libraries(midi-4seasons-test gecodecprel)
+# test for the follow propagator
+add_executable(follow tests/follow.cpp)
+target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})

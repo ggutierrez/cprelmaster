@@ -2,7 +2,7 @@
 #include <vector>
 #include <bdddomain/tuple.hh>
 #include <bdddomain/rel-impl.hh>
-#include <cprel/grelation.hh>
+#include <rel/grelation.hh>
 #include <fstream>
 //#include <tests/ground-relations/midi-small.hh>
 
@@ -13,8 +13,8 @@ using std::vector;
 using std::make_pair;
 using std::ifstream;
 
-using namespace MPG::CPRel;
-using namespace MPG::CPRel::VarImpl;
+using namespace MPG;
+using namespace MPG::VarImpl;
 
 int main(void) {
   cout << "Tests starts" << endl;
