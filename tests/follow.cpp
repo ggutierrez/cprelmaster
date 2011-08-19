@@ -54,10 +54,10 @@ public:
    t = CPRelVar(*this,dt.first,dt.second);
 
    follow(*this,r,1,s,t);
-   branch(*this,r);
-   Gist::stopBranch(*this);
-   branch(*this,s);
-   //branch(*this,t);
+   //branch(*this,r);
+   //Gist::stopBranch(*this);
+   //branch(*this,s);
+   branch(*this,t);
   }
   void print(std::ostream& os, const char* varName, CPRelVar v) const {
     os << "<tr><td><b>" << varName << "</b></td>"

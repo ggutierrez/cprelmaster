@@ -63,32 +63,62 @@ public:
                                 const Gecode::ModEventDelta&) const {
     return Gecode::PropCost::binary(Gecode::PropCost::LO);
   }
+  /**
+   * \brief Returns the upper bound of b_ permuted in a way that the follow part
+   * is at the right.
+   */
+  GRelation PBLub(void) const {
+    PermDescriptor d;
+    for (int i = 0; i < f_; i++) d.permute(i,f_+i);
+    for (int i = f_; i < b_.arity(); i++) d.permute(i,f_-i);
+    return b_.lub().permute(d);
+  }
+  /**
+   * \brief Returns the lower bound of c_ permuted in a way that the part comming
+   * from B is at the left.
+   */
+  GRelation PCGlb(void) const {
+    PermDescriptor d;
+    for (int i = 0; i < b_.arity() - f_; i++) d.permute(i,a_.arity() - f_ + i);
+    for (int i =  b_.arity() - f_; i < c_.arity(); i++)
+      d.permute(i, i + a_.arity()  - f_ - b_.arity() - f_);
+
+
+//    for (DescIterator it(d); it(); ++it)
+//      std::cout << "Changing " << it.val().first << " -> " << it.val().second << std::endl;
+
+    return c_.glb().permute(d);
+  }
+
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
-
-    std::cout << "Follow proagaor running" << std::endl;
+    std::cout << "C " << c_.glb() << std::endl;
 
     // 1) pruning C from A and B
     // C must have atleast the follow of what is known in A and B
     GRelation glbF = a_.glb().follow(f_,b_.glb());
-    //std::cout << "This must be in C" << glbF << std::endl;
     GECODE_ME_CHECK(c_.include(home,glbF));
 
     // C can have atmost the join of what is possible in A and B
     GRelation max_possile_c = a_.lub().follow(f_,b_.lub());
     GECODE_ME_CHECK(c_.exclude(home,max_possile_c.complement()));
 
-    // 2) pruning A from C
-    GRelation CaGlb = c_.glb().shiftRight(b_.arity()-f_);
-    //std::cout << "CaGlb " << CaGlb << std::endl;
+    // 2) pruning A from B and C
+    {
+      // Pruning lower bound of A
+      GRelation x = c_.glb().follow(f_,PBLub()).intersect(a_.lub());
+      std::vector<int> uq(f_,-1);
+      for (int i = 0; i < f_; i++) uq[i] = i;
+      GRelation singles = x.unique(uq).intersect(x);
+      //std::cout << "Singles: " << singles << std::endl;
+      GECODE_ME_CHECK(a_.include(home,singles));
 
-    GRelation CaLub = c_.lub().shiftRight(b_.arity()-f_);
-    //std::cout << "CaLub " << CaLub << std::endl;
+    }
 
-    // 3) Pruning B from C
-    //GRelation CbGlb = c_.glb().project(b_.arity()-f_);
-    //std::cout << "CbGlb " << CbGlb << std::endl;
-
+    // 3) Pruning B from A and C
+    {
+      //std::cout << "PCGlb " << PCGlb() << std::endl;
+    }
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {
       /// \todo is it possible to get another subsumption condition??
