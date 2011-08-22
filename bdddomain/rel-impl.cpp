@@ -127,6 +127,7 @@ RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
   // this \times U^n is implemented by doing the shift of n columns to the right.
 
   RelationImpl ret(VarImpl::swap_columns(bdd_,permDesc),arity_);
+
   assert(ret.cardinality() == cardinality());
   assert(ret.arity() == arity());
   return ret;

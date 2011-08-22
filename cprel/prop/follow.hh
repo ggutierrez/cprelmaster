@@ -79,20 +79,18 @@ public:
    */
   GRelation PCGlb(void) const {
     PermDescriptor d;
-    for (int i = 0; i < b_.arity() - f_; i++) d.permute(i,a_.arity() - f_ + i);
-    for (int i =  b_.arity() - f_; i < c_.arity(); i++)
-      d.permute(i, i + a_.arity()  - f_ - b_.arity() - f_);
+    int columns_a = a_.arity() - f_;
+    int i = 0;
+    for (; i < columns_a - 1; i++)  d.permute(i,a_.arity() - f_ + i);
 
-
-//    for (DescIterator it(d); it(); ++it)
-//      std::cout << "Changing " << it.val().first << " -> " << it.val().second << std::endl;
+    int columns_b = b_.arity() - f_;
+    for (; i < columns_b + columns_a; i++) d.permute(i,i + columns_b - columns_a);
 
     return c_.glb().permute(d);
   }
 
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
-    std::cout << "C " << c_.glb() << std::endl;
 
     // 1) pruning C from A and B
     // C must have atleast the follow of what is known in A and B
@@ -106,19 +104,29 @@ public:
     // 2) pruning A from B and C
     {
       // Pruning lower bound of A
-      GRelation x = c_.glb().follow(f_,PBLub()).intersect(a_.lub());
+      GRelation x = c_.glb().follow(b_.arity() - f_,PBLub()).intersect(a_.lub());
+      std::cout << "Cglb follow Blub N ALub: " << std::endl << x << std::endl;
       std::vector<int> uq(f_,-1);
       for (int i = 0; i < f_; i++) uq[i] = i;
       GRelation singles = x.unique(uq).intersect(x);
-      //std::cout << "Singles: " << singles << std::endl;
+      if (!singles.empty())
+        std::cout << "Singles(B): " << singles << std::endl;
       GECODE_ME_CHECK(a_.include(home,singles));
 
     }
 
     // 3) Pruning B from A and C
     {
-      //std::cout << "PCGlb " << PCGlb() << std::endl;
+      GRelation x = PCGlb().follow(a_.arity() - f_,a_.lub()).intersect(b_.lub());
+      std::cout << "Cglb follow ALub N BLub: " << std::endl << x << std::endl;
+      std::vector<int> uq(f_,-1);
+      for (int i = 0; i < f_; i++) uq[i] = i;
+      GRelation singles = x.unique(uq).intersect(x);
+      if (!singles.empty())
+        std::cout << "Singles(A): " << singles << std::endl;
+      GECODE_ME_CHECK(b_.include(home,singles));
     }
+
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {
       /// \todo is it possible to get another subsumption condition??

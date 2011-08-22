@@ -19,15 +19,20 @@ pair<GRelation,GRelation> domR(void) {
    {8,2,2},
    {6,5,3}
   });
+
+  GRelation lb(3);
+  lb.add(make_Tuple(8,2,2));
+
+  //return make_pair(lb,ub);
   return make_pair(GRelation(3),ub);
-}
+  }
 
 pair<GRelation,GRelation> domS(void) {
   GRelation ub(2);
   ub.add({
    {5,1},
    {2,8},
-   {2,9},
+  // {2,9},
    {7,4}
   });
   return make_pair(GRelation(2),ub);
@@ -35,7 +40,11 @@ pair<GRelation,GRelation> domS(void) {
 
 pair<GRelation,GRelation> domT(void) {
   GRelation ub = create_full(3);
-  return make_pair(GRelation(3),ub);
+
+  GRelation lb(3);
+  lb.add(make_Tuple(8,2,8));
+
+  return make_pair(lb,ub);
 }
 
 class FollowTest : public Gecode::Space {
@@ -54,9 +63,10 @@ public:
    t = CPRelVar(*this,dt.first,dt.second);
 
    follow(*this,r,1,s,t);
-   //branch(*this,r);
-   //Gist::stopBranch(*this);
-   //branch(*this,s);
+//   branch(*this,r);
+//   Gist::stopBranch(*this);
+//   branch(*this,s);
+//   Gist::stopBranch(*this);
    branch(*this,t);
   }
   void print(std::ostream& os, const char* varName, CPRelVar v) const {

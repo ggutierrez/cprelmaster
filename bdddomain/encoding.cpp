@@ -1,5 +1,6 @@
 #include <bdddomain/encoding.hh>
 #include <bdddomain/unique.h>
+#include <set>
 
 namespace MPG { namespace VarImpl {
 
@@ -64,32 +65,28 @@ std::vector<int> decodeCube(int* cube, int arity) {
   return std::vector<int>(ret.begin()+(maxTupleSize-arity), ret.end());
 }
 
-
 DdNode* swap_columns(DdNode *r, const PermDescriptor& swapDesc) {
-  vector<DdNode*> orig, perm;
-  int descSize = static_cast<int>(swapDesc.size());
-  orig.reserve(descSize * Limits::bitsPerInteger);
-  perm.reserve(descSize * Limits::bitsPerInteger);
+  const int numberOfVars = Limits::bitsPerInteger * Limits::arity;
+  std::set<int> permuted;
+  // This array is used to store the definition of the permutation
+  int perm[numberOfVars];
 
-  typedef vector<pair<int,int> >::const_iterator It;
-  vector<DdNode*> tempOrig, tempPerm;
-  tempOrig.reserve(Limits::bitsPerInteger);
-  tempPerm.reserve(Limits::bitsPerInteger);
   for (DescIterator i(swapDesc); i(); ++i) {
-    tempOrig = bddVars(i.val().first);
-    tempPerm = bddVars(i.val().second);
-    std::copy(tempOrig.begin(), tempOrig.end(), back_inserter(orig));
-    std::copy(tempPerm.begin(), tempPerm.end(), back_inserter(perm));
-    tempOrig.clear();
-    tempPerm.clear();
+    std::vector<int> idx_orig = bddIndices(i.val().first);
+    std::vector<int> idx_dest = bddIndices(i.val().second);
+    for (unsigned int i = 0; i < idx_orig.size(); i++) {
+      perm[idx_orig[i]] = idx_dest[i];
+      permuted.insert(idx_orig[i]);
+    }
   }
 
-  assert(static_cast<int>(orig.size()) == descSize * Limits::bitsPerInteger &&
-         static_cast<int>(perm.size()) == descSize * Limits::bitsPerInteger &&
-         "size of the bddVar vector is not correct");
+  for (int i = 0; i < numberOfVars; i++)
+    if (permuted.find(i) == permuted.end())
+      perm[i] = i;
 
-  DdNode *ret = Cudd_bddSwapVariables(dd(),r,&orig[0],&perm[0],orig.size());
-  assert(ret && "swap_columns returned invalid bdd");
+  DdNode *ret = Cudd_bddPermute(dd(),r,perm);
+  assert(ret && "bddPerm returned invalid bdd");
+
   return ret;
 }
 
