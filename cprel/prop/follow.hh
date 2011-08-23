@@ -73,6 +73,12 @@ public:
     for (int i = f_; i < b_.arity(); i++) d.permute(i,f_-i);
     return b_.lub().permute(d);
   }
+  GRelation TransformB(GRelation r) const {
+    PermDescriptor d;
+    for (int i = 0; i < f_; i++) d.permute(i,f_+i);
+    for (int i = f_; i < b_.arity(); i++) d.permute(i,f_-i);
+    return r.permute(d);
+  }
   /**
    * \brief Returns the lower bound of c_ permuted in a way that the part comming
    * from B is at the left.
@@ -103,27 +109,29 @@ public:
 
     // 2) pruning A from B and C
     {
+//      std::cout << "PBLUB " << std::endl << PBLub() << std::endl;
       // Pruning lower bound of A
       GRelation x = c_.glb().follow(b_.arity() - f_,PBLub()).intersect(a_.lub());
-      std::cout << "Cglb follow Blub N ALub: " << std::endl << x << std::endl;
+//      std::cout << "Cglb follow Blub N ALub: " << std::endl << x << std::endl;
       std::vector<int> uq(f_,-1);
       for (int i = 0; i < f_; i++) uq[i] = i;
       GRelation singles = x.unique(uq).intersect(x);
-      if (!singles.empty())
-        std::cout << "Singles(B): " << singles << std::endl;
+//      if (!singles.empty())
+//        std::cout << "Singles(B): " << singles << std::endl;
       GECODE_ME_CHECK(a_.include(home,singles));
 
     }
 
     // 3) Pruning B from A and C
     {
-      GRelation x = PCGlb().follow(a_.arity() - f_,a_.lub()).intersect(b_.lub());
-      std::cout << "Cglb follow ALub N BLub: " << std::endl << x << std::endl;
+//      std::cout << "PCGLB " << std::endl << PCGlb() << std::endl;
+      GRelation x = TransformB(PCGlb().follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
+//      std::cout << "Cglb follow ALub N BLub: " << std::endl << x << std::endl;
       std::vector<int> uq(f_,-1);
       for (int i = 0; i < f_; i++) uq[i] = i;
       GRelation singles = x.unique(uq).intersect(x);
-      if (!singles.empty())
-        std::cout << "Singles(A): " << singles << std::endl;
+//      if (!singles.empty())
+//        std::cout << "Singles(A): " << singles << std::endl;
       GECODE_ME_CHECK(b_.include(home,singles));
     }
 

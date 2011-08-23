@@ -42,7 +42,7 @@ pair<GRelation,GRelation> domT(void) {
   GRelation ub = create_full(3);
 
   GRelation lb(3);
-  lb.add(make_Tuple(8,2,8));
+  //lb.add(make_Tuple(8,2,8));
 
   return make_pair(lb,ub);
 }
