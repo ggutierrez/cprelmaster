@@ -95,44 +95,57 @@ public:
     return c_.glb().permute(d);
   }
 
+  GRelation transformC(GRelation r) const {
+    PermDescriptor d;
+    int columns_a = a_.arity() - f_;
+    int i = 0;
+    for (; i < columns_a - 1; i++)  d.permute(i,a_.arity() - f_ + i);
+
+    int columns_b = b_.arity() - f_;
+    for (; i < columns_b + columns_a; i++) d.permute(i,i + columns_b - columns_a);
+
+    return r.permute(d);
+  }
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
     // 1) pruning C from A and B
-    // C must have atleast the follow of what is known in A and B
-    GRelation glbF = a_.glb().follow(f_,b_.glb());
-    GECODE_ME_CHECK(c_.include(home,glbF));
+    {
+      // C must have atleast the follow of what is known in A and B
+      GRelation glbF = a_.glb().follow(f_,b_.glb());
+      GECODE_ME_CHECK(c_.include(home,glbF));
 
-    // C can have atmost the join of what is possible in A and B
-    GRelation max_possile_c = a_.lub().follow(f_,b_.lub());
-    GECODE_ME_CHECK(c_.exclude(home,max_possile_c.complement()));
-
+      // C can have atmost the join of what is possible in A and B
+      GRelation max_possile_c = a_.lub().follow(f_,b_.lub());
+      GECODE_ME_CHECK(c_.exclude(home,max_possile_c.complement()));
+    }
     // 2) pruning A from B and C
     {
-//      std::cout << "PBLUB " << std::endl << PBLub() << std::endl;
-      // Pruning lower bound of A
+      // pruning the lower bound of A
       GRelation x = c_.glb().follow(b_.arity() - f_,PBLub()).intersect(a_.lub());
-//      std::cout << "Cglb follow Blub N ALub: " << std::endl << x << std::endl;
       std::vector<int> uq(f_,-1);
       for (int i = 0; i < f_; i++) uq[i] = i;
       GRelation singles = x.unique(uq).intersect(x);
-//      if (!singles.empty())
-//        std::cout << "Singles(B): " << singles << std::endl;
       GECODE_ME_CHECK(a_.include(home,singles));
 
+      // pruning the upper bound of A
+      GRelation y = c_.oob().follow(b_.arity() - f_, TransformB(b_.glb()));
+      GECODE_ME_CHECK(a_.exclude(home,y));
     }
 
     // 3) Pruning B from A and C
     {
-//      std::cout << "PCGLB " << std::endl << PCGlb() << std::endl;
+      // pruning the lower bound of B
       GRelation x = TransformB(PCGlb().follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
-//      std::cout << "Cglb follow ALub N BLub: " << std::endl << x << std::endl;
       std::vector<int> uq(f_,-1);
       for (int i = 0; i < f_; i++) uq[i] = i;
       GRelation singles = x.unique(uq).intersect(x);
-//      if (!singles.empty())
-//        std::cout << "Singles(A): " << singles << std::endl;
       GECODE_ME_CHECK(b_.include(home,singles));
+
+      // pruning the upper bound of B
+      GRelation y = transformC(c_.oob()).follow(a_.arity() - f_, a_.glb());
+      GRelation b_out = TransformB(y);
+      GECODE_ME_CHECK(b_.exclude(home,b_out));
     }
 
     // Propagator subsumption
