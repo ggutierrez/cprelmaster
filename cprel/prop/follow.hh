@@ -106,6 +106,32 @@ public:
 
     return r.permute(d);
   }
+  /**
+   * \brief Main propagation algorithm.
+   *
+   * Implements: \f$A_{\smile_{f}}B=C\f$
+   *
+   * Where:
+   * - \f$A \subseteq \mathcal{U}_{n}\f$
+   * - \f$B \subseteq \mathcal{U}_{m}\f$
+   * - \f$f \in \{x : 1 \leq x \leq \text{min}(n,m)\}\f$
+   * - \f$C \subseteq \mathcal{U}_{m+n-2f}\f$
+   *
+   * Conventions:
+   * - \f$\mathcal{U}_{n}\f$ denotes the universe of all the tuples with arity \f$n\f$
+   * - \f$A_{\text{glb}} = \text{glb}(A)\f$
+   * - \f$A_{\text{lub}} = \text{lub}(A)\f$
+   * - \f$R_{\smile_{f}^{*}}S\f$ denotes the follow operation on ground relations
+   *   \f$R\f$ and \f$S\f$
+   *
+   * Propagation rules:
+   * - \f${A_{\text{glb}}}_{\smile_{f}^{*}}B_{\text{glb}}\subseteq C_{\text{glb}}\f$
+   * - \f${A_{\text{lub}}}_{\smile_{f}^{*}}B_{\text{lub}}\supseteq C_{\text{lub}}\f$
+   * Where:
+   *
+   * \todo Find a good latex symbol for the operation and complete the missing
+   * four rules
+   */
   virtual Gecode::ExecStatus propagate(Gecode::Space& home,
                                        const Gecode::ModEventDelta&)  {
 
