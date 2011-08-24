@@ -163,9 +163,10 @@ namespace MPG {
  *
  * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
  * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
+ *
+ * \see MPG::CPRel::Prop::Equal
  */
 void equal(Gecode::Space& home, CPRelVar A, CPRelVar B);
-
 /**
  * \brief Posts: \f$ A = \overline{B} \f$
  * \ingroup SetProp
@@ -181,6 +182,8 @@ void complement(Gecode::Space& home, CPRelVar A, CPRelVar B);
  * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
  * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n}\f$
  * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n}\f$
+ *
+ * \see MPG::CPRel::Prop::Intersect
  */
 void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C);
 /**
@@ -240,7 +243,7 @@ void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B,
  * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
  * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{n-p}\f$
  *
- * For more details see @see MPG::CPRel::Prop::Project::propagate
+ * @see MPG::CPRel::Prop::Project
  */
 void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B);
 /**
@@ -252,8 +255,23 @@ void projection(Gecode::Space& home, int p, CPRelVar A, CPRelVar B);
  * and on the left of \a B to join on.
  * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{m}\f$
  * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n+m-j}\f$
+ *
+ * @see MPG::CPRel::Prop::Join
  */
 void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
+/**
+ * \brief Posts the constraint: \f$ A_{\smile_{f}}B = C \f$
+ * \ingroup RelProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param f is the number of columns on the right of \a A
+ * and on the left of \a B that a match must contain to be consider as a follow.
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{m}\f$
+ * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n+m-2j}\f$
+ *
+ * @see MPG::CPRel::Prop::Follow
+ */
+void follow(Gecode::Space& home, CPRelVar A, int f, CPRelVar B, CPRelVar C);
 /**
  * \brief Posts the constraint: \f$ R = S\f$
  * \ingroup ChannelProp
@@ -287,9 +305,6 @@ void included(Gecode::Space& home, CPTupleVar t, CPRelVar R);
  * and the arity of \a t is not the same.
  */
 void excluded(Gecode::Space& home, CPTupleVar t, CPRelVar R);
-
-/// \todo Document!
-void follow(Gecode::Space& home, CPRelVar A, int f, CPRelVar B, CPRelVar C);
 /**
  * \brief Simple branching on relations.
  * \ingroup RelBranch
