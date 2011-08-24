@@ -603,6 +603,7 @@ INPUT                  = @CMAKE_SOURCE_DIR@/cprel \
                          @CMAKE_SOURCE_DIR@/bdddomain \
                          @CMAKE_SOURCE_DIR@/cptuple \
                          @CMAKE_SOURCE_DIR@/cptuple/prop \
+                         @CMAKE_SOURCE_DIR@/rel \
                          @CMAKE_SOURCE_DIR@/doc
 
 # This tag can be used to specify the character encoding of the source files

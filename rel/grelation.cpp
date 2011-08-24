@@ -199,6 +199,13 @@ GRelation GRelation::unique(const std::vector<int>& c) const {
             );
 }
 
+GRelation GRelation::forall(int c) const {
+  return
+      GRelation(
+        Impl(new RelationImpl(pimpl_->forall(c)))
+        );
+}
+
 GRelation GRelation::project(int p) const {
   typedef boost::error_info<struct tag_projection,std::string>
       projection;

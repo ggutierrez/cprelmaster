@@ -122,6 +122,13 @@ public:
    */
   RelationImpl unique(const std::vector<int>& c) const;
   /**
+   * \brief Returns the relation resulting from universaly quantifying on column
+   * \a c
+   *
+   * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
+   */
+  RelationImpl forall(int c) const;
+  /**
    * \brief Returns \f$ \Pi_{\{0,\ldots,p-1\}}\text{this}\f$.
    *
    * The projection of this on the \a p rightmost columns.

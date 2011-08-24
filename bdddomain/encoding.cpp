@@ -260,6 +260,15 @@ DdNode* unique(const std::vector<int>& c, DdNode* r) {
   return q;
 }
 
+DdNode* forall(int c, DdNode* r) {
+  std::vector<int> indices = bddIndices(c);
+  DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
+  Cudd_Ref(cube);
+  DdNode *q = Cudd_bddUnivAbstract(dd(),r,cube);
+  Cudd_RecursiveDeref(dd(),cube);
+  return q;
+}
+
 #ifndef NDEBUG
 void debug_bdd(DdNode* node, int a) {
     if (node == one()) {

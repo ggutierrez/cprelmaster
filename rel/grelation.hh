@@ -151,15 +151,34 @@ public:
    * \todo documentation
    */
   GRelation follow(int f,const GRelation& r) const;
-  /// Returns the relation resulting from existencially quantifying on column \a c
+  /**
+   * \brief Returns the relation resulting from existencially quantifying on
+   * column \a c
+   *
+   * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
+   */
   GRelation exists(int c) const;
-  /// Returns the relation resulting from uniquely quantifying on column \a c
+  /**
+   * \brief Returns the relation resulting from uniquely quantifying on column
+   * \a c
+   *
+   * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
+   */
   GRelation unique(int c) const;
   /**
    * \brief Returns the relation resulting from uniquely quantifying on all the
-   * columns in \a c
+   * columns in \a c.
+   *
+   * \param c a vector of columns: \f$ \forall_{i \in \{0,\ldots,\text{size}(c)-1\}}: 0 \leq c[i] < \text{arity}(\text{this})\f$
    */
   GRelation unique(const std::vector<int>& c) const;
+  /**
+   * \brief Returns the relation resulting from universaly quantifying on column
+   * \a c
+   *
+   * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
+   */
+  GRelation forall(int c) const;
   /**
    * \brief Returns: \f$ \Pi_{p} this \f$.
    *
