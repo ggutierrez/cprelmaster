@@ -365,6 +365,7 @@ set(CPREL_SRCS
 # propagators
   cprel/prop/and.cpp
   cprel/prop/and.hh
+  cprel/prop/and.hpp
   cprel/prop/equality.cpp
   cprel/prop/equality.hh
   cprel/prop/join.hh

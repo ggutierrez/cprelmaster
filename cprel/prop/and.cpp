@@ -2,24 +2,23 @@
 #include <cprel/cprel.hh>
 
 namespace MPG {
-  
-  bool checkArityEq(CPRelVar A, CPRelVar B,  CPRelVar C) {
-    if (A.arity() != B.arity())
-      return false;
-    if (A.arity() != C.arity())
-      return false;
-    if (C.arity() != B.arity())
-      return false;
-    return true;
-  }
+bool checkArityEq(CPRelVar A, CPRelVar B,  CPRelVar C) {
+  if (A.arity() != B.arity())
+    return false;
+  if (A.arity() != C.arity())
+    return false;
+  if (C.arity() != B.arity())
+    return false;
+  return true;
+}
 
 using namespace CPRel;
 using namespace CPRel::Prop;
 void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
-  if (!checkArityEq(A,B,C)) 
+  if (!checkArityEq(A,B,C))
     throw ArityMissmatch("intersect constraint");
-  
+
   CPRelView a(A);
   CPRelView b(B);
   CPRelView c(C);
@@ -28,7 +27,7 @@ void intersect(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
 
 void Union(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
-  if (!checkArityEq(A,B,C)) 
+  if (!checkArityEq(A,B,C))
     throw ArityMissmatch("union constraint");
 
   CPRelView a(A), b(B), c(C);
@@ -76,11 +75,11 @@ void implies(Gecode::Space& home, CPRelVar A, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
   if (!checkArityEq(A,B,C))
     throw ArityMissmatch("intersect constraint");
-  
+
   CPRelView a(A), b(B), c(C);
   typedef ComplementView<CPRelView> CView;
   CView complementB(b), complementC(c);
-  
+
   GECODE_ES_FAIL((Intersect<CPRelView,CView,CView>::
                   post(home,a,complementB,complementC)));
 }
