@@ -62,7 +62,7 @@ public:
    pair<GRelation,GRelation> dt = domT();
    t = CPRelVar(*this,dt.first,dt.second);
 
-   follow(*this,r,1,s,t);
+   divide(*this,r,1,s,t);
 //   branch(*this,r);
 //   Gist::stopBranch(*this);
 //   branch(*this,s);

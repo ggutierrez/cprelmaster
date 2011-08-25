@@ -273,6 +273,19 @@ void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
  */
 void follow(Gecode::Space& home, CPRelVar A, int f, CPRelVar B, CPRelVar C);
 /**
+ * \brief Posts the constraint: \f$ A \%_{d}B = C \f$
+ * \ingroup RelProp
+ *
+ * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+ * @param d is the number of columns on the right of \a A
+ * and on the left of \a B that a match must contain to be consider for the division
+ * @param B a relation decision variable: \f$B\subseteq\mathcal{U}_{m}\f$
+ * @param C a relation decision variable: \f$C\subseteq\mathcal{U}_{n+m-2j}\f$
+ *
+ * @see MPG::CPRel::Prop::Follow
+ */
+void divide(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C);
+/**
  * \brief Posts the constraint: \f$ R = S\f$
  * \ingroup ChannelProp
  *
