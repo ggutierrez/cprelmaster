@@ -1,0 +1,41 @@
+%\enableregime[utf-8]
+
+\setupexternalfigures[directory={figures/}]
+\useexternalfigure[follow][follow][width=.5\textwidth]
+
+\starttext
+\title{Preliminaries}
+
+\startitemize
+\item Let's define a finite set of integers  $\cal{U} = \{x: 0 \leq x
+  \leq k \}$ for some large enough $k$.
+\item A tuple $t$ is an ordered list of elements of $\cal{U}$ of the
+  form $t = <t_{1}, t_{2}, \ldots, t_{i}, \ldots, t_{n}>$ where
+  $t_{i}\in\cal{U}$. The arity of a tuple is the number of elements it
+  contains: $\text{arity}(t)=n$.
+\item A relation $R$ is a set of tuples of the same arity. There are
+  several properties in a relation that are of our interest
+  \startitemize
+  \item The arity of the relation is the arity of the tuples it
+    contains: $\text{arity}(R)=\text{arity}(t)$, where $t$ is a tuple
+    of the relation.
+  \item The cardinality of $R$, represented as $\text{card}(R)$, is the
+    number of tuples it contains.
+  \item Another way of looking at $R$ is by columns. The number of
+    columns in $R$ is the same as its arity.
+  \stopitemize
+\stopitemize
+
+\section{Follow}
+Te parameters of the follow constraint are three relation decision
+variables $A\subseteq\cal{U}_{n}$, $B\subseteq\cal{U}_{m}$ and
+$C\subseteq\cal{U}_{k}$; and an integer representing the length of the
+match: $f \in \{x : 1 \leq x \leq \text{min}(n,m)\}$. The semantincs
+of the constraint is defined by:
+\startformula
+A
+\stopformula
+
+\externalfigure[follow]
+
+\stoptext

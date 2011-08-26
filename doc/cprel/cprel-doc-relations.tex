@@ -1,0 +1,44 @@
+\startcomponent cprel-doc-relations
+
+\product cprel-doc
+
+\chapter{Relations as values}
+
+\startitemize
+  \item \universe{} represents the set of all the numbers under consideration. It is defined es:
+    \startformula
+    {\cal U} = \{x : 0 \leq x \leq k \}
+    \stopformula
+    For a finite but possible large enough $k$.
+  \item a tuple $t$ is an ordered list of integers:
+    \startformula
+    t = <t_{0},\ldots,t_{i},\ldots,t_{n-1}>
+    \stopformula
+    where every $t_{i}\in{\cal U}$. The number of elements in a tuple represents its arity, in this case $\arity{t}=n$.
+    
+  \item A relation $R$ is a set of tuples of the same arity. The arity of a relation, represented by \arity{R}, is the arity of the tuples it contains. The cardinality of a relation, denoted by \card{R}, represent the number of elements the relation contains.  A relation $R$ with cardinality $c$ is a subset of \universe{c}. With:
+\startformula
+  \universe{c} = \underbrace{\universe{}\times\universe{}\times\ldots,\times\universe{}}_{c-\text{times}}
+\stopformula
+
+\item Relations can be operated as sets. This means that operations such as complement and intersection are defined on relations.
+  \startitemize
+    \item \intersection{R}{S} represents the intersection between relations $R$ and $S$. For this operation to be defined both relations must have the same cardinality: $R\subseteq\universe{n} \land S \subseteq \universe{n}$. The result of this operation is a new relation $T\subseteq\universe{n}$.
+    \item \complement{R} represents the complement of relation $R$ and is equivalent to $\universe{c}\setminus R$, being $c$ the arity of $R$.
+    \item Other set operations can be defined in terms of the ones presented.
+  \stopitemize
+
+  \item There are other operations on relations such as projection,  permutation, join and division:
+    \startitemize
+    \item \projection{C}{R} represents the projection of relation $R$ on the set of columns $C$. If we suppose that $R\subseteq\universe{n}$,  $|C|=m$ and  $m \leq n$ then the relation resulting from this operation will be a subset of $\universe{m}$.  
+    \item \perm{B}{R} represents the permutation of columns in $R$ according with a binary relation $B$. Let's $C$ represent the set of valid column indices in $\{x: 0 \leq x < \arity{R}\}$.  Then $B\subseteq C\times C$ and an element $<x,y>\in B$ means that in the resulting relation columns $x$ and $y$ will be swapped. 
+      \item \join{R}{C}{S}
+
+      \item hola \follow{3} mundo
+    \stopitemize
+
+
+
+\stopitemize 
+
+\stopcomponent

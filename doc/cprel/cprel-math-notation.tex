@@ -1,0 +1,50 @@
+\startenvironment cprel-math-notation
+
+\usemodule[tikz]
+
+\define[1]\universe
+       {\mathematics{{\cal U}_{#1}}}
+
+\define[1]\arity
+  {\mathematics{\text{arity}(#1)}}
+
+\define[1]\card
+  {\mathematics{\text{card}(#1)}}
+
+\define[0]\intersect
+  {\mathematics{\cap}}
+
+\define[2]\intersection
+  {\mathematics{#1\intersect#2}}
+
+\define[1]\complement
+  {\mathematics{\overline{#1}}}
+
+\define[0]\project
+  {\mathematics{\pi}}
+
+\define[2]\projection
+  {\mathematics{\project\low{\tfxx #1}(#2)}}
+
+\define[0]\permute
+  {\mathematics{\sigma}}
+
+\define[2]\perm
+  {\mathematics{\permute\low{\tfxx #1}(#2)}}
+
+\define[3]\join
+  {\mathematics{#1\Join_{\tfxx #2} #3}}
+
+\define[1]\follow
+  {
+    \starttikzpicture
+     \draw[thick] (0mm,0mm) arc (-180:0:1mm);
+% node[very near start,sloped,below] {ggg};
+    \stoptikzpicture
+  }
+
+
+\define[2]\cross
+  {\mathematics{#1\times#2}}
+
+\stopenvironment
