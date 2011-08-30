@@ -13,6 +13,7 @@
 #+LINK_UP:   
 #+LINK_HOME: 
 
+
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
@@ -22,73 +23,77 @@
 #+LATEX_HEADER: \newcommand{\inter}[2]{\ensuremath{#1\cap #2}}
 #+LATEX_HEADER: \newcommand{\proj}[2]{\ensuremath{\Pi_{#1} #2}}
 #+LATEX_HEADER: \newcommand{\perm}[2]{\ensuremath{\sigma_{#2} #1}}
+#+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{glb(#1)}}
+#+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{lub(#1)}}
 
-* General things to be done
-** TODO Create the converter to use Context instead of latex
-** TODO Improve latex definitions for the relation operations shortcuts
-** TODO design the follow operator in tikz
- 
+
+* TODO [0%] General things to be done 				   :noexport:
+** TODO Create the converter to use Context instead of latex 
+** TODO Improve latex definitions for the relation operations shortcuts 
+** TODO design the follow operator in tikz 
+** TODO Improve the definition of the tuple command in latex.
+** TODO Change the mode from article to book when exporting the document
 * Introduction
 ** Contributions
 ** Related work
+* TODO [%] Relations as ground values :noexport:
+** TODO explain that a relation is a set of tuples.
+   For now it does not matter how tuples are considered or which kind
+   of elements do they contain.
+** TODO explain that there is a formal model behind relations: the relational algebra. :noexport:
+** TODO explain that there are two ways of see a relation, as a set or by columns. :noexport:
+
 * Relations as ground values
 ** What is a relation?
-*** TODO explain that a relation is a set of tuples.
-    For now it does not matter how tuples are considered or which kind
-    of elements do they contain.
-*** TODO explain that there is a formal model behind relations: the relational algebra.
-*** TODO explain that there are two ways of see a relation, as a set or by columns.
 ** The relational algebra notion of a relation or table
 ** Relations in constraint programming
-     An important difference from relational algebra is that the
-     universe of elements is finite in constraint
-     programming and this allow us to assume that operations like
-     /complement/ of relations are semantically well defined.
-
-     As we are restricted to integers as elements in any relation we
-     define the set \universe{} as the biggest set containing all the
-     integers that can appear as elements in relations. 
-
-     \begin{align*} 
-     \universe{} = \{x : 0 \leq x \leq k \} 
-     \end{align*}
-
-     In this definition, $k$ represents an arbitrary big number that
-     is fixed only for implementation purposes.
- 
-     After this definition of elements, we define a tuple as an
-     ordered list of elements of \universe{}. A tuple $t$ of $n$
-     elements is represented:
-
-     \begin{align*} 
-     t = \tuple{n}
-     \end{align*}
-
-*** TODO Improve the definition of the tuple command in latex.
-
-     The number of elements in a tuple is called its /arity/. For the
-     example above we have that $\art{t}=n$. To refer to the elements
-     at specific positions in the tuple we use the notation $nth(t,k)$
-     which will refer to the element at position $k$ of tuple $t$.
-
-     With the definitions of tuple and the universe we can define for
-     instance the universe of all the possible tuples of arity 2 as
-     $\universe{}\times\universe{}$. In a general way we define:
-
-     \begin{align*}
-     \universe{}_k = \underbrace{\universe{}\times\ldots\times\universe{}}_{k-times}
-     \end{align*}
-
-     as the universe for al the tuples of arity $k$. A relation is
-     consider asa set of tuples of the same arity and because of this
-     we write $R\subseteq\universe{k}$ to represent that $R$ is a set
-     of tuples of arity $k$.
+   An important difference from relational algebra is that the
+   universe of elements is finite in constraint
+   programming and this allow us to assume that operations like
+   /complement/ of relations are semantically well defined.
+   
+   As we are restricted to integers as elements in any relation we
+   define the set \universe{} as the biggest set containing all the
+   integers that can appear as elements in relations. 
+   
+   \begin{align*} 
+   \universe{} = \{x : 0 \leq x \leq k \} 
+   \end{align*}
+   
+   In this definition, $k$ represents an arbitrary big number that
+   is fixed only for implementation purposes.
+   
+   After this definition of elements, we define a tuple as an
+   ordered list of elements of \universe{}. A tuple $t$ of $n$
+   elements is represented:
+   
+   \begin{align*} 
+   t = \tuple{n}
+   \end{align*}
+  
+   The number of elements in a tuple is called its /arity/. For the
+   example above we have that $\art{t}=n$. To refer to the elements
+   at specific positions in the tuple we use the notation $nth(t,k)$
+   which will refer to the element at position $k$ of tuple $t$.
+   
+   With the definitions of tuple and the universe we can define for
+   instance the universe of all the possible tuples of arity 2 as
+   $\universe{}\times\universe{}$. In a general way we define:
+   
+   \begin{align*}
+   \universe{}_k = \underbrace{\universe{}\times\ldots\times\universe{}}_{k-times}
+   \end{align*}
+   
+   as the universe for al the tuples of arity $k$. A relation is
+   consider asa set of tuples of the same arity and because of this
+   we write $R\subseteq\universe{k}$ to represent that $R$ is a set
+   of tuples of arity $k$.
      
-    It is also important to define the empty set as the set that does
-    not contain any tuple. In the same way that \universe{n}
-    represents the universe of all the tuples of arity $n$ we define
-    \emptyrel{n} as the empty set for tuples of the same arity.
- 
+   It is also important to define the empty set as the set that does
+   not contain any tuple. In the same way that \universe{n}
+   represents the universe of all the tuples of arity $n$ we define
+   \emptyrel{n} as the empty set for tuples of the same arity.
+   
 ** Operations on relations
    Even when restricting the elements of a relation to be in
    $\universe{}$ we can still define the usual operations in relations
@@ -96,12 +101,12 @@
    operations deal with relations as if they were sets:
 
 *** Complement
-     The complement of a relation $R\subseteq\universe{n}$ is the relation: 
-     
-     \begin{align*}
-     \compl{R} = \{t : t \in \universe{n} \land t \notin R\}
-     \end{align*}
-     
+    The complement of a relation $R\subseteq\universe{n}$ is the relation: 
+    
+    \begin{align*}
+    \compl{R} = \{t : t \in \universe{n} \land t \notin R\}
+    \end{align*}
+    
 *** Intersection
     The intersection of two relations $R$ and $S$, both of them of
     the same arity, is the relation:
@@ -111,8 +116,22 @@
     \end{align*}
 
     With this two operations it is possible to define other operations
-    like union, subset, etc.. Apart from these operations we can also
-    use the ones from the relational algebra. 
+    like union, subset, etc.. Table \ref{tab:derived-relations}
+    presents a list of other operations that we can get from
+    complement and intersection.
+
+    #+CAPTION: Other operations that can be derived from complement and intersection.
+    #+LABEL:   tab:derived-relations
+    |----------------+------------|
+    | Operation      | Equivalent |
+    |----------------+------------|
+    | $R\cup S$      |            |
+    | $R\subseteq S$ |            |
+    | $R\iff S$      |            |
+    |----------------+------------|
+    
+    Apart from these operations we can also use the ones from the
+    relational algebra.
     
 *** Projection
     Projecting a relation allows to obtain a relation of less
@@ -142,18 +161,21 @@
     \begin{align*}
     \forall t \in R  \implies \exists t' \in \Pi_{P}R: \arity{t'}=|P|
     \land \forall i \in P : nth(t',i) = nth(t,i)
-   \end{align*}
+    \end{align*}
 
     We can deduce from this definition that
     $\proj{P}{R}\subseteq\universe{|P|}$. Moreover, projecting a
     relation on a set that contains all its columns will give as
     result the same relation while projecting it on an empty set will
     give \emptyrel{0}.
-
+*** Quantification
+**** Universal
+**** Existencial
+**** Unique
 *** Permutation
     This operation allows to perform column reordering on
     relations. The parameters are:
-
+    
     - A relation $R\subseteq\universe{n}$ to be permuted, and
     - a relation $P\subseteq\universe{2}$ that specifies how columns in
       the resulting relation correspond to columns in $R$.
@@ -204,79 +226,141 @@
     \in C(R) : nth(t,i) = nth(t',N(i))
     \end{align*}
     
+*** TODO Join :noexport:
+**** TODO [%] Define the following operations formally.
+***** TODO Introduce the notion of Follow or division
+    
 *** Join
-Before introducing this operation we will introduce three different
-concepts on tuples. Given the tuple $t=<t_1,\ldots,t_i,\ldots,t_n>$,
-we define:
+    
+    Before introducing this operation we will introduce three
+    different concepts on tuples that will be used by the definitions.
+    Given the tuple $t=<t_1,\ldots,t_i,\ldots,t_n>$, we define:
+    
+    - $prefix(t,i)$ :: the tuple of arity $i$ that contains the first
+      $i$ elements of $t$.
+    - $suffix(t,i)$ :: the tuple of arity $i$ that contains the last $i$
+      elements of $t$.
+    - $match(t,t',l)$ :: a boolean function that evaluates to /true/ if
+      $suffix(t,l)=prefix(t',l)$ and /false/ otherwise.
+    - $concat(t,u)$ :: is the tuple resulting from appending tuples $t$
+      and $u$.
 
-**** TODO Define the following operations formally.
-  - $prefix(t,i)$ as the tuple of arity $i$ that contains the first
-    $i$ elements of $t$.
-  - $suffix(t,i)$ is the tuple of arity $i$ that contains the last $i$
-    elements of t.
-  - $match(t,t',l)$ as a boolean function that evaluates to /true/ if
-    $suffix(t,l)=prefix(t',l)$ and /false/ otherwise.
-  - $concat(t,u)$ is the tuple resulting from appending tuples $t$ and $u$.
+    The join operation take two relations $R\subseteq\universe{n}$ and
+    $S\subseteq\universe{m}$ as arguments. Additionally it takes an
+    integer $j$ that describes on how many columns the join operation is
+    going to be performed. The resulting relation, denoted $R\Join_{j}S$
+    is a subset of $\universe{n+m-j}$ and is defined:
+    
+    \begin{align*}
+    \forall r \in R \forall s \in S : match(r,s,j) \implies
+    concat(r,suffix(s,m-j)) \in  R\Join_{j}S
+    \end{align*}
+    
+    As an example, consider the two relations:
+    |-------+-------+-------|
+    | C_{1} | C_{2} | C_{3} |
+    |-------+-------+-------|
+    |    42 |     5 |    38 |
+    |    21 |     7 |     9 |
+    |    43 |    12 |     1 |
+    |-------+-------+-------|
+    
+    |-------+-------+-------|
+    | C_{3} | C_{2} | C_{1} |
+    |-------+-------+-------|
+    |     5 |    38 |     2 |
+    |     5 |    38 |     4 |
+    |    12 |     1 |     3 |
+    |-------+-------+-------|
 
-The join operation take two relations $R\subseteq\universe{n}$ and
-$S\subseteq\universe{m}$ as arguments. Additionally it takes an
-integer $j$ that describes on how many columns the join operation is
-going to be performed. The resulting relation, denoted $R\Join_{j}S$
-is a subset of $\universe{n+m-j}$ and is defined:
+    The result of joining both relations on $j=2$ columns is:
+    
+    |-------+-------+-------+-------|
+    | C_{1} | C_{2} | C_{3} | C_{4} |
+    |-------+-------+-------+-------|
+    |    42 |     5 |    38 |     2 |
+    |    42 |     5 |    38 |     4 |
+    |    43 |    12 |     1 |     3 |
+    |-------+-------+-------+-------|
 
-\begin{align*}
-\forall r \in R \forall s \in S : match(r,s,j) \implies
-concat(r,suffix(s,m-j)) \in  R\Join_{j}S
-\end{align*}
+    An special case of the join operation is when $j=0$. From the
+    definition, $match(t,u,0)$ will evaluate to /true/ always. In this
+    case every possible combination of tuples will be part of the result
+    and therefore it represents the cartesian product of the two
+    relations.
 
-As an example, consider the two relations:
-|-------+-------+-------|
-| C_{1} | C_{2} | C_{3} |
-|-------+-------+-------|
-|    42 |     5 |    38 |
-|    21 |     7 |     9 |
-|    43 |    12 |     1 |
-|-------+-------+-------|
-
-|-------+-------+-------|
-| C_{3} | C_{2} | C_{1} |
-|-------+-------+-------|
-|     5 |    38 |     2 |
-|     5 |    38 |     4 |
-|    12 |     1 |     3 |
-|-------+-------+-------|
-
-The result of joining both relations on $j=2$ columns is:
-|-------+-------+-------+-------|
-| C_{1} | C_{2} | C_{3} | C_{4} |
-|-------+-------+-------+-------|
-|    42 |     5 |    38 |     2 |
-|    42 |     5 |    38 |     4 |
-|    43 |    12 |     1 |     3 |
-|-------+-------+-------+-------|
-
-**** TODO Introduce the notion of Follow or division
-
-An special case of the join operation is when $j=0$. From the
-definition, $match(t,u,0)$ will evaluate to /true/ always. In this
-case every possible combination of tuples will be part of the result
-and therefore it represents the cartesian product of the two
-relations.
-
-\begin{align*}
-R \times S = R\Join_{0}S
-\end{align*}
+    \begin{align*}
+    R \times S = R\Join_{0}S
+    \end{align*}
 
 *** Summarizing (notion of cardinality)
 * Relations as decision variables
    They represent a relation out of a possible sets of relations.
 ** Domain definition
+*** What it really is in the mathematical sense
+**** Lattice and power set definitions
+***** Minimal and maximal elements
+***** Operations that increase information in the lattice
+*** How does is it approximated
+*** How does is it implemented
 ** Kernel constraints
 ** Cardinality
+* Constraints on relation decision variables
 ** Sets-like constraints
 *** Complement
 *** Intersection
-** Relation-like constraints 
+** Relation-like constraints
+*** TODO [0%] Projection 					   :noexport:
+**** TODO Complete the explanation for the pruning of A in this constraint.
+**** TODO Explain that the constraint takes a number of columns on the right part and not a set with column indices
+*** Projection
+
+   This constraints enforces that a relation decision variable
+   $B\subseteq\universe{m}$ is the result of projecting another
+   decision variable $A\subseteq\univers{n}$ on the set of column
+   indices $P$. It is written:
+   
+   \begin{align*}
+   \proj{P}{A} \equiv B
+   \end{align*}
+
+   For this constraint to be well defined we required:
+   - $m=|P|$: preserves the requirements of the /join
+		operation/ on relations.
+   - $\forall x \in P : 1 \leq x \leq n$: ensures
+	that $P$ only contains valid column indices.
+
+     
+   The pruning that this constraint is going to perform on both
+   variables can be defined by the following propagation rules:
+   - Pruning $A$: :: The fact that $n\geq m$ makes the pruning that
+		     can be performed on $A$ weaker than the pruning
+		     done for the other direction of the
+		     constraint.
+     - Consider tuples $\{a_0,a_1\}\subseteq unk(A)$
+       and $b\in glb(B)$.
+     - $\proj{P}{\{a_0,a_1\}}=\{b\}$ means that both $a_0$ and $a_1$
+       can be valid supports for $b$. However this does not represents enough
+       information to deduce that one or the other must be included
+       in $A$. this decision can be taken only when we know that the
+       support is unique.
+     - If for some reason, all but one of the supports of $b$ become
+       no longer part of the variable we need to include the
+       remaining one in order to keep the constraint consistent.
+     - Finally new bounds for $A$ are:
+       - $\lub{B}\times\universe{n-p} \supseteq A$
+       - $A \subseteq Uq\cap(\universe{n-p}\times\glb{B})$, where
+	 $Uq$ represents the unique quantification of the elements in
+	 the upper bound of $A$. This is, $Uq = (\exists!_{\{p+1,\ldots,n\}}\lub{A})\cap\lub{A}$
+
+   - Pruning $B$: :: In this case it is enough to apply the
+		     projection operation on both the lower and upper
+		     bounds of $A$ to find the new bounds:
+     - $B \subseteq \proj{P}{\glb{A}}$
+     - $\proj{P}{\lub{A}} \supseteq B$
+   
+*** Permutation
+*** Join
 *** Folllow
 *** FollwoAll
 *** Sumarize
@@ -289,13 +373,65 @@ R \times S = R\Join_{0}S
 *** A first approach, extentional
 *** Binary decision diagrams to represent the domain
 **** They have been used for complete domain representation of set decision variables.
-* Constraint system implementation
-* study case: the package installability problem
+* System's implementation
+** An overview of the implementation of the system
+*** Project website
+    The implementation of the constraint system is available
+    online. The documentation along with instructions on how to build
+    it are available at: http://ggutierrez.github.com/cprelmaster/ and
+    the development site where bugs can be submitted is:
+    https://github.com/ggutierrez/cprelmaster.
+**** Setup instructions
+***** Supported operating systems
+***** Requirements
+***** Building
+***** Installation
+
+** Libraries used to implement it
+*** Gecode
+**** Variable specification
+**** Complexity of the propagators
+     In this case Gecode presents an advantage as its state of the art
+     implementation of the propagation engine makes a more efficient
+     use of the resources.
+*** CUDD
+    This is the library that we use to support the implementation of
+    the domain representation of the constraint system. [[http://vlsi.colorado.edu/~fabio/CUDD/][CUDD]] presents
+    several strong points that we take advantage of.
+
+    - Provides support for implementing the domain representation
+    - It has several advantages over the use of other libraries. For
+      instance it provides a real implementation of complemented
+      edges. Other libraries just implement ADDs and they do not
+      provide the same time complexities guaranties.
+    - Its use causes some interference with the parallel search
+      architecture provided by Gecode. To maximize the possible
+      sharing a /manager/ is used to store several /BDDs/ then what
+      will happen if several threads try to access the same variable
+      representation?.
+    - It already provides some constant bdd representation for
+      different constant relations. We do a direct use of them.
+      - $R(x,y) = \{(x,y) : x = y\}$
+      - $R(x,y) = \{(x,y) : x > y\}$
+      - Others....
+**** TODO Complete with other ground relations that are implemented by CUDD and that we use directly.
+*** Other /BDD/ libraries
+**** Buddy
+     The [[http://buddy.sourceforge.net/manual/main.html][Buddy]] library.
+**** JINC
+     The [[http://jossowski.de/projects/jinc/jinc.html][JINC]] library.
+     
+     - Support for multithreading
+     - Modern object oriented design
+
+** Relation encoding on /BDDs/
+** Simple program using relation constraints
+* Study case: the package installability problem
 ** Constraint model
 ** Variables
 ** Constraints
 ** Search heuristics
 ** Benchmarks
 ** Other approaches that solve the problem
-* study case: music composition
+* Study case: music composition
 
