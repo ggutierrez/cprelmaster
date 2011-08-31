@@ -15,17 +15,29 @@
 
 
 #+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{mathtools}
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
-#+LATEX_HEADER: \newcommand{\tuple}[1]{\ensuremath{<t_{1},\ldots,t_{#1}>}}
+#+LATEX_HEADER: \newcommand{\tuple}[1]{\ensuremath{\langle t_{1},\ldots,t_{#1} \rangle}}
 #+LATEX_HEADER: \newcommand{\art}[1]{\ensuremath{arity(#1)}}
 #+LATEX_HEADER: \newcommand{\compl}[1]{\ensuremath{\lnot #1}}
 #+LATEX_HEADER: \newcommand{\inter}[2]{\ensuremath{#1\cap #2}}
-#+LATEX_HEADER: \newcommand{\proj}[2]{\ensuremath{\Pi_{#1} #2}}
-#+LATEX_HEADER: \newcommand{\perm}[2]{\ensuremath{\sigma_{#2} #1}}
-#+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{glb(#1)}}
-#+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{lub(#1)}}
-
+#+LATEX_HEADER: \newcommand{\proj}[2]{\ensuremath{\underset{\scriptstyle #1}{\prod}(#2)}}
+#+LATEX_HEADER: \newcommand{\perm}[2]{\ensuremath{\underset{\scriptstyle #2}{\sigma}(#1)}}
+#+LATEX_HEADER: \newcommand{\join}[3]{\ensuremath{#1 \underset{\scriptstyle #2}{\Join} #3}}
+#+LATEX_HEADER: \newcommand{\follow}[3]{\ensuremath{#1 \underbracket{\scriptstyle #2}_{\scriptstyle \/} #3}}
+#+LATEX_HEADER: \newcommand{\followall}[3]{\ensuremath{#1 \underbracket{\scriptstyle #2}_{\scriptstyle \forall} #3}}
+#+LATEX_HEADER: \DeclareMathOperator{\glbo}{glb}
+#+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{\glbo(#1)}}
+#+LATEX_HEADER: \DeclareMathOperator{\lubo}{lub}
+#+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{\lubo(#1)}}
+#+LATEX_HEADER: \DeclareMathOperator{\unko}{unk}
+#+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{\unko(#1)}}
+#+LATEX_HEADER: \DeclareMathOperator{\suffix}{suffix}
+#+LATEX_HEADER: \DeclareMathOperator{\concat}{concat}
+#+LATEX_HEADER: \DeclareMathOperator{\match}{match}
+#+LATEX_HEADER: \DeclareMathOperator{\prefix}{prefix}
+#+LATEX_HEADER: \DeclareMathOperator{\nth}{nth}
 
 * TODO [0%] General things to be done 				   :noexport:
 ** TODO Create the converter to use Context instead of latex 
@@ -73,7 +85,7 @@
   
    The number of elements in a tuple is called its /arity/. For the
    example above we have that $\art{t}=n$. To refer to the elements
-   at specific positions in the tuple we use the notation $nth(t,k)$
+   at specific positions in the tuple we use the notation $\nth(t,k)$
    which will refer to the element at position $k$ of tuple $t$.
    
    With the definitions of tuple and the universe we can define for
@@ -159,8 +171,8 @@
     Formally, projection a relation $R \subseteq \universe{n}$ on a
     set $P$ of column indexes, denoted  \proj{P}{R}, is defined as: 
     \begin{align*}
-    \forall t \in R  \implies \exists t' \in \Pi_{P}R: \arity{t'}=|P|
-    \land \forall i \in P : nth(t',i) = nth(t,i)
+    \forall t \in R  \implies \exists t' \in \proj{P}{R}: \arity{t'}=|P|
+    \land \forall i \in P : \nth(t',i) = \nth(t,i)
     \end{align*}
 
     We can deduce from this definition that
@@ -223,7 +235,7 @@
     
     \begin{align*}
     \forall t \in R  \implies \exists t' \in \perm{R}{N}: \forall i
-    \in C(R) : nth(t,i) = nth(t',N(i))
+    \in C(R) : \nth(t,i) = \nth(t',N(i))
     \end{align*}
     
 *** TODO Join :noexport:
@@ -236,24 +248,24 @@
     different concepts on tuples that will be used by the definitions.
     Given the tuple $t=<t_1,\ldots,t_i,\ldots,t_n>$, we define:
     
-    - $prefix(t,i)$ :: the tuple of arity $i$ that contains the first
+    - $\prefix(t,i)$ :: the tuple of arity $i$ that contains the first
       $i$ elements of $t$.
-    - $suffix(t,i)$ :: the tuple of arity $i$ that contains the last $i$
+    - $\suffix(t,i)$ :: the tuple of arity $i$ that contains the last $i$
       elements of $t$.
-    - $match(t,t',l)$ :: a boolean function that evaluates to /true/ if
-      $suffix(t,l)=prefix(t',l)$ and /false/ otherwise.
-    - $concat(t,u)$ :: is the tuple resulting from appending tuples $t$
+    - $\match(t,t',l)$ :: a boolean function that evaluates to /true/ if
+      $\suffix(t,l)=\prefix(t',l)$ and /false/ otherwise.
+    - $\concat(t,u)$ :: is the tuple resulting from appending tuples $t$
       and $u$.
 
     The join operation take two relations $R\subseteq\universe{n}$ and
     $S\subseteq\universe{m}$ as arguments. Additionally it takes an
     integer $j$ that describes on how many columns the join operation is
-    going to be performed. The resulting relation, denoted $R\Join_{j}S$
+    going to be performed. The resulting relation, denoted $\join{R}{j}{S}$
     is a subset of $\universe{n+m-j}$ and is defined:
     
     \begin{align*}
     \forall r \in R \forall s \in S : match(r,s,j) \implies
-    concat(r,suffix(s,m-j)) \in  R\Join_{j}S
+    \concat(r,\suffix(s,m-j)) \in  \join{R}{j}{S}
     \end{align*}
     
     As an example, consider the two relations:
@@ -290,9 +302,9 @@
     relations.
 
     \begin{align*}
-    R \times S = R\Join_{0}S
+    R \times S = \join{R}{0}{S}
     \end{align*}
-
+    
 *** Summarizing (notion of cardinality)
 * Relations as decision variables
    They represent a relation out of a possible sets of relations.
@@ -337,8 +349,8 @@
 		     can be performed on $A$ weaker than the pruning
 		     done for the other direction of the
 		     constraint.
-     - Consider tuples $\{a_0,a_1\}\subseteq unk(A)$
-       and $b\in glb(B)$.
+     - Consider tuples $\{a_0,a_1\}\subseteq \unk{A}$
+       and $b\in \glb{B}$.
      - $\proj{P}{\{a_0,a_1\}}=\{b\}$ means that both $a_0$ and $a_1$
        can be valid supports for $b$. However this does not represents enough
        information to deduce that one or the other must be included
@@ -361,10 +373,73 @@
    
 *** Permutation
 *** Join
-*** Folllow
-*** FollwoAll
-*** Sumarize
+*** TODO [%] Follow :noexport:
+**** TODO Write on the disadvantages of the implementation of this constraint in the well known case
+**** TODO Elaborate on the notion of division in relational algebra and the correspondence to Follow
+*** Follow
+    \begin{align*}
+    \follow{A}{f}{B}\equiv C
+    \end{align*}
+   
+*** TODO [%] FollowAll :noexport:
+**** TODO Explain why the FollowAll constraint can be expressed in terms of Follow
+*** FollowAll
+    \begin{align*}
+    \followall{A}{f}{B}\equiv C
+    \end{align*}
+
+    This constraint is equivalent to:
+
+    \begin{align*}
+    \follow{A}{f}{\compl{B}}\equiv \compl{C}
+    \end{align*}
+
+**** TODO The following tables are work in progress and can be even incorrect
+
+     |--------+--------+---------+--------+---------|
+     | \vdots | \vdots | y_1     | \ldots | z_1     |
+     | \vdots | \vdots | y_2     | \ldots | z_2     |
+     | w      | x      | \vdots  | \ldots | \vdots  |
+     | \vdots | \vdots | y_{n-1} | \ldots | z_{n-1} |
+     | \vdots | \vdots | y_n     | \ldots | z_n     |
+     |--------+--------+---------+--------+---------|
+
+     followed by $|\{y_1,\ldots,z_1\}|$
+     |---------+--------+---------+--------+--------|
+     | y_0     | \ldots | z_0     | \vdots | \vdots |
+     | y_1     | \ldots | z_1     | \vdots | \vdots |
+     | y_2     | \ldots | z_2     | \vdots | \vdots |
+     | \vdots  | \ldots | \vdots  | a      | b      |
+     | y_{n-1} | \ldots | z_{n-1} | \vdots | \vdots |
+     | y_n     | \ldots | z_n     | \vdots | \vdots |
+     |---------+--------+---------+--------+--------|
+
+*** FAAA
+*** Summarize
 * Relation with other decision variables
+** TODO [%] Set decision variables :noexport:
+*** TODO Mention channel constraint between a relation variable and an array of set vars
+*** TODO Is it possible to say something about the cardinality here?
+** Set decision variables
+  From a mathematical point of view we can appreciate some
+  similarities between relations and sets. For this reason is not
+  surprising that also the decision variables share basically the same
+  aspects.
+  - A relation is a set of tuples. If we consider that a tuple can
+    have any arity and therefor in particular one we can see that a
+    relation of arity one is the same as a set. This applies to both,
+    constant relations and decision variables. This similarity is
+    exploited in the system by providing a channel constraint between
+    a set and a relation decision variable.
+  - Projecting a relation on one of its columns will give as result a
+    set. This is an straight forward statement from the definition of
+    the projection operation where its result will be a relation with
+    the arity being equal to the cardinality of the set of column
+    indices. There is no special constraint that exploits this
+    similarity because this can be handled by the constraint mentioned
+    in the item above.
+** Integer decision variables
+** Boolean variables
 * Domain representation
 ** Which properties do we expect from the domain representation
 *** Time complexity
@@ -386,7 +461,7 @@
 ***** Requirements
 ***** Building
 ***** Installation
-
+      
 ** Libraries used to implement it
 *** Gecode
 **** Variable specification
@@ -394,6 +469,8 @@
      In this case Gecode presents an advantage as its state of the art
      implementation of the propagation engine makes a more efficient
      use of the resources.
+*** TODO CUDD :noexport:
+**** TODO Complete with other ground relations that are implemented by CUDD and that we use directly. 
 *** CUDD
     This is the library that we use to support the implementation of
     the domain representation of the constraint system. [[http://vlsi.colorado.edu/~fabio/CUDD/][CUDD]] presents
@@ -414,7 +491,7 @@
       - $R(x,y) = \{(x,y) : x = y\}$
       - $R(x,y) = \{(x,y) : x > y\}$
       - Others....
-**** TODO Complete with other ground relations that are implemented by CUDD and that we use directly.
+
 *** Other /BDD/ libraries
 **** Buddy
      The [[http://buddy.sourceforge.net/manual/main.html][Buddy]] library.
@@ -433,5 +510,4 @@
 ** Search heuristics
 ** Benchmarks
 ** Other approaches that solve the problem
-* Study case: music composition
-
+* Study case: music composition 
