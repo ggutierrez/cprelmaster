@@ -511,3 +511,86 @@
 ** Benchmarks
 ** Other approaches that solve the problem
 * Study case: music composition 
+* PIP infrastructure
+** Model and interaction among components
+** Implementation
+*** TODO [%] Parser implementation
+**** TODO Bison %code directive
+     When I tried to build the parser in Mac OSX the %code directive
+     is not supported by the bison version shipped with mac. This
+     directive is needed in Linux because otherwise the code included
+     by it wont be present at the right place in the generated file.
+
+     As a workaround in mac we can use the a normal prologue section:
+     %{ %}
+*** A parser from CUDF to KCUDF
+*** TODO [%] libkcudf implementation
+**** TODO cmake file is out of date with my knowledge of cmake
+**** TODO drop the support for universal binaries and provide only support for gcc generic options
+**** TODO remove the use of std::list where possible
+*** Kernel-CUDF language
+    The goal is to have something that is solver friendly in the sense
+    that it can be easily parsed by it.
+**** Language definition
+**** Tools
+     It consists of several components that interact together:
+     - Translator: :: takes CUDF as an input and provides a KCUDF
+                      representation of it.
+     - Reducer: :: given a KCUDF specification this process tries to
+                   find all the components of it that must participate
+                   in the solving process.
+
+* Experiments
+** TODO [%] Implementation
+*** TODO segmentation fault when iterating on the files of a directory
+    This is produced on mac when using filesystem3 and the custom
+    compiled gcc. Apple's gcc works fine.
+*** TODO more information from the reducer is needed.
+    We need to know how many relations the reducer was able to drop
+    because they were not needed. Also think about other useful
+    information that can complement this.
+** Size of the relations in the package installability problem
+
+   - General statistics that show how the tools perform on several
+     instances.
+     
+     |-----------------------------+----------------+--------------------+-----------------+------------------|
+     | Problem                     | Parsing (sec.) | Translating (sec.) | Reducing (sec.) | Date             |
+     |-----------------------------+----------------+--------------------+-----------------+------------------|
+     | codebreaker.cudf            |        7.47771 |             9.2886 |         3.38545 | <2011-09-02 Fri> |
+     | dpkg-dev.cudf               |        7.44725 |            9.29764 |         3.47013 | <2011-09-02 Fri> |
+     | fcron.cudf                  |        7.48727 |            9.40373 |          3.4305 | <2011-09-02 Fri> |
+     | libgnokii4.cudf             |        7.52728 |            9.42241 |          3.4593 | <2011-09-02 Fri> |
+     | libnss3-1d.cudf             |        7.49822 |            9.35437 |         3.49358 | <2011-09-02 Fri> |
+     | mercurial-common.cudf       |        7.49112 |            9.49861 |         3.48125 | <2011-09-02 Fri> |
+     | mono-gac.cudf               |        7.65299 |            9.38672 |         3.57372 | <2011-09-02 Fri> |
+     | openoffice.org-l10n-da.cudf |        7.59518 |            9.48585 |         3.54366 | <2011-09-02 Fri> |
+     | tasque.cudf                 |        7.57444 |            9.44606 |         3.52883 | <2011-09-02 Fri> |
+     | unattended-upgrades.cudf    |        7.61505 |            9.51398 |         3.51486 | <2011-09-02 Fri> |
+     |-----------------------------+----------------+--------------------+-----------------+------------------|
+
+   - Translation specific statistics
+     |-----------------------------+----------------+-----------------|
+     | Problem                     | Installed Pkgs | Consistent Pkgs |
+     |-----------------------------+----------------+-----------------|
+     | codebreaker.cudf            |           2961 |            2896 |
+     | dpkg-dev.cudf               |           2960 |            2896 |
+     | fcron.cudf                  |           2961 |            2896 |
+     | libgnokii4.cudf             |           2960 |            2896 |
+     | libnss3-1d.cudf             |           2960 |            2896 |
+     | mercurial-common.cudf       |           2960 |            2896 |
+     | mono-gac.cudf               |           2960 |            2896 |
+     | openoffice.org-l10n-da.cudf |           2960 |            2896 |
+     | tasque.cudf                 |           2960 |            2896 |
+     | unattended-upgrades.cudf    |           2960 |            2896 |
+     |-----------------------------+----------------+-----------------|
+   
+   - Reducer specific statistics
+
+
+   Experiments were taken in:
+   - Darwin snyders.info.ucl.ac.be 10.8.0 Darwin Kernel Version
+     10.8.0. root:xnu-1504.15.3~1/RELEASE_I386 i386
+   - Te reported time corresponds to the /real/ field of the output of
+     the *time* command. 
+
