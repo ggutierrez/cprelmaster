@@ -16,6 +16,7 @@
 #+LaTeX_CLASS: uclthesis
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{latexsym}
+#+LATEX_HEADER: \usepackage{graphicx}
 #+LATEX_HEADER: \usepackage{hyperref}
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
@@ -44,8 +45,8 @@
 * TODO [0%] General things to be done 				   :noexport:
 ** TODO Create the converter to use Context instead of latex 
 ** TODO Improve latex definitions for the relation operations shortcuts 
-** TODO design the follow operator in tikz 
 ** TODO Improve the definition of the tuple command in latex.
+** TODO design the follow operator in tikz 
 ** TODO Change the mode from article to book when exporting the document
 * Introduction
 ** Contributions
@@ -515,8 +516,15 @@
 * Study case: music composition 
 * PIP infrastructure
 ** Model and interaction among components
+*** Component overview
+    #+begin_src ditaa :file some_filename.png :cmdline -r
+      +---------+      +---------+      +------------+      +---------+ 
+      |  Input  +----->+ Parser  +----->+ Translator +----->+ Reducer +
+      |  Cudf   |      +---------+      +------------+      +---------+
+      +---------+                  
+   #+end_src
 ** Implementation
-*** TODO [%] Parser implementation
+*** TODO [%] Parser implementation :noexport:
 **** TODO Bison %code directive
      When I tried to build the parser in Mac OSX the %code directive
      is not supported by the bison version shipped with mac. This
@@ -526,7 +534,7 @@
      As a workaround in mac we can use the a normal prologue section:
      %{ %}
 *** A parser from CUDF to KCUDF
-*** TODO [%] libkcudf implementation
+*** TODO [%] libkcudf implementation :noexport:
 **** TODO cmake file is out of date with my knowledge of cmake
 **** TODO drop the support for universal binaries and provide only support for gcc generic options
 **** TODO remove the use of std::list where possible
