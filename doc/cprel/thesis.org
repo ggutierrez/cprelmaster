@@ -13,9 +13,7 @@
 #+LINK_UP:   
 #+LINK_HOME: 
 
-
-#+LATEX_HEADER: \usepackage{amsmath}
-#+LATEX_HEADER: \usepackage{mathtools}
+#+LaTeX_CLASS: report
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
 #+LATEX_HEADER: \newcommand{\tuple}[1]{\ensuremath{\langle t_{1},\ldots,t_{#1} \rangle}}
@@ -27,17 +25,17 @@
 #+LATEX_HEADER: \newcommand{\join}[3]{\ensuremath{#1 \underset{\scriptstyle #2}{\Join} #3}}
 #+LATEX_HEADER: \newcommand{\follow}[3]{\ensuremath{#1 \underbracket{\scriptstyle #2}_{\scriptstyle \/} #3}}
 #+LATEX_HEADER: \newcommand{\followall}[3]{\ensuremath{#1 \underbracket{\scriptstyle #2}_{\scriptstyle \forall} #3}}
-#+LATEX_HEADER: \DeclareMathOperator{\glbo}{glb}
+#+LATEX_HEADER: \newcommand{\glbo}{\ensuremath{\operatorname{glb}}}
 #+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{\glbo(#1)}}
-#+LATEX_HEADER: \DeclareMathOperator{\lubo}{lub}
+#+LATEX_HEADER: \newcommand{\lubo}{\ensuremath{\operalub}
 #+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{\lubo(#1)}}
-#+LATEX_HEADER: \DeclareMathOperator{\unko}{unk}
+#+LATEX_HEADER: \newcommand{\unko}{\ensuremath{\operatorname{unk}}}
 #+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{\unko(#1)}}
-#+LATEX_HEADER: \DeclareMathOperator{\suffix}{suffix}
-#+LATEX_HEADER: \DeclareMathOperator{\concat}{concat}
-#+LATEX_HEADER: \DeclareMathOperator{\match}{match}
-#+LATEX_HEADER: \DeclareMathOperator{\prefix}{prefix}
-#+LATEX_HEADER: \DeclareMathOperator{\nth}{nth}
+#+LATEX_HEADER: \newcommand{\suffix}{\ensuremath{\operatorname{suffix}}}
+#+LATEX_HEADER: \newcommand{\concat}{\ensuremath{\operatorname{concat}}}
+#+LATEX_HEADER: \newcommand{\match}{\ensuremath{\operatorname{mathc}}}
+#+LATEX_HEADER: \newcommand{\prefix}{\ensuremath{\operatorname{prefix}}}
+#+LATEX_HEADER: \newcommand{\nth}{\ensuremath{\operatorname{nth}}}
 
 * TODO [0%] General things to be done 				   :noexport:
 ** TODO Create the converter to use Context instead of latex 
