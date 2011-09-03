@@ -13,29 +13,33 @@
 #+LINK_UP:   
 #+LINK_HOME: 
 
-#+LaTeX_CLASS: report
+#+LaTeX_CLASS: uclthesis
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{latexsym}
+#+LATEX_HEADER: \usepackage{hyperref}
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
 #+LATEX_HEADER: \newcommand{\tuple}[1]{\ensuremath{\langle t_{1},\ldots,t_{#1} \rangle}}
-#+LATEX_HEADER: \newcommand{\art}[1]{\ensuremath{arity(#1)}}
+#+LATEX_HEADER: \newcommand{\arity}[1]{\ensuremath{arity(#1)}}
 #+LATEX_HEADER: \newcommand{\compl}[1]{\ensuremath{\lnot #1}}
 #+LATEX_HEADER: \newcommand{\inter}[2]{\ensuremath{#1\cap #2}}
 #+LATEX_HEADER: \newcommand{\proj}[2]{\ensuremath{\underset{\scriptstyle #1}{\prod}(#2)}}
 #+LATEX_HEADER: \newcommand{\perm}[2]{\ensuremath{\underset{\scriptstyle #2}{\sigma}(#1)}}
 #+LATEX_HEADER: \newcommand{\join}[3]{\ensuremath{#1 \underset{\scriptstyle #2}{\Join} #3}}
-#+LATEX_HEADER: \newcommand{\follow}[3]{\ensuremath{#1 \underbracket{\scriptstyle #2}_{\scriptstyle \/} #3}}
-#+LATEX_HEADER: \newcommand{\followall}[3]{\ensuremath{#1 \underbracket{\scriptstyle #2}_{\scriptstyle \forall} #3}}
+#+LATEX_HEADER: \newcommand{\follow}[3]{\ensuremath{#1 \underbrace{\scriptstyle #2}_{\scriptstyle \/} #3}}
+#+LATEX_HEADER: \newcommand{\followall}[3]{\ensuremath{#1 \underbrace{\scriptstyle #2}_{\scriptstyle \forall} #3}}
 #+LATEX_HEADER: \newcommand{\glbo}{\ensuremath{\operatorname{glb}}}
 #+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{\glbo(#1)}}
-#+LATEX_HEADER: \newcommand{\lubo}{\ensuremath{\operalub}
+#+LATEX_HEADER: \newcommand{\lubo}{\ensuremath{\operatorname{lub}}}
 #+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{\lubo(#1)}}
 #+LATEX_HEADER: \newcommand{\unko}{\ensuremath{\operatorname{unk}}}
-#+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{\unko(#1)}}
+#+LATEX_HEADER: \newcommand{\unk}[1]{\ensuremath{\unko(#1)}}
 #+LATEX_HEADER: \newcommand{\suffix}{\ensuremath{\operatorname{suffix}}}
 #+LATEX_HEADER: \newcommand{\concat}{\ensuremath{\operatorname{concat}}}
 #+LATEX_HEADER: \newcommand{\match}{\ensuremath{\operatorname{mathc}}}
 #+LATEX_HEADER: \newcommand{\prefix}{\ensuremath{\operatorname{prefix}}}
 #+LATEX_HEADER: \newcommand{\nth}{\ensuremath{\operatorname{nth}}}
+
 
 * TODO [0%] General things to be done 				   :noexport:
 ** TODO Create the converter to use Context instead of latex 
@@ -82,7 +86,7 @@
    \end{align*}
   
    The number of elements in a tuple is called its /arity/. For the
-   example above we have that $\art{t}=n$. To refer to the elements
+   example above we have that $\arity{t}=n$. To refer to the elements
    at specific positions in the tuple we use the notation $\nth(t,k)$
    which will refer to the element at position $k$ of tuple $t$.
    
@@ -91,7 +95,7 @@
    $\universe{}\times\universe{}$. In a general way we define:
    
    \begin{align*}
-   \universe{}_k = \underbrace{\universe{}\times\ldots\times\universe{}}_{k-times}
+   \universe{k} = \underbrace{\universe{}\times\ldots\times\universe{}}_{k-times}
    \end{align*}
    
    as the universe for al the tuples of arity $k$. A relation is
@@ -223,7 +227,7 @@
     surjective and:
 
     \begin{align*}
-    &\forall x, y : (x,y) \in $P$ \implies x \in C(R) \land y \in C(R) \\
+    &\forall x, y : (x,y) \in P \implies x \in C(R) \land y \in C(R) \\
     &C(R)=\{1,\ldots,n\}
     \end{align*}
       
@@ -327,7 +331,7 @@
 
    This constraints enforces that a relation decision variable
    $B\subseteq\universe{m}$ is the result of projecting another
-   decision variable $A\subseteq\univers{n}$ on the set of column
+   decision variable $A\subseteq\universe{n}$ on the set of column
    indices $P$. It is written:
    
    \begin{align*}
