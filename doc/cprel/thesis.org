@@ -48,6 +48,11 @@
 ** TODO Improve the definition of the tuple command in latex.
 ** TODO design the follow operator in tikz 
 ** TODO Change the mode from article to book when exporting the document
+** TODO Fix the export to latex using uclthesis
+   For now follow these instructions to export this document:
+   - Try to export to late, it will fail saying that uclthesis is not defined
+   - evaluate the contents of file:uclthesis.el
+   - Try to export again, it should work this time
 * Introduction
 ** Contributions
 ** Related work
@@ -516,13 +521,6 @@
 * Study case: music composition 
 * PIP infrastructure
 ** Model and interaction among components
-*** Component overview
-    #+begin_src ditaa :file some_filename.png :cmdline -r
-      +---------+      +---------+      +------------+      +---------+ 
-      |  Input  +----->+ Parser  +----->+ Translator +----->+ Reducer +
-      |  Cudf   |      +---------+      +------------+      +---------+
-      +---------+                  
-   #+end_src
 ** Implementation
 *** TODO [%] Parser implementation :noexport:
 **** TODO Bison %code directive

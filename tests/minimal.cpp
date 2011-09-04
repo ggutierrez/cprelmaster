@@ -63,5 +63,7 @@ int main(int, char**) {
   Gist::dfs(g,o);
   delete g;
 
+  std::cout << "Finishing " << std::endl;
+  std::cout << "Foooo " << 332 << std::endl;
   return 0;
 }

@@ -13,16 +13,16 @@ option(BUILD_EXAMPLES "Build examples " NO)
 # Compiler information
 ##########################################################################
 if(CMAKE_COMPILER_IS_GNUCC)
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
-                    OUTPUT_VARIABLE GCC_VERSION)
+  execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+    OUTPUT_VARIABLE GCC_VERSION)
   if (GCC_VERSION VERSION_GREATER 4.2 OR GCC_VERSION VERSION_EQUAL 4.2)
     message(STATUS "GCC version ${GCC_VERSION}")
   else()
     messge(FATAL_ERROR "GCC version 4.2 or greater is required")
   endif()
 else()
-  message(WARNING "This project has been only built with GCC, other compilers
-                  might work: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_COMPILER_IS_CLANGCXX}")
+  message(WARNING "Compiler: ${CMAKE_CXX_COMPILER_ID}")
+  message(WARNING "${CMAKE_COMPILER_IS_CLANGCXX}")
 endif()
 ##########################################################################
 # System information
