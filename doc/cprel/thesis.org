@@ -67,14 +67,24 @@
 ** What is a relation?
 ** The relational algebra notion of a relation or table
 ** Relations in constraint programming
-   An important difference from relational algebra is that the
-   universe of elements is finite in constraint
-   programming and this allow us to assume that operations like
-   /complement/ of relations are semantically well defined.
-   
-   As we are restricted to integers as elements in any relation we
-   define the set \universe{} as the biggest set containing all the
-   integers that can appear as elements in relations. 
+   The goal of this section is to support the notion of /relation
+   decision variable/. To achieve that we need to define what is going
+   to be considered as a /value/ or an /assignment/ for that kind of
+   variable. Moreover, in constraint programming we need these
+   variables to range on a finite set of possible values and this is
+   the reason for introducing the existence of a universe that will be
+   used to support that.
+
+   An important difference from the relational algebra is that the
+   universe of elements is finite in constraint programming. This
+   allows us to talk about the /complement/ operation and use it as a
+   built in for other operations.
+
+  
+   As the relations that we will consider are restricted only to have
+   integers as elements we define the set \universe{} as the biggest
+   set containing all the possible integers that can be part of a
+   relation:
    
    \begin{align*} 
    \universe{} = \{x : 0 \leq x \leq k \} 
@@ -105,15 +115,19 @@
    \end{align*}
    
    as the universe for al the tuples of arity $k$. A relation is
-   consider asa set of tuples of the same arity and because of this
-   we write $R\subseteq\universe{k}$ to represent that $R$ is a set
-   of tuples of arity $k$.
+   consider as a set of tuples of the *same* arity and then it is
+   possible to write $R\subseteq\universe{k}$ for representing that
+   $R$ is a set of tuples of arity $k$.
      
-   It is also important to define the empty set as the set that does
-   not contain any tuple. In the same way that \universe{n}
-   represents the universe of all the tuples of arity $n$ we define
-   \emptyrel{n} as the empty set for tuples of the same arity.
-   
+   It is also important to define the empty set (i.e. the empty
+   relation) as the set that does not contain any tuple. In the same
+   way that \universe{n} represents the universe of all the tuples of
+   arity $n$ we define \emptyrel{n} as the empty set for tuples of the
+   same arity.
+
+   The next section uses the definitions introduced here to define a
+   core set of operations on relations.
+
 ** Operations on relations
    Even when restricting the elements of a relation to be in
    $\universe{}$ we can still define the usual operations in relations
@@ -136,22 +150,9 @@
     \end{align*}
 
     With this two operations it is possible to define other operations
-    like union, subset, etc.. Table \ref{tab:derived-relations}
-    presents a list of other operations that we can get from
-    complement and intersection.
-
-    #+CAPTION: Other operations that can be derived from complement and intersection.
-    #+LABEL:   tab:derived-relations
-    |----------------+------------|
-    | Operation      | Equivalent |
-    |----------------+------------|
-    | $R\cup S$      |            |
-    | $R\subseteq S$ |            |
-    | $R\iff S$      |            |
-    |----------------+------------|
-    
-    Apart from these operations we can also use the ones from the
-    relational algebra.
+    on relations (viewed as sets) like union, subset, etc.. Apart from
+    these operations we can also use the ones from the relational
+    algebra.
     
 *** Projection
     Projecting a relation allows to obtain a relation of less
@@ -324,11 +325,131 @@
 *** How does is it approximated
 *** How does is it implemented
 ** Kernel constraints
-** Cardinality
+   Thes constraints define the basic prunning operations that can be
+   performed on the decision variables. These operations must interact
+   directly with the domain representation taking into account several
+   aspects:
+   
+   - They must perform within a reasonable time complexity. As all the
+     the constraint will rely on these operations for prunning, their
+     time complexity plays a very important role.
+   - The representation can only be updated in a way that can be
+     recorded by the representation. They cannot offer prunning levels
+     that cannot be represented by affecting the domain
+     representation.
+
+     Actually, the proposeddomain representation has a direct
+     implication in the consistency level that can be achieved by any
+     constraint on the decision variables in this system. Because we
+     approximate the domain of a variable by two bounds, the only way
+     of modifying the domain is by modifying them. For this reason no
+     constraint can perform a prunning stronger than *bound
+     consistency*.
+
+     The basic prunning operations are:
+     - Contracting the domain by removing information from the /upper
+       bound/. This operation allows to reduce the domain by reducing
+       the possible relations that can be represented in the
+       domain. It is straight forward to see that this operation is
+       monotonic: it always leads to an smaller domain.
+       \begin{align*}
+       \operatorname{exclude}(X,G) \equiv \forall t: t \in G \implies t \notin \lub{X}
+       \end{align*}
+
+     - Restricting the set of represented relations by including
+       information in the /lower bound/. This operation will reduce the
+       domain by augmenting the information known for the relations.
+       \begin{align*}
+       \operatorname{include}(X,G)\equiv \forall t: t\in G \implies t \in \glb{X}
+       \end{align*}
+       
+** Domain information
+   Apart from modfying the domain, we also define operations to query
+   it. This operations will be used by the constraints to decide if
+   prunning of the domain can be performed. It is also an strong
+   requirement for this operations to have a reasonable time
+   complexity as they are, in practice, more used than the
+   modification operations described above.
+
+   There are at least two different aspects of a domain representation
+   that we are interested in query: the relations it represents and
+   their cardinalities. The query operations related with the
+   cardinality are:
+
+   The *minimum cardinality* of all the represented relations. This
+   information carresponds to the cardinality of the relation
+   representing the lower bound:
+  
+   \begin{align*}
+   \operatorname{cardMin}(X) = \operatorname{card}(\glb{X}) 
+   \end{align*}
+   
+   The reason for this is that the lower bound represents the maximum
+   relation that is known in the domain representation. Because this
+   is the minimal of the lattice then there is no other known relation
+   with less elements.
+
+   In the same way, the *maximum cardinality* of the relations
+   represented corresponds to the cardinality of the relation
+   representing the upper bound.
+
+   \begin{align*}
+   \operatorname{cardMax}(X) = \operatorname{card}(\lub{X}) 
+   \end{align*}
+   
+   The justification for this is analog to the one presented above:
+   there is no relation in the domain that can be possible bigger than
+   the upper bound. Therfore, the cardinality of the upper bound is
+   the maximum possible cardinality of any relation in the domain.
+
+   In addition to query the maximum and minimum cardinalities of the
+   relations in a domain it is also useful to have mechanisms to query
+   the relations itself. For this we define the operations
+   $\operatorname{known}$ and \operatorname{possible}:
+
+   \begin{align*}
+   &\operatorname{known(X)} = \glb{X} \\
+   &\operatorname{possible(X)} = \lub{X}
+   \end{align*}
+
 * Constraints on relation decision variables
+** TODO Sets-like constraints :noexport:
+*** TODO We are still missing other constraints like the ones in  file:../../cprel/prop/equality.cpp it should be possible to express them in terms of the others
+*** These operations are defined in the code at file:../../cprel/prop/and.cpp
 ** Sets-like constraints
 *** Complement
+    This is a constraint on two relations $A$ and $B$ of the same
+    arity and enforces the property that $A\equiv \compl{B}$.
+
+  
 *** Intersection
+    
+    This is a constraint on three relation decision variables of the
+    same arity. It constraints $C$ to be the result of intersecting
+    $A$ and $B$:
+
+    \begin{align*}
+    A& \cap B \equiv C \\
+    A&\subseteq\universe{n}, B\subseteq\universe{n}, C\subseteq\universe{n}
+    \end{align*}
+
+    Table \ref{tab:derived-set-constraints} presents a
+    list of other operations that we can get from complement and
+    intersection.
+
+    #+CAPTION: Derived constraints from complement and intersection.
+    #+LABEL:   tab:derived-set-constraints
+    |--------------------------------+-----------------------------------------|
+    | Constraint                     | Equivalent                              |
+    |--------------------------------+-----------------------------------------|
+    | $A\cup B\equiv C$              | $\compl{A}\cap\compl{B}\equiv\compl{C}$ |
+    | $A\subseteq B$                 | $A\cap\compl{B}\equiv\emptyrel{}$       |
+    | $\operatorname{disjoint}(A,B)$ | $A\cap B\equiv\emptyrel{}$              |
+    | $A\implies B\equiv C$          | $A\cap\compl{B}\equiv\compl{C}$         |
+    |--------------------------------+-----------------------------------------|
+
+
+
 ** Relation-like constraints
 *** TODO [0%] Projection 					   :noexport:
 **** TODO Complete the explanation for the pruning of A in this constraint.
@@ -510,6 +631,17 @@
      - Modern object oriented design
 
 ** Relation encoding on /BDDs/
+*** TODO Implementation parameters :noexport:
+    - $k$ as presented to define tha universe is represented in terms
+      of $bbv$: file:../../bdddomain/manager.hh::23
+    - Additionaly, we use $ba$ to represent the maximum arity that is
+      handled at the BDD representation level. This is done at
+      file:../../bdddomain/manager.hh::31
+    - It is important to choose $bbv$ to use the same number of bits
+      as an integer in gecode. This is to allow channel constraints to
+      not cause overflows.
+*** TODO Impact of the parameters
+*** TODO Allow this parameters to be choosen at building time
 ** Simple program using relation constraints
 * Study case: the package installability problem
 ** Constraint model
