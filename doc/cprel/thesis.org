@@ -404,8 +404,8 @@
 
    In addition to query the maximum and minimum cardinalities of the
    relations in a domain it is also useful to have mechanisms to query
-   the relations itself. For this we define the operations
-   $\operatorname{known}$ and \operatorname{possible}:
+   the relations itself. For this we define the operations /known/ and
+   /possible/:
 
    \begin{align*}
    &\operatorname{known(X)} = \glb{X} \\
@@ -577,6 +577,43 @@
 *** A first approach, extentional
 *** Binary decision diagrams to represent the domain
 **** They have been used for complete domain representation of set decision variables.
+* TODO [%] System implementation
+** TODO Propagators to be done
+*** TODO Cardinality
+**** Summarize
+     This constraint was proposed by Yves and takes as arguments two
+     relation variables $A\subseteq\universe{k+m+n}$ and
+     $C\subseteq\universe{k+n}$; an integer $n$ and one ground
+     relation $B\subseteq\universe{3m}$.
+     
+     #+ATTR_LaTeX:  align=|p{3cm}|p{3cm}|p{3cm}|
+     |----------------------------------------+----------------------------------------+-----------------------------------------------|
+     | $\overbrace{\ldots,\ldots,\ldots}^{k}$ | $\overbrace{\ldots,\ldots,\ldots}^{n}$ | $\overbrace{\ldots,\ldots,\ldots}^{m}$        |
+     |----------------------------------------+----------------------------------------+-----------------------------------------------|
+     | group by ( one of these appear in $C$) | Columns we do not care about           | columns that will be grouped by the operation |
+     |----------------------------------------+----------------------------------------+-----------------------------------------------|
+
+     When looking at a relation as a table, this operation identifies three consecutive parts in it:
+     - /Group by/ crieria :: This part contains $k$ columns of the
+          relation. In this part the operator will identify the tuples
+          that match the /group by/ criteria. This crieria will appear
+          in the form of one tuple in the result of the operation.
+     - /No care/ columns :: This correspons to columns that will be
+          ignored by the operator. This part will not be part of any
+          tuple in $C$. Columns of this part are located just after
+          the columns of the first part.
+     - /Group operation/ :: This is he part of the relation that will
+          be processed with the ground relation $B$. For every group
+          in the irst part of the relation, $B$ will return the
+          operation on all the members of the group.
+
+*** TODO Build system
+**** TODO Fix gecode building with no Qt
+     When gecode is built by the cmake script and QT is not present in
+     the system there are missing symbols when trying to build the
+     contribution. The cause is that some of the examples make use of
+     gist without using any conditional compilation. The soluion
+     should be as simple as wrap that code in GECODE_HAS_GIST ifdef.
 * System's implementation
 ** An overview of the implementation of the system
 *** Project website
