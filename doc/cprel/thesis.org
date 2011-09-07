@@ -17,6 +17,11 @@
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{latexsym}
 #+LATEX_HEADER: \usepackage{graphicx}
+#+LaTeX_HEADER: \usepackage{minted}
+#+LaTeX_HEADER: \usemintedstyle{emacs}
+#+LaTeX_HEADER: \definecolor{codebg}{rgb}{0.95,0.95,0.95}
+#+LaTeX_HEADER: \definecolor{codeframe}{rgb}{0.69,0.84,0.31}
+#+LaTeX_HEADER: \renewcommand{\theFancyVerbLine}{\sffamily \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize \oldstylenums{\arabic{FancyVerbLine}}}}
 #+LATEX_HEADER: \usepackage{hyperref}
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
@@ -41,6 +46,25 @@
 #+LATEX_HEADER: \newcommand{\prefix}{\ensuremath{\operatorname{prefix}}}
 #+LATEX_HEADER: \newcommand{\nth}{\ensuremath{\operatorname{nth}}}
 
+
+* My own FAQ :noexport:
+** Insert c++ source code
+   Everything is ready for that, just add a block like:
+   #+begin_src c++ :exports code
+    x = str(y);
+    class foo { foo(int x); };
+    x = str(y)
+    x = str(y)
+    x = str(y)   
+    x = str(y)
+   #+end_src
+  
+** Verbatim text
+   #+BEGIN_EXAMPLE
+     $ mv gmp-4.3.2 gmp
+     $ mv mpfr-2.4.2 mpfr
+     $ mv mpc-0.8.1 mpc
+   #+END_EXAMPLE
 
 * TODO [0%] General things to be done 				   :noexport:
 ** TODO Create the converter to use Context instead of latex 
@@ -770,4 +794,6 @@
      10.8.0. root:xnu-1504.15.3~1/RELEASE_I386 i386
    - Te reported time corresponds to the /real/ field of the output of
      the *time* command. 
+
+
 
