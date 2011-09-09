@@ -213,6 +213,22 @@ set_source_files_properties(
 )
 set(CUDD_LIBS cudd util st mpr epd)
 ##########################################################################
+# Installation of CUDD
+##########################################################################
+install(TARGETS ${CUDD_LIBS}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+install(DIRECTORY ${CUDD_SOURCES}/cudd/ DESTINATION include/cudd
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
+install(DIRECTORY ${CUDD_SOURCES}/util/ DESTINATION include/util
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
+install(DIRECTORY ${CUDD_SOURCES}/st/ DESTINATION include/st
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
+install(DIRECTORY ${CUDD_SOURCES}/mtr/ DESTINATION include/mtr
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
+install(DIRECTORY ${CUDD_SOURCES}/epd/ DESTINATION include/epd
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
+##########################################################################
 # Boost
 ##########################################################################
 set(BOOST_COMPONENTS)
@@ -283,10 +299,12 @@ endif()
 ##########################################################################
 # BDDDomain Installation
 ##########################################################################
-install(TARGETS bdddomain ${CUDD_LIBS}
+install(TARGETS bdddomain
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
+install(DIRECTORY rel/ DESTINATION include/rel
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
 ##########################################################################
 # Gecode
@@ -395,8 +413,6 @@ endif()
 ##########################################################################
 set(CPTUPLE_SRCS
   cptuple/cptuple.hh
-  #cprel/grelation.cpp
-  #cprel/grelation.hh
   cptuple/var.hh
   cptuple/varimp.cpp
   cptuple/varimp.hh
@@ -411,11 +427,15 @@ target_link_libraries(gecodecptuple bdddomain ${Gecode_LIBRARIES})
 ##########################################################################
 # Installation                                                           #
 ##########################################################################
-#install(FILES ${BINREL_HDRS} DESTINATION include/binrel COMPONENT devel)
 install(TARGETS gecodecprel
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
 install(DIRECTORY cprel/ DESTINATION include/cprel
+        FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
+install(TARGETS gecodecptuple
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+install(DIRECTORY cptuple/ DESTINATION include/cptuple
         FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
 ##########################################################################
 # Uninstall

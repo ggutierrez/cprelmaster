@@ -746,30 +746,138 @@
 *** TODO segmentation fault when iterating on the files of a directory
     This is produced on mac when using filesystem3 and the custom
     compiled gcc. Apple's gcc works fine.
+
+    - work around :: The problem seems o be some linker path. If boost
+                     is linked statically the problem disappear.
+
 *** TODO more information from the reducer is needed.
     We need to know how many relations the reducer was able to drop
     because they were not needed. Also think about other useful
     information that can complement this.
+*** TODO instance roblems
+    There is a problem wih the instance:
+
+    |------------+---+---+---+---------|
+    | libnss3-1d | 0 | 0 | 0 | 1.1e-05 |
+    |------------+---+---+---+---------|
+    
+    That is the result that is returned by *load* on the non reduced
+    kcudf.
+
+** Benchmarks for PIP
+   The set of benchmarks used in these experiments were taken from
+   users machines and randomly generated problems. There are several
+   set of benchmarks present:
+   |---------------+---------------|
+   | Benchmark set | Instance name |
+   |---------------+---------------|
+   | 9orless       |               |
+   | 10orplus      |               |
+   | caixa         |               |
+   | rand.biglist  |               |
+   | rand.newlist  |               |
+   | rand.smallist |               |
+   |---------------+---------------|
+   
+
 ** Size of the relations in the package installability problem
 
    - General statistics that show how the tools perform on several
      instances.
-     
-     |-----------------------------+----------------+--------------------+-----------------+------------------|
-     | Problem                     | Parsing (sec.) | Translating (sec.) | Reducing (sec.) | Date             |
-     |-----------------------------+----------------+--------------------+-----------------+------------------|
-     | codebreaker.cudf            |        7.47771 |             9.2886 |         3.38545 | <2011-09-02 Fri> |
-     | dpkg-dev.cudf               |        7.44725 |            9.29764 |         3.47013 | <2011-09-02 Fri> |
-     | fcron.cudf                  |        7.48727 |            9.40373 |          3.4305 | <2011-09-02 Fri> |
-     | libgnokii4.cudf             |        7.52728 |            9.42241 |          3.4593 | <2011-09-02 Fri> |
-     | libnss3-1d.cudf             |        7.49822 |            9.35437 |         3.49358 | <2011-09-02 Fri> |
-     | mercurial-common.cudf       |        7.49112 |            9.49861 |         3.48125 | <2011-09-02 Fri> |
-     | mono-gac.cudf               |        7.65299 |            9.38672 |         3.57372 | <2011-09-02 Fri> |
-     | openoffice.org-l10n-da.cudf |        7.59518 |            9.48585 |         3.54366 | <2011-09-02 Fri> |
-     | tasque.cudf                 |        7.57444 |            9.44606 |         3.52883 | <2011-09-02 Fri> |
-     | unattended-upgrades.cudf    |        7.61505 |            9.51398 |         3.51486 | <2011-09-02 Fri> |
-     |-----------------------------+----------------+--------------------+-----------------+------------------|
 
+     This first group of statistics measures the time for the parser,
+     translator and reducer functions of the library. The column
+     /State/ presents the output of the reducer. The following
+     convenions are used:
+     - ND\_SRCH :: The problem in he output needs the solver. When this
+                  is the case, no information is present in the
+                  column.
+     - NO\_SOL :: The reducer /deduced/ hat the problem does no have
+                  solution.
+     - SOLVED :: The reducer as able o solve the problem and the
+                 solver does not need to be run.
+
+		 
+     - <2011-09-09 Fri>       
+       |------------------------------------+---------+-----------+---------+---------|
+       | Instance name                      |   Parse | Translate |  Reduce | State   |
+       |------------------------------------+---------+-----------+---------+---------|
+       | codebreaker                        | 7.53151 |   17.1597 | 8.94164 |         |
+       | dwww                               | 7.53606 |   17.1671 | 9.19521 |         |
+       | epiphany-browser                   | 7.54502 |   17.2429 |  9.1394 |         |
+       | evolution-dev                      | 7.53558 |   17.2166 | 9.20169 |         |
+       | gnochm                             | 7.52841 |   17.2361 | 9.15517 |         |
+       | gnome-panel-data                   | 7.52902 |   17.3122 | 9.16844 |         |
+       | guake                              | 7.52074 |   17.2945 | 8.87171 |         |
+       | hal-cups-utils                     | 7.53777 |   17.3212 | 9.11696 |         |
+       | idle                               | 7.51897 |   17.2844 | 9.18476 |         |
+       | kdebase-bin                        | 7.54534 |    17.286 | 9.25091 |         |
+       | konq-plugins                       | 7.59574 |    17.384 | 9.23175 |         |
+       | libbsd-resource-perl               | 7.51107 |   17.2554 | 9.20956 |         |
+       | libcatalyst-perl                   | 7.52771 |   17.2184 | 9.19588 |         |
+       | libcurses-perl                     | 7.55242 |   17.6866 | 9.34863 |         |
+       | libcyrus-imap-perl22               | 7.54435 |   17.4218 | 9.11563 |         |
+       | libdbd-pg-perl                     | 7.58858 |   17.2199 | 9.27803 |         |
+       | libhtml-parser-perl                | 7.51887 |   17.2284 | 9.22885 |         |
+       | libmail-spf-perl                   | 7.52374 |   17.3396 | 9.36031 |         |
+       | libnkf-perl                        | 7.55381 |   17.2551 | 9.10224 |         |
+       | libnspr4-dev                       | 7.54409 |   17.2531 | 9.27164 |         |
+       | libnss3-1d                         | 7.41931 |    17.001 | 9.15781 |         |
+       | libpango-perl                      | 7.51323 |   17.2185 | 9.05561 |         |
+       | libpoe-perl                        | 7.44377 |   17.0048 |  9.1203 |         |
+       | libtemplate-provider-encoding-perl | 7.39022 |   17.0572 | 9.11853 |         |
+       | lirc                               | 7.40536 |   17.1422 | 9.01403 |         |
+       | mercurial-common                   | 7.48508 |   17.2525 | 9.21871 |         |
+       | monodevelop-nunit                  | 7.42696 |   17.1925 | 9.23653 |         |
+       | openoffice.org-l10n-da             | 7.44748 |   17.2435 | 9.21474 |         |
+       | openoffice.org-l10n-nl             |  7.5055 |   17.3365 | 9.20036 |         |
+       | pidgin-plugin-pack                 | 7.47945 |   17.2283 | 8.92911 |         |
+       | pybackpack                         | 7.36421 |   17.1811 |  9.1957 |         |
+       | python-cairo                       | 7.44435 |   17.1734 | 9.52386 |         |
+       | python-hippocanvas                 | 7.50576 |   17.5549 | 9.25899 |         |
+       | sonata                             | 7.41302 |   17.1508 | 9.24633 |         |
+       | synaptic                           | 7.38547 |   17.5469 | 9.46012 |         |
+       | system-config-printer              | 7.51224 |   17.4152 | 9.10394 |         |
+       | texlive-generic-recommended        | 7.37659 |   17.4146 | 9.30122 |         |
+       | txt2html                           | 7.47997 |   17.5543 | 9.33384 |         |
+       | unattended-upgrades                | 7.53027 |   17.4068 | 9.18918 |         |
+       | xvfb                               | 7.43632 |   17.3677 | 9.32164 |         |
+       | rand03b0b5                         | 5.34267 |   22.6947 | 2.95711 | NO\_SOL |
+       | rand1958fb                         | 5.35521 |    22.638 | 2.99035 | NO\_SOL |
+       | rand2fa1f8                         | 5.32974 |   22.5397 | 2.75237 | NO\_SOL |
+       | rand35afbf                         | 5.31484 |   22.5161 | 2.98101 | NO\_SOL |
+       | rand396cf8                         | 5.30638 |   22.5853 | 2.98956 | NO\_SOL |
+       | rand49e642                         | 5.43813 |   22.7286 | 2.98577 | NO\_SOL |
+       | rand56b853                         | 5.32315 |   22.6248 | 2.98875 | NO\_SOL |
+       | rand59f7dd                         | 5.32181 |   22.5908 | 2.98521 | NO\_SOL |
+       | rand601ba8                         | 5.31271 |   22.5535 | 2.99042 | NO\_SOL |
+       | rand682c92                         | 5.31532 |   22.5385 |  2.8286 | NO\_SOL |
+       | rand6c4744                         | 5.29927 |   22.4669 | 2.96123 | NO\_SOL |
+       | rand6f4585                         | 5.31223 |   22.4333 |  2.9844 | NO\_SOL |
+       | rand7e9372                         | 5.29903 |   22.4325 | 2.98785 | NO\_SOL |
+       | rand88811a                         | 5.32401 |   22.6084 | 2.98943 | NO\_SOL |
+       | rand936b0d                         | 5.32126 |    22.431 | 2.99247 | NO\_SOL |
+       | rand9e35f0                         | 5.32822 |   22.5518 | 3.64427 |         |
+       | randa13f2d                         | 5.36954 |   22.7315 | 3.69437 |         |
+       |------------------------------------+---------+-----------+---------+---------|
+      
+      
+     - <2011-09-02 Fri>
+       |-----------------------------+-------------+-----------------+--------------|
+       | Problem                     | Parsing (s) | Translating (s) | Reducing (s) |
+       |-----------------------------+-------------+-----------------+--------------|
+       | codebreaker.cudf            |     7.47771 |          9.2886 |      3.38545 |
+       | dpkg-dev.cudf               |     7.44725 |         9.29764 |      3.47013 |
+       | fcron.cudf                  |     7.48727 |         9.40373 |       3.4305 |
+       | libgnokii4.cudf             |     7.52728 |         9.42241 |       3.4593 |
+       | libnss3-1d.cudf             |     7.49822 |         9.35437 |      3.49358 |
+       | mercurial-common.cudf       |     7.49112 |         9.49861 |      3.48125 |
+       | mono-gac.cudf               |     7.65299 |         9.38672 |      3.57372 |
+       | openoffice.org-l10n-da.cudf |     7.59518 |         9.48585 |      3.54366 |
+       | tasque.cudf                 |     7.57444 |         9.44606 |      3.52883 |
+       | unattended-upgrades.cudf    |     7.61505 |         9.51398 |      3.51486 |
+       |-----------------------------+-------------+-----------------+--------------|
+    
    - Translation specific statistics
      |-----------------------------+----------------+-----------------|
      | Problem                     | Installed Pkgs | Consistent Pkgs |
@@ -788,12 +896,87 @@
    
    - Reducer specific statistics
 
+   - Times to load the relations from kcudf packages to ground relations
+
+     - The following times are taken on normal instances, as they are
+       output by the translator.
+       
+       - <2011-09-09 Fri>
+         |----------------------+--------------+-----------+----------+----------|
+         | Instance name        | Dependencies | Conflicts | Provides | Load (s) |
+         |----------------------+--------------+-----------+----------+----------|
+         | ark                  |       404070 |     91830 |   116849 |  61.0731 |
+         | codebreaker          |       404070 |     91830 |   116849 |  58.7977 |
+         | dpkg-dev             |       404070 |     91830 |   116849 |  59.4491 |
+         | dwww                 |       404070 |     91830 |   116849 |  60.0817 |
+         | epiphany-browser     |       404070 |     91830 |   116849 |  59.2349 |
+         | evolution-dev        |       404070 |     91830 |   116849 |   58.538 |
+         | gnochm               |       404070 |     91830 |   116849 |  58.7689 |
+         | gnome-panel-data     |       404070 |     91830 |   116849 |   58.955 |
+         | guake                |       404070 |     91830 |   116849 |  58.6447 |
+         | hal-cups-utils       |       404070 |     91830 |   116849 |  58.7232 |
+         | idle                 |       404070 |     91830 |   116849 |  59.0856 |
+         | kbd                  |       404070 |     91830 |   116849 |   58.756 |
+         | kdebase-bin          |       404070 |     91830 |   116849 |  59.1321 |
+         | konq-plugins         |       404070 |     91830 |   116849 |  59.0516 |
+         | libbsd-resource-perl |       404070 |     91830 |   116849 |  59.3166 |
+         | libcatalyst-perl     |       404070 |     91830 |   116849 |  66.1356 |
+         | libcurses-perl       |       404070 |     91830 |   116849 |  65.1467 |
+         | libcyrus-imap-perl22 |       404070 |     91830 |   116849 |  65.2596 |
+         | libdbd-pg-perl       |       404070 |     91830 |   116849 |  62.6958 |
+         | libhtml-parser-perl  |       404070 |     91830 |   116849 |  62.6192 |
+         | libmail-spf-perl     |       404070 |     91830 |   116849 |  67.3246 |
+         | libnkf-perl          |       404070 |     91830 |   116849 |  65.2831 |
+         | libnspr4-dev         |       404070 |     91830 |   116849 |  62.3625 |
+         |----------------------+--------------+-----------+----------+----------|
+        
+     - The following times were taken *on reduced instances*. This means,
+       he instances produced by the reducer.
+       
+       An interesting aspect of this test is that it uses the same bdd
+       manager for all the instances. This is, no new manager is
+       creaed between two different instances. Even more interesting
+       is the fact that the memmory used during all the run of the
+       program never goes more than 80 megabytes.
+
+       During these tests no tunning o the bdd manager is done. It
+       uses the same configuration that comes by default in CUDD.
+
+       - <2011-09-09 Fri>
+         |----------------------+--------------+-----------+----------+----------|
+         | Instance name        | Dependencies | Conflicts | Provides | Load (s) |
+         |----------------------+--------------+-----------+----------+----------|
+         | ark                  |       123014 |     18972 |    47665 |   16.777 |
+         | codebreaker          |       104449 |     17820 |    44972 |  14.9274 |
+         | dpkg-dev             |       122857 |     18950 |    47602 |  16.9693 |
+         | dwww                 |       123071 |     18978 |    47680 |  16.9846 |
+         | epiphany-browser     |       122937 |     18946 |    47631 |  16.9889 |
+         | evolution-dev        |       123179 |     19008 |    47733 |  17.0116 |
+         | gnochm               |       122097 |     18966 |    47652 |  16.8054 |
+         | gnome-panel-data     |       123014 |     18972 |    47665 |  17.0823 |
+         | guake                |        97152 |     17554 |    44132 |  14.2352 |
+         | hal-cups-utils       |       109045 |     17934 |    45199 |  15.5774 |
+         | idle                 |       123026 |     18974 |    47669 |   17.209 |
+         | kbd                  |       123012 |     18970 |    47662 |  16.9377 |
+         | kdebase-bin          |       123005 |     18972 |    47665 |  17.1071 |
+         | konq-plugins         |       123015 |     18972 |    47665 |  17.0862 |
+         | libbsd-resource-perl |       123016 |     18972 |    47665 |  17.2277 |
+         | libcatalyst-perl     |       123467 |     19046 |    47825 |   17.358 |
+         | libcurses-perl       |       123030 |     18974 |    47669 |  17.1605 |
+         | libcyrus-imap-perl22 |       108357 |     17812 |    44919 |  15.5239 |
+         | libdbd-pg-perl       |       123015 |     18972 |    47665 |  17.1469 |
+         | libhtml-parser-perl  |       122995 |     18972 |    47665 |  17.1752 |
+         | libmail-spf-perl     |       121860 |     18828 |    47276 |  16.9846 |
+         | libnkf-perl          |       109244 |     17876 |    45100 |  15.5976 |
+         | libnspr4-dev         |       123038 |     18984 |    47677 |  17.1984 |
+         |----------------------+--------------+-----------+----------+----------|
+
 
    Experiments were taken in:
-   - Darwin snyders.info.ucl.ac.be 10.8.0 Darwin Kernel Version
-     10.8.0. root:xnu-1504.15.3~1/RELEASE_I386 i386
-   - Te reported time corresponds to the /real/ field of the output of
-     the *time* command. 
+   #+BEGIN_EXAMPLE
+   Darwin snyders.info.ucl.ac.be 10.8.0 Darwin Kernel Version 10.8.0. 
+   root:xnu-1504.15.3~1/RELEASE_I386 i386
+   #+END_EXAMPLE
 
 
 
