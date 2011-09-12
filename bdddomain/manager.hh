@@ -92,7 +92,9 @@ private:
   }
   /// Destructor that releases the BDD manager of CUDD
   ~BddManager (void) {
-    std::cout << "Called destructor: " << references() << std::endl;
+    //std::cout << "Called destructor: " << references() << std::endl;
+    //std::cout << "Manager stats" << std::endl;
+    stats(std::cout);
     Cudd_Quit(dd);
   }
   //@}
@@ -125,6 +127,22 @@ public:
   DdNode* zero(void) {
     return zero_;
   }
+  /// Prints manager statistics to \a os
+  void stats(std::ostream& os) const {
+    auto usedMemory = Cudd_ReadMemoryInUse(dd);
+    //    os << "\tMemory in use: " <<  (usedMemory / 1024)  << " KB" << std::endl;
+    auto gcTime = Cudd_ReadGarbageCollectionTime(dd);
+    //os << "\tGC time: " <<  gcTime  << " ms." << std::endl;
+    auto gcs =  Cudd_ReadGarbageCollections(dd);
+    //os << "\tGC triggered " << gcs << " times" << std::endl;
+    /*
+      This will print a table in the form:
+      |-----------------+----------+----------------|
+      | Memmory (Bytes) | GC (ms.) | Number of GC's |
+      |-----------------+----------+----------------|
+     */
+    os << "|" <<  usedMemory   << "|" << gcTime << "|" << gcs << "|" << std::endl;
+  }
   //@}
 };
 
@@ -153,6 +171,15 @@ DdNode* one(void) {
 inline
 DdNode* zero(void) {
   return BddManager::instance()->zero();
+}
+
+/**
+ * \brief Oututs manager statistics to \a os
+ * \ingroup DomRepr
+ */
+inline
+void stats(std::ostream& os) {
+  BddManager::instance()->stats(os);
 }
 }}
 #endif
