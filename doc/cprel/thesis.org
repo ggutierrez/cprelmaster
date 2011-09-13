@@ -17,6 +17,8 @@
 #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{latexsym}
 #+LATEX_HEADER: \usepackage{graphicx}
+#+LATEX_HEADER: \usepackage{longtable}
+#+LATEX_HEADER: \usepackage{lscape}
 #+LaTeX_HEADER: \usepackage{minted}
 #+LaTeX_HEADER: \usemintedstyle{emacs}
 #+LaTeX_HEADER: \definecolor{codebg}{rgb}{0.95,0.95,0.95}
@@ -65,6 +67,12 @@
      $ mv mpfr-2.4.2 mpfr
      $ mv mpc-0.8.1 mpc
    #+END_EXAMPLE
+** Long table
+   Use at the beggining of the table:
+   ATTR_LaTeX: longtable
+** Tables
+*** Column formula:
+    TBLFM: $8=$5/(1024*1024);%.2f
 
 * TODO [0%] General things to be done 				   :noexport:
 ** TODO Create the converter to use Context instead of latex 
@@ -782,324 +790,459 @@
 
 ** Size of the relations in the package installability problem
 
-   - General statistics that show how the tools perform on several
-     instances.
+*** Parser, translator and reducer statistics
+    This secion presents the times (in seconds) that tools like the
+    parser, the translator and the reducer spent in the set of
+    instances. The last column present the group to which the
+    particular instance belongs. The /State/ column is the output of
+    the reducer on the particular instance. This can be:
 
-     This first group of statistics measures the time for the parser,
-     translator and reducer functions of the library. The column
-     /State/ presents the output of the reducer. The following
-     convenions are used:
-     - ND\_SRCH :: The problem in he output needs the solver. When this
+    - ND\_SRCH: :: The problem in he output needs the solver. When this
                   is the case, no information is present in the
                   column.
-     - NO\_SOL :: The reducer /deduced/ hat the problem does no have
+    - NO\_SOL: :: The reducer /deduced/ hat the problem does no have
                   solution.
-     - SOLVED :: The reducer as able o solve the problem and the
+    - SOLVED: :: The reducer as able o solve the problem and the
                  solver does not need to be run.
-
 		 
-     - <2011-09-12 Mon>
-       |------------------------------+---------+-----------+---------+---------+-------|
-       | Instance name                |   Parse | Translate |  Reduce | State   | Group |
-       |------------------------------+---------+-----------+---------+---------+-------|
-       | randa65dfb                   | 5.27266 |   22.4984 | 2.94574 | NO\_SOL | F     |
-       | randa65f48                   | 5.32872 |    22.443 | 3.01229 | NO\_SOL | F     |
-       | randab5933                   | 5.27702 |   22.4696 | 2.97544 | NO\_SOL | F     |
-       | randbbb4ba                   | 5.27085 |   22.5844 | 2.96578 | NO\_SOL | F     |
-       | randcbf550                   | 5.30088 |   22.4715 | 2.75661 | NO\_SOL | F     |
-       | randcef367                   | 5.31488 |   22.5157 | 2.96342 | NO\_SOL | F     |
-       | randd6bc17                   | 5.34197 |   10.8783 | 3.45583 |         | F     |
-       | randdc506f                   | 5.30936 |   22.6851 | 2.79353 | NO\_SOL | F     |
-       | randdd5509                   | 5.34199 |   22.6674 | 2.96711 | NO\_SOL | F     |
-       | rande2165e                   | 5.28771 |    23.321 | 3.25559 | NO\_SOL | F     |
-       | rande22180                   | 5.47494 |   22.9249 | 3.00198 | NO\_SOL | F     |
-       | rande89f80                   | 5.35534 |   22.6624 |  2.9724 | NO\_SOL | F     |
-       | randea4da3                   | 5.26848 |   22.5344 | 3.00242 | NO\_SOL | F     |
-       | rand0c02bc                   | 9.02113 |   38.1948 | 8.86322 |         | D     |
-       | rand13056c                   | 8.94678 |   38.0624 | 6.25343 | NO\_SOL | D     |
-       | rand144372                   | 8.94315 |   37.9071 | 6.23059 | NO\_SOL | D     |
-       | rand199fd6                   | 8.99937 |   38.1532 | 6.19191 | NO\_SOL | D     |
-       | rand2d77b5                   | 9.03036 |   38.2726 | 6.35644 | NO\_SOL | D     |
-       | rand2d8467                   | 8.96447 |   38.1656 | 8.90487 |         | D     |
-       | rand35d0c8                   | 8.95043 |   38.1184 | 6.30329 | NO\_SOL | D     |
-       | rand43bd88                   | 9.01809 |     38.05 | 8.74308 |         | D     |
-       | rand4bf850                   | 9.05345 |   38.0508 | 8.72505 |         | D     |
-       | rand5c0b12                   | 9.10323 |    38.084 | 6.33522 | NO\_SOL | D     |
-       | rand659e05                   | 8.92617 |   38.1306 | 6.24994 | NO\_SOL | D     |
-       | rand65d021                   | 9.00733 |   37.8455 | 8.79986 |         | D     |
-       | rand6d579e                   | 8.91686 |   38.1749 |  6.3142 | NO\_SOL | D     |
-       | rand8177e7                   | 8.97149 |   38.3113 |  8.7991 |         | D     |
-       | rand902db1                   | 9.04851 |   19.0753 | 6.31145 | NO\_SOL | D     |
-       | randa09fe9                   | 8.99005 |   38.1407 | 8.78044 |         | D     |
-       | randa491d5                   | 9.11429 |   38.3665 | 6.26202 | NO\_SOL | D     |
-       | randa6997e                   | 9.06988 |   38.1014 | 8.96777 |         | D     |
-       | randaef248                   |  9.1108 |   38.4019 | 6.35604 | NO\_SOL | D     |
-       | randaefc7c                   | 9.06998 |   18.9313 | 8.87779 |         | D     |
-       | randb3c96d                   | 9.05068 |   38.2803 |  5.9278 | NO\_SOL | D     |
-       | randb87834                   | 9.06585 |   38.3401 | 8.82254 |         | D     |
-       | randbccf2d                   | 9.06727 |   38.2955 |  8.7654 |         | D     |
-       | randd1cab2                   |   9.092 |   38.2098 | 8.83866 |         | D     |
-       | randee102b                   | 9.07804 |   38.3097 | 6.39453 | NO\_SOL | D     |
-       | randf7d077                   | 9.10962 |   38.2345 | 8.85322 |         | D     |
-       | randfe95e3                   |  9.0699 |    38.439 | 6.27939 | NO\_SOL | D     |
-       | ark                          | 7.38268 |   17.2682 |  9.2485 |         | A     |
-       | audacious-plugins-extra      | 7.41923 |   17.2781 | 9.24403 |         | A     |
-       | dpkg-dev                     | 7.27914 |     17.23 | 9.19031 |         | A     |
-       | fcron                        | 7.39036 |   17.2622 | 8.93853 |         | A     |
-       | gnash-common-opengl          | 7.38634 |   17.4343 | 9.14414 |         | A     |
-       | gpc-4.1                      | 7.36843 |    17.267 | 8.81257 |         | A     |
-       | gtwitter                     | 7.42615 |    17.366 | 8.97292 |         | A     |
-       | inetutils-syslogd            |  7.3814 |   17.3255 | 9.26136 |         | A     |
-       | kbd                          | 7.36927 |   17.3698 | 9.26664 |         | A     |
-       | kblocks                      | 7.39994 |   17.3815 | 9.24314 |         | A     |
-       | kdemultimedia-kio-plugins    | 7.39037 |   17.2722 | 9.30103 |         | A     |
-       | kdessh                       | 7.38701 |   17.3304 | 9.23115 |         | A     |
-       | kdesudo                      | 7.37744 |   17.2793 | 9.16462 |         | A     |
-       | kfilereplace                 | 7.41724 |   17.4238 | 9.23411 |         | A     |
-       | kjumpingcube                 | 7.39974 |   17.0562 | 9.46478 |         | A     |
-       | kmines                       | 7.41286 |   17.0827 | 9.41853 |         | A     |
-       | knetwalk                     | 7.34713 |   17.0947 |  9.4068 |         | A     |
-       | kommander                    | 7.33913 |   17.1272 | 9.46557 |         | A     |
-       | kphotoalbum                  | 7.31697 |   17.0861 | 9.45753 |         | A     |
-       | ksystemlog                   | 7.32844 |   17.2795 | 9.53742 |         | A     |
-       | ktouch                       | 7.33073 |   17.2044 | 9.49049 |         | A     |
-       | kwin-style-crystal           | 7.32775 |   17.1315 | 9.51738 |         | A     |
-       | libevolution3.0-cil          | 7.33212 |   17.0826 | 9.30571 |         | A     |
-       | libgnokii4                   | 7.34696 |   17.0817 |  9.5066 |         | A     |
-       | libmono-addins-gui0.2-cil    | 7.33404 |   17.0781 | 9.51556 |         | A     |
-       | libmono-relaxng1.0-cil       | 7.37008 |   17.2083 | 9.43989 |         | A     |
-       | libwnck2.20-cil              | 7.32391 |    17.109 | 9.44434 |         | A     |
-       | mono-debugger                | 7.35266 |    17.233 | 9.48801 |         | A     |
-       | mono-gac                     | 7.38054 |   17.2924 | 9.73277 |         | A     |
-       | mono-mcs                     |  7.4811 |   17.5259 | 9.64008 |         | A     |
-       | openoffice.org-draw          | 7.51129 |   17.4847 | 9.65803 |         | A     |
-       | plasma-dataengines-workspace | 7.52133 |   17.4123 | 9.61167 |         | A     |
-       | plasma-widgets-workspace     | 7.51208 |   17.5717 | 9.68221 |         | A     |
-       | r-cran-car                   | 7.53111 |   17.4026 | 9.71176 |         | A     |
-       | r-cran-lme4                  | 7.49015 |   17.4893 | 9.75082 |         | A     |
-       | r-cran-rodbc                 | 7.51232 |   17.5296 | 9.73554 |         | A     |
-       | tasque                       | 7.50071 |   17.5371 | 9.69433 |         | A     |
-       | upstart-compat-sysv          | 7.51557 |   17.4602 | 9.55746 |         | A     |
-       |------------------------------+---------+-----------+---------+---------+-------|
+		 
+    As he results can change with the evolution of the tools, a
+    subsection is made with the date in which the benchmark was
+    applied.
+
+**** <2011-09-12 Mon>
+     #+ATTR_LaTeX: longtable
+     |------------------------------+---------+-----------+---------+---------+-------|
+     | Instance name                |   Parse | Translate |  Reduce | State   | Group |
+     |------------------------------+---------+-----------+---------+---------+-------|
+     | randa65dfb                   | 5.27266 |   22.4984 | 2.94574 | NO\_SOL | F     |
+     | randa65f48                   | 5.32872 |    22.443 | 3.01229 | NO\_SOL | F     |
+     | randab5933                   | 5.27702 |   22.4696 | 2.97544 | NO\_SOL | F     |
+     | randbbb4ba                   | 5.27085 |   22.5844 | 2.96578 | NO\_SOL | F     |
+     | randcbf550                   | 5.30088 |   22.4715 | 2.75661 | NO\_SOL | F     |
+     | randcef367                   | 5.31488 |   22.5157 | 2.96342 | NO\_SOL | F     |
+     | randd6bc17                   | 5.34197 |   10.8783 | 3.45583 |         | F     |
+     | randdc506f                   | 5.30936 |   22.6851 | 2.79353 | NO\_SOL | F     |
+     | randdd5509                   | 5.34199 |   22.6674 | 2.96711 | NO\_SOL | F     |
+     | rande2165e                   | 5.28771 |    23.321 | 3.25559 | NO\_SOL | F     |
+     | rande22180                   | 5.47494 |   22.9249 | 3.00198 | NO\_SOL | F     |
+     | rande89f80                   | 5.35534 |   22.6624 |  2.9724 | NO\_SOL | F     |
+     | randea4da3                   | 5.26848 |   22.5344 | 3.00242 | NO\_SOL | F     |
+     | rand0c02bc                   | 9.02113 |   38.1948 | 8.86322 |         | D     |
+     | rand13056c                   | 8.94678 |   38.0624 | 6.25343 | NO\_SOL | D     |
+     | rand144372                   | 8.94315 |   37.9071 | 6.23059 | NO\_SOL | D     |
+     | rand199fd6                   | 8.99937 |   38.1532 | 6.19191 | NO\_SOL | D     |
+     | rand2d77b5                   | 9.03036 |   38.2726 | 6.35644 | NO\_SOL | D     |
+     | rand2d8467                   | 8.96447 |   38.1656 | 8.90487 |         | D     |
+     | rand35d0c8                   | 8.95043 |   38.1184 | 6.30329 | NO\_SOL | D     |
+     | rand43bd88                   | 9.01809 |     38.05 | 8.74308 |         | D     |
+     | rand4bf850                   | 9.05345 |   38.0508 | 8.72505 |         | D     |
+     | rand5c0b12                   | 9.10323 |    38.084 | 6.33522 | NO\_SOL | D     |
+     | rand659e05                   | 8.92617 |   38.1306 | 6.24994 | NO\_SOL | D     |
+     | rand65d021                   | 9.00733 |   37.8455 | 8.79986 |         | D     |
+     | rand6d579e                   | 8.91686 |   38.1749 |  6.3142 | NO\_SOL | D     |
+     | rand8177e7                   | 8.97149 |   38.3113 |  8.7991 |         | D     |
+     | rand902db1                   | 9.04851 |   19.0753 | 6.31145 | NO\_SOL | D     |
+     | randa09fe9                   | 8.99005 |   38.1407 | 8.78044 |         | D     |
+     | randa491d5                   | 9.11429 |   38.3665 | 6.26202 | NO\_SOL | D     |
+     | randa6997e                   | 9.06988 |   38.1014 | 8.96777 |         | D     |
+     | randaef248                   |  9.1108 |   38.4019 | 6.35604 | NO\_SOL | D     |
+     | randaefc7c                   | 9.06998 |   18.9313 | 8.87779 |         | D     |
+     | randb3c96d                   | 9.05068 |   38.2803 |  5.9278 | NO\_SOL | D     |
+     | randb87834                   | 9.06585 |   38.3401 | 8.82254 |         | D     |
+     | randbccf2d                   | 9.06727 |   38.2955 |  8.7654 |         | D     |
+     | randd1cab2                   |   9.092 |   38.2098 | 8.83866 |         | D     |
+     | randee102b                   | 9.07804 |   38.3097 | 6.39453 | NO\_SOL | D     |
+     | randf7d077                   | 9.10962 |   38.2345 | 8.85322 |         | D     |
+     | randfe95e3                   |  9.0699 |    38.439 | 6.27939 | NO\_SOL | D     |
+     | ark                          | 7.38268 |   17.2682 |  9.2485 |         | A     |
+     | audacious-plugins-extra      | 7.41923 |   17.2781 | 9.24403 |         | A     |
+     | dpkg-dev                     | 7.27914 |     17.23 | 9.19031 |         | A     |
+     | fcron                        | 7.39036 |   17.2622 | 8.93853 |         | A     |
+     | gnash-common-opengl          | 7.38634 |   17.4343 | 9.14414 |         | A     |
+     | gpc-4.1                      | 7.36843 |    17.267 | 8.81257 |         | A     |
+     | gtwitter                     | 7.42615 |    17.366 | 8.97292 |         | A     |
+     | inetutils-syslogd            |  7.3814 |   17.3255 | 9.26136 |         | A     |
+     | kbd                          | 7.36927 |   17.3698 | 9.26664 |         | A     |
+     | kblocks                      | 7.39994 |   17.3815 | 9.24314 |         | A     |
+     | kdemultimedia-kio-plugins    | 7.39037 |   17.2722 | 9.30103 |         | A     |
+     | kdessh                       | 7.38701 |   17.3304 | 9.23115 |         | A     |
+     | kdesudo                      | 7.37744 |   17.2793 | 9.16462 |         | A     |
+     | kfilereplace                 | 7.41724 |   17.4238 | 9.23411 |         | A     |
+     | kjumpingcube                 | 7.39974 |   17.0562 | 9.46478 |         | A     |
+     | kmines                       | 7.41286 |   17.0827 | 9.41853 |         | A     |
+     | knetwalk                     | 7.34713 |   17.0947 |  9.4068 |         | A     |
+     | kommander                    | 7.33913 |   17.1272 | 9.46557 |         | A     |
+     | kphotoalbum                  | 7.31697 |   17.0861 | 9.45753 |         | A     |
+     | ksystemlog                   | 7.32844 |   17.2795 | 9.53742 |         | A     |
+     | ktouch                       | 7.33073 |   17.2044 | 9.49049 |         | A     |
+     | kwin-style-crystal           | 7.32775 |   17.1315 | 9.51738 |         | A     |
+     | libevolution3.0-cil          | 7.33212 |   17.0826 | 9.30571 |         | A     |
+     | libgnokii4                   | 7.34696 |   17.0817 |  9.5066 |         | A     |
+     | libmono-addins-gui0.2-cil    | 7.33404 |   17.0781 | 9.51556 |         | A     |
+     | libmono-relaxng1.0-cil       | 7.37008 |   17.2083 | 9.43989 |         | A     |
+     | libwnck2.20-cil              | 7.32391 |    17.109 | 9.44434 |         | A     |
+     | mono-debugger                | 7.35266 |    17.233 | 9.48801 |         | A     |
+     | mono-gac                     | 7.38054 |   17.2924 | 9.73277 |         | A     |
+     | mono-mcs                     |  7.4811 |   17.5259 | 9.64008 |         | A     |
+     | openoffice.org-draw          | 7.51129 |   17.4847 | 9.65803 |         | A     |
+     | plasma-dataengines-workspace | 7.52133 |   17.4123 | 9.61167 |         | A     |
+     | plasma-widgets-workspace     | 7.51208 |   17.5717 | 9.68221 |         | A     |
+     | r-cran-car                   | 7.53111 |   17.4026 | 9.71176 |         | A     |
+     | r-cran-lme4                  | 7.49015 |   17.4893 | 9.75082 |         | A     |
+     | r-cran-rodbc                 | 7.51232 |   17.5296 | 9.73554 |         | A     |
+     | tasque                       | 7.50071 |   17.5371 | 9.69433 |         | A     |
+     | upstart-compat-sysv          | 7.51557 |   17.4602 | 9.55746 |         | A     |
+     |------------------------------+---------+-----------+---------+---------+-------|
        
-     - <2011-09-09 Fri>       
-       |------------------------------------+---------+-----------+---------+---------+-------|
-       | Instance name                      |   Parse | Translate |  Reduce | State   | Group |
-       |------------------------------------+---------+-----------+---------+---------+-------|
-       | codebreaker                        | 7.53151 |   17.1597 | 8.94164 |         | B     |
-       | dwww                               | 7.53606 |   17.1671 | 9.19521 |         | B     |
-       | epiphany-browser                   | 7.54502 |   17.2429 |  9.1394 |         | B     |
-       | evolution-dev                      | 7.53558 |   17.2166 | 9.20169 |         | B     |
-       | gnochm                             | 7.52841 |   17.2361 | 9.15517 |         | B     |
-       | gnome-panel-data                   | 7.52902 |   17.3122 | 9.16844 |         | B     |
-       | guake                              | 7.52074 |   17.2945 | 8.87171 |         | B     |
-       | hal-cups-utils                     | 7.53777 |   17.3212 | 9.11696 |         | B     |
-       | idle                               | 7.51897 |   17.2844 | 9.18476 |         | B     |
-       | kdebase-bin                        | 7.54534 |    17.286 | 9.25091 |         | B     |
-       | konq-plugins                       | 7.59574 |    17.384 | 9.23175 |         | B     |
-       | libbsd-resource-perl               | 7.51107 |   17.2554 | 9.20956 |         | B     |
-       | libcatalyst-perl                   | 7.52771 |   17.2184 | 9.19588 |         | B     |
-       | libcurses-perl                     | 7.55242 |   17.6866 | 9.34863 |         | B     |
-       | libcyrus-imap-perl22               | 7.54435 |   17.4218 | 9.11563 |         | B     |
-       | libdbd-pg-perl                     | 7.58858 |   17.2199 | 9.27803 |         | B     |
-       | libhtml-parser-perl                | 7.51887 |   17.2284 | 9.22885 |         | B     |
-       | libmail-spf-perl                   | 7.52374 |   17.3396 | 9.36031 |         | B     |
-       | libnkf-perl                        | 7.55381 |   17.2551 | 9.10224 |         | B     |
-       | libnspr4-dev                       | 7.54409 |   17.2531 | 9.27164 |         | B     |
-       | libnss3-1d                         | 7.41931 |    17.001 | 9.15781 |         | B     |
-       | libpango-perl                      | 7.51323 |   17.2185 | 9.05561 |         | B     |
-       | libpoe-perl                        | 7.44377 |   17.0048 |  9.1203 |         | B     |
-       | libtemplate-provider-encoding-perl | 7.39022 |   17.0572 | 9.11853 |         | B     |
-       | lirc                               | 7.40536 |   17.1422 | 9.01403 |         | B     |
-       | mercurial-common                   | 7.48508 |   17.2525 | 9.21871 |         | B     |
-       | monodevelop-nunit                  | 7.42696 |   17.1925 | 9.23653 |         | B     |
-       | openoffice.org-l10n-da             | 7.44748 |   17.2435 | 9.21474 |         | B     |
-       | openoffice.org-l10n-nl             |  7.5055 |   17.3365 | 9.20036 |         | B     |
-       | pidgin-plugin-pack                 | 7.47945 |   17.2283 | 8.92911 |         | B     |
-       | pybackpack                         | 7.36421 |   17.1811 |  9.1957 |         | B     |
-       | python-cairo                       | 7.44435 |   17.1734 | 9.52386 |         | B     |
-       | python-hippocanvas                 | 7.50576 |   17.5549 | 9.25899 |         | B     |
-       | sonata                             | 7.41302 |   17.1508 | 9.24633 |         | B     |
-       | synaptic                           | 7.38547 |   17.5469 | 9.46012 |         | B     |
-       | system-config-printer              | 7.51224 |   17.4152 | 9.10394 |         | B     |
-       | texlive-generic-recommended        | 7.37659 |   17.4146 | 9.30122 |         | B     |
-       | txt2html                           | 7.47997 |   17.5543 | 9.33384 |         | B     |
-       | unattended-upgrades                | 7.53027 |   17.4068 | 9.18918 |         | B     |
-       | xvfb                               | 7.43632 |   17.3677 | 9.32164 |         | B     |
-       | rand03b0b5                         | 5.34267 |   22.6947 | 2.95711 | NO\_SOL | F     |
-       | rand1958fb                         | 5.35521 |    22.638 | 2.99035 | NO\_SOL | F     |
-       | rand2fa1f8                         | 5.32974 |   22.5397 | 2.75237 | NO\_SOL | F     |
-       | rand35afbf                         | 5.31484 |   22.5161 | 2.98101 | NO\_SOL | F     |
-       | rand396cf8                         | 5.30638 |   22.5853 | 2.98956 | NO\_SOL | F     |
-       | rand49e642                         | 5.43813 |   22.7286 | 2.98577 | NO\_SOL | F     |
-       | rand56b853                         | 5.32315 |   22.6248 | 2.98875 | NO\_SOL | F     |
-       | rand59f7dd                         | 5.32181 |   22.5908 | 2.98521 | NO\_SOL | F     |
-       | rand601ba8                         | 5.31271 |   22.5535 | 2.99042 | NO\_SOL | F     |
-       | rand682c92                         | 5.31532 |   22.5385 |  2.8286 | NO\_SOL | F     |
-       | rand6c4744                         | 5.29927 |   22.4669 | 2.96123 | NO\_SOL | F     |
-       | rand6f4585                         | 5.31223 |   22.4333 |  2.9844 | NO\_SOL | F     |
-       | rand7e9372                         | 5.29903 |   22.4325 | 2.98785 | NO\_SOL | F     |
-       | rand88811a                         | 5.32401 |   22.6084 | 2.98943 | NO\_SOL | F     |
-       | rand936b0d                         | 5.32126 |    22.431 | 2.99247 | NO\_SOL | F     |
-       | rand9e35f0                         | 5.32822 |   22.5518 | 3.64427 |         | F     |
-       | randa13f2d                         | 5.36954 |   22.7315 | 3.69437 |         | F     |
-       |------------------------------------+---------+-----------+---------+---------+-------|
-      
-      
-     - <2011-09-02 Fri>
-       |-----------------------------+-------------+-----------------+--------------|
-       | Problem                     | Parsing (s) | Translating (s) | Reducing (s) |
-       |-----------------------------+-------------+-----------------+--------------|
-       | codebreaker.cudf            |     7.47771 |          9.2886 |      3.38545 |
-       | dpkg-dev.cudf               |     7.44725 |         9.29764 |      3.47013 |
-       | fcron.cudf                  |     7.48727 |         9.40373 |       3.4305 |
-       | libgnokii4.cudf             |     7.52728 |         9.42241 |       3.4593 |
-       | libnss3-1d.cudf             |     7.49822 |         9.35437 |      3.49358 |
-       | mercurial-common.cudf       |     7.49112 |         9.49861 |      3.48125 |
-       | mono-gac.cudf               |     7.65299 |         9.38672 |      3.57372 |
-       | openoffice.org-l10n-da.cudf |     7.59518 |         9.48585 |      3.54366 |
-       | tasque.cudf                 |     7.57444 |         9.44606 |      3.52883 |
-       | unattended-upgrades.cudf    |     7.61505 |         9.51398 |      3.51486 |
-       |-----------------------------+-------------+-----------------+--------------|
+**** <2011-09-09 Fri>       
+     #+ATTR_LaTeX: longtable
+     |------------------------------------+---------+-----------+---------+---------+-------|
+     | Instance name                      |   Parse | Translate |  Reduce | State   | Group |
+     |------------------------------------+---------+-----------+---------+---------+-------|
+     | codebreaker                        | 7.53151 |   17.1597 | 8.94164 |         | B     |
+     | dwww                               | 7.53606 |   17.1671 | 9.19521 |         | B     |
+     | epiphany-browser                   | 7.54502 |   17.2429 |  9.1394 |         | B     |
+     | evolution-dev                      | 7.53558 |   17.2166 | 9.20169 |         | B     |
+     | gnochm                             | 7.52841 |   17.2361 | 9.15517 |         | B     |
+     | gnome-panel-data                   | 7.52902 |   17.3122 | 9.16844 |         | B     |
+     | guake                              | 7.52074 |   17.2945 | 8.87171 |         | B     |
+     | hal-cups-utils                     | 7.53777 |   17.3212 | 9.11696 |         | B     |
+     | idle                               | 7.51897 |   17.2844 | 9.18476 |         | B     |
+     | kdebase-bin                        | 7.54534 |    17.286 | 9.25091 |         | B     |
+     | konq-plugins                       | 7.59574 |    17.384 | 9.23175 |         | B     |
+     | libbsd-resource-perl               | 7.51107 |   17.2554 | 9.20956 |         | B     |
+     | libcatalyst-perl                   | 7.52771 |   17.2184 | 9.19588 |         | B     |
+     | libcurses-perl                     | 7.55242 |   17.6866 | 9.34863 |         | B     |
+     | libcyrus-imap-perl22               | 7.54435 |   17.4218 | 9.11563 |         | B     |
+     | libdbd-pg-perl                     | 7.58858 |   17.2199 | 9.27803 |         | B     |
+     | libhtml-parser-perl                | 7.51887 |   17.2284 | 9.22885 |         | B     |
+     | libmail-spf-perl                   | 7.52374 |   17.3396 | 9.36031 |         | B     |
+     | libnkf-perl                        | 7.55381 |   17.2551 | 9.10224 |         | B     |
+     | libnspr4-dev                       | 7.54409 |   17.2531 | 9.27164 |         | B     |
+     | libnss3-1d                         | 7.41931 |    17.001 | 9.15781 |         | B     |
+     | libpango-perl                      | 7.51323 |   17.2185 | 9.05561 |         | B     |
+     | libpoe-perl                        | 7.44377 |   17.0048 |  9.1203 |         | B     |
+     | libtemplate-provider-encoding-perl | 7.39022 |   17.0572 | 9.11853 |         | B     |
+     | lirc                               | 7.40536 |   17.1422 | 9.01403 |         | B     |
+     | mercurial-common                   | 7.48508 |   17.2525 | 9.21871 |         | B     |
+     | monodevelop-nunit                  | 7.42696 |   17.1925 | 9.23653 |         | B     |
+     | openoffice.org-l10n-da             | 7.44748 |   17.2435 | 9.21474 |         | B     |
+     | openoffice.org-l10n-nl             |  7.5055 |   17.3365 | 9.20036 |         | B     |
+     | pidgin-plugin-pack                 | 7.47945 |   17.2283 | 8.92911 |         | B     |
+     | pybackpack                         | 7.36421 |   17.1811 |  9.1957 |         | B     |
+     | python-cairo                       | 7.44435 |   17.1734 | 9.52386 |         | B     |
+     | python-hippocanvas                 | 7.50576 |   17.5549 | 9.25899 |         | B     |
+     | sonata                             | 7.41302 |   17.1508 | 9.24633 |         | B     |
+     | synaptic                           | 7.38547 |   17.5469 | 9.46012 |         | B     |
+     | system-config-printer              | 7.51224 |   17.4152 | 9.10394 |         | B     |
+     | texlive-generic-recommended        | 7.37659 |   17.4146 | 9.30122 |         | B     |
+     | txt2html                           | 7.47997 |   17.5543 | 9.33384 |         | B     |
+     | unattended-upgrades                | 7.53027 |   17.4068 | 9.18918 |         | B     |
+     | xvfb                               | 7.43632 |   17.3677 | 9.32164 |         | B     |
+     | rand03b0b5                         | 5.34267 |   22.6947 | 2.95711 | NO\_SOL | F     |
+     | rand1958fb                         | 5.35521 |    22.638 | 2.99035 | NO\_SOL | F     |
+     | rand2fa1f8                         | 5.32974 |   22.5397 | 2.75237 | NO\_SOL | F     |
+     | rand35afbf                         | 5.31484 |   22.5161 | 2.98101 | NO\_SOL | F     |
+     | rand396cf8                         | 5.30638 |   22.5853 | 2.98956 | NO\_SOL | F     |
+     | rand49e642                         | 5.43813 |   22.7286 | 2.98577 | NO\_SOL | F     |
+     | rand56b853                         | 5.32315 |   22.6248 | 2.98875 | NO\_SOL | F     |
+     | rand59f7dd                         | 5.32181 |   22.5908 | 2.98521 | NO\_SOL | F     |
+     | rand601ba8                         | 5.31271 |   22.5535 | 2.99042 | NO\_SOL | F     |
+     | rand682c92                         | 5.31532 |   22.5385 |  2.8286 | NO\_SOL | F     |
+     | rand6c4744                         | 5.29927 |   22.4669 | 2.96123 | NO\_SOL | F     |
+     | rand6f4585                         | 5.31223 |   22.4333 |  2.9844 | NO\_SOL | F     |
+     | rand7e9372                         | 5.29903 |   22.4325 | 2.98785 | NO\_SOL | F     |
+     | rand88811a                         | 5.32401 |   22.6084 | 2.98943 | NO\_SOL | F     |
+     | rand936b0d                         | 5.32126 |    22.431 | 2.99247 | NO\_SOL | F     |
+     | rand9e35f0                         | 5.32822 |   22.5518 | 3.64427 |         | F     |
+     | randa13f2d                         | 5.36954 |   22.7315 | 3.69437 |         | F     |
+     |------------------------------------+---------+-----------+---------+---------+-------|
+
+**** <2011-09-02 Fri>
+     |-----------------------------+-------------+-----------------+--------------|
+     | Problem                     | Parsing (s) | Translating (s) | Reducing (s) |
+     |-----------------------------+-------------+-----------------+--------------|
+     | codebreaker.cudf            |     7.47771 |          9.2886 |      3.38545 |
+     | dpkg-dev.cudf               |     7.44725 |         9.29764 |      3.47013 |
+     | fcron.cudf                  |     7.48727 |         9.40373 |       3.4305 |
+     | libgnokii4.cudf             |     7.52728 |         9.42241 |       3.4593 |
+     | libnss3-1d.cudf             |     7.49822 |         9.35437 |      3.49358 |
+     | mercurial-common.cudf       |     7.49112 |         9.49861 |      3.48125 |
+     | mono-gac.cudf               |     7.65299 |         9.38672 |      3.57372 |
+     | openoffice.org-l10n-da.cudf |     7.59518 |         9.48585 |      3.54366 |
+     | tasque.cudf                 |     7.57444 |         9.44606 |      3.52883 |
+     | unattended-upgrades.cudf    |     7.61505 |         9.51398 |      3.51486 |
+     |-----------------------------+-------------+-----------------+--------------|
     
 
-   - Translation specific statistics
-     |-----------------------------+----------------+-----------------|
-     | Problem                     | Installed Pkgs | Consistent Pkgs |
-     |-----------------------------+----------------+-----------------|
-     | codebreaker.cudf            |           2961 |            2896 |
-     | dpkg-dev.cudf               |           2960 |            2896 |
-     | fcron.cudf                  |           2961 |            2896 |
-     | libgnokii4.cudf             |           2960 |            2896 |
-     | libnss3-1d.cudf             |           2960 |            2896 |
-     | mercurial-common.cudf       |           2960 |            2896 |
-     | mono-gac.cudf               |           2960 |            2896 |
-     | openoffice.org-l10n-da.cudf |           2960 |            2896 |
-     | tasque.cudf                 |           2960 |            2896 |
-     | unattended-upgrades.cudf    |           2960 |            2896 |
-     |-----------------------------+----------------+-----------------|
+
+
+*** Translation specific statistics
+    |-----------------------------+----------------+-----------------|
+    | Problem                     | Installed Pkgs | Consistent Pkgs |
+    |-----------------------------+----------------+-----------------|
+    | codebreaker.cudf            |           2961 |            2896 |
+    | dpkg-dev.cudf               |           2960 |            2896 |
+    | fcron.cudf                  |           2961 |            2896 |
+    | libgnokii4.cudf             |           2960 |            2896 |
+    | libnss3-1d.cudf             |           2960 |            2896 |
+    | mercurial-common.cudf       |           2960 |            2896 |
+    | mono-gac.cudf               |           2960 |            2896 |
+    | openoffice.org-l10n-da.cudf |           2960 |            2896 |
+    | tasque.cudf                 |           2960 |            2896 |
+    | unattended-upgrades.cudf    |           2960 |            2896 |
+    |-----------------------------+----------------+-----------------|
    
-   - Reducer specific statistics
+*** Reducer specific statistics
+    
+     Times to load the relations from kcudf packages to ground relations.
 
-   - Times to load the relations from kcudf packages to ground relations
-
-     - The following times are taken on normal instances, as they are
-       output by the translator.
        
-       - <2011-09-09 Fri>
-         |----------------------+--------------+-----------+----------+----------|
-         | Instance name        | Dependencies | Conflicts | Provides | Load (s) |
-         |----------------------+--------------+-----------+----------+----------|
-         | ark                  |       404070 |     91830 |   116849 |  61.0731 |
-         | codebreaker          |       404070 |     91830 |   116849 |  58.7977 |
-         | dpkg-dev             |       404070 |     91830 |   116849 |  59.4491 |
-         | dwww                 |       404070 |     91830 |   116849 |  60.0817 |
-         | epiphany-browser     |       404070 |     91830 |   116849 |  59.2349 |
-         | evolution-dev        |       404070 |     91830 |   116849 |   58.538 |
-         | gnochm               |       404070 |     91830 |   116849 |  58.7689 |
-         | gnome-panel-data     |       404070 |     91830 |   116849 |   58.955 |
-         | guake                |       404070 |     91830 |   116849 |  58.6447 |
-         | hal-cups-utils       |       404070 |     91830 |   116849 |  58.7232 |
-         | idle                 |       404070 |     91830 |   116849 |  59.0856 |
-         | kbd                  |       404070 |     91830 |   116849 |   58.756 |
-         | kdebase-bin          |       404070 |     91830 |   116849 |  59.1321 |
-         | konq-plugins         |       404070 |     91830 |   116849 |  59.0516 |
-         | libbsd-resource-perl |       404070 |     91830 |   116849 |  59.3166 |
-         | libcatalyst-perl     |       404070 |     91830 |   116849 |  66.1356 |
-         | libcurses-perl       |       404070 |     91830 |   116849 |  65.1467 |
-         | libcyrus-imap-perl22 |       404070 |     91830 |   116849 |  65.2596 |
-         | libdbd-pg-perl       |       404070 |     91830 |   116849 |  62.6958 |
-         | libhtml-parser-perl  |       404070 |     91830 |   116849 |  62.6192 |
-         | libmail-spf-perl     |       404070 |     91830 |   116849 |  67.3246 |
-         | libnkf-perl          |       404070 |     91830 |   116849 |  65.2831 |
-         | libnspr4-dev         |       404070 |     91830 |   116849 |  62.3625 |
-         |----------------------+--------------+-----------+----------+----------|
+**** <2011-09-09 Fri>
+     The following times are taken on normal instances, as they are
+     output by the translator.
+
+     #+ATTR_LaTeX: longtable
+     |----------------------+--------------+-----------+----------+----------|
+     | Instance name        | Dependencies | Conflicts | Provides | Load (s) |
+     |----------------------+--------------+-----------+----------+----------|
+     | ark                  |       404070 |     91830 |   116849 |  61.0731 |
+     | codebreaker          |       404070 |     91830 |   116849 |  58.7977 |
+     | dpkg-dev             |       404070 |     91830 |   116849 |  59.4491 |
+     | dwww                 |       404070 |     91830 |   116849 |  60.0817 |
+     | epiphany-browser     |       404070 |     91830 |   116849 |  59.2349 |
+     | evolution-dev        |       404070 |     91830 |   116849 |   58.538 |
+     | gnochm               |       404070 |     91830 |   116849 |  58.7689 |
+     | gnome-panel-data     |       404070 |     91830 |   116849 |   58.955 |
+     | guake                |       404070 |     91830 |   116849 |  58.6447 |
+     | hal-cups-utils       |       404070 |     91830 |   116849 |  58.7232 |
+     | idle                 |       404070 |     91830 |   116849 |  59.0856 |
+     | kbd                  |       404070 |     91830 |   116849 |   58.756 |
+     | kdebase-bin          |       404070 |     91830 |   116849 |  59.1321 |
+     | konq-plugins         |       404070 |     91830 |   116849 |  59.0516 |
+     | libbsd-resource-perl |       404070 |     91830 |   116849 |  59.3166 |
+     | libcatalyst-perl     |       404070 |     91830 |   116849 |  66.1356 |
+     | libcurses-perl       |       404070 |     91830 |   116849 |  65.1467 |
+     | libcyrus-imap-perl22 |       404070 |     91830 |   116849 |  65.2596 |
+     | libdbd-pg-perl       |       404070 |     91830 |   116849 |  62.6958 |
+     | libhtml-parser-perl  |       404070 |     91830 |   116849 |  62.6192 |
+     | libmail-spf-perl     |       404070 |     91830 |   116849 |  67.3246 |
+     | libnkf-perl          |       404070 |     91830 |   116849 |  65.2831 |
+     | libnspr4-dev         |       404070 |     91830 |   116849 |  62.3625 |
+     |----------------------+--------------+-----------+----------+----------|
         
-     - The following times were taken *on reduced instances*. This means,
-       he instances produced by the reducer.
+
+**** <2011-09-09 Fri>
+
+     The following times were taken *on reduced instances*. This
+     means, he instances produced by the reducer.
        
-       An interesting aspect of this test is that it uses the same bdd
-       manager for all the instances. This is, no new manager is
-       creaed between two different instances. Even more interesting
-       is the fact that the memmory used during all the run of the
-       program never goes more than 80 megabytes.
+     An interesting aspect of this test is that it uses the same bdd
+     manager for all the instances. This is, no new manager is creaed
+     between two different instances. Even more interesting is the
+     fact that the memmory used during all the run of the program
+     never goes more than 80 megabytes.
 
-       During these tests no tunning o the bdd manager is done. It
-       uses the same configuration that comes by default in CUDD.
+     During these tests no tunning o the bdd manager is done. It
+     uses the same configuration that comes by default in CUDD.
 
-       - <2011-09-09 Fri>
-         |----------------------+--------------+-----------+----------+----------|
-         | Instance name        | Dependencies | Conflicts | Provides | Load (s) |
-         |----------------------+--------------+-----------+----------+----------|
-         | ark                  |       123014 |     18972 |    47665 |   16.777 |
-         | codebreaker          |       104449 |     17820 |    44972 |  14.9274 |
-         | dpkg-dev             |       122857 |     18950 |    47602 |  16.9693 |
-         | dwww                 |       123071 |     18978 |    47680 |  16.9846 |
-         | epiphany-browser     |       122937 |     18946 |    47631 |  16.9889 |
-         | evolution-dev        |       123179 |     19008 |    47733 |  17.0116 |
-         | gnochm               |       122097 |     18966 |    47652 |  16.8054 |
-         | gnome-panel-data     |       123014 |     18972 |    47665 |  17.0823 |
-         | guake                |        97152 |     17554 |    44132 |  14.2352 |
-         | hal-cups-utils       |       109045 |     17934 |    45199 |  15.5774 |
-         | idle                 |       123026 |     18974 |    47669 |   17.209 |
-         | kbd                  |       123012 |     18970 |    47662 |  16.9377 |
-         | kdebase-bin          |       123005 |     18972 |    47665 |  17.1071 |
-         | konq-plugins         |       123015 |     18972 |    47665 |  17.0862 |
-         | libbsd-resource-perl |       123016 |     18972 |    47665 |  17.2277 |
-         | libcatalyst-perl     |       123467 |     19046 |    47825 |   17.358 |
-         | libcurses-perl       |       123030 |     18974 |    47669 |  17.1605 |
-         | libcyrus-imap-perl22 |       108357 |     17812 |    44919 |  15.5239 |
-         | libdbd-pg-perl       |       123015 |     18972 |    47665 |  17.1469 |
-         | libhtml-parser-perl  |       122995 |     18972 |    47665 |  17.1752 |
-         | libmail-spf-perl     |       121860 |     18828 |    47276 |  16.9846 |
-         | libnkf-perl          |       109244 |     17876 |    45100 |  15.5976 |
-         | libnspr4-dev         |       123038 |     18984 |    47677 |  17.1984 |
-         |----------------------+--------------+-----------+----------+----------|
-
+     #+ATTR_LaTeX: longtable
+     |----------------------+--------------+-----------+----------+----------|
+     | Instance name        | Dependencies | Conflicts | Provides | Load (s) |
+     |----------------------+--------------+-----------+----------+----------|
+     | ark                  |       123014 |     18972 |    47665 |   16.777 |
+     | codebreaker          |       104449 |     17820 |    44972 |  14.9274 |
+     | dpkg-dev             |       122857 |     18950 |    47602 |  16.9693 |
+     | dwww                 |       123071 |     18978 |    47680 |  16.9846 |
+     | epiphany-browser     |       122937 |     18946 |    47631 |  16.9889 |
+     | evolution-dev        |       123179 |     19008 |    47733 |  17.0116 |
+     | gnochm               |       122097 |     18966 |    47652 |  16.8054 |
+     | gnome-panel-data     |       123014 |     18972 |    47665 |  17.0823 |
+     | guake                |        97152 |     17554 |    44132 |  14.2352 |
+     | hal-cups-utils       |       109045 |     17934 |    45199 |  15.5774 |
+     | idle                 |       123026 |     18974 |    47669 |   17.209 |
+     | kbd                  |       123012 |     18970 |    47662 |  16.9377 |
+     | kdebase-bin          |       123005 |     18972 |    47665 |  17.1071 |
+     | konq-plugins         |       123015 |     18972 |    47665 |  17.0862 |
+     | libbsd-resource-perl |       123016 |     18972 |    47665 |  17.2277 |
+     | libcatalyst-perl     |       123467 |     19046 |    47825 |   17.358 |
+     | libcurses-perl       |       123030 |     18974 |    47669 |  17.1605 |
+     | libcyrus-imap-perl22 |       108357 |     17812 |    44919 |  15.5239 |
+     | libdbd-pg-perl       |       123015 |     18972 |    47665 |  17.1469 |
+     | libhtml-parser-perl  |       122995 |     18972 |    47665 |  17.1752 |
+     | libmail-spf-perl     |       121860 |     18828 |    47276 |  16.9846 |
+     | libnkf-perl          |       109244 |     17876 |    45100 |  15.5976 |
+     | libnspr4-dev         |       123038 |     18984 |    47677 |  17.1984 |
+     |----------------------+--------------+-----------+----------+----------|
 	 
+	 
+*** Solver times
+    Memory meassurements for loading the relations of the different
+    instances in gecode. The first column is the instance name, the
+    second one is the time in seconds for reading the input using the
+    /KCUDF/. The nex two columns are the Gecode memmory consumption
+    and the solving time. The las group of columns contains the
+    memmory in bytes used by the /BDD/ manager, the time (in
+    milliseconds) spent in garbage colloections and the actual number
+    of garbage collections performed.
 
-   - Meory meassurements for loading the relations of the different instances in gecode.
-     (Taken on: <2011-09-12 Mon>)
-     |---------------------------+------------+-----------+------------+-----------------+-----------+----------|
-     | Instance                  | Gecode Mem | Read time | Solve time | Bdd Mem (bytes) | GC (sec.) | GC calls |
-     |---------------------------+------------+-----------+------------+-----------------+-----------+----------|
-     | ark                       |     329584 |   16.5548 |   0.001795 |        60055712 |      2390 |       36 |
-     | audacious-plugins-extra   |     329584 |   16.7979 |   0.001921 |        59171840 |      2413 |       36 |
-     | codebreaker               |     313200 |   14.6579 |   0.001779 |        58778944 |      2043 |       32 |
-     | dpkg-dev                  |     329584 |   16.7917 |   0.001769 |        59630144 |      2395 |       36 |
-     | dwww                      |     329584 |   16.7595 |   0.001893 |        58909952 |      2417 |       36 |
-     | epiphany-browser          |     329584 |   16.6794 |   0.001806 |        59630144 |      2381 |       36 |
-     | evolution-dev             |     329584 |   16.7397 |   0.001813 |        59924768 |      2381 |       36 |
-     | fcron                     |     313200 |   15.0159 |   0.001867 |        58353376 |      2046 |       32 |
-     | gnash-common-opengl       |     329584 |   16.8481 |    0.00183 |        58713536 |      2417 |       36 |
-     | gnochm                    |     329584 |   16.7433 |   0.001863 |        59466464 |      2412 |       36 |
-     | gnome-panel-data          |     329584 |    16.756 |   0.001859 |        59826560 |      2379 |       36 |
-     | gpc-4.1                   |     296816 |   14.0108 |   0.001692 |        58353376 |      1986 |       31 |
-     | gtwitter                  |     313200 |   14.3458 |   0.002219 |        57665888 |      1925 |       31 |
-     | guake                     |     305008 |   14.0421 |   0.001973 |        57436736 |      1886 |       30 |
-     | hal-cups-utils            |     313200 |   15.2316 |   0.001793 |        59171776 |      2151 |       33 |
-     | idle                      |     329584 |   16.8118 |   0.001808 |        58517120 |      2414 |       36 |
-     | inetutils-syslogd         |     329584 |    16.749 |   0.001785 |        59892032 |      2384 |       36 |
-     | kbd                       |     329584 |   17.2297 |   0.001808 |        58517120 |      2442 |       36 |
-     | kblocks                   |     329584 |   16.9877 |   0.001877 |        58746272 |      2444 |       36 |
-     | kdebase-bin               |     329584 |   17.2108 |   0.001755 |        58811744 |      2440 |       36 |
-     | kdemultimedia-kio-plugins |     329584 |   17.0889 |    0.00181 |        59073632 |      2420 |       36 |
-     | kdessh                    |     329584 |   17.1147 |   0.001779 |        59630144 |      2403 |       36 |
-     | kdesudo                   |     329584 |   17.0233 |   0.001816 |        59335520 |      2339 |       35 |
-     | kfilereplace              |     329584 |   17.2154 |   0.001758 |        59139104 |      2424 |       36 |
-     | kjumpingcube              |     329584 |   16.6671 |   0.001751 |        60055712 |      2409 |       36 |
-     | kmines                    |     329584 |    17.006 |   0.001879 |        58975424 |      2433 |       36 |
-     | knetwalk                  |     329584 |   16.7861 |   0.001819 |        59728352 |      2412 |       36 |
-     | kommander                 |     329584 |   16.6853 |   0.001867 |        59924768 |      2379 |       36 |
-     | konq-plugins              |     329584 |    16.949 |   0.001779 |        59073632 |      2414 |       36 |
-     | kphotoalbum               |     329584 |   17.0421 |    0.00177 |        58746272 |      2426 |       36 |
-     |---------------------------+------------+-----------+------------+-----------------+-----------+----------|
+**** <2011-09-12 Mon>
+     #+ATTR_LaTeX: longtable
+     |------------------------------------+----------+----------+----------+----------+---------+----|
+     | Instance                           |     Read | Mem (KB) |    Solve | Mem (MB) | GC time | GC |
+     |------------------------------------+----------+----------+----------+----------+---------+----|
+     | /                                  |        < |        < |        > |        < |         |  > |
+     | ark                                |  16.5548 |   321.86 | 0.001795 |    57.27 |    2.39 | 36 |
+     | audacious-plugins-extra            |  16.7979 |   321.86 | 0.001921 |    56.43 |   2.413 | 36 |
+     | codebreaker                        |  14.6579 |   305.86 | 0.001779 |    56.06 |   2.043 | 32 |
+     | dpkg-dev                           |  16.7917 |   321.86 | 0.001769 |    56.87 |   2.395 | 36 |
+     | dwww                               |  16.7595 |   321.86 | 0.001893 |    56.18 |   2.417 | 36 |
+     | epiphany-browser                   |  16.6794 |   321.86 | 0.001806 |    56.87 |   2.381 | 36 |
+     | evolution-dev                      |  16.7397 |   321.86 | 0.001813 |    57.15 |   2.381 | 36 |
+     | fcron                              |  15.0159 |   305.86 | 0.001867 |    55.65 |   2.046 | 32 |
+     | gnash-common-opengl                |  16.8481 |   321.86 |  0.00183 |    55.99 |   2.417 | 36 |
+     | gnochm                             |  16.7433 |   321.86 | 0.001863 |    56.71 |   2.412 | 36 |
+     | gnome-panel-data                   |   16.756 |   321.86 | 0.001859 |    57.06 |   2.379 | 36 |
+     | gpc-4.1                            |  14.0108 |   289.86 | 0.001692 |    55.65 |   1.986 | 31 |
+     | gtwitter                           |  14.3458 |   305.86 | 0.002219 |    54.99 |   1.925 | 31 |
+     | guake                              |  14.0421 |   297.86 | 0.001973 |    54.78 |   1.886 | 30 |
+     | hal-cups-utils                     |  15.2316 |   305.86 | 0.001793 |    56.43 |   2.151 | 33 |
+     | idle                               |  16.8118 |   321.86 | 0.001808 |    55.81 |   2.414 | 36 |
+     | inetutils-syslogd                  |   16.749 |   321.86 | 0.001785 |    57.12 |   2.384 | 36 |
+     | kbd                                |  17.2297 |   321.86 | 0.001808 |    55.81 |   2.442 | 36 |
+     | kblocks                            |  16.9877 |   321.86 | 0.001877 |    56.02 |   2.444 | 36 |
+     | kdebase-bin                        |  17.2108 |   321.86 | 0.001755 |    56.09 |    2.44 | 36 |
+     | kdemultimedia-kio-plugins          |  17.0889 |   321.86 |  0.00181 |    56.34 |    2.42 | 36 |
+     | kdessh                             |  17.1147 |   321.86 | 0.001779 |    56.87 |   2.403 | 36 |
+     | kdesudo                            |  17.0233 |   321.86 | 0.001816 |    56.59 |   2.339 | 35 |
+     | kfilereplace                       |  17.2154 |   321.86 | 0.001758 |    56.40 |   2.424 | 36 |
+     | kjumpingcube                       |  16.6671 |   321.86 | 0.001751 |    57.27 |   2.409 | 36 |
+     | kmines                             |   17.006 |   321.86 | 0.001879 |    56.24 |   2.433 | 36 |
+     | knetwalk                           |  16.7861 |   321.86 | 0.001819 |    56.96 |   2.412 | 36 |
+     | kommander                          |  16.6853 |   321.86 | 0.001867 |    57.15 |   2.379 | 36 |
+     | konq-plugins                       |   16.949 |   321.86 | 0.001779 |    56.34 |   2.414 | 36 |
+     | kphotoalbum                        |  17.0421 |   321.86 |  0.00177 |    56.02 |   2.426 | 36 |
+     | ksystemlog                         |  16.9717 |   321.86 | 0.001853 |    57.18 |   2.397 | 36 |
+     | ktouch                             |  16.8874 |   321.86 |  0.00176 |    55.93 |   2.429 | 36 |
+     | kwin-style-crystal                 |  16.7946 |   321.86 | 0.001825 |    56.93 |   2.382 | 36 |
+     | libbsd-resource-perl               |   16.903 |   321.86 | 0.001746 |    56.87 |   2.373 | 36 |
+     | libcatalyst-perl                   |  16.8183 |   321.86 |  0.00184 |    57.12 |   2.382 | 36 |
+     | libcurses-perl                     |  16.8517 |   321.86 | 0.001845 |    56.27 |   2.424 | 36 |
+     | libcyrus-imap-perl22               |  15.2814 |   305.86 |  0.00177 |    56.37 |   2.157 | 33 |
+     | libdbd-pg-perl                     |  16.9002 |   321.86 | 0.001843 |    56.77 |   2.395 | 36 |
+     | libevolution3.0-cil                |  15.1186 |   305.86 | 0.001931 |    55.81 |   2.033 | 32 |
+     | libgnokii4                         |   16.849 |   321.86 | 0.001741 |    57.21 |   2.389 | 36 |
+     | libhtml-parser-perl                |  16.7357 |   321.86 | 0.001856 |    56.09 |   2.322 | 35 |
+     | libmail-spf-perl                   |  16.7392 |   321.86 | 0.001857 |    57.02 |   2.321 | 35 |
+     | libmono-addins-gui0.2-cil          |  16.9186 |   321.86 | 0.001788 |    56.34 |    2.42 | 36 |
+     | libmono-relaxng1.0-cil             |    16.76 |   321.86 | 0.001842 |    56.81 |   2.379 | 36 |
+     | libnkf-perl                        |  15.1421 |   305.86 |  0.00174 |    55.56 |   2.087 | 33 |
+     | libnspr4-dev                       |   16.745 |   321.86 | 0.001779 |    57.24 |   2.387 | 36 |
+     | libnss3-1d                         |  16.5166 |   321.86 | 0.001872 |    57.27 |   2.382 | 36 |
+     | libpango-perl                      |  14.5964 |   305.86 | 0.001795 |    56.06 |   2.048 | 32 |
+     | libpoe-perl                        |  17.1124 |   321.86 | 0.001824 |    56.93 |   2.385 | 36 |
+     | libtemplate-provider-encoding-perl |  16.5274 |   321.86 | 0.001919 |    56.59 |   2.319 | 35 |
+     | libwnck2.20-cil                    |  16.8014 |   321.86 | 0.001836 |    56.59 |   2.326 | 35 |
+     | lirc                               |  15.2175 |   305.86 | 0.001842 |    56.43 |   2.186 | 34 |
+     | mercurial-common                   |  16.8303 |   321.86 | 0.001808 |    56.12 |   2.412 | 36 |
+     | mono-debugger                      |  16.9205 |   321.86 | 0.001891 |    56.31 |    2.42 | 36 |
+     | mono-gac                           |  16.7622 |   321.86 | 0.001796 |    56.99 |   2.388 | 36 |
+     | mono-mcs                           |  16.9094 |   321.86 | 0.001858 |    56.77 |   2.397 | 36 |
+     | monodevelop-nunit                  |  16.8351 |   321.86 | 0.001784 |    56.31 |   2.414 | 36 |
+     | openoffice.org-draw                |  17.0151 |   321.86 | 0.001858 |    56.09 |    2.33 | 35 |
+     | openoffice.org-l10n-da             |  16.7194 |   321.86 | 0.001862 |    56.93 |   2.408 | 36 |
+     | openoffice.org-l10n-nl             |  17.0154 |   321.86 | 0.001775 |    55.81 |   2.426 | 36 |
+     | pidgin-plugin-pack                 |  14.8887 |   305.86 |   0.0018 |    55.77 |   2.029 | 32 |
+     | plasma-dataengines-workspace       |  17.0269 |   321.86 | 0.001836 |    56.56 |   2.423 | 36 |
+     | plasma-widgets-workspace           |  17.2447 |   321.86 | 0.001821 |    55.87 |   2.431 | 36 |
+     | pybackpack                         |  17.0736 |   321.86 | 0.001919 |    56.34 |   2.429 | 36 |
+     | python-cairo                       |  17.2538 |   321.86 | 0.001824 |    56.84 |   2.437 | 36 |
+     | python-hippocanvas                 |  14.7484 |   305.86 | 0.001773 |    55.84 |   2.029 | 32 |
+     | r-cran-car                         |  16.9271 |   321.86 | 0.001774 |    57.30 |   2.403 | 36 |
+     | r-cran-lme4                        |  17.0993 |   321.86 | 0.001876 |    56.12 |   2.421 | 36 |
+     | r-cran-rodbc                       |  16.8607 |   321.86 | 0.001833 |    56.96 |   2.383 | 36 |
+     | rand0c02bc                         |  7.49036 |   177.86 | 0.002227 |    49.96 |   0.859 | 16 |
+     | rand2d8467                         |  7.58557 |   185.86 | 0.002393 |    49.52 |   0.871 | 16 |
+     | rand43bd88                         |  7.25721 |   185.86 | 0.002675 |    50.49 |   0.875 | 16 |
+     | rand4bf850                         |  6.56145 |   161.86 | 0.002719 |    48.74 |   0.753 | 14 |
+     | rand65d021                         |  7.70242 |   177.86 | 0.002478 |    50.46 |   0.873 | 16 |
+     | rand8177e7                         |  7.74492 |   185.86 | 0.003462 |    51.77 |   0.944 | 17 |
+     | rand9e35f0                         |  0.86094 |    41.86 | 0.000466 |    22.05 |    0.09 |  3 |
+     | randa09fe9                         |  7.32208 |   169.86 | 0.002544 |    50.52 |   0.889 | 16 |
+     | randa13f2d                         | 0.775037 |    41.86 | 0.000427 |    21.64 |   0.059 |  2 |
+     | randa6997e                         |  8.83075 |   193.86 | 0.002484 |    50.11 |   1.081 | 19 |
+     | randaefc7c                         |  7.67682 |   161.86 | 0.001305 |    50.09 |    0.91 | 16 |
+     | randb87834                         |  7.52046 |   177.86 | 0.002825 |    50.15 |    0.87 | 16 |
+     | randbccf2d                         |  6.98394 |   169.86 | 0.002219 |    50.37 |   0.793 | 15 |
+     | randd1cab2                         |  7.58847 |   177.86 | 0.002758 |    50.02 |   0.861 | 16 |
+     | randf7d077                         |  7.84011 |   185.86 | 0.002566 |    49.93 |   0.944 | 17 |
+     | sonata                             |  17.0768 |   321.86 | 0.001798 |    56.43 |   2.421 | 36 |
+     | synaptic                           |  16.9266 |   321.86 | 0.001785 |    56.99 |   2.394 | 36 |
+     | system-config-printer              |  16.7792 |   321.86 | 0.001843 |    56.77 |   2.386 | 36 |
+     | tasque                             |  16.8754 |   321.86 | 0.001831 |    56.02 |   2.427 | 36 |
+     | texlive-generic-recommended        |  16.7509 |   321.86 |  0.00177 |    56.12 |   2.313 | 35 |
+     | txt2html                           |  16.5904 |   321.86 | 0.001898 |    56.99 |   2.331 | 35 |
+     | unattended-upgrades                |  16.7827 |   321.86 | 0.001868 |    55.87 |   2.411 | 36 |
+     | upstart-compat-sysv                |  15.4358 |   305.86 | 0.001731 |    56.37 |   2.198 | 34 |
+     | xvfb                               |  16.7687 |   321.86 | 0.001901 |    57.30 |   2.377 | 36 |
+     |------------------------------------+----------+----------+----------+----------+---------+----|
+
+
+**** TODO <2011-09-12 Mon> 					   :noexport:
+     This benchmarks resulted in strange results. They should be
+     compared against the ones the reducer output no solution for.
+
+     #+ATTR_LaTeX: longtable
+     |------------+------+----------+----------+----------+--------+----|
+     | Instance   | Read |      Mem |    Solve |  Mem (b) | GC (s) | GC |
+     |------------+------+----------+----------+----------+--------+----|
+     | randa491d5 | 6000 | 0.007771 | 0.000117 |  9493856 |      0 |  0 |
+     | randa65dfb | 6000 | 0.007259 | 0.000113 |  9493856 |      0 |  0 |
+     | randa65f48 | 6000 |   0.0071 | 0.000119 |  9493856 |      0 |  0 |
+     | randab5933 | 6000 | 0.007428 | 0.000118 |  9493856 |      0 |  0 |
+     | randaef248 | 6000 | 0.006946 | 0.000107 |  9493856 |      0 |  0 |
+     | randb3c96d | 6000 | 0.007281 | 0.000114 |  9493856 |      0 |  0 |
+     | randbbb4ba | 6000 | 0.007497 | 0.000116 |  9493856 |      0 |  0 |
+     | randcbf550 | 6000 | 0.007458 | 0.000112 |  9493856 |      0 |  0 |
+     | randcef367 | 6000 | 0.006931 | 0.000109 |  9493856 |      0 |  0 |
+     | randd6bc17 | 6000 | 0.090994 | 0.000122 | 13007072 |      0 |  0 |
+     | randdc506f | 6000 | 0.007471 | 0.000112 |  9493856 |      0 |  0 |
+     | randdd5509 | 6000 | 0.007169 | 0.000108 |  9493856 |      0 |  0 |
+     | rand03b0b5 | 6000 | 0.007735 | 0.000109 |  9493856 |      0 |  0 |
+     | rand13056c | 6000 | 0.007578 | 0.000113 |  9493856 |      0 |  0 |
+     | rand144372 | 6000 | 0.007021 |  0.00011 |  9493856 |      0 |  0 |
+     | rand1958fb | 6000 | 0.007017 | 0.000106 |  9493856 |      0 |  0 |
+     | rand199fd6 | 6000 | 0.007246 | 0.000111 |  9493856 |      0 |  0 |
+     | rand2d77b5 | 6000 | 0.007559 | 0.000113 |  9493856 |      0 |  0 |
+     | rand2fa1f8 | 6000 | 0.007479 | 0.000118 |  9493856 |      0 |  0 |
+     | rand35afbf | 6000 |   0.0072 |  0.00011 |  9493856 |      0 |  0 |
+     | rand35d0c8 | 6000 | 0.007061 | 0.000109 |  9493856 |      0 |  0 |
+     | rand396cf8 | 6000 | 0.007428 | 0.000116 |  9493856 |      0 |  0 |
+     | rand49e642 | 6000 | 0.007667 | 0.000121 |  9493856 |      0 |  0 |
+     | rand56b853 | 6000 |  0.00744 | 0.000122 |  9493856 |      0 |  0 |
+     | rand59f7dd | 6000 |  0.00733 | 0.000112 |  9493856 |      0 |  0 |
+     | rand5c0b12 | 6000 | 0.007245 | 0.000113 |  9493856 |      0 |  0 |
+     | rand601ba8 | 6000 | 0.007056 | 0.000111 |  9493856 |      0 |  0 |
+     | rand659e05 | 6000 | 0.007196 | 0.000111 |  9493856 |      0 |  0 |
+     | rand682c92 | 6000 | 0.007301 | 0.000122 |  9493856 |      0 |  0 |
+     | rand6c4744 | 6000 | 0.007024 | 0.000112 |  9493856 |      0 |  0 |
+     | rand6d579e | 6000 | 0.007029 | 0.000118 |  9493856 |      0 |  0 |
+     | rand6f4585 | 6000 |  0.00738 | 0.000119 |  9493856 |      0 |  0 |
+     | rand7e9372 | 6000 | 0.007097 | 0.000183 |  9493856 |      0 |  0 |
+     | rand88811a | 6000 | 0.007486 | 0.000122 |  9493856 |      0 |  0 |
+     | rand902db1 | 6000 | 0.007177 | 0.000109 |  9493856 |      0 |  0 |
+     | rand936b0d | 6000 | 0.006878 | 0.000113 |  9493856 |      0 |  0 |
+     | rande2165e | 6000 | 0.007125 | 0.000106 |  9493856 |      0 |  0 |
+     | rande22180 | 6000 | 0.006967 |  0.00011 |  9493856 |      0 |  0 |
+     | rande89f80 | 6000 | 0.007378 |  0.00011 |  9493856 |      0 |  0 |
+     | randea4da3 | 6000 | 0.007117 | 0.000113 |  9493856 |      0 |  0 |
+     | randee102b | 6000 | 0.007471 | 0.000121 |  9493856 |      0 |  0 |
+     | randfe95e3 | 6000 | 0.007809 | 0.000119 |  9493856 |      0 |  0 |
+     |------------+------+----------+----------+----------+--------+----|
     
 
-
-
-
-   Experiments were taken in:
+*** Experiments were taken in:
    #+BEGIN_EXAMPLE
    Darwin snyders.info.ucl.ac.be 10.8.0 Darwin Kernel Version 10.8.0. 
    root:xnu-1504.15.3~1/RELEASE_I386 i386
