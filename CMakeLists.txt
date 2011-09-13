@@ -396,7 +396,7 @@ set(CPREL_SRCS
   cprel/prop/tuple.hh
   cprel/prop/follow.hh
   cprel/prop/follow.cpp
-
+  cprel/prop/dom.cpp
 # branchers
   cprel/branch/branch.cpp
 )

@@ -318,6 +318,10 @@ void included(Gecode::Space& home, CPTupleVar t, CPRelVar R);
  * and the arity of \a t is not the same.
  */
 void excluded(Gecode::Space& home, CPTupleVar t, CPRelVar R);
+
+  void include(Gecode::Space& home, CPRelVar A, GRelation R);
+
+  void exclude(Gecode::Space& home, CPRelVar A, GRelation R); 
 /**
  * \brief Simple branching on relations.
  * \ingroup RelBranch
