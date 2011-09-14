@@ -366,7 +366,6 @@ include_directories(${Gecode_INCLUDE_DIRS})
 ##########################################################################
 set(CPREL_SRCS
   cprel/complement-view.hh
-  cprel/permuted-view.hh
   cprel/const-view.hh
   cprel/cprel.hh
   cprel/var.hh
@@ -386,6 +385,8 @@ set(CPREL_SRCS
   cprel/prop/and.hpp
   cprel/prop/equality.cpp
   cprel/prop/equality.hh
+  cprel/prop/permutation.cpp
+  cprel/prop/permutation.hh
   cprel/prop/join.hh
   cprel/prop/join.cpp
   cprel/prop/projection.cpp
@@ -508,6 +509,9 @@ add_custom_target(dist
   # test for the projection propagator
   add_executable(projection tests/projection.cpp)
   target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
+  # test for the projection propagator
+  add_executable(permutation tests/permutation.cpp)
+  target_link_libraries(permutation gecodecprel ${Gecode_LIBRARIES})
   # test for the join propagator
   add_executable(join tests/join.cpp)
   target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
