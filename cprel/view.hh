@@ -136,6 +136,5 @@ operator<<(std::basic_ostream<Char,Traits>& os, const CPRelView& R) {
 
 #include <cprel/const-view.hh>
 #include <cprel/complement-view.hh>
-#include <cprel/permuted-view.hh>
 
 #endif
