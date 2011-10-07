@@ -22,7 +22,7 @@ namespace MPG { namespace VarImpl {
       for (int i = 0; i < columns; i++) {
 	columns_[i] = BDDDomain(&factory_,i,maximum,columnVars.at(i));
       }
-      //std::cout << "Needed variables per column " << vars << std::endl;
+      std::cout << "Needed variables per column " << vars << std::endl;
     }
 
     Bdd DomainSpace::represent(std::initializer_list<int> tuple) {
@@ -168,5 +168,6 @@ namespace MPG { namespace VarImpl {
       }
       done = true;
     }
+
 
   }}

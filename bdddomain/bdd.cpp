@@ -65,6 +65,14 @@ namespace MPG { namespace VarImpl {
       bdd_ = bdd_ | other.bdd_;
     }
 
+    Bdd Bdd::forAll(const Bdd& cube) {
+      return bdd_.UnivAbstract(cube.bdd_);
+    }
+
+    Bdd Bdd::exists(const Bdd& cube) {
+      return bdd_.ExistAbstract(cube.bdd_);
+    }
+
     int Bdd::printdot_rec(std::ostream& os, int current, std::vector<bool>& visited,
 			  std::vector<int>& names) const {
 
@@ -97,16 +105,18 @@ namespace MPG { namespace VarImpl {
 	os << nodeId << " -> " << names.at(leftId) << " [style=dotted];" << std::endl;
 	current = l.printdot_rec(os, current, visited, names);
       }
-      
+
       // printing the right part of the bdd
       Bdd h = high();
       if (h.isZero() || h.isOne()) {
 	os << nodeName << " -> " << (h.isZero() ? 0 : 1) << " [style=filled];" << std::endl;
       } else {
 	int rightId = h.var() + 2;
+	std::cout << "Here??? " << rightId << " " << names.size() << std::endl;
 	if (names.at(rightId) == -1) {
 	  names[rightId] = ++current;
 	}
+	std::cout << "Here??? " << std::endl;
 	os << nodeId << " -> " << names.at(rightId) << " [style=filled];" << std::endl;
 	current = h.printdot_rec(os, current, visited, names);
       }

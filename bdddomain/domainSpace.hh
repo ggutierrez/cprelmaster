@@ -5,6 +5,7 @@
 #include <bdddomain/domain.hh>
 #include <initializer_list>
 #include <vector>
+#include <map>
 
 namespace MPG { namespace VarImpl {
     
@@ -41,8 +42,50 @@ namespace MPG { namespace VarImpl {
        */
       Bdd represent(std::initializer_list<int> tuple);
       /**
-       * \brief Returns a cube with the bdd variables used to represent
+       * \brief Returns a cube with the bdd variables used to represent column \a c
        */
+      Bdd cube(int c) {
+	assert(c >= 0);
+	assert( static_cast<unsigned int>(c) < columns_.size());
+	return columns_.at(c).cube();
+      }
+      /**
+       * \brief Returns a cube with the bdd variables used to
+       * represent the columns in the range first to last (inclusive).
+       */
+      Bdd cube(int first, int last) {
+	assert(first >= 0);
+	assert(first <= last);
+	assert(static_cast<unsigned int>(last) < columns_.size());
+	Bdd c = factory_.one();
+	for (int i = first; i <= last; i++)
+	  c.andWith(cube(i));
+	return c;
+      }
+      
+      /**
+       * \brief Augments the content of \a permutation to store the
+       * permutation needed to swap \a col0 and \a col1.
+       */
+      void  permute(int col0, int col1, std::map<int,int>& permutation) {
+	auto& vars0 = columns_.at(col0).vars();
+	auto& vars1 = columns_.at(col1).vars();
+
+	for (unsigned int i = 0; i < vars0.size(); i++) {
+	  permutation[vars0.at(i)] = vars1.at(i);
+	}
+	
+	for (auto p : permutation) {
+	  std::cout << "Entry in perm " << p.first << " --> " << p.second << std::endl;
+	}
+      }
+      std::vector<int> permute(int col0, int col1) {
+	std::map<int,int> permutation;
+	permute(col0,col1,permutation);
+	std::vector<int> result;
+	// complete!!
+	return result;
+      }
       /**
        * \brief Prints \a bdd as a set to \a os.
        */

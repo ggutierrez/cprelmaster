@@ -101,7 +101,15 @@ namespace MPG { namespace VarImpl {
       int level2var(int level) const {
 	return cudd.ReadInvPerm(level);
       }
-
+      /**
+       * \brief Returns a cube of the variables for the given array of indices.
+       *
+       * The function in Cudd takes a c array, to avoid const problems
+       * we do not take a reference to the vector but a copy of it.
+       */
+      Bdd cube(std::vector<int> indices) {
+	return cudd.IndicesToCube(&indices[0],indices.size());
+      }
     };
     
   }}

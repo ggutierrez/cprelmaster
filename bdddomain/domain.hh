@@ -33,10 +33,6 @@ namespace MPG { namespace VarImpl {
        * \a size of the domain.
        */
       std::vector<int> varIndexes_;
-      /**
-       * \brief The actual bdd used to represent the column
-       */
-      Bdd var_;
     public:
       /// Default constructor
       BDDDomain(void) {}
@@ -91,6 +87,12 @@ namespace MPG { namespace VarImpl {
        */
       const std::vector<int>& vars(void) const {
 	return varIndexes_;
+      }
+      /**
+       * \brief Returns a cube with the variables used to represent the domain
+       */
+      Bdd cube(void) {
+	return factory_->cube(varIndexes_);
       }
     };
   }}

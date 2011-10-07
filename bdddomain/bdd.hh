@@ -73,6 +73,16 @@ namespace MPG { namespace VarImpl {
        */
       void orWith(const Bdd& other);
       /**
+       * \brief Returns the result of universaly quenatifying this bdd
+       * with respect to \a cube
+       */
+      Bdd forAll(const Bdd& cube);
+      /**
+       * \brief Returns the result of existentially quenatifying this
+       * bdd with respect to \a cube
+       */
+      Bdd exists(const Bdd& cube);
+      /**
        * \brief Outputs the bdd in dot format to \a os
        */
       void printDot(std::ostream& os) const;
