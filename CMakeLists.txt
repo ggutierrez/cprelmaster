@@ -129,6 +129,12 @@ set(UTIL_SRCS
   util.h
 )
 
+set(OBJ_SRCS
+  cuddObj.cc
+#Headers
+  cuddObj.hh
+)
+
 # Cudd libraries definition
 set(CUDD_SRCS_)
 foreach(file ${CUDD_SRCS})
@@ -149,10 +155,20 @@ add_library(st ${ST_SRCS})
 add_library(mpr ${MTR_SRCS})
 add_library(epd ${EPD_SRCS})
 
+set(OBJ_SRCS_)
+foreach(file ${OBJ_SRCS})
+  list(APPEND OBJ_SRCS_ ${CUDD_SOURCES}/obj/${file})
+endforeach()
+
+add_library(cuddobj ${OBJ_SRCS_})
+
+
 target_link_libraries(mpr util)
 target_link_libraries(epd util)
 target_link_libraries(st util)
 target_link_libraries(cudd util st mpr epd)
+target_link_libraries(cuddobj cudd)
+
 ## NOTE about warnings:
 ## When CUDF is compiled by gcc there are a lot of warnings signaling
 ## unused parameters. As they can hide other important warnings of this project
@@ -211,7 +227,7 @@ set_source_files_properties(
     ${CUDD_SRCS_} ${UTIL_SRCS_} ${ST_SRCS} ${MTR_SRCS} ${EPD_SRCS}
     PROPERTIES COMPILE_FLAGS ${CUDD_SPECIFIC_FLAGS}
 )
-set(CUDD_LIBS cudd util st mpr epd)
+set(CUDD_LIBS cudd util st mpr epd cuddobj)
 ##########################################################################
 # Installation of CUDD
 ##########################################################################
@@ -281,6 +297,19 @@ set(BDDDOMAIN_SRCS_)
 foreach(file ${BDDDOMAIN_SRCS})
   list(APPEND BDDDOMAIN_SRCS_ "bdddomain/${file}")
 endforeach()
+
+set(NEWBDDDOMAIN_SRCS
+  cuddFactory.hh bdd.hh bdd.cpp domain.hh domainSpace.hh
+)
+
+set(NEWBDDDOMAIN_SRCS_)
+foreach(file ${NEWBDDDOMAIN_SRCS})
+  list(APPEND NEWBDDDOMAIN_SRCS_ "bdddomain/${file}")
+endforeach()
+
+add_library(newbdddomain ${NEWBDDDOMAIN_SRCS_})
+target_link_libraries(newbdddomain ${CUDD_LIBS})
+
 
 ## This files are added to this module because it is shared by cprel and cptuple
 ## and because so far, creating another module just for this does not make to much
@@ -548,3 +577,6 @@ add_custom_target(dist
 # test for the follow propagator
 add_executable(follow tests/follow.cpp)
 target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
+
+add_executable(fdddomain tests/fdddomain.cpp)
+target_link_libraries(fdddomain newbdddomain)
