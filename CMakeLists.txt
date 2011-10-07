@@ -299,7 +299,7 @@ foreach(file ${BDDDOMAIN_SRCS})
 endforeach()
 
 set(NEWBDDDOMAIN_SRCS
-  cuddFactory.hh bdd.hh bdd.cpp domain.hh domainSpace.hh
+  cuddFactory.hh bdd.hh bdd.cpp domain.hh domainSpace.hh domainSpace.cpp
 )
 
 set(NEWBDDDOMAIN_SRCS_)
