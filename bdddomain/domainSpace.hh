@@ -28,6 +28,17 @@ namespace MPG { namespace VarImpl {
     private:
       CUDDBDDFactory factory_;
       std::vector<BDDDomain> columns_;
+      /**
+       * \brief Number of used variables at the bdd level.
+       *
+       * It is assumed that everything happen trough the Domainspace
+       * interface. This means that no nodes are directly created at
+       * the bdd level and that every bdd is created by the manager or
+       * by operating bdds created by the manager. This has a possible
+       * impact in the permutation operations: in order to perform a
+       * permutation we need to specify every variable in the manager
+       * and the variable it will be permuted with.
+       */
       int usedVariables;
     public:
       /**
@@ -63,29 +74,6 @@ namespace MPG { namespace VarImpl {
 	return c;
       }
       
-      /**
-       * \brief Augments the content of \a permutation to store the
-       * permutation needed to swap \a col0 and \a col1.
-       */
-      void  permute(int col0, int col1, std::map<int,int>& permutation) {
-	auto& vars0 = columns_.at(col0).vars();
-	auto& vars1 = columns_.at(col1).vars();
-
-	for (unsigned int i = 0; i < vars0.size(); i++) {
-	  permutation[vars0.at(i)] = vars1.at(i);
-	}
-	
-	for (auto p : permutation) {
-	  std::cout << "Entry in perm " << p.first << " --> " << p.second << std::endl;
-	}
-      }
-      std::vector<int> permute(int col0, int col1) {
-	std::map<int,int> permutation;
-	permute(col0,col1,permutation);
-	std::vector<int> result;
-	// complete!!
-	return result;
-      }
       /**
        * \brief Prints \a bdd as a set to \a os.
        */

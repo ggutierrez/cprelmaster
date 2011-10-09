@@ -73,6 +73,25 @@ namespace MPG { namespace VarImpl {
       return bdd_.ExistAbstract(cube.bdd_);
     }
 
+    Bdd Bdd::permute(const Bdd& s0, const Bdd& s1) {
+      std::vector<DdNode*> varsS0, varsS1;
+      Bdd x(s0), y(s1);
+      // assumes s0 and s1 are cubes of the same number of variables
+      while (!x.isOne()) {
+	varsS0.push_back(x.bdd_.getNode());
+	x = x.high();
+	varsS1.push_back(y.bdd_.getNode());
+	y = y.high();
+      }
+      assert(y.isOne());
+
+      // transform both sets into BDDvectors
+      BDDvector orig(varsS0.size(), x.bdd_.manager(),&varsS0[0]);
+      BDDvector dest(varsS1.size(), x.bdd_.manager(),&varsS1[0]);
+      // return the permutation
+      return bdd_.SwapVariables(orig,dest);
+    }
+
     int Bdd::printdot_rec(std::ostream& os, int current, std::vector<bool>& visited,
 			  std::vector<int>& names) const {
 

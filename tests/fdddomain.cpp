@@ -15,14 +15,18 @@ int main(void) {
   x.orWith(y);
   x.orWith(z);
 
-  MPG::VarImpl::Bdd e = x.exists(ds.cube(0,1));
+  //MPG::VarImpl::Bdd e = x.exists(ds.cube(0,1));
   //x.orWith(z);
   //std::cout << "Equal to zero? " << x.isZero() << std::endl;
   //x.printDot(std::cout);
-  //ds.print(std::cout,x);
-  //std::cout << "And now the quantification " << std::endl;
-  //ds.print(std::cout, e);
-  ds.print(std::cout,z,1);
-  //ds.permute(0,2);
+  ds.print(std::cout,x);
+
+  auto swap = x.permute(ds.cube(0), ds.cube(2));
+
+  std::cout << "And now the quantification " << std::endl;
+  
+  ds.print(std::cout, swap);
+  //ds.print(std::cout,z,1);
+
   return 0;
 }
