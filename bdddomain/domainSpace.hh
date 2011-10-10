@@ -55,28 +55,12 @@ namespace MPG { namespace VarImpl {
       /**
        * \brief Returns a cube with the bdd variables used to represent column \a c
        */
-      Bdd cube(int c) {
-	/// \todo These tests should be changed by exceptions. I do
-	/// not know much about how this will affect the performace
-	/// because this method can be called a lot.
-	assert(c >= 0);
-	assert( static_cast<unsigned int>(c) < columns_.size());
-	return columns_.at(c).cube();
-      }
+      Bdd cube(int c);
       /**
        * \brief Returns a cube with the bdd variables used to
        * represent the columns in the range first to last (inclusive).
        */
-      Bdd cube(int first, int last) {
-	assert(first >= 0);
-	assert(first <= last);
-	assert(static_cast<unsigned int>(last) < columns_.size());
-	Bdd c = factory_.one();
-	for (int i = first; i <= last; i++)
-	  c.andWith(cube(i));
-	return c;
-      }
-      
+      Bdd cube(int first, int last);      
       /**
        * \brief Prints \a bdd as a set to \a os.
        */

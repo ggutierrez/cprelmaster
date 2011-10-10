@@ -41,6 +41,26 @@ namespace MPG { namespace VarImpl {
       return r;
     }
 
+    Bdd DomainSpace::cube(int c) {
+      /// \todo These tests should be changed by exceptions. I do
+      /// not know much about how this will affect the performace
+      /// because this method can be called a lot.
+      assert(c >= 0);
+      assert( static_cast<unsigned int>(c) < columns_.size());
+      return columns_.at(c).cube();
+    }
+
+    Bdd DomainSpace::cube(int first, int last) {
+      assert(first >= 0);
+      assert(first <= last);
+      assert(static_cast<unsigned int>(last) < columns_.size());
+      Bdd c = factory_.one();
+      for (int i = first; i <= last; i++)
+	c.andWith(cube(i));
+      return c;
+    }
+
+
     void printHeader(std::ostream& os, int cols) {
       os << "|";
       for (int i = 0; i < cols; i++) {
@@ -212,5 +232,6 @@ namespace MPG { namespace VarImpl {
       done = true;
     }
 
+    
 
   }}
