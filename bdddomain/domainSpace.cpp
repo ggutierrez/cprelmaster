@@ -41,18 +41,58 @@ namespace MPG { namespace VarImpl {
       return r;
     }
 
+    void printHeader(std::ostream& os, int cols) {
+      os << "|";
+      for (int i = 0; i < cols; i++) {
+	os << "---";
+	if (i != cols - 1)
+	  os << "+";
+      }
+      os << "|" << std::endl << "|";
+      for (int i = 0; i < cols; i++)
+	os << "Col(" << i << ") |";
+      
+      os << std::endl << "|";
+      for (int i = 0; i < cols; i++) {
+	os << "---";
+	if (i != cols - 1)
+	  os << "+";
+      }
+      os << "|" << std::endl;      
+    }
+
+    void printFooter(std::ostream& os, int cols) {
+      os << "|";
+      for (int i = 0; i < cols; i++) {
+	os << "---";
+	if (i != cols - 1)
+	  os << "+";
+      }
+      os << "|" << std::endl;
+    }
+
     void DomainSpace::print(std::ostream& os, Bdd& bdd) {
+      std::cout << "From the other print " <<  std::endl;
+      printHeader(os, columns_.size());
       std::vector<int> set(usedVariables,0);
       printsetRec(os, bdd, set, columns_.size());
+      printFooter(os, columns_.size());
     }
 
     void DomainSpace::print(std::ostream& os, Bdd& bdd, int n) {
+      std::cout << "From print " << n << std::endl;
       if (static_cast<unsigned int>(n) > columns_.size()) {
 	std::cout << "Asked to print more columns that existent " << n << std::endl;
 	assert(false);
+      } 
+      if (bdd.isZero()) {
+	os << "Empty" << std::endl;
+      } else {
+	printHeader(os,n);
+	std::vector<int> set(usedVariables,0);
+	printsetRec(os, bdd, set, n);
+	printFooter(os,n);
       }
-      std::vector<int> set(usedVariables,0);
-      printsetRec(os, bdd, set, n);
     }
 
     void DomainSpace::printSetHelper(OutputBuffer& ob, int value, int i, std::vector<int>& set,
@@ -76,7 +116,8 @@ namespace MPG { namespace VarImpl {
 	return;
       } else if (bdd.isOne()) {
 	// for now print set
-	os << "<";
+	//os << "<";
+	os << "|";
 
 	bool first = true;
 	bool used = false;
@@ -91,9 +132,10 @@ namespace MPG { namespace VarImpl {
 
 	  if (used) {
 	    if (!first)
-	      os << ", ";
+	      //os << ", ";
+	      os << "| ";
 	    first = false;
-	    os << "\"" << n << "\":";
+	    //os << "\"" << n << "\":";
 	      
 	    std::vector<int> var(domain_n_ivar);
 	    int pos = 0;
@@ -124,7 +166,8 @@ namespace MPG { namespace VarImpl {
 	    }
 	  }
 	}
-	os << ">" << std::endl;
+	//os << ">" << std::endl;
+	os << "|" << std::endl;
       } else {
 	// we are in a node
 	set[bdd.var()] = 1;

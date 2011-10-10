@@ -86,7 +86,10 @@ namespace MPG { namespace VarImpl {
        * \brief Returns a bdd representing the permutation of the two
        * sets of variables \a s0 and \a s1.
        *
-       * Both sets are cubes of varibles and are assumed to be disjoint.
+       * There are several assumptions that are made on how the sets
+       * of variables are represented:
+       * - Both sets are cubes of varibles
+       * - They represent a disjoint set
        */
       Bdd permute(const Bdd& s0, const Bdd& s1);
       /**
@@ -98,7 +101,6 @@ namespace MPG { namespace VarImpl {
        * \brief Helper function to print the bdd in dot format
        */
       int printdot_rec(std::ostream& os, int current, std::vector<bool>& visited, std::vector<int>& names) const;
-
     };
     
   }}

@@ -56,6 +56,9 @@ namespace MPG { namespace VarImpl {
        * \brief Returns a cube with the bdd variables used to represent column \a c
        */
       Bdd cube(int c) {
+	/// \todo These tests should be changed by exceptions. I do
+	/// not know much about how this will affect the performace
+	/// because this method can be called a lot.
 	assert(c >= 0);
 	assert( static_cast<unsigned int>(c) < columns_.size());
 	return columns_.at(c).cube();

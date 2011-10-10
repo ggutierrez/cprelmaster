@@ -83,6 +83,7 @@ namespace MPG { namespace VarImpl {
 	varsS1.push_back(y.bdd_.getNode());
 	y = y.high();
       }
+      // ensure both cubes have the same number of variables.
       assert(y.isOne());
 
       // transform both sets into BDDvectors
@@ -163,5 +164,5 @@ namespace MPG { namespace VarImpl {
 	os << "}" << std::endl;
       }
     }
-    
+
   }}
