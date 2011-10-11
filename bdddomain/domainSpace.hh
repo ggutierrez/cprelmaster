@@ -60,7 +60,34 @@ namespace MPG { namespace VarImpl {
        * \brief Returns a cube with the bdd variables used to
        * represent the columns in the range first to last (inclusive).
        */
-      Bdd cube(int first, int last);      
+      Bdd cube(int first, int last);
+      /**
+       * \brief Returns the constant zero
+       */
+      Bdd zero(void);
+      /**
+       * \brief Returns the constant one
+       */
+      Bdd one(void);
+      /**
+       * \brief Returns a permutation specification that moves the
+       * first \a x columns \a n possitions to the right.
+       *
+       * This method does not perform any change, it just returns the
+       * permutation that has to be applied to a bdd in order to
+       * produce the effect of shifting the columns.
+       */
+
+      //std::vector<int> shiftRight(int x, int n);
+      /**
+       * \brief Returns a permutation specification that when applied
+       * to a BDD moves the first \a x columns \a n possitions to the
+       * left.
+       *
+       * The columns that gets out of the relation by the movement are
+       * existentially quantified.
+       */
+      //std::vector<int> shiftLeft(int x, int n);
       /**
        * \brief Prints \a bdd as a set to \a os.
        */
@@ -104,6 +131,11 @@ namespace MPG { namespace VarImpl {
        * \brief Helper method for printing \a bdd as a set to \a os.
        */
       void printsetRec(std::ostream& os, Bdd& bdd, std::vector<int>& set, int numCols);
+      /**
+       * \brief Trnaslate the column permutation represented by \a p
+       * into a bdd variable permutation.
+       */
+      std::vector<int> transformPerm(const std::vector<int>& p) const;
     };
   }}
 

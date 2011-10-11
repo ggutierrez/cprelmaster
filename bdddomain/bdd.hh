@@ -93,6 +93,14 @@ namespace MPG { namespace VarImpl {
        */
       Bdd permute(const Bdd& s0, const Bdd& s1);
       /**
+       * \brief Return the number of minterms represented in the bdd.
+       */
+      double countMinterm(int vars) const;
+      /**
+       * \brief Returns the bdd resulting on applying the permutation specified by \a perm
+       */
+      //Bdd permute(std::vector<int>& perm) const;
+      /**
        * \brief Outputs the bdd in dot format to \a os
        */
       void printDot(std::ostream& os) const;

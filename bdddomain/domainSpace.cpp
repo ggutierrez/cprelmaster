@@ -1,4 +1,5 @@
 #include <bdddomain/domainSpace.hh>
+#include <algorithm>
 
 namespace MPG { namespace VarImpl {
 
@@ -60,7 +61,70 @@ namespace MPG { namespace VarImpl {
       return c;
     }
 
+    Bdd DomainSpace::zero(void) {
+      return factory_.zero();
+    }
 
+    Bdd DomainSpace::one(void) {
+      return factory_.one();
+    }
+    
+
+    std::vector<int> DomainSpace::transformPerm(const std::vector<int>& p) const {
+      std::vector<int> perm(usedVariables,-1);
+      {
+	int i = 0;
+	for (auto& e : perm) {
+	  e = i; i++;
+	}
+      }
+
+      int source = 0;
+      for (auto dest : p) {
+	std::cout << "Source " << source << " dest: " << dest << std::endl;
+	auto sourceVars = columns_.at(source).vars();
+	auto targetVars = columns_.at(dest).vars();
+	for (unsigned int i = 0; i < sourceVars.size(); i++) {
+	  perm[sourceVars.at(i)] = targetVars.at(i);
+	  //std::cout << "\tPermutation " << sourceVars.at(i) << " ---- " 
+	  //<< targetVars.at(i) << std::endl;
+	}
+	source++;
+      }
+      return perm;
+    }
+    /*
+    std::vector<int> DomainSpace::shiftRight(int x, int n) {
+      assert((n + x) <= columns_.size() && "the shift cannot be carried out");
+      std::vector<int> colPerm(columns_.size(),-1);
+      for (int c = 0; static_cast<unsigned int>(c) < columns_.size(); c++) {
+	if (c < x)  colPerm[c] = c + n;
+	else if (c >= x && c < x+n) colPerm[c] = c - x;
+	else colPerm[c] = c;
+      }
+      return transformPerm(colPerm);
+    }
+    */
+    /*
+    std::vector<int> DomainSpace::shiftLeft(int x, int n) {
+      assert(false);
+      //assert(static_cast<unsigned int>(x) >= columns_.size() && "the shift cannot be carried out");
+      std::vector<int> colPerm(columns_.size(),-1);
+      for (int c = 0; static_cast<unsigned int>(c) < columns_.size(); c++) {
+	if (c < x)  {
+	  std::cout << "Desapear " << c << " becomes " << (columns_.size() - n - 1) << std::endl;
+	  colPerm[c] = c;
+	} else if (c >= x && c < x+n) {
+	  std::cout << "Moves " <<  c << " becomes " << (c - n) << std::endl;
+	  colPerm[c] = c;
+	  } else {
+	  std::cout << "The same "  << c << std::endl;
+	  colPerm[c] = c;
+	}
+      }
+      return transformPerm(colPerm);
+    }
+    */
     void printHeader(std::ostream& os, int cols) {
       os << "|";
       for (int i = 0; i < cols; i++) {
@@ -92,7 +156,13 @@ namespace MPG { namespace VarImpl {
     }
 
     void DomainSpace::print(std::ostream& os, Bdd& bdd) {
-      std::cout << "From the other print " <<  std::endl;
+      if (bdd.isOne()) {
+	os << "Full";
+	return;
+      } else if (bdd.isZero()) {
+	os << "Empty";
+	return;
+      }
       printHeader(os, columns_.size());
       std::vector<int> set(usedVariables,0);
       printsetRec(os, bdd, set, columns_.size());
@@ -100,12 +170,13 @@ namespace MPG { namespace VarImpl {
     }
 
     void DomainSpace::print(std::ostream& os, Bdd& bdd, int n) {
-      std::cout << "From print " << n << std::endl;
       if (static_cast<unsigned int>(n) > columns_.size()) {
 	std::cout << "Asked to print more columns that existent " << n << std::endl;
 	assert(false);
       } 
-      if (bdd.isZero()) {
+      if (bdd.isOne()) {
+	os << "Full";
+      } else if (bdd.isZero()) {
 	os << "Empty" << std::endl;
       } else {
 	printHeader(os,n);

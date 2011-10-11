@@ -68,7 +68,7 @@ namespace MPG { namespace VarImpl {
       /// Destructor
       ~CUDDBDDFactory(void) {
 	auto references = Cudd_CheckZeroRef(cudd.getManager());
-	std::cout << "Destroy bdd factory: " <<  references << std::endl;
+	std::cout << "Destroyed bdd factory: " <<  references << std::endl;
       }
       /// Returns a bdd representing zero
       Bdd zero(void) {

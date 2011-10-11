@@ -1,4 +1,5 @@
 #include <bdddomain/bdd.hh>
+#include <algorithm>
 
 namespace MPG { namespace VarImpl {
     
@@ -93,6 +94,15 @@ namespace MPG { namespace VarImpl {
       return bdd_.SwapVariables(orig,dest);
     }
 
+    double Bdd::countMinterm(int vars) const {
+      return bdd_.CountMinterm(vars);
+    }
+
+    /*    
+    Bdd Bdd::permute(std::vector<int>& perm) const {
+      return bdd_.Permute(&perm[0]);
+    }
+    */
     int Bdd::printdot_rec(std::ostream& os, int current, std::vector<bool>& visited,
 			  std::vector<int>& names) const {
 
