@@ -52,6 +52,9 @@ namespace MPG { namespace VarImpl {
        * \brief Returns a bdd representing the tuple descirbed by the list.
        */
       Bdd represent(std::initializer_list<int> tuple);
+
+      template <typename It>
+      Bdd represent(It begin, It end);
       /**
        * \brief Returns a cube with the bdd variables used to represent column \a c
        */
@@ -137,6 +140,19 @@ namespace MPG { namespace VarImpl {
        */
       std::vector<int> transformPerm(const std::vector<int>& p) const;
     };
+
+    template <typename It>
+    Bdd DomainSpace::represent(It begin, It end) {
+      Bdd r = factory_.one();
+      int i = 0;
+      for (; begin != end; ++begin) {
+	assert(static_cast<unsigned int>(i) < columns_.size() &&
+	       "Not enough columns in the domain space to represent the tuple");
+	r.andWith(columns_[i].ithVar(*begin));
+	i++;
+      }
+      return r;
+    }
   }}
 
 #endif

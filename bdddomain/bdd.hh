@@ -101,6 +101,10 @@ namespace MPG { namespace VarImpl {
        */
       //Bdd permute(std::vector<int>& perm) const;
       /**
+       * \brief Tests if the bdd is equal to \a other
+       */
+      bool isEqual(const Bdd& other) const;
+      /**
        * \brief Outputs the bdd in dot format to \a os
        */
       void printDot(std::ostream& os) const;
@@ -110,7 +114,11 @@ namespace MPG { namespace VarImpl {
        */
       int printdot_rec(std::ostream& os, int current, std::vector<bool>& visited, std::vector<int>& names) const;
     };
-    
+
+    /**
+     * \brief Tests if \a f and \a g are the same
+     */
+    bool operator == (const Bdd& f, const Bdd& g);
   }}
 
 #endif

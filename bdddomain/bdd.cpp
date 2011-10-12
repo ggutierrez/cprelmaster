@@ -98,6 +98,9 @@ namespace MPG { namespace VarImpl {
       return bdd_.CountMinterm(vars);
     }
 
+    bool Bdd::isEqual(const Bdd& other) const {
+      return bdd_ == other.bdd_;
+    }
     /*    
     Bdd Bdd::permute(std::vector<int>& perm) const {
       return bdd_.Permute(&perm[0]);
@@ -173,6 +176,10 @@ namespace MPG { namespace VarImpl {
 	
 	os << "}" << std::endl;
       }
+    }
+
+    bool operator == (const Bdd& f, const Bdd& g) {
+      return f.isEqual(g);
     }
 
   }}
