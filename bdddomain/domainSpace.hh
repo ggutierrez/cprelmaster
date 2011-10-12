@@ -73,6 +73,14 @@ namespace MPG { namespace VarImpl {
        */
       Bdd one(void);
       /**
+       * \brief Returns the maximum value that can be represented in any of the columns
+       */
+      int maximum(void) const;
+      /**
+       * \brief Returns the number of bdd variables used per each column
+       */
+      int varsPerColumn(void) const;
+      /**
        * \brief Returns a permutation specification that moves the
        * first \a x columns \a n possitions to the right.
        *

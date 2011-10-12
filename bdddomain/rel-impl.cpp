@@ -1,5 +1,4 @@
 #include <iostream>
-#include <bdddomain/encoding.hh>
 #include <bdddomain/rel-impl.hh>
 
 using std::pair;
@@ -7,293 +6,286 @@ using std::vector;
 
 namespace MPG { namespace VarImpl {
 
-RelationImpl::RelationImpl(DdNode *n, int a)
-  : bdd_(n), arity_(a) {
-  Cudd_Ref(bdd_);
-}
+    RelationImpl::RelationImpl(Bdd n, int a)
+      : bdd_(n), arity_(a) {}
 
-RelationImpl::RelationImpl(int a)
-  : bdd_(zero()), arity_(a) {
-  Cudd_Ref(bdd_);
-}
+    RelationImpl::RelationImpl(int a)
+      : bdd_(zero()), arity_(a) {}
 
-RelationImpl::RelationImpl(const RelationImpl &r)
-  : bdd_(r.bdd_), arity_(r.arity_){
-  Cudd_Ref(bdd_);
-}
+    RelationImpl::RelationImpl(const RelationImpl &r)
+      : bdd_(r.bdd_), arity_(r.arity_){}
 
-RelationImpl& RelationImpl::operator=(const RelationImpl& right) {
-  if (this == &right) return *this;
-  swap(right);
-  return *this;
-}
+    RelationImpl& RelationImpl::operator=(const RelationImpl& right) {
+      if (this == &right) return *this;
+      swap(right);
+      return *this;
+    }
 
-RelationImpl RelationImpl::create_full(int a) {
-  return RelationImpl(one(),a);
-}
+    RelationImpl RelationImpl::create_full(int a) {
+      return RelationImpl(one(),a);
+    }
 
-RelationImpl RelationImpl::create_fromBdd(DdNode* b, int a) {
-  return RelationImpl(b,a);
-}
+    RelationImpl RelationImpl::create_fromBdd(Bdd b, int a) {
+      return RelationImpl(b,a);
+    }
 
-void RelationImpl::swap(const RelationImpl& r) {
-  Cudd_RecursiveDeref(dd(),bdd_);
-  bdd_ = r.bdd_;
-  arity_ = r.arity_;
-  Cudd_Ref(bdd_);
-}
+    void RelationImpl::swap(const RelationImpl& r) {
+      bdd_ = r.bdd_;
+      arity_ = r.arity_;
+    }
 
-RelationImpl::~RelationImpl(void) {
-  Cudd_RecursiveDeref(dd(),bdd_);
-}
+    RelationImpl::~RelationImpl(void) {}
 
-int RelationImpl::arity(void) const {
-  return arity_;
-}
+    int RelationImpl::arity(void) const {
+      return arity_;
+    }
 
-bool RelationImpl::empty(void) const {
-  return bdd_ == zero();
-}
+    bool RelationImpl::empty(void) const {
+      return bdd_ == zero();
+    }
 
-bool RelationImpl::universe(void) const {
-  return bdd_ == one();
-}
+    bool RelationImpl::universe(void) const {
+      return bdd_ == one();
+    }
 
-void RelationImpl::add(const Tuple& t) {
-  assert(arity_ == t.arity());
-  DdNode *et = t.getBDD();
-  Cudd_Ref(et);
-  DdNode *tmp = Cudd_bddOr(dd(),bdd_,et);
-  Cudd_Ref(tmp);
-  Cudd_RecursiveDeref(dd(),et);
-  Cudd_RecursiveDeref(dd(),bdd_);
-  bdd_ = tmp;
-}
+    void RelationImpl::add(const Tuple& t) {
+      assert(arity_ == t.arity());
+      bdd_.orWith(t.getBDD());
+    }
 
-void RelationImpl::remove(const Tuple& t) {
-  assert(arity_ == t.arity());
-  DdNode *et = t.getBDD();
-  Cudd_Ref(et);
-  DdNode *tmp = Cudd_bddAnd(dd(),bdd_,Cudd_Not(et));
-  Cudd_Ref(tmp);
-  Cudd_RecursiveDeref(dd(),et);
-  Cudd_RecursiveDeref(dd(),bdd_);
-  bdd_ = tmp;
-}
+    void RelationImpl::remove(const Tuple& t) {
+      assert(arity_ == t.arity());
+      bdd_.andWith(!t.getBDD());
+    }
 
-double RelationImpl::cardinality(void) const {
-  return Cudd_CountMinterm(dd(),bdd_,arity_ << Limits::bbv);
-}
+    double RelationImpl::cardinality(void) const {
+      if (bdd_.isOne())
+	return domain().maximum();
+      else {
+	return bdd_.countMinterm(domain().varsPerColumn() * arity_);
+      }
+    }
 
-void RelationImpl::add(const RelationImpl& r) {
-  assert(arity_ == r.arity_);
-  DdNode *bddr = r.bdd_;
-  DdNode *tmp = Cudd_bddOr(dd(),bdd_,bddr);
-  Cudd_Ref(tmp);
-  Cudd_RecursiveDeref(dd(),bdd_);
-  bdd_ = tmp;
-}
+    void RelationImpl::add(const RelationImpl& r) {
+      assert(arity_ == r.arity_);
+      bdd_.orWith(r.bdd_);
+    }
 
-void RelationImpl::remove(const RelationImpl& r) {
-  assert(arity_ == r.arity_);
-  DdNode *bddr = r.bdd_;
-  DdNode *tmp = Cudd_bddAnd(dd(),bdd_,Cudd_Not(bddr));
-  Cudd_Ref(tmp);
-  Cudd_RecursiveDeref(dd(),bdd_);
-  bdd_ = tmp;
-}
+    void RelationImpl::remove(const RelationImpl& r) {
+      assert(arity_ == r.arity_);
+      bdd_.andWith(!r.bdd_);
+    }
 
-void RelationImpl::intersect(const RelationImpl& r) {
-  assert(arity_ == r.arity_);
-  DdNode *tmp = Cudd_bddAnd(dd(),bdd_,r.bdd_);
-  Cudd_Ref(tmp);
-  Cudd_RecursiveDeref(dd(),bdd_);
-  bdd_=tmp;
-}
+    void RelationImpl::intersect(const RelationImpl& r) {
+      assert(arity_ == r.arity_);
+      bdd_.andWith(r.bdd_);
+    }
 
-bool RelationImpl::equal(const RelationImpl& r) const {
-  if (arity_ != r.arity_) return false;
-  return bdd_ == r.bdd_;
-}
+    bool RelationImpl::equal(const RelationImpl& r) const {
+      if (arity_ != r.arity_) return false;
+      return bdd_ == r.bdd_;
+    }
 
-void RelationImpl::complement(void) {
-  bdd_ = Cudd_Not(bdd_);
-}
+    void RelationImpl::complement(void) {
+      bdd_ = !bdd_;
+    }
 
-RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
-  // No error detection on permDesc is done here. The reason is because under
-  // some circumstances this method is used to move columns in the representation
-  // to places that are outside of the arity of the relation. For instance,
-  // this \times U^n is implemented by doing the shift of n columns to the right.
+    RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
+      // No error detection on permDesc is done here. The reason is because under
+      // some circumstances this method is used to move columns in the representation
+      // to places that are outside of the arity of the relation. For instance,
+      // this \times U^n is implemented by doing the shift of n columns to the right.
 
-  RelationImpl ret(VarImpl::swap_columns(bdd_,permDesc),arity_);
+      assert(false);
+      /*
+      RelationImpl ret(VarImpl::swap_columns(bdd_,permDesc),arity_);
 
-  assert(ret.cardinality() == cardinality());
-  assert(ret.arity() == arity());
-  return ret;
-}
+      assert(ret.cardinality() == cardinality());
+      assert(ret.arity() == arity());
+      return ret;
+      */
+    }
+    /*
+    RelationImpl RelationImpl::shiftLeft(int n) const {
+      if (n == 0) return RelationImpl(*this);
+      return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
+    }
 
-RelationImpl RelationImpl::shiftLeft(int n) const {
-  if (n == 0) return RelationImpl(*this);
-  return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
-}
+    RelationImpl RelationImpl::shiftRight(int n) const {
+      if (n == 0) return RelationImpl(*this);
+      if (n == arity_) return RelationImpl(0);
+      return RelationImpl(VarImpl::shiftRight(bdd_,arity_,n),arity_-n);
+    }
+    */
+    RelationImpl RelationImpl::timesU(int n, bool left) const {
+      assert(false);
+      /*
+      if (left)
+	return RelationImpl(bdd_,arity_+n);
 
-RelationImpl RelationImpl::shiftRight(int n) const {
-  if (n == 0) return RelationImpl(*this);
-  if (n == arity_) return RelationImpl(0);
-  return RelationImpl(VarImpl::shiftRight(bdd_,arity_,n),arity_-n);
-}
+      PermDescriptor d;
+      for (int i = 0; i < arity_; i++) d.permute(i,i+n);
+      RelationImpl r = permute(d);
+      return RelationImpl(r.bdd_,arity_+n);
+      */
+    }
 
-RelationImpl RelationImpl::timesU(int n, bool left) const {
-  if (left)
-    return RelationImpl(bdd_,arity_+n);
+    RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
+      assert(false);
+      /*
+      const RelationImpl& left = *this;
 
-  PermDescriptor d;
-  for (int i = 0; i < arity_; i++) d.permute(i,i+n);
-  RelationImpl r = permute(d);
-  return RelationImpl(r.bdd_,arity_+n);
-}
+      assert(left.arity() >= j && right.arity() >= j
+	     && "There are not enough columns for the join");
 
-RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
-  const RelationImpl& left = *this;
+      RelationImpl lxu = left.timesU(right.arity() - j,false);
+      RelationImpl rxu = right.timesU(left.arity() - j,true);
 
-  assert(left.arity() >= j && right.arity() >= j
-         && "There are not enough columns for the join");
+      lxu.intersect(rxu);
+      return lxu;
+      */
+    }
 
-  RelationImpl lxu = left.timesU(right.arity() - j,false);
-  RelationImpl rxu = right.timesU(left.arity() - j,true);
+    RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
+      assert(false);
+      /*
+      const RelationImpl& left = *this;
 
-  lxu.intersect(rxu);
-  return lxu;
-}
+      /// \todo handle errors on arity of the relations with exceptions
 
-RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
-  const RelationImpl& left = *this;
+      //  assert(left.arity() >= f && right.arity() >= f
+      //         && "There are not enough columns for the join");
 
-  /// \todo handle errors on arity of the relations with exceptions
+      // 1) compute the join of the relations on f columns
+      RelationImpl join = left.join(f,right);
 
-//  assert(left.arity() >= f && right.arity() >= f
-//         && "There are not enough columns for the join");
+      // 2) remove the "join" columns. These columns are in the range right.arity-1
+      //    to right.arity-f
+      int leftMost = right.arity() - 1;
+      int rightMost = right.arity() - f;
 
-  // 1) compute the join of the relations on f columns
-  RelationImpl join = left.join(f,right);
+      assert(leftMost >= rightMost && "Unexpected result for range of join columns");
 
-  // 2) remove the "join" columns. These columns are in the range right.arity-1
-  //    to right.arity-f
-  int leftMost = right.arity() - 1;
-  int rightMost = right.arity() - f;
+      return RelationImpl(
+			  VarImpl::discard(join.bdd_,join.arity(), leftMost, rightMost),
+			  join.arity()-f
+			  );
+      */
+    }
 
-  assert(leftMost >= rightMost && "Unexpected result for range of join columns");
+    RelationImpl RelationImpl::exists(int c) const {
+      assert(false);
+      //return RelationImpl(VarImpl::exists(c, bdd_), arity_);
+    }
 
-  return RelationImpl(
-        VarImpl::discard(join.bdd_,join.arity(), leftMost, rightMost),
-        join.arity()-f
-        );
-}
+    RelationImpl RelationImpl::unique(int c) const {
+      assert(false);
+      //return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+    }
 
-RelationImpl RelationImpl::exists(int c) const {
- return RelationImpl(VarImpl::exists(c, bdd_), arity_);
-}
+    RelationImpl RelationImpl::unique(const std::vector<int>& c) const {
+      assert(false);
+      //return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+    }
 
-RelationImpl RelationImpl::unique(int c) const {
- return RelationImpl(VarImpl::unique(c, bdd_), arity_);
-}
+    RelationImpl RelationImpl::forall(int c) const {
+      assert(false);
+      //return RelationImpl(VarImpl::forall(c, bdd_), arity_);
+    }
 
-RelationImpl RelationImpl::unique(const std::vector<int>& c) const {
-  return RelationImpl(VarImpl::unique(c, bdd_), arity_);
-}
+    RelationImpl RelationImpl::projectBut(int c) const {
+      /*
+      RelationImpl q(exists(c));
 
-RelationImpl RelationImpl::forall(int c) const {
- return RelationImpl(VarImpl::forall(c, bdd_), arity_);
-}
+      PermDescriptor d;
+      for (int i = arity_ -1; i > c; i--) {
+	d.permute(i,i-1);
+      }
+      RelationImpl perm(q.permute(d));
 
-RelationImpl RelationImpl::projectBut(int c) const {
-  RelationImpl q(exists(c));
+      RelationImpl ret(perm.bdd_,arity_-1);
 
-  PermDescriptor d;
-  for (int i = arity_ -1; i > c; i--) {
-    d.permute(i,i-1);
-  }
-  RelationImpl perm(q.permute(d));
+      assert(ret.cardinality() == cardinality());
+      assert(ret.arity() == arity()-1);
 
-  RelationImpl ret(perm.bdd_,arity_-1);
+      return ret;
+      */
+      assert(false);
+    }
 
-  assert(ret.cardinality() == cardinality());
-  assert(ret.arity() == arity()-1);
+    RelationImpl RelationImpl::project(int p) const {
+      /*
+      // p indicates the columns on the right that will remain at the end.
 
-  return ret;
-}
+      // it is a mistake to project in more columns that the ones in the relation
+      assert(p <= arity_ && "Projecting in more columns that the onse in the relation");
 
-RelationImpl RelationImpl::project(int p) const {
-  // p indicates the columns on the right that will remain at the end.
+      RelationImpl r(*this);
+      // Project on 0 columns is the empty relation
+      if (p == 0) return RelationImpl(0);
+      // Project on all the columns of a relation is the relation itself
+      if (p == arity_) return r;
 
-  // it is a mistake to project in more columns that the ones in the relation
-  assert(p <= arity_ && "Projecting in more columns that the onse in the relation");
+      // 1) existentially quantify on all the columns but the ones from 0 (right most)
+      //    to p (not including).
+      int first = p;
+      int last = arity_ - 1;
+      return RelationImpl(VarImpl::exists(first,last,r.bdd_),p);
+      */
+    }
 
-  RelationImpl r(*this);
-  // Project on 0 columns is the empty relation
-  if (p == 0) return RelationImpl(0);
-  // Project on all the columns of a relation is the relation itself
-  if (p == arity_) return r;
+    RelationImplIter RelationImpl::tuples(void) const {
+      return RelationImplIter(bdd_,arity_);
+    }
 
-  // 1) existentially quantify on all the columns but the ones from 0 (right most)
-  //    to p (not including).
-  int first = p;
-  int last = arity_ - 1;
-  return RelationImpl(VarImpl::exists(first,last,r.bdd_),p);
-}
+    void RelationImpl::print(std::ostream& os) {
+      domain().print(os,bdd_,arity_);
+    }
 
-RelationImplIter RelationImpl::tuples(void) const {
-  return RelationImplIter(bdd_,arity_);
-}
+    RelationImplIter::RelationImplIter(Bdd rel, int a)
+      : relation_(rel), arity_(a) {}
 
-RelationImplIter::RelationImplIter(DdNode *rel, int a)
-  : relation_(rel), arity_(a){
-  Cudd_Ref(relation_);
-}
+    RelationImplIter::RelationImplIter(const RelationImplIter& it)
+      : relation_(it.relation_), arity_(it.arity_) {}
 
-RelationImplIter::RelationImplIter(const RelationImplIter& it)
-  : relation_(it.relation_), arity_(it.arity_){
-  Cudd_Ref(relation_);
-}
+    RelationImplIter::~RelationImplIter(void) {}
 
-RelationImplIter::~RelationImplIter(void) {
-  Cudd_RecursiveDeref(dd(),relation_);
-}
+    bool RelationImplIter::operator ()(void) const {
+      //return relation_ != zero();
+    }
 
-bool RelationImplIter::operator ()(void) const {
-  return relation_ != zero();
-}
+    Tuple RelationImplIter::val(void) {
+      /*
+      const int cube_size = 1<<(Limits::bbv + Limits::ba);
 
-Tuple RelationImplIter::val(void) {
-  const int cube_size = 1<<(Limits::bbv + Limits::ba);
+      int cube_[cube_size];
+      int *cube = cube_;
+      CUDD_VALUE_TYPE val;
 
-  int cube_[cube_size];
-  int *cube = cube_;
-  CUDD_VALUE_TYPE val;
+      DdGen* gen = Cudd_FirstCube(dd(),relation_,&cube,&val);
+      assert(gen != NULL);
+      vector<int> v = decodeCube(cube,arity_);
+      Cudd_GenFree(gen);
 
-  DdGen* gen = Cudd_FirstCube(dd(),relation_,&cube,&val);
-  assert(gen != NULL);
-  vector<int> v = decodeCube(cube,arity_);
-  Cudd_GenFree(gen);
+      // Prepare the output
+      Tuple out(v);
+      // Affect the state of the iterator
+      remove(out);
 
-  // Prepare the output
-  Tuple out(v);
-  // Affect the state of the iterator
-  remove(out);
+      return out;
+      */
+    }
 
-  return out;
+    void RelationImplIter::remove(const Tuple& t) {
+      /*
+      DdNode *i = t.getBDD();
+      Cudd_Ref(i);
+      DdNode *tmp = Cudd_bddAnd(dd(),relation_,Cudd_Not(i));
+      Cudd_Ref(tmp);
+      Cudd_RecursiveDeref(dd(),i);
+      Cudd_RecursiveDeref(dd(),relation_);
+      relation_ = tmp;
+      */
+    }
 
-}
-
-void RelationImplIter::remove(const Tuple& t) {
-  DdNode *i = t.getBDD();
-  Cudd_Ref(i);
-  DdNode *tmp = Cudd_bddAnd(dd(),relation_,Cudd_Not(i));
-  Cudd_Ref(tmp);
-  Cudd_RecursiveDeref(dd(),i);
-  Cudd_RecursiveDeref(dd(),relation_);
-  relation_ = tmp;
-}
-
-}}
+  }}

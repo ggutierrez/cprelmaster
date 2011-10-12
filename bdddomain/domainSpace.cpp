@@ -68,7 +68,14 @@ namespace MPG { namespace VarImpl {
     Bdd DomainSpace::one(void) {
       return factory_.one();
     }
-    
+
+    int DomainSpace::maximum(void) const {
+      return columns_.at(0).maximum();
+    }
+
+    int DomainSpace::varsPerColumn(void) const {
+      return usedVariables / columns_.size();
+    }
 
     std::vector<int> DomainSpace::transformPerm(const std::vector<int>& p) const {
       std::vector<int> perm(usedVariables,-1);

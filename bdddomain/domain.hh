@@ -89,6 +89,12 @@ namespace MPG { namespace VarImpl {
 	return varIndexes_;
       }
       /**
+       * \brief Return the maximum value of the domain
+       */
+      int maximum(void) const {
+	return size_;
+      }
+      /**
        * \brief Returns a cube with the variables used to represent the domain
        */
       Bdd cube(void) {

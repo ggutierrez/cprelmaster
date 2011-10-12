@@ -300,6 +300,8 @@ endforeach()
 
 set(NEWBDDDOMAIN_SRCS
   cuddFactory.hh bdd.hh bdd.cpp domain.hh domainSpace.hh domainSpace.cpp
+  manager.hh manager.cpp tuple.cpp tuple.hh
+  rel-impl.cpp rel-impl.hh
 )
 
 set(NEWBDDDOMAIN_SRCS_)
@@ -561,9 +563,6 @@ add_custom_target(dist
   add_executable(dom tests/dom.cpp)
   target_link_libraries(dom gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
-  add_executable(domain-test tests/domain-test.cc)
-  target_link_libraries(domain-test bdddomain)
-
   add_executable(grel-test tests/grel-test.cpp)
   target_link_libraries(grel-test gecodecprel)
 
@@ -578,5 +577,9 @@ add_custom_target(dist
 add_executable(follow tests/follow.cpp)
 target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
 
+#new stuff
 add_executable(fdddomain tests/fdddomain.cpp)
 target_link_libraries(fdddomain newbdddomain)
+
+add_executable(domain-test tests/domain-test.cc)
+target_link_libraries(domain-test newbdddomain)
