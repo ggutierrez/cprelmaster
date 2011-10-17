@@ -81,6 +81,7 @@ include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/epd")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/st")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/util")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/cudd")
+include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}/obj")
 include_directories("${CMAKE_SOURCE_DIR}/${CUDD_SOURCES}")
 
 set(CUDD_SRCS
@@ -129,11 +130,24 @@ set(UTIL_SRCS
   util.h
 )
 
+set(CUDDOBJ_SRCS
+  cuddObj.hh
+  cuddObj.cc
+)
+  
+message(STATUS "OBJ: ${CUDDOBJ_SRCS}")
+
 # Cudd libraries definition
 set(CUDD_SRCS_)
 foreach(file ${CUDD_SRCS})
   list(APPEND CUDD_SRCS_ ${CUDD_SOURCES}/cudd/${file})
 endforeach()
+
+set(CUDDOBJ_SRCS_)
+foreach(file ${CUDDOBJ_SRCS})
+  list(APPEND CUDDOBJ_SRCS_ ${CUDD_SOURCES}/obj/${file})
+endforeach()
+add_library(cuddobj ${CUDDOBJ_SRCS_})
 
 list(APPEND CUDD_SRCS_ ${CMAKE_SOURCE_DIR}/bdddomain/unique.c)
 list(APPEND CUDD_SRCS_ ${CMAKE_SOURCE_DIR}/bdddomain/unique.h)
@@ -153,6 +167,7 @@ target_link_libraries(mpr util)
 target_link_libraries(epd util)
 target_link_libraries(st util)
 target_link_libraries(cudd util st mpr epd)
+target_link_libraries(cuddobj cudd)
 ## NOTE about warnings:
 ## When CUDF is compiled by gcc there are a lot of warnings signaling
 ## unused parameters. As they can hide other important warnings of this project
@@ -211,7 +226,7 @@ set_source_files_properties(
     ${CUDD_SRCS_} ${UTIL_SRCS_} ${ST_SRCS} ${MTR_SRCS} ${EPD_SRCS}
     PROPERTIES COMPILE_FLAGS ${CUDD_SPECIFIC_FLAGS}
 )
-set(CUDD_LIBS cudd util st mpr epd)
+set(CUDD_LIBS cuddobj cudd util st mpr epd)
 ##########################################################################
 # Installation of CUDD
 ##########################################################################

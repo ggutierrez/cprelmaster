@@ -5,7 +5,8 @@
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
-#include <cudd/cuddInt.h>
+//#include <cudd/cuddInt.h>
+#include <obj/cuddObj.hh>
 #include <limits>
 
 namespace MPG { namespace VarImpl {
@@ -20,7 +21,7 @@ namespace Limits {
  * - Setting this attribute to 5 will allow to represent positive integers
  *   of 32 bits.
  */
-const int bbv = 5;
+const int bbv = 2;
 /**
  * \brief Number of bits of the maximum arity that can be represented
  * \ingroup DomRepr
@@ -67,24 +68,17 @@ class BddManager : private boost::noncopyable {
 private:
   /// Only one single instance of this class is allowed at run time
   static PManager _instance;
-  /// Pointer to the Bdd manager
-  DdManager *dd;
-  /// Constant true
-  DdNode *one_;
-  /// Constant false
-  DdNode *zero_;
+  /// Bdd abstraction offered by CUDD
+  Cudd factory_;
   /// \name Constructors and destructor
   //@{
   /// Constructor that initializes the BDD manager of CUDD
   BddManager (void)
-    : dd(Cudd_Init(Limits::bitsPerInteger * Limits::arity,
-                   0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0))
-    , one_(DD_ONE(dd))
-    , zero_(Cudd_Not(DD_ONE(dd)))
+    : factory_(Limits::bitsPerInteger * Limits::arity,
+	       0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0)
   {
     /// \todo: The existence of shiftLeft needs that the manager is initialized
     /// with the number of variables. Fix that method in order to permute only existent vars
-    std::cout << "Created bdd manager" << std::endl;
   }
   /// Creates an instace of this object
   static void create() {
@@ -92,10 +86,9 @@ private:
   }
   /// Destructor that releases the BDD manager of CUDD
   ~BddManager (void) {
-    //std::cout << "Called destructor: " << references() << std::endl;
+    std::cout << "Destroyed BDD manager: " << references() << std::endl;
     //std::cout << "Manager stats" << std::endl;
-    stats(std::cout);
-    Cudd_Quit(dd);
+    //stats(std::cout);
   }
   //@}
   /// Method called by the managed pointer when destructed
@@ -103,7 +96,7 @@ private:
     delete ptr;
   }
   int references(void) {
-    return Cudd_CheckZeroRef(dd);
+    return Cudd_CheckZeroRef(factory_.getManager());
   }
 public:
   /// Returns an instance of the manager
@@ -115,25 +108,29 @@ public:
   }
   /// \name Access
   //@{
+  /// Returns the factory
+  Cudd& getFactory(void) {
+    return factory_;
+  }
   /// Returns the bdd manager
   DdManager* manager(void) {
-    return dd;
+    return factory_.getManager();
   }
   /// Returns the constant \c true
-  DdNode* one(void) {
-    return one_;
+  BDD one(void) {
+    return factory_.bddOne();
   }
   /// Returns the constant \c false
-  DdNode* zero(void) {
-    return zero_;
+  BDD zero(void) {
+    return factory_.bddZero();
   }
   /// Prints manager statistics to \a os
   void stats(std::ostream& os) const {
-    auto usedMemory = Cudd_ReadMemoryInUse(dd);
+    auto usedMemory = Cudd_ReadMemoryInUse(factory_.getManager());
     //    os << "\tMemory in use: " <<  (usedMemory / 1024)  << " KB" << std::endl;
-    auto gcTime = Cudd_ReadGarbageCollectionTime(dd);
+    auto gcTime = Cudd_ReadGarbageCollectionTime(factory_.getManager());
     //os << "\tGC time: " <<  gcTime  << " ms." << std::endl;
-    auto gcs =  Cudd_ReadGarbageCollections(dd);
+    auto gcs =  Cudd_ReadGarbageCollections(factory_.getManager());
     //os << "\tGC triggered " << gcs << " times" << std::endl;
     /*
       This will print a table in the form:
@@ -146,6 +143,14 @@ public:
   //@}
 };
 
+/**
+ * \brief Returns the factory used for all the bdds
+ * \ingroup DomRepr
+ */
+    inline 
+    Cudd factory(void) {
+      return BddManager::instance()->getFactory();
+    }
 /**
  * \brief Returns the manager
  * \ingroup DomRepr
@@ -160,7 +165,7 @@ DdManager* dd(void) {
  * \ingroup DomRepr
  */
 inline
-DdNode* one(void) {
+BDD one(void) {
   return BddManager::instance()->one();
 }
 
@@ -169,7 +174,7 @@ DdNode* one(void) {
  * \ingroup DomRepr
  */
 inline
-DdNode* zero(void) {
+BDD zero(void) {
   return BddManager::instance()->zero();
 }
 

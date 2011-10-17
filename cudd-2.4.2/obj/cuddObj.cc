@@ -183,7 +183,7 @@ DD::manager() const
 } // DD::manager
 
 
-inline DdNode *
+DdNode *
 DD::getNode() const
 {
     return node;

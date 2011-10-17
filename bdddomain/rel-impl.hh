@@ -18,13 +18,13 @@ class RelationImplIter;
 class RelationImpl {
 private:
   /// The BDD with the representation
-  DdNode *bdd_;
+  BDD bdd_;
   /// The arity of the represented relation
   int arity_;
   /// Avoid default construction
   RelationImpl(void);
   /// Constructor from anexisting bdd
-  RelationImpl(DdNode *n, int a);
+  RelationImpl(BDD n, int a);
 public:
   /// \name Constructors, destructor and assignement
   //@{
@@ -46,7 +46,7 @@ public:
    * arity. The idea behind this method is to bypass this restriction but it should
    * be used carefully.
    */
-  static RelationImpl create_fromBdd(DdNode* b, int a);
+  static RelationImpl create_fromBdd(BDD b, int a);
   /// Destructor
   ~RelationImpl(void);
   //@}
@@ -272,7 +272,7 @@ RelationImpl complement(const RelationImpl& r) {
 class RelationImplIter {
 private:
   /// The BDD with the representation of the relation being iterated
-  DdNode *relation_;
+  BDD relation_;
   /// The arity of the relation
   int arity_;
   /// Avoid default construction
@@ -281,7 +281,7 @@ private:
   void remove(const Tuple& t);
 public:
   /// Constructor
-  RelationImplIter(DdNode *rel, int a);
+  RelationImplIter(BDD rel, int a);
   /// Copy constructor
   RelationImplIter(const RelationImplIter&);
   /// Destructor

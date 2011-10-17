@@ -38,7 +38,7 @@ private:
   friend class VarImpl::RelationImpl;
   friend class VarImpl::RelationImplIter;
   /// Actual data container
-  DdNode* data_;
+  BDD data_;
   /// Arity of the tuple
   int arity_;
   /// Avoiding Default constructor
@@ -49,7 +49,7 @@ private:
    * \warning Throws and exception of type RepresentationOverflow if \a p cannot
    * be represented with the current manager setup.
    */
-  static DdNode* encode(int p, int a);
+  static BDD encode(int p, int a);
   /**
    * \brief Returns a BDD representing \a this
    *
@@ -57,16 +57,15 @@ private:
    * counting of the returned BDD. For instance, to call Cudd_Ref before using
    * it and Cudd_RecursiveDeref when not needed anymore.
    */
-  DdNode* getBDD(void) const;
+  BDD getBDD(void) const;
   /// Returns a BDD representing \a this
-  DdNode* encode(const std::vector<int>& v) const;
+  BDD encode(const std::vector<int>& v) const;
 public:
   /**
    * \brief Construct a tuple with all the elements present in \a v. The arity
    * of the tuple is the size of the vector.
    */
   explicit Tuple(const std::vector<int>& v);
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
   /**
    * \brief Construct a tuple with all the elements present in \a l. The arity
    * of the tuple is the size of the list.
@@ -75,7 +74,6 @@ public:
    * lists to tuples.
    */
   Tuple(std::initializer_list<int> l);
-#endif
   /// Copy constructor
   Tuple(const Tuple& t);
   /// Assignement operator
