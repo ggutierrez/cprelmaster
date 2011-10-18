@@ -88,6 +88,14 @@ namespace MPG { namespace VarImpl {
       os << "}";
     }
 
+    /**
+     * \brief Function to traverse every cube in BDD \a r and to apply \a fc.
+     *
+     * \a fc must be a functor that takes as argument a
+     * std::vector<std::vector<int>>.  every possition in the vector
+     * represents a column and inside it is the vector with the
+     * possible values for that column on a particular branch.
+     */
     template <typename Functor>
     void printSet_rec(Cudd& factory, const BDD& r, Functor& fc, std::vector<int>& set) {
       // the number of domains is the number of columns
@@ -112,17 +120,6 @@ namespace MPG { namespace VarImpl {
 	  }
 
 	  if (used) {
-	    {
-	      // debug information on the indices used for every column
-	      /*
-	      os << "[";
-	      for (auto x : domain_n_ivar) {
-		os << x << ", ";
-	      }
-	      os << "]" << std::endl;
-	      */
-	    }
-
 	    std::vector<int> var(domain_n_ivar);
 	    int maxSkip = -1;
 	    bool hasDontCare = false;

@@ -16,10 +16,11 @@ int main(void) {
     
     // fill some elements in the binary relation
     binary.add({1,2});
-    //binary.add({3,3});
+    binary.add({3,3});
     binary.add({3,1});
+    binary.add({3,2});
     //binary.add({5,4});
-    //binary.add({0,0});
+    binary.add({0,0});
 
     /*
     // fill the unary relation
