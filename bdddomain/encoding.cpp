@@ -1,7 +1,6 @@
 #include <bdddomain/encoding.hh>
 #include <bdddomain/manager.hh>
-#include <cudd/cudd.h>
-//#include <bdddomain/unique.h>
+#include <bdddomain/bdd.hh>
 #include <set>
 
 namespace MPG { namespace VarImpl {
@@ -218,59 +217,12 @@ namespace MPG { namespace VarImpl {
       return exists(indices,r);
     }
 
-    /**
-     * \brief returns the \a then node of \a r
-     *
-     * The OO API of CUDD does not offer access to this operation.
-     */
-    inline BDD high(const BDD& r) {
-      DdNode * d = r.getNode();
-      DdNode *res = Cudd_T(d);
-      res = Cudd_NotCond(res, Cudd_IsComplement(d));
-      return BDD(factoryPtr(),res);
-    }
-
-    /**
-     * \brief returns the \a else node of \a r
-     *
-     * The OO API of CUDD does not offer access to this operation.
-     */
-    inline BDD low(const BDD& r) {
-      DdNode *d  = r.getNode();
-      DdNode *res = Cudd_E(d);
-      res = Cudd_NotCond(res, Cudd_IsComplement(d));
-      return BDD(factoryPtr(),res);   
-    }
-
-    
-    /**
-     * \brief returns the \a level of variable \a r in the bdd manager
-     *
-     * The OO API of CUDD does not offer access to this operation.
-     */
-    inline int var2Level0(int v) {
-      return Cudd_ReadPerm(dd(),v);
-    }
-
-    /**
-     * \brief returns the \a variable at a given level in the manager
-     *
-     * The OO API of CUDD does not offer access to this operation.
-     */
-    inline int level2Var0(int level) {
-      return Cudd_ReadInvPerm(dd(),level);
-    }
-
-    inline int var0(const BDD& r) {
-      return r.NodeReadIndex();
-    }
-
     BDD uniqueRec(BDD r, BDD c) {
       if (r == one() || r == zero() || c == one())
 	return r;
       
-      int levelR = var2Level0(var0(r));
-      int levelC = var2Level0(var0(c));
+      int levelR = var2Level(var(r));
+      int levelC = var2Level(var(c));
       
       if (levelR > levelC) {
 	return factory().bddZero();
@@ -290,7 +242,7 @@ namespace MPG { namespace VarImpl {
 	BDD u_high = uniqueRec(high(r), c);
 	//BDD root = bdd_ithvar(bdd_var(rel));
 	BDD root(factoryPtr(),Cudd_Regular(r.getNode()));
-	res = factory().bddVar(var0(r)).Ite(u_high,u_low);
+	res = factory().bddVar(var(r)).Ite(u_high,u_low);
       }
       return res;
     }
@@ -304,7 +256,7 @@ namespace MPG { namespace VarImpl {
 
     BDD unique(int c, BDD r) {
       std::cout << "Called unique on one column " << c << std::endl;
-      
+      printDot(r);
       std::vector<int> indices = bddIndices(c);
       BDD cube = factory().IndicesToCube(&indices[0],indices.size());
       return unique(r,cube);

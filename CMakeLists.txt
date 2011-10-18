@@ -102,8 +102,6 @@ set(CUDD_SRCS
   cudd.h cuddInt.h
 )
 
-set(EXTRA_CUDD_SRCS bdddomain/unique.c bdddomain/unique.h)
-
 set(MTR_SRCS
   ${CUDD_SOURCES}/mtr/mtrBasic.c
   ${CUDD_SOURCES}/mtr/mtrGroup.c
@@ -287,9 +285,10 @@ endif()
 include_directories(${CMAKE_SOURCE_DIR})
 
 set(BDDDOMAIN_SRCS
-encoding.cpp encoding.hh exception.hh manager.cpp manager.hh
-perm-descriptor.hh rel-impl.cpp rel-impl.hh relations.cpp relations.hh
-tuple.cpp tuple.hh
+  encoding.cpp encoding.hh exception.hh manager.cpp manager.hh
+  bdd.hh bdd.cpp
+  perm-descriptor.hh rel-impl.cpp rel-impl.hh relations.cpp relations.hh
+  tuple.cpp tuple.hh
 )
 
 set(BDDDOMAIN_SRCS_)
