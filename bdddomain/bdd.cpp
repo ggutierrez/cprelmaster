@@ -1,8 +1,18 @@
+#include <vector>
 #include <map>
 #include <bdddomain/manager.hh>
 #include <bdddomain/bdd.hh>
 
 namespace MPG { namespace VarImpl {
+
+    std::vector<int> domainIndices(int c) {
+      std::vector<int> vars(Limits::bitsPerInteger,-1);
+
+      for (int i = (1 << Limits::bbv); i--;) {
+	vars[i] = (i << Limits::ba) + c;
+      }
+      return vars;
+    }
 
     /**
      * \brief Helper function to print a bdd.
@@ -49,7 +59,7 @@ namespace MPG { namespace VarImpl {
       }
 
       os << ri << " -> " << li << " [style=dotted];" << std::endl;
-      os << ri << " -> " << hi << " [style=dotted];" << std::endl;
+      os << ri << " -> " << hi << " [style=solid];" << std::endl;
       
       current = printdot_rec(l, os, current, visited, names);
       current = printdot_rec(h, os, current, visited, names);
@@ -65,7 +75,7 @@ namespace MPG { namespace VarImpl {
       int variables = 1 << (Limits::bbv + Limits::ba);
       // make a vector big enough to store all the variables in the
       // manager and constants true and false
-      std::vector<bool> visited(variables + 2);
+      std::vector<bool> visited(variables + 2, false);
       visited[0] = true; visited[1] = true;
       
       // a map to store pointers to names (integer ids)
@@ -74,13 +84,124 @@ namespace MPG { namespace VarImpl {
       names[factory().bddOne().getNode()] = 1;
 
       printdot_rec(b, os, 1, visited, names);
-      /*
-	for (auto e : names) {
-	std::cout << "Element " << e.first << " --- " << e.second << std::endl;
-      }
-      */
-      
+
+      os << "}";
     }
 
+    template <typename Functor>
+    void printSet_rec(Cudd& factory, const BDD& r, Functor& fc, std::vector<int>& set) {
+      // the number of domains is the number of columns
+      int fdvarnum = Limits::arity;
+      
+      if (r == factory.bddZero()) 
+	return;
+      else if (r == factory.bddOne()) {
+	// we got a branch that goes to terminal 1
+	std::vector<std::vector<int>> decoded(fdvarnum);
+	for (int n = fdvarnum; n--;) {
+	  const std::vector<int>& domain_n_ivar = domainIndices(n);
+	  int domain_n_varnum = domain_n_ivar.size();
+	  
+	  bool used = false;
+	  // detect if the branch represented by \a set uses a
+	  // variable of the current column
+	  for (int m = 0; m < domain_n_varnum; m++) {
+	    if (set.at(domain_n_ivar.at(m)) != 0) {
+	      used = true;
+	    }
+	  }
+
+	  if (used) {
+	    {
+	      // debug information on the indices used for every column
+	      /*
+	      os << "[";
+	      for (auto x : domain_n_ivar) {
+		os << x << ", ";
+	      }
+	      os << "]" << std::endl;
+	      */
+	    }
+
+	    std::vector<int> var(domain_n_ivar);
+	    int maxSkip = -1;
+	    bool hasDontCare = false;
+	    
+	    // detect if there are dont cares in \a set for the
+	    // current column. A dont care is represented by a value
+	    // of zero in set. Not that at this point we are sure that
+	    // the column is being used.
+	    for (int i = 0; i < domain_n_varnum; i++) {
+	      int val = set.at(var.at(i));
+	      if (val == 0) {
+		hasDontCare = true;
+		if (maxSkip == i-1)
+		  maxSkip = i;
+	      }
+	    }
+
+	    // decode the number represented by this column
+	    int pos = 0;
+	    for (int i = 0; i < domain_n_varnum; i++) {
+	      pos <<= 1;
+	      int val = set.at(var.at(i));
+	      if (val == 2)
+		pos |= 1;
+	    }
+	    
+	    // print the number
+	    if (!hasDontCare) {
+	      decoded[n].push_back(pos); 
+	    } else {
+	      decoded[n].push_back(-1);
+	    }
+
+	  }
+	  else {
+	    decoded[n].push_back(-2);
+	  }
+	}
+
+	// call the functor
+	fc(decoded);
+      } else {
+	set[var(r)] = 1;
+	BDD lo = low(r);
+	printSet_rec(factory, lo, fc, set);
+	
+	set[var(r)] = 2;
+	BDD hi = high(r);
+	printSet_rec(factory, hi, fc, set);
+	
+	set[var(r)] = 0;
+      }
+    }
+    
+    void printSet(const BDD& b, std::ostream& os) {
+      Cudd& f = factory();
+      if (b == f.bddZero()) 
+	os << "F";
+      else if (b == f.bddOne())
+	os << "T";
+      else {
+	int variables = 1 << (Limits::bbv + Limits::ba);
+	std::vector<int> set(variables,0);
+	
+	// The header of the relation
+	for (auto i = Limits::arity; i--;) {
+	  os << "| Col_{" << i << "}";
+	}
+	os << "|" << std::endl;
+	auto functor = [&](std::vector<std::vector<int>>& r) {
+	  for (auto i = r.size(); i--;) {
+	    os << "| " << r.at(i).at(0) ;
+	  }
+	  os << "|" << std::endl;
+	};
+
+	printSet_rec(f, b, functor, set);
+
+      }
+    }
   }
 }

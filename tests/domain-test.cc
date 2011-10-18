@@ -15,8 +15,9 @@ int main(void) {
     MPG::VarImpl::RelationImpl unary(1), binary(2), ternary(3), fourthary(4);
     
     // fill some elements in the binary relation
-    binary.add({0,2});
-    binary.add({0,3});
+    binary.add({1,2});
+    //binary.add({3,3});
+    binary.add({3,1});
     //binary.add({5,4});
     //binary.add({0,0});
 

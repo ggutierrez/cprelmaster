@@ -5,6 +5,11 @@
 #include <cudd/cudd.h>
 
 namespace MPG { namespace VarImpl {
+    /**
+     * \brief Returns the variables (indices) used in the bdd to encode column \a c
+     * \ingroup BDDEnc
+     */
+    std::vector<int> domainIndices(int c);
 
     /**
      * \brief returns the \a then node of \a r
@@ -57,6 +62,10 @@ namespace MPG { namespace VarImpl {
      */
     void printDot(const BDD& b, std::ostream& os = std::cout);
 
+    /**
+     * \brief Outputs a relation represented by \a b to \a os.
+     */
+    void printSet(const BDD& b, std::ostream& os = std::cout);
   }
 }
 
