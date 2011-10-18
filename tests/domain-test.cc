@@ -15,22 +15,25 @@ int main(void) {
     MPG::VarImpl::RelationImpl unary(1), binary(2), ternary(3), fourthary(4);
     
     // fill some elements in the binary relation
-    binary.add({1,2});
-    binary.add({2,3});
-    binary.add({5,4});
-    binary.add({0,0});
+    binary.add({0,2});
+    binary.add({0,3});
+    //binary.add({5,4});
+    //binary.add({0,0});
 
+    /*
     // fill the unary relation
     unary.add(MPG::make_Tuple(2));
     unary.add(MPG::make_Tuple(0));
-    
+    */
     std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
-    std::cout << "Unary relation: " << unary << std::endl;
-
-    binary.remove({2,3});
-    binary.remove({5,5});
-    std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
+    //std::cout << "Unary relation: " << unary << std::endl;
     
+    //binary.remove({2,3});
+    //binary.remove({5,5});
+    //std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
+    
+    auto uq = binary.unique(0);
+    std::cout << "Unique quantification yields: " << uq << std::endl;
     //auto e0binary = binary.exists(0);
     //std::cout << "Existentialy quant 0 in binary gives: " << e0binary << std::endl;
 

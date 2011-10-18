@@ -1,5 +1,7 @@
 #include <bdddomain/encoding.hh>
-#include <bdddomain/unique.h>
+#include <bdddomain/manager.hh>
+#include <cudd/cudd.h>
+//#include <bdddomain/unique.h>
 #include <set>
 
 namespace MPG { namespace VarImpl {
@@ -216,14 +218,100 @@ namespace MPG { namespace VarImpl {
       return exists(indices,r);
     }
 
+    /**
+     * \brief returns the \a then node of \a r
+     *
+     * The OO API of CUDD does not offer access to this operation.
+     */
+    inline BDD high(const BDD& r) {
+      DdNode * d = r.getNode();
+      DdNode *res = Cudd_T(d);
+      res = Cudd_NotCond(res, Cudd_IsComplement(d));
+      return BDD(factoryPtr(),res);
+    }
+
+    /**
+     * \brief returns the \a else node of \a r
+     *
+     * The OO API of CUDD does not offer access to this operation.
+     */
+    inline BDD low(const BDD& r) {
+      DdNode *d  = r.getNode();
+      DdNode *res = Cudd_E(d);
+      res = Cudd_NotCond(res, Cudd_IsComplement(d));
+      return BDD(factoryPtr(),res);   
+    }
+
+    
+    /**
+     * \brief returns the \a level of variable \a r in the bdd manager
+     *
+     * The OO API of CUDD does not offer access to this operation.
+     */
+    inline int var2Level0(int v) {
+      return Cudd_ReadPerm(dd(),v);
+    }
+
+    /**
+     * \brief returns the \a variable at a given level in the manager
+     *
+     * The OO API of CUDD does not offer access to this operation.
+     */
+    inline int level2Var0(int level) {
+      return Cudd_ReadInvPerm(dd(),level);
+    }
+
+    inline int var0(const BDD& r) {
+      return r.NodeReadIndex();
+    }
+
+    BDD uniqueRec(BDD r, BDD c) {
+      if (r == one() || r == zero() || c == one())
+	return r;
+      
+      int levelR = var2Level0(var0(r));
+      int levelC = var2Level0(var0(c));
+      
+      if (levelR > levelC) {
+	return factory().bddZero();
+      }
+
+      BDD res;
+      if (levelR == levelC) {
+	BDD u_low = uniqueRec(low(r), high(c));
+	BDD e_high = high(r).ExistAbstract(high(c));
+	
+	BDD u_high = uniqueRec(high(r), high(c));
+	BDD e_low = low(r).ExistAbstract(high(c));
+	
+	res = (u_low & !e_high) | (u_high & !e_low);
+      } else {
+	BDD u_low = uniqueRec(low(r), c);
+	BDD u_high = uniqueRec(high(r), c);
+	//BDD root = bdd_ithvar(bdd_var(rel));
+	BDD root(factoryPtr(),Cudd_Regular(r.getNode()));
+	res = factory().bddVar(var0(r)).Ite(u_high,u_low);
+      }
+      return res;
+    }
+
+    BDD unique(BDD r, BDD c) {
+      if (c == one()) 
+	return r;
+      
+      return uniqueRec(r,c);
+    }
+
     BDD unique(int c, BDD r) {
+      std::cout << "Called unique on one column " << c << std::endl;
+      
       std::vector<int> indices = bddIndices(c);
       BDD cube = factory().IndicesToCube(&indices[0],indices.size());
-      assert(false && "Not implemented");
-      return r;
+      return unique(r,cube);
     }
 
     BDD unique(const std::vector<int>& c, BDD r) {
+      assert(false && "Not implemented");
       std::vector<int> indices;
       return r;
       /*

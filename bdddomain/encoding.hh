@@ -2,7 +2,7 @@
 #define __CPREL_BDDDOMAIN_ENCODING_HH__
 
 #include <vector>
-#include <bdddomain/manager.hh>
+#include <obj/cuddObj.hh>
 #include <bdddomain/perm-descriptor.hh>
 
 namespace MPG { namespace VarImpl {
@@ -67,6 +67,12 @@ namespace MPG { namespace VarImpl {
      */
     BDD forall(int c, BDD r);
 
+    /**
+     * \brief Unique quantification of \a r with respect to \a c
+     *
+     * \a c is assumed to be a cube
+     */
+    BDD unique(BDD r, BDD c);
     /**
      * \brief Unique quantification of column \a c on relation \a r.
      * \ingroup BDDEnc
