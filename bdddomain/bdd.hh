@@ -58,6 +58,12 @@ namespace MPG { namespace VarImpl {
     }
 
     /**
+     * \brief Traverses \a r and executes \a fc on every tuple represented.
+     */
+    template <typename Functor>
+    void traverseSet(Cudd& factory, const BDD& r, Functor& fc);
+
+    /**
      * \brief Outputs \a b to \a os in dot format.
      */
     void printDot(const BDD& b, std::ostream& os = std::cout);
@@ -69,4 +75,5 @@ namespace MPG { namespace VarImpl {
   }
 }
 
+#include <bdddomain/bdd-visitor.hpp>
 #endif
