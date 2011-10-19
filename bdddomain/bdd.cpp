@@ -1,7 +1,4 @@
-#include <vector>
-#include <map>
 #include <bdddomain/manager.hh>
-#include <bdddomain/bdd.hh>
 
 namespace MPG { namespace VarImpl {
 
@@ -11,6 +8,7 @@ namespace MPG { namespace VarImpl {
       for (int i = (1 << Limits::bbv); i--;) {
 	vars[i] = (i << Limits::ba) + c;
       }
+      std::reverse(begin(vars), end(vars));
       return vars;
     }
   

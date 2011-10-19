@@ -79,6 +79,69 @@ namespace MPG {
       os << "}";
     }
 
+    /**
+     * \brief class to store the information of a range.
+     */
+    class OutputBuffer {
+    private:
+      int domain_;
+      int lastLow_;
+      int lastHigh_;
+      bool done_;
+      std::vector<int>& values_;
+    public:
+      OutputBuffer(int domain, std::vector<int>& values) 
+	: domain_(domain), lastHigh_(-2), done_(false), values_(values) {}
+      
+      void append(int low, int high) {
+	if (low == lastHigh_ + 1)
+	  lastHigh_ = high;
+	else {
+	  finish();
+	  lastLow_ = low; lastHigh_ = high;
+	}
+      }
+     
+      void finish(void) {
+	if (lastHigh_ != -2) {
+	  //if (done_) std::cout << "/";
+	  if (lastLow_ == lastHigh_)
+	    values_.push_back(lastHigh_);
+	    //std::cout << lastHigh_;
+	  else
+	    //std::cout << lastLow_ << "..." << lastHigh_;
+	    for (int i = lastLow_; i <= lastHigh_; i++) {
+	      std::cout << "Pushing value  " << i << std::endl;
+	      values_.push_back(i);
+	    }
+	  lastHigh_ = -2;
+	}
+	done_ = true;
+      }
+
+      void append(int low) {
+	append(low,low);
+      }
+    };
+
+    void printSet_helper(OutputBuffer& sb, int value, int i, const std::vector<int>& set, 
+			 const std::vector<int>& var, int maxSkip) 
+    {
+      if (i == maxSkip) {
+	int bit = (1 << (i + 1)) - 1;
+	int maxValue = value | bit;
+	std::cout << "Appending  " << value << " to " << maxValue << std::endl;
+	sb.append(value,maxValue);
+	return;
+      }
+      int val = set.at(var.at(i));
+      if (val == 0) {
+	std::cout << "Val is zero " << val << std::endl;
+	int temp = (value | (1 << i));
+	printSet_helper(sb, temp, i-1, set, var, maxSkip);
+      }
+      printSet_helper(sb, value, i-1, set, var, maxSkip);
+    }
      /**
      * \brief Function to traverse every cube in BDD \a r and to apply \a fc.
      *
@@ -119,7 +182,7 @@ namespace MPG {
 	    // current column. A dont care is represented by a value
 	    // of zero in set. Not that at this point we are sure that
 	    // the column is being used.
-	    for (int i = 0; i < domain_n_varnum; i++) {
+	    for (int i = 0; i < domain_n_varnum; ++i) {
 	      int val = set.at(var.at(i));
 	      if (val == 0) {
 		hasDontCare = true;
@@ -130,7 +193,8 @@ namespace MPG {
 
 	    // decode the number represented by this column
 	    int pos = 0;
-	    for (int i = 0; i < domain_n_varnum; i++) {
+	    //for (int i = 0; i < domain_n_varnum; i++) {
+	    for (int i = domain_n_varnum - 1; i >= 0;  --i) {
 	      pos <<= 1;
 	      int val = set.at(var.at(i));
 	      if (val == 2)
@@ -141,7 +205,12 @@ namespace MPG {
 	    if (!hasDontCare) {
 	      decoded[n].push_back(pos); 
 	    } else {
-	      decoded[n].push_back(-1);
+	      // here we have to call the helper to get all the
+	      // possibilities for the dont care.
+	      OutputBuffer ob(n,decoded[n]);
+	      std::cout << "Caqlled maxsikp " << maxSkip << std::endl;
+	      printSet_helper(ob, pos, domain_n_varnum-1, set, var, maxSkip);
+	      ob.finish();
 	    }
 
 	  }
@@ -180,9 +249,21 @@ namespace MPG {
 	  os << "| Col_{" << i << "}";
 	}
 	os << "|" << std::endl;
+
+	// define the functor that will print the content of b this
+	// functor is called wih a vector of vectors of integers.
 	auto functor = [&](std::vector<std::vector<int>>& r) {
 	  for (auto i = r.size(); i--;) {
-	    os << "| " << r.at(i).at(0) ;
+	    os << "| ";
+	    // every element in \a i can contain one or more
+	    // integers. When there are several integers is because a
+	    // range of values is represented in the same branch in
+	    // the bdd and therefore we can offer a compressed way to
+	    // output them.
+	    std::for_each(begin(r.at(i)), end(r.at(i)), 
+			  [&os] (int j) {
+			    os << j << ", ";
+			  });
 	  }
 	  os << "|" << std::endl;
 	};
