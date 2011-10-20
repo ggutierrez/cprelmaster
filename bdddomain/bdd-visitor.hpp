@@ -85,6 +85,12 @@ namespace MPG {
 	// we got a branch that goes to terminal 1
 	std::vector<std::vector<int>> decoded(fdvarnum);
 	for (int n = fdvarnum; n--;) {
+	  /// \todo The decoding performed by this function relies on
+	  /// the order of the bits. As each bit is represented by a
+	  /// bdd variable and the way we encode the values is the
+	  /// oposite we need the function domainIndices to reverse
+	  /// the vector before returnng it. This is something that
+	  /// should be fixed in a further release.
 	  const std::vector<int>& domain_n_ivar = domainIndices(n);
 	  int domain_n_varnum = domain_n_ivar.size();
 	  

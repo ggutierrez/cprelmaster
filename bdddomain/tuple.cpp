@@ -1,5 +1,6 @@
 #include <bdddomain/tuple.hh>
 #include <bdddomain/encoding.hh>
+#include <bdddomain/bdd.hh>
 #include <vector>
 
 using std::vector;
@@ -10,7 +11,6 @@ namespace MPG {
   Tuple::Tuple(const std::vector<int>& v)
     : data_(encode(v)), arity_(v.size()) {}
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
   Tuple::Tuple(const std::initializer_list<int> l)
     : arity_(l.size()) {
     /** \todo This is not as efficient as it can be. The best thing is for encode
@@ -20,7 +20,6 @@ namespace MPG {
     // The representation from "encode" is already referenced.
     data_ = encode(v);
   }
-#endif
 
   Tuple::Tuple(const Tuple& t)
     : data_(t.data_), arity_(t.arity_) {}
@@ -64,16 +63,21 @@ namespace MPG {
   }
 
   vector<int> Tuple::value(void) const {
-    const int cubeSize = 1<<(Limits::bbv + Limits::ba);
-    int cube_[cubeSize];
-    int *cube = cube_;
-    CUDD_VALUE_TYPE val;
-
-    DdGen* gen = Cudd_FirstCube(dd(),data_.getNode(),&cube,&val);
-    assert(gen != NULL);
-    vector<int> tuple = decodeCube(cube,arity_);
-    Cudd_GenFree(gen);
-
+    std::vector<int> tuple(arity_,-1);
+    bool first = false;
+    auto f = [&](const std::vector<std::vector<int>>& r) {
+      if (!first) {
+	for (auto i = 0; i < arity_; i++) {
+	  // there should not be ranges because this is a tuple
+	  assert(r.at(i).size() == 1);
+	  tuple[i] = r.at(i).at(0);
+	}
+	first = false;
+      } else {
+	assert(false && "Unexpected branch for a tuple");
+      }
+    };
+    traverseSet(factory(), data_, f);
     return tuple;
   }
 

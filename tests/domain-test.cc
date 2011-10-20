@@ -16,15 +16,20 @@ int main(void) {
     
     // fill some elements in the binary relation
     binary.add({1,2});
-    binary.add({3,3});
-    binary.add({3,1});
+    //binary.add({2,3});
+    //  binary.add({3,1});
     binary.add({3,2});
     //binary.add({5,4});
     binary.add({0,0});
 
+    auto t = MPG::Tuple({2,3,1});
+    for (int i : t.value()) {
+      std::cout << "Tuple has " << i << std::endl;
+    }
+    std::cout << std::endl;
     /*
     // fill the unary relation
-    unary.add(MPG::make_Tuple(2));
+
     unary.add(MPG::make_Tuple(0));
     */
     std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
