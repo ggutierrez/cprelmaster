@@ -80,6 +80,8 @@ namespace MPG {
      * lists to tuples.
      */
     Tuple(std::initializer_list<int> l);
+    //template <typename C>
+    //Tuple(const C& c);
     /// Copy constructor
     Tuple(const Tuple& t);
     /// Assignement operator
