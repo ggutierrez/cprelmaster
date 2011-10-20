@@ -322,6 +322,20 @@ install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
 install(DIRECTORY rel/ DESTINATION include/rel
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
+
+##########################################################################
+# JINC
+##########################################################################
+if (BUILD_JINC)
+  include(ExternalProject)
+  ExternalProject_Add(JINC_INSTALL
+    URL http://www.jossowski.de/projects/jinc/download/assets/jinc_2010-05-29_114104.tgz
+    BUILD_IN_SOURCE Yes
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND make -j${JOBS}
+    INSTALL_COMMAND make install
+    )
+endif()
 ##########################################################################
 # Gecode
 ##########################################################################

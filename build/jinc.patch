@@ -1,0 +1,14 @@
+diff -rupN jinc/makefile.options jinc-patched/makefile.options
+--- jinc/makefile.options	2009-09-09 16:28:31.000000000 +0200
++++ jinc-patched/makefile.options	2011-10-20 18:20:33.000000000 +0200
+@@ -1,7 +1,7 @@
+ #CXX := g++-4.0
+ #CXXCPP := g++-4.0
+ #CXXLD := g++-4.0
+-CPPFLAGS := -m32 -ansi -pedantic -O3 -Wall -Wextra -Wno-long-long -Isrc/lib #-mtune=native #i686 #-march=pentium
++CPPFLAGS := -ansi -pedantic -O3 -Wall -Wextra -Wno-long-long -Isrc/lib #-mtune=native #i686 #-march=pentium
+ CXXFLAGS := -fPIC
+-LDFLAGS :=  -shared -m32 
+-LIBS := -m32 -lboost_thread 
++LDFLAGS :=  -shared  
++LIBS := -lboost_thread 
