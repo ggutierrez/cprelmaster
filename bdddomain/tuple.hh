@@ -4,9 +4,7 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
 #include <initializer_list>
-#endif
 #include <bdddomain/manager.hh>
 
 namespace MPG {
@@ -58,14 +56,22 @@ namespace MPG {
      * it and Cudd_RecursiveDeref when not needed anymore.
      */
     BDD getBDD(void) const;
-    /// Returns a BDD representing \a this
-    BDD encode(const std::vector<int>& v) const;
+    /**
+     * \brief Returns a Bdd that represents all the elements in collection \a c.
+     *
+     * \a C is expected to have a method size that returns the legnth
+     * of the collection and also is expected to provide \a begin and
+     * \a end iterators.
+     */ 
+    template <typename C>
+    BDD encode(const C& c) const;
   public:
     /**
      * \brief Construct a tuple with all the elements present in \a v. The arity
      * of the tuple is the size of the vector.
      */
-    explicit Tuple(const std::vector<int>& v);
+    template <typename C>
+    Tuple(const C& c);
     /**
      * \brief Construct a tuple with all the elements present in \a l. The arity
      * of the tuple is the size of the list.
@@ -74,6 +80,8 @@ namespace MPG {
      * lists to tuples.
      */
     Tuple(std::initializer_list<int> l);
+    //template <typename C>
+    //Tuple(const C& c);
     /// Copy constructor
     Tuple(const Tuple& t);
     /// Assignement operator
@@ -87,6 +95,25 @@ namespace MPG {
     /// Arity of the tuple
     int arity(void) const { return arity_; }
   };
+
+  template <typename C>
+  BDD Tuple::encode(const C& c) const {
+    BDD f = VarImpl::one();
+    int col = c.size()-1;
+    int i = 0;
+    for (auto x = begin(c); x != end(c); ++x, i++) {
+      f &= encode(*x,col);
+      col--;
+    }
+    return f;
+  }
+
+  template <typename C>
+  Tuple::Tuple(const C& c)
+    : data_(encode(c)), arity_(c.size()) {
+    assert(c.size() <= static_cast<unsigned int>(VarImpl::Limits::arity)
+	   && "The manager was not configured to support this arity");
+  }
 
   /// Creates a binary tuple with \a a
   inline

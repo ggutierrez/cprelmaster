@@ -7,18 +7,18 @@ using std::vector;
 
 namespace MPG {
   using namespace VarImpl;
-
+  /*
   Tuple::Tuple(const std::vector<int>& v)
-    : data_(encode(v)), arity_(v.size()) {}
-
+    : data_(encode(v)), arity_(v.size()) {
+    assert(v.size() <= static_cast<unsigned int>(Limits::arity)
+	   && "The manager was not configured to support this arity");
+  }
+  */
   Tuple::Tuple(const std::initializer_list<int> l)
     : arity_(l.size()) {
-    /** \todo This is not as efficient as it can be. The best thing is for encode
-     * to get two iterators and this will avoid copying to a temporal vector
-     */
-    std::vector<int> v(l.begin(),l.end());
-    // The representation from "encode" is already referenced.
-    data_ = encode(v);
+    assert(l.size() <= static_cast<unsigned int>(Limits::arity)
+	   && "The manager was not configured to support this arity");
+    data_ = encode(l);
   }
 
   Tuple::Tuple(const Tuple& t)
@@ -36,6 +36,8 @@ namespace MPG {
   }
 
   BDD Tuple::encode(int p, int a) {
+    assert(static_cast<unsigned int>(p) <= Limits::maxValue &&
+	   "The manager was not configured to support this value");
     BDD f = one();
     for (int i = Limits::bitsPerInteger; i--;) {
       BDD v = factory().bddVar((i << Limits::ba)+a);
@@ -48,15 +50,6 @@ namespace MPG {
     return f;
   }
 
-  BDD Tuple::encode(const std::vector<int>& v) const {
-    BDD f = one();
-    int c = v.size()-1;
-    for (unsigned int i = 0; i < v.size(); i++) {
-      f &= encode(v.at(i),c);
-      c--;
-    }
-    return f;
-  }
 
   BDD Tuple::getBDD(void) const {
     return data_;

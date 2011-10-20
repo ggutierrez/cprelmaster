@@ -15,18 +15,20 @@ int main(void) {
     MPG::VarImpl::RelationImpl unary(1), binary(2), ternary(3), fourthary(4);
     
     // fill some elements in the binary relation
-    binary.add({1,2});
+    binary.add({3,1});
     //binary.add({2,3});
     //  binary.add({3,1});
     binary.add({3,2});
     //binary.add({5,4});
     binary.add({0,0});
-
+    binary.add({0,1});
+    /*
     auto t = MPG::Tuple({2,3,1});
     for (int i : t.value()) {
       std::cout << "Tuple has " << i << std::endl;
     }
     std::cout << std::endl;
+    */
     /*
     // fill the unary relation
 
