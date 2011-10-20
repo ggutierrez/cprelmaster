@@ -256,8 +256,6 @@ namespace MPG { namespace VarImpl {
 
     BDD unique(int c, BDD r) {
       std::cout << "Called unique on one column " << c << std::endl;
-      printDot(r);
-      printSet(r);
       std::vector<int> indices = bddIndices(c);
       BDD cube = factory().IndicesToCube(&indices[0],indices.size());
       return unique(r,cube);

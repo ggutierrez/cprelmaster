@@ -97,6 +97,7 @@ namespace MPG {
 	// define the functor that will print the content of b this
 	// functor is called wih a vector of vectors of integers.
 	auto functor = [&](std::vector<std::vector<int>>& r) {
+	  std::cout << "Doing nothing " << std::endl;
 	  for (auto i = r.size(); i--;) {
 	    os << "| ";
 	    // every element in \a i can contain one or more
@@ -105,6 +106,9 @@ namespace MPG {
 	    // the bdd and therefore we can offer a compressed way to
 	    // output them.
 	    auto& range = r.at(i);
+	    bool single = range.size() == 1;
+	    if (!single)
+	      os << "{";
 	    for (auto e = begin(range); e != end(range);) { 
 	      int element = *e;
 	      if (element != -2) {
@@ -115,14 +119,14 @@ namespace MPG {
 	      ++e;
 	      if (e != end(range)) {
 		os << ", ";
-	      }
+	      } else if (!single)
+		os << "}";
 	    }
 	  }
 	  os << "|" << std::endl;
 	};
 
 	traverseSet(f, b, functor);
-
       }
     }
 

@@ -29,7 +29,7 @@ namespace MPG { namespace VarImpl {
        * The maximum arity that a relation can have is 2^ba.
        * - Setting this attribute to 3 will allow to represent up to 8-ary relations
        */
-      const int ba = 3;
+      const int ba = 1;
       /**
        * \brief Number of bits used to represent each element of a tuple
        * \ingroup DomRepr

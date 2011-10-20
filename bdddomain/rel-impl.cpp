@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bdddomain/encoding.hh>
 #include <bdddomain/rel-impl.hh>
+#include <bdddomain/bdd.hh>
 
 using std::pair;
 using std::vector;
@@ -212,6 +213,16 @@ namespace MPG { namespace VarImpl {
       int last = arity_ - 1;
       return RelationImpl(VarImpl::exists(first,last,r.bdd_),p);
     }
+
+    void RelationImpl::print(std::ostream& os) const {
+      printSet(bdd_,os);
+    }
+
+    std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
+      r.print(os);
+      return os;
+    }
+
 
     RelationImplIter RelationImpl::tuples(void) const {
       return RelationImplIter(bdd_,arity_);
