@@ -40,7 +40,12 @@ namespace MPG { namespace VarImpl {
        * \ingroup DomRepr
        */
       const int arity = 1 << ba;
-
+      /**
+       * \brief Maximum number that can be represented by the current
+       * configuration of the manager.
+       * \ingroup DomRepr
+       */
+      const unsigned int maxValue = (1L << bitsPerInteger) - 1;
       /**
        * \brief Ensures that the library is compiled on an architecture in which the
        * bits in an integer fits in the bdd representation. This is because most of the
