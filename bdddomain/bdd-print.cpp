@@ -79,8 +79,6 @@ namespace MPG {
       os << "}";
     }
 
-
-
     void printSet(const BDD& b, std::ostream& os) {
       Cudd& f = factory();
       if (b == f.bddZero()) 
@@ -97,7 +95,6 @@ namespace MPG {
 	// define the functor that will print the content of b this
 	// functor is called wih a vector of vectors of integers.
 	auto functor = [&](std::vector<std::vector<int>>& r) {
-	  std::cout << "Doing nothing " << std::endl;
 	  for (auto i = r.size(); i--;) {
 	    os << "| ";
 	    // every element in \a i can contain one or more
