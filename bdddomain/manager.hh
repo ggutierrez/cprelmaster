@@ -93,7 +93,7 @@ namespace MPG { namespace VarImpl {
       ~BddManager (void) {
 	std::cout << "Destroyed BDD manager: " << references() << std::endl;
 	//std::cout << "Manager stats" << std::endl;
-	//stats(std::cout);
+	stats(std::cout);
       }
       //@}
       /// Method called by the managed pointer when destructed

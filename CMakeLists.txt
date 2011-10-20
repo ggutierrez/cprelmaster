@@ -15,10 +15,10 @@ option(BUILD_EXAMPLES "Build examples " NO)
 if(CMAKE_COMPILER_IS_GNUCC)
   execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
     OUTPUT_VARIABLE GCC_VERSION)
-  if (GCC_VERSION VERSION_GREATER 4.2 OR GCC_VERSION VERSION_EQUAL 4.2)
+  if (GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
     message(STATUS "GCC version ${GCC_VERSION}")
   else()
-    messge(FATAL_ERROR "GCC version 4.2 or greater is required")
+    message(FATAL_ERROR "GCC version 4.6 or greater is required")
   endif()
 else()
   message(WARNING "Compiler: ${CMAKE_CXX_COMPILER_ID}")
@@ -233,6 +233,8 @@ install(TARGETS ${CUDD_LIBS}
   ARCHIVE DESTINATION lib)
 install(DIRECTORY ${CUDD_SOURCES}/cudd/ DESTINATION include/cudd
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
+install(DIRECTORY ${CUDD_SOURCES}/obj/ DESTINATION include/obj
+  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
 install(DIRECTORY ${CUDD_SOURCES}/util/ DESTINATION include/util
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp" PATTERN "*.h")
 install(DIRECTORY ${CUDD_SOURCES}/st/ DESTINATION include/st
@@ -394,26 +396,26 @@ set(CPREL_SRCS
   doc/main.hh
 
 # propagators
-  cprel/prop/and.cpp
-  cprel/prop/and.hh
-  cprel/prop/and.hpp
-  cprel/prop/equality.cpp
-  cprel/prop/equality.hh
-  cprel/prop/permutation.cpp
-  cprel/prop/permutation.hh
-  cprel/prop/join.hh
-  cprel/prop/join.cpp
-  cprel/prop/projection.cpp
-  cprel/prop/projection.hh
-  cprel/prop/channel.cpp
-  cprel/prop/channel.hh
-  cprel/prop/tuple.cpp
-  cprel/prop/tuple.hh
-  cprel/prop/follow.hh
-  cprel/prop/follow.cpp
-  cprel/prop/dom.cpp
+#  cprel/prop/and.cpp
+#  cprel/prop/and.hh
+#  cprel/prop/and.hpp
+#  cprel/prop/equality.cpp
+#  cprel/prop/equality.hh
+#  cprel/prop/permutation.cpp
+#  cprel/prop/permutation.hh
+#  cprel/prop/join.hh
+#  cprel/prop/join.cpp
+#  cprel/prop/projection.cpp
+#  cprel/prop/projection.hh
+#  cprel/prop/channel.cpp
+#  cprel/prop/channel.hh
+#  cprel/prop/tuple.cpp
+#  cprel/prop/tuple.hh
+#  cprel/prop/follow.hh
+#  cprel/prop/follow.cpp
+#  cprel/prop/dom.cpp
 # branchers
-  cprel/branch/branch.cpp
+#  cprel/branch/branch.cpp
 )
 add_library(gecodecprel ${CPREL_SRCS})
 target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
@@ -513,7 +515,7 @@ add_custom_target(dist
 ##########################################################################
 # Executables
 ##########################################################################
-#if(BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
   # test for the equality propagator
   add_executable(eq tests/equality.cpp)
   target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
@@ -557,8 +559,8 @@ add_custom_target(dist
 
   add_executable(join-test tests/join-test.cpp)
   target_link_libraries(join-test gecodecprel)
-#endif()
+endif()
 
 # test for the follow propagator
-add_executable(follow tests/follow.cpp)
-target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
+#add_executable(follow tests/follow.cpp)
+#target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})
