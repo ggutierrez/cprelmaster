@@ -104,9 +104,6 @@ namespace MPG { namespace VarImpl {
      */
     BDD unique(const std::vector<int>& c, BDD r);
 
-#ifndef NDEBUG
-    /// Prints relation \a r to standard output
-    void debug_bdd(BDD r, int arity);
-#endif
-  }}
+  }
+}
 #endif
