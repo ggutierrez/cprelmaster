@@ -92,6 +92,14 @@ namespace MPG { namespace VarImpl {
        */
       RelationImpl exists(const std::vector<int>& c) const;
       //@}
+      /// \name Unique quantification
+      //@{
+
+      //@}
+      /// \name Column permutation
+      //@{
+      RelationImpl replace(const std::vector<std::pair<int,int>>& pairing);
+      //@}
       /// \name Operations
       /**
        * \brief Returns the relation resulting from permuting \a this

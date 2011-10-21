@@ -104,6 +104,7 @@ namespace MPG { namespace VarImpl {
      */
     BDD unique(const std::vector<int>& c, BDD r);
 
+    BDD replace(const std::vector<std::pair<int,int>>& pairing, BDD r);
   }
 }
 #endif

@@ -38,6 +38,11 @@ namespace MPG { namespace VarImpl {
       return makeCube(columns);
     }
 
+    BDD replace(const std::vector<std::pair<int,int>>& pairing, BDD r) {
+      //std::vector<int>
+      return r;
+    }
+
     vector<DdNode*> bddVars(int c) {
       vector<DdNode*> vars;
       vars.reserve(Limits::bitsPerInteger);

@@ -110,7 +110,14 @@ namespace MPG { namespace VarImpl {
     RelationImpl RelationImpl::exists(const std::vector<int>& c) const {
       return RelationImpl(VarImpl::exists(c, bdd_), arity_);
     }
-    
+
+    /*
+     * Permutation
+     */
+    RelationImpl RelationImpl::replace(const std::vector<std::pair<int,int>>& pairing) {
+      return RelationImpl(VarImpl::replace(pairing,bdd_), arity_);
+    }
+
 
 
     // still for review
