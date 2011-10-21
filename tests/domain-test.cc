@@ -20,8 +20,23 @@ int main(void) {
     //  binary.add({3,1});
     binary.add({3,2});
     //binary.add({5,4});
-    binary.add({0,0});
+    binary.add({1,0});
     binary.add({0,1});
+    //std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
+    //auto uq = binary.unique(0);
+    //std::cout << "Unique quantification yields: " << uq << std::endl;
+    
+    ternary.add({0,0,1});
+    ternary.add({0,1,1});
+    ternary.add({0,0,2});
+    ternary.add({1,2,3});
+    std::cout << "Ternary relation: (" << ternary.cardinality() << "): " << ternary << std::endl;
+    //auto tuq = ternary.unique({0,1});
+    //std::cout << "Unique quantification yields: " << tuq << std::endl;
+    auto teq = ternary.exists({0,1});
+    std::cout << "Unique quantification yields: " << teq << std::endl;
+    
+
     /*
     auto t = MPG::Tuple({2,3,1});
     for (int i : t.value()) {
@@ -34,15 +49,12 @@ int main(void) {
 
     unary.add(MPG::make_Tuple(0));
     */
-    std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
     //std::cout << "Unary relation: " << unary << std::endl;
     
     //binary.remove({2,3});
     //binary.remove({5,5});
     //std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
     
-    auto uq = binary.unique(0);
-    std::cout << "Unique quantification yields: " << uq << std::endl;
     //auto e0binary = binary.exists(0);
     //std::cout << "Existentialy quant 0 in binary gives: " << e0binary << std::endl;
 

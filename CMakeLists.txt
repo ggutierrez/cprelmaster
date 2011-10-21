@@ -287,7 +287,7 @@ endif()
 include_directories(${CMAKE_SOURCE_DIR})
 
 set(BDDDOMAIN_SRCS
-  encoding.cpp encoding.hh exception.hh manager.cpp manager.hh
+  encoding.cpp encoding.hh abstract.cpp exception.hh manager.cpp manager.hh
   bdd.hh bdd.cpp bdd-print.cpp bdd-visitor.hpp
   perm-descriptor.hh rel-impl.cpp rel-impl.hh relations.cpp relations.hh
   tuple.cpp tuple.hh
@@ -563,8 +563,6 @@ if(BUILD_EXAMPLES)
   add_executable(dom tests/dom.cpp)
   target_link_libraries(dom gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
-  add_executable(domain-test tests/domain-test.cc)
-  target_link_libraries(domain-test bdddomain)
 
   add_executable(grel-test tests/grel-test.cpp)
   target_link_libraries(grel-test gecodecprel)
@@ -575,6 +573,9 @@ if(BUILD_EXAMPLES)
   add_executable(join-test tests/join-test.cpp)
   target_link_libraries(join-test gecodecprel)
 endif()
+
+add_executable(domain-test tests/domain-test.cc)
+target_link_libraries(domain-test bdddomain)
 
 # test for the follow propagator
 #add_executable(follow tests/follow.cpp)

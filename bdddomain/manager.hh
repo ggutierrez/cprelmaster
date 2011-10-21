@@ -2,6 +2,7 @@
 #define __CPREL_BDDDOMAIN_MANAGER_HH__
 
 #include <iostream>
+#include <iomanip>
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
@@ -61,13 +62,20 @@ namespace MPG { namespace VarImpl {
     class BddManager;
     typedef boost::shared_ptr<BddManager> PManager;
     /**
-     * \brief Class to handle the creation and destruction of Cudd related objects.
-     * \ingroup DomRepr
-     *
-     * The idea of having this class is to create a global object that
-     * is in charge of the resource deallocation of Cudd entities. For
-     * this reason only one manager is used and this class implements the
-     * singleton pattern.
+       \brief Class to interact with the underlying bdd library.
+       \ingroup DomRepr
+     
+       A common design of BDD libraries is to provide a space where
+       all the bdd nodes are allocated and the operations are
+       performed. The manager will abstract this in order to decouple
+       the domain representation from a particular implementation.
+     
+       The manager is configured by two main constants that will
+       define the number of bdd variables that will be used.
+     
+       This class is also in charge of controlling te life time of the
+       bdd objects. There is one global object for all the constraint
+       system and no assumption on thread safety can be made on it.
      */
     class BddManager : private boost::noncopyable {
     private:
@@ -131,19 +139,28 @@ namespace MPG { namespace VarImpl {
       }
       /// Prints manager statistics to \a os
       void stats(std::ostream& os) const {
+	
 	auto usedMemory = Cudd_ReadMemoryInUse(factory_.getManager());
 	//    os << "\tMemory in use: " <<  (usedMemory / 1024)  << " KB" << std::endl;
 	auto gcTime = Cudd_ReadGarbageCollectionTime(factory_.getManager());
 	//os << "\tGC time: " <<  gcTime  << " ms." << std::endl;
 	auto gcs =  Cudd_ReadGarbageCollections(factory_.getManager());
 	//os << "\tGC triggered " << gcs << " times" << std::endl;
-	/*
-	  This will print a table in the form:
-	  |-----------------+----------+----------------|
-	  | Memmory (Bytes) | GC (ms.) | Number of GC's |
-	  |-----------------+----------+----------------|
-	*/
-	os << "|" <<  usedMemory   << "|" << gcTime << "|" << gcs << "|" << std::endl;
+
+	{
+	  std::cout << "|" << std::setfill('-') << std::setw(14) << "-+" 
+		    << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;	
+	  std::cout << "|" << "Memory (MB) " <<  "|"  << "GC (s.)" << " |" << "GC steps" << " |" << std::endl;
+	  std::cout << "|" << std::setfill('-') << std::setw(14) << "-+" 
+		    << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;
+	  /*
+	    This will print a table in the form:
+            |--------------+---------+----------------|
+            | Memmory (MB) | GC (s.) | Number of GC's |
+            |--------------+---------+----------------|
+	  */
+	  os << "|" <<  (usedMemory / 1048576.0)   << "|" << (gcTime / 1000.0) << "|" << gcs << "|" << std::endl;
+	}
       }
       //@}
     };
@@ -168,7 +185,6 @@ namespace MPG { namespace VarImpl {
     DdManager* dd(void) {
       return BddManager::instance()->manager();
     }
-
     /**
      * \brief Returns logical true
      * \ingroup DomRepr
@@ -177,7 +193,6 @@ namespace MPG { namespace VarImpl {
     BDD one(void) {
       return BddManager::instance()->one();
     }
-
     /**
      * \brief Returns logical false
      * \ingroup DomRepr
@@ -186,7 +201,6 @@ namespace MPG { namespace VarImpl {
     BDD zero(void) {
       return BddManager::instance()->zero();
     }
-
     /**
      * \brief Oututs manager statistics to \a os
      * \ingroup DomRepr

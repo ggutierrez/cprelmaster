@@ -78,6 +78,20 @@ namespace MPG { namespace VarImpl {
       /// Tests if the represented relation is the universe
       bool universe(void) const;
       //@}
+      /// \name Existential quantification
+      //@{
+      /**
+       * \brief Returns the relation resulting from existencially quantifying the
+       * column \a c of the represented relation.
+       */
+      RelationImpl exists(int c) const;
+      /**
+       * \brief Returns the relation resulting from existentially
+       * quantifying the column that correspond to indices in \a c of
+       * this relation.
+       */
+      RelationImpl exists(const std::vector<int>& c) const;
+      //@}
       /// \name Operations
       /**
        * \brief Returns the relation resulting from permuting \a this
@@ -106,11 +120,6 @@ namespace MPG { namespace VarImpl {
        *
        */
       RelationImpl follow(int f, const RelationImpl& r) const;
-      /**
-       * \brief Returns the relation resulting from existencially quantifying the
-       * column \a c of the represented relation.
-       */
-      RelationImpl exists(int c) const;
       /**
        * \brief Returns the relation resulting from uniquely quantifying the column
        * \a c of the represented relation.

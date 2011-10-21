@@ -18,6 +18,26 @@ namespace MPG { namespace VarImpl {
       return vars;
     }
 
+    BDD makeCube(const std::vector<int>& c) {
+      std::cout << "Called container cube " << std::endl;
+      const unsigned int size = c.size() * Limits::bitsPerInteger;
+      std::vector<int> indices;
+      indices.reserve(size);
+      std::for_each(begin(c), end(c),
+		    [&indices](int e) {
+		      const auto& i = bddIndices(e);
+		      std::copy(begin(i), end(i), std::back_inserter(indices));
+		    });
+      assert(size == indices.size());
+      return factory().IndicesToCube(&indices[0],indices.size());
+    }
+
+    BDD makeCube(int c) {
+      std::cout << "Called constant cube " <<  std::endl;
+      std::vector<int> columns(1,c);
+      return makeCube(columns);
+    }
+
     vector<DdNode*> bddVars(int c) {
       vector<DdNode*> vars;
       vars.reserve(Limits::bitsPerInteger);
@@ -195,99 +215,6 @@ namespace MPG { namespace VarImpl {
       return q;
     }
 
-    BDD exists(std::vector<int>& indices, BDD r) {
-      BDD cube = factory().IndicesToCube(&indices[0],indices.size());
-      BDD q = r.ExistAbstract(cube);
-      return q;
-    }
-
-    BDD exists(int c, BDD r) {
-      std::vector<int> indices = bddIndices(c);
-      return exists(indices,r);
-    }
-
-    BDD exists(int first, int last, BDD r) {
-      assert(first <= last && "emtpy column identifier set");
-      std::vector<int> indices = bddIndices(first);
-
-      for(int i = last; i > first; i--) {
-	std::vector<int> idx = bddIndices(i);
-	std::copy(idx.begin(),idx.end(),std::back_inserter(indices));
-      }
-      return exists(indices,r);
-    }
-
-    BDD uniqueRec(BDD r, BDD c) {
-      if (r == one() || r == zero() || c == one())
-	return r;
-      
-      int levelR = var2Level(var(r));
-      int levelC = var2Level(var(c));
-      
-      if (levelR > levelC) {
-	return factory().bddZero();
-      }
-
-      BDD res;
-      if (levelR == levelC) {
-	BDD u_low = uniqueRec(low(r), high(c));
-	BDD e_high = high(r).ExistAbstract(high(c));
-	
-	BDD u_high = uniqueRec(high(r), high(c));
-	BDD e_low = low(r).ExistAbstract(high(c));
-	
-	res = (u_low & !e_high) | (u_high & !e_low);
-      } else {
-	BDD u_low = uniqueRec(low(r), c);
-	BDD u_high = uniqueRec(high(r), c);
-	//BDD root = bdd_ithvar(bdd_var(rel));
-	BDD root(factoryPtr(),Cudd_Regular(r.getNode()));
-	res = factory().bddVar(var(r)).Ite(u_high,u_low);
-      }
-      return res;
-    }
-
-    BDD unique(BDD r, BDD c) {
-      if (c == one()) 
-	return r;
-      
-      return uniqueRec(r,c);
-    }
-
-    BDD unique(int c, BDD r) {
-      std::cout << "Called unique on one column " << c << std::endl;
-      std::vector<int> indices = bddIndices(c);
-      BDD cube = factory().IndicesToCube(&indices[0],indices.size());
-      return unique(r,cube);
-    }
-
-    BDD unique(const std::vector<int>& c, BDD r) {
-      assert(false && "Not implemented");
-      std::vector<int> indices;
-      return r;
-      /*
-      indices.reserve(c.size() * Limits::bitsPerInteger);
-      for (unsigned int i = 0; i < c.size(); i++) {
-	std::vector<int> x = bddIndices(c.at(i));
-	for (unsigned int j = 0; j < x.size(); j++)
-	  indices.push_back(x[j]);
-
-      }
-
-      DdNode *cube = Cudd_IndicesToCube(dd(),&indices[0],indices.size());
-      Cudd_Ref(cube);
-      DdNode *q = Cudd_bddUniqueAbstract(dd(),r,cube);
-      Cudd_RecursiveDeref(dd(),cube);
-      return q;
-      */
-    }
-
-    BDD forall(int c, BDD r) {
-      std::vector<int> indices = bddIndices(c);
-      BDD cube = factory().IndicesToCube(&indices[0],indices.size());
-      BDD q = r.UnivAbstract(cube);
-      return q;
-    }
 
 #ifndef NDEBUG
     void debug_bdd(BDD node, int a) {

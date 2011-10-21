@@ -91,6 +91,30 @@ namespace MPG { namespace VarImpl {
       bdd_ = !bdd_;
     }
 
+    /*
+     * Relational algebra operations on relations
+     */
+
+    RelationImpl RelationImpl::unique(int c) const {
+      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+    }
+
+    RelationImpl RelationImpl::unique(const std::vector<int>& c) const {
+      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+    }
+
+    RelationImpl RelationImpl::exists(int c) const {
+      return RelationImpl(VarImpl::exists(c, bdd_), arity_);
+    }
+
+    RelationImpl RelationImpl::exists(const std::vector<int>& c) const {
+      return RelationImpl(VarImpl::exists(c, bdd_), arity_);
+    }
+    
+
+
+    // still for review
+
     RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
       // No error detection on permDesc is done here. The reason is because under
       // some circumstances this method is used to move columns in the representation
@@ -162,17 +186,6 @@ namespace MPG { namespace VarImpl {
 			  );
     }
 
-    RelationImpl RelationImpl::exists(int c) const {
-      return RelationImpl(VarImpl::exists(c, bdd_), arity_);
-    }
-
-    RelationImpl RelationImpl::unique(int c) const {
-      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
-    }
-
-    RelationImpl RelationImpl::unique(const std::vector<int>& c) const {
-      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
-    }
 
     RelationImpl RelationImpl::forall(int c) const {
       return RelationImpl(VarImpl::forall(c, bdd_), arity_);

@@ -11,6 +11,20 @@ namespace MPG { namespace VarImpl {
      *
      *
      */
+    /**
+     * \brief Creates a cube with all the bdd variables that represent
+     * column \a c 
+     *
+     * \ingroup BDDEnc
+     */
+    BDD makeCube(int c);
+    /**
+     * \brief Creates a cube with all the bdd variables that represent
+     * columns in \a c
+     *
+     *\ingroup BDDEnc
+     */
+    BDD makeCube(const std::vector<int>& c);
 
     /**
      * \brief Returns the variables (indices) used in the bdd to encode column \a c
@@ -58,6 +72,11 @@ namespace MPG { namespace VarImpl {
      * \ingroup BDDEnc
      */
     BDD exists(int c, BDD r);
+    /**
+     * \brief Existential queantification of all the columns with
+     * indices in \a c of relation \a r.
+     */
+    BDD exists(const std::vector<int>& c, BDD r);
 
     BDD exists(int first, int last, BDD r);
 
