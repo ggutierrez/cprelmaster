@@ -331,9 +331,10 @@ if (BUILD_JINC)
   ExternalProject_Add(JINC_INSTALL
     URL http://www.jossowski.de/projects/jinc/download/assets/jinc_2010-05-29_114104.tgz
     BUILD_IN_SOURCE Yes
+    PATCH_COMMAND patch < ${CMAKE_SOURCE_DIR}/jinc.patch
     CONFIGURE_COMMAND ""
-    BUILD_COMMAND make -j${JOBS}
-    INSTALL_COMMAND make install
+    BUILD_COMMAND make lib
+    INSTALL_COMMAND ""
     )
 endif()
 ##########################################################################
