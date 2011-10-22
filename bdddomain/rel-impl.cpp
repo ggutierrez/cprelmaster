@@ -118,6 +118,9 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::replace(pairing,bdd_), arity_);
     }
 
+    RelationImpl RelationImpl::swap(const std::vector<std::pair<int,int>>& pairing) {
+      return RelationImpl(VarImpl::swap(pairing,bdd_), arity_);
+    }
 
 
     // still for review

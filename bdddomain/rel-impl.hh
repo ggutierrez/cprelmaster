@@ -98,7 +98,9 @@ namespace MPG { namespace VarImpl {
       //@}
       /// \name Column permutation
       //@{
+      
       RelationImpl replace(const std::vector<std::pair<int,int>>& pairing);
+      RelationImpl swap(const std::vector<std::pair<int,int>>& pairing);
       //@}
       /// \name Operations
       /**

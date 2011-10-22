@@ -35,9 +35,13 @@ int main(void) {
     //std::cout << "Unique quantification yields: " << tuq << std::endl;
     //auto teq = ternary.exists({0,1});
     //std::cout << "Unique quantification yields: " << teq << std::endl;
-    std::vector<std::pair<int,int>> pairing = {{0,1}};
-    //pairing.push_back({0,1});
-    std::cout << "Ternary replace: " << ternary.replace(pairing) << std::endl;
+    std::cout << "Ternary replace: " 
+              << ternary.replace({{1,0}})
+              << std::endl;
+
+    std::cout << "Ternary swap: " 
+              << ternary.swap({{0,1}})
+              << std::endl;
 
     /*
     auto t = MPG::Tuple({2,3,1});

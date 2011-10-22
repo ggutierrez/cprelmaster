@@ -104,7 +104,22 @@ namespace MPG { namespace VarImpl {
      */
     BDD unique(const std::vector<int>& c, BDD r);
 
-    BDD replace(const std::vector<std::pair<int,int>>& pairing, BDD r);
+    /**
+     * \brief Returns a bdd containing the permutation of columns
+     * according with the permutation specification \a pairing.
+     *
+     * \a pairing contains a pair of column indices per element. The
+     * first element of the pair is the is the index of the column
+     * that will be replaced by the column on the second element. This
+     * operation will replace the contents of the column.
+     */
+    BDD replace(const std::vector<std::pair<int,int>>& pairing, const BDD& r);
+    /**
+     * \brief Returns a bdd with the swapping of the columns in \a r
+     * represented by \a pairing
+     */
+    BDD swap(const std::vector<std::pair<int,int>>& pairing, const BDD& r);
+
   }
 }
 #endif

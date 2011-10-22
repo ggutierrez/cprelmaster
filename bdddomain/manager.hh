@@ -48,6 +48,11 @@ namespace MPG { namespace VarImpl {
        */
       const unsigned int maxValue = (1L << bitsPerInteger) - 1;
       /**
+       * \brief Number of variables in the manager for the current setup
+       * \ingroup DomRepr
+       */
+      const int variables = bitsPerInteger * arity;
+      /**
        * \brief Ensures that the library is compiled on an architecture in which the
        * bits in an integer fits in the bdd representation. This is because most of the
        * operations on tuples or anything that has a bdd representation behind use the
