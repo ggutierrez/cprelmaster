@@ -154,27 +154,17 @@ namespace MPG { namespace VarImpl {
 
 	{
           
-	  os  << "|" << std::setfill('-') << std::setw(14) << "+" 
-              << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;	
-	  os  << std::setfill(' ')
-              << setiosflags(std::ios::left)
-              << "|" << std::setw(13) << "Memory (MB)" 
-              << std::setw(14) << "|GC (s.)"
-              << std::setw(14) << "|GC steps" << "|" 
-              << std::endl;
-            
-          os << setiosflags(std::ios::right) << "|" << std::setfill('-') << std::setw(14) << "-+" 
-		    << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;
-          
-          os << std::setfill(' ') <<  setiosflags(std::ios::right)  << "|" 
-             << std::setw(13) << (usedMemory / 1048576.0)  << "|" 
-             << std::setw(13) << (gcTime / 1000.0) << "|"
-             << std::setw(13) << gcs << "|" 
+          os << setiosflags(std::ios::left)
+             << std::setw(14) << "Memory (MB)" 
+             << std::setw(14) << "GC (s.)"
+             << std::setw(14) << "GC steps" 
              << std::endl;
-	  
-          os << "|" << std::setfill('-') << std::setw(14) << "+" 
-             << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;	
-	}
+                      
+          os << std::setw(14) << (usedMemory / 1048576.0) 
+             << std::setw(14) << (gcTime / 1000.0) 
+             << std::setw(14) << gcs 
+             << std::endl;
+        }
       }
       //@}
     };
