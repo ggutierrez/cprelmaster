@@ -148,18 +148,27 @@ namespace MPG { namespace VarImpl {
 	//os << "\tGC triggered " << gcs << " times" << std::endl;
 
 	{
-	  std::cout << "|" << std::setfill('-') << std::setw(14) << "-+" 
-		    << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;	
-	  std::cout << "|" << "Memory (MB) " <<  "|"  << "GC (s.)" << " |" << "GC steps" << " |" << std::endl;
-	  std::cout << "|" << std::setfill('-') << std::setw(14) << "-+" 
+          
+	  os  << "|" << std::setfill('-') << std::setw(14) << "+" 
+              << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;	
+	  os  << std::setfill(' ')
+              << setiosflags(std::ios::left)
+              << "|" << std::setw(13) << "Memory (MB)" 
+              << std::setw(14) << "|GC (s.)"
+              << std::setw(14) << "|GC steps" << "|" 
+              << std::endl;
+            
+          os << setiosflags(std::ios::right) << "|" << std::setfill('-') << std::setw(14) << "-+" 
 		    << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;
-	  /*
-	    This will print a table in the form:
-            |--------------+---------+----------------|
-            | Memmory (MB) | GC (s.) | Number of GC's |
-            |--------------+---------+----------------|
-	  */
-	  os << "|" <<  (usedMemory / 1048576.0)   << "|" << (gcTime / 1000.0) << "|" << gcs << "|" << std::endl;
+          
+          os << std::setfill(' ') <<  setiosflags(std::ios::right)  << "|" 
+             << std::setw(13) << (usedMemory / 1048576.0)  << "|" 
+             << std::setw(13) << (gcTime / 1000.0) << "|"
+             << std::setw(13) << gcs << "|" 
+             << std::endl;
+	  
+          os << "|" << std::setfill('-') << std::setw(14) << "+" 
+             << std::setw(14) << "-+" << std::setw(14) << "-|" << std::endl;	
 	}
       }
       //@}
