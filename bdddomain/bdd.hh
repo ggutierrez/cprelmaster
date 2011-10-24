@@ -10,7 +10,6 @@ namespace MPG { namespace VarImpl {
      * \ingroup BDDEnc
      */
     std::vector<int> domainIndices(int c);
-
     /**
      * \brief returns the \a then node of \a r
      *
@@ -22,7 +21,6 @@ namespace MPG { namespace VarImpl {
       res = Cudd_NotCond(res, Cudd_IsComplement(d));
       return BDD(factoryPtr(),res);
     }
-
     /**
      * \brief returns the \a else node of \a r
      *
@@ -34,7 +32,6 @@ namespace MPG { namespace VarImpl {
       res = Cudd_NotCond(res, Cudd_IsComplement(d));
       return BDD(factoryPtr(),res);   
     }
-
     /**
      * \brief returns the \a level of variable \a r in the bdd manager
      *
@@ -43,7 +40,6 @@ namespace MPG { namespace VarImpl {
     inline int var2Level(int v) {
       return Cudd_ReadPerm(dd(),v);
     }
-
     /**
      * \brief returns the \a variable at a given level in the manager
      *
@@ -52,11 +48,9 @@ namespace MPG { namespace VarImpl {
     inline int level2Var(int level) {
       return Cudd_ReadInvPerm(dd(),level);
     }
-
     inline int var(const BDD& r) {
       return r.NodeReadIndex();
     }
-
     /**
      * \brief Traverses \a r and executes \a fc on every tuple represented.
      */
@@ -64,14 +58,18 @@ namespace MPG { namespace VarImpl {
     void traverseSet(Cudd& factory, const BDD& r, Functor& fc);
 
     /**
-     * \brief Outputs \a b to \a os in dot format.
+     * \brief Outputs \a b to \a os in dot format.  
+     *
+     * \todo This function has to be reviewed. It is causing a
+     * segmentation fault some times when the arity of the relation is
+     * 1.
      */
     void printDot(const BDD& b, std::ostream& os = std::cout);
 
     /**
      * \brief Outputs a relation represented by \a b to \a os.
      */
-    void printSet(const BDD& b, std::ostream& os = std::cout);
+    void printSet(const BDD& b, int columns = Limits::arity, std::ostream& os = std::cout);
   }
 }
 

@@ -15,9 +15,13 @@ namespace MPG {
       int lastHigh_;
       bool done_;
       std::vector<int>& values_;
+      int pos_;
     public:
       OutputBuffer(int domain, std::vector<int>& values) 
-	: domain_(domain), lastHigh_(-2), done_(false), values_(values) {}
+	: domain_(domain), lastHigh_(-2), done_(false), values_(values), pos_(0) {
+	//values_.push_back(-5);
+	//values_.push_back(-5);
+      }
       
       void append(int low, int high) {
 	if (low == lastHigh_ + 1)
@@ -30,15 +34,19 @@ namespace MPG {
      
       void finish(void) {
 	if (lastHigh_ != -2) {
-	  //if (done_) std::cout << "/";
-	  if (lastLow_ == lastHigh_)
-	    values_.push_back(lastHigh_);
-	  //std::cout << lastHigh_;
-	  else
-	    //std::cout << lastLow_ << "..." << lastHigh_;
-	    for (int i = lastLow_; i <= lastHigh_; i++) {
-	      values_.push_back(i);
-	    }
+	  if (done_) {
+	    values_.push_back(-5);
+	    values_.push_back(-5);
+	  }
+	  if (lastLow_ == lastHigh_) {
+	    auto size = values_.size();
+	    values_[size - 2] = lastHigh_;
+	    values_[size - 1] = lastHigh_;
+	  } else {
+	    auto size = values_.size();
+	    values_[size - 2] = lastLow_;
+	    values_[size - 1] = lastHigh_;
+	  }
 	  lastHigh_ = -2;
 	}
 	done_ = true;

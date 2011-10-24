@@ -81,7 +81,7 @@ namespace MPG {
       os << "}";
     }
 
-    void printSet(const BDD& b, std::ostream& os) {
+    void printSet(const BDD& b, int columns,  std::ostream& os) {
       Cudd& f = factory();
       if (b == f.bddZero()) 
 	os << "F";
