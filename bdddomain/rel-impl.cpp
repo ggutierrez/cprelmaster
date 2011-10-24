@@ -15,7 +15,7 @@ namespace MPG { namespace VarImpl {
       : bdd_(zero()), arity_(a) {}
 
     RelationImpl::RelationImpl(const RelationImpl &r)
-      : bdd_(r.bdd_), arity_(r.arity_){}
+      : bdd_(r.bdd_), arity_(r.arity_) {}
 
     RelationImpl& RelationImpl::operator=(const RelationImpl& right) {
       if (this == &right) return *this;
@@ -122,8 +122,46 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::swap(pairing,bdd_), arity_);
     }
 
+    /*
+     * Cross product
+     */
+    RelationImpl RelationImpl::timesULeft(int n) const {
+      assert(arity_ + n <= Limits::arity &&
+	     "Manager does not configure with the appropriate capacity to handle this operation.");
+      return RelationImpl(bdd_, arity_ + n);
+    }
+
+    RelationImpl RelationImpl::timesURight(int n) const {
+      assert(arity_ + n <= Limits::arity &&
+	     "Manager does not configure with the appropriate capacity to handle this operation.");
+      
+      std::vector<std::pair<int,int>> replacement(Limits::arity);
+      for (int i = 0; i < arity_; i++) {
+	replacement[i] = {i,i+n};
+      }
+      for (int i = arity_; i < Limits::arity - n; i++) {
+	replacement[i] = {i,i};
+      }
+      int j = 0;
+      for (int i = Limits::arity - n; i < Limits::arity; i++, j++) {
+	replacement[i] = {i, j};
+      }
+      
+      return RelationImpl(VarImpl::replace(replacement,bdd_), arity_ + n);
+    }
 
     // still for review
+    RelationImpl RelationImpl::timesU(int n, bool left) const {
+      if (left)
+	return RelationImpl(bdd_,arity_+n);
+
+      PermDescriptor d;
+      for (int i = 0; i < arity_; i++) d.permute(i,i+n);
+      RelationImpl r = permute(d);
+      return RelationImpl(r.bdd_,arity_+n);
+    }
+
+
 
     RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
       // No error detection on permDesc is done here. The reason is because under
@@ -149,15 +187,6 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::shiftRight(bdd_,arity_,n),arity_-n);
     }
 
-    RelationImpl RelationImpl::timesU(int n, bool left) const {
-      if (left)
-	return RelationImpl(bdd_,arity_+n);
-
-      PermDescriptor d;
-      for (int i = 0; i < arity_; i++) d.permute(i,i+n);
-      RelationImpl r = permute(d);
-      return RelationImpl(r.bdd_,arity_+n);
-    }
 
     RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
       const RelationImpl& left = *this;
@@ -238,7 +267,11 @@ namespace MPG { namespace VarImpl {
     }
 
     void RelationImpl::print(std::ostream& os) const {
-      printSet(bdd_,os);
+      // this prints the bdd with all the columns in the manager
+      printSet(bdd_,Limits::arity,os);
+      // this is to print only the columns that correspond to the
+      // represented relation
+      //printSet(bdd_,arity_,os);
     }
 
     std::ostream& operator << (std::ostream& os, const RelationImpl& r) {

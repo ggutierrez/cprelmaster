@@ -92,13 +92,14 @@ namespace MPG {
         os << std::endl;
         
         os << setiosflags(std::ios::left);
-	for (auto i = Limits::arity; i--;)
+	for (auto i = columns; i--;)
 	  os << "C-" << i << std::setw(7) << " " ;
         os << std::endl;
+	typedef std::vector<std::vector<std::pair<int,int>>> branch_contents; 
 	// define the functor that will print the content of b this
 	// functor is called wih a vector of vectors of integers.
-	auto functor = [&](std::vector<std::vector<int>>& r) {
-	  for (auto i = r.size(); i--;) {
+	auto functor = [&](branch_contents& r) {
+	  for (auto i = columns; i--;) {
 	    // every element in \a i can contain one or more
 	    // integers. When there are several integers is because a
 	    // range of values is represented in the same branch in
@@ -106,24 +107,29 @@ namespace MPG {
 	    // output them.
             std::string text;
 	    auto& range = r.at(i);
-	    bool single = range.size() == 1;
-	    if (!single)
-	      text = "{";
 	    for (auto e = begin(range); e != end(range);) { 
-	      int element = *e;
-	      if (element != -2) {
-		text += boost::lexical_cast<std::string>(element);
+	      const std::pair<int,int>& element = *e;
+	      if (element.first != -2) {
+		bool single = element.first == element.second;
+		if (!single) 
+		  text += "{";
+		text += boost::lexical_cast<std::string>(element.first);
+		if (!single) {
+		  text += "..";
+		  text += boost::lexical_cast<std::string>(element.second);
+		  text += "}";
+		}
 	      } else {
 		text += "-";
 	      }
 	      ++e;
 	      if (e != end(range)) {
 		text +=  ",";
-	      } else if (!single)
-		text += "}";
+	      } 
 	    }
             os << std::setw(10) << text;
           }
+	  
 	  os << std::endl;
 	};
 

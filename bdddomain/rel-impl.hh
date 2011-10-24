@@ -98,9 +98,33 @@ namespace MPG { namespace VarImpl {
       //@}
       /// \name Column permutation
       //@{
-      
+      /**
+       * \brief Returns a new relation implementation by performing
+       * the specified replacement of columns indicated by \a pairing.
+       *
+       * Every component of \a pairning consists of two column indices
+       * specifying: 1) the column to be replaced and 2) the column to
+       * replace it with.
+       *
+       * This method overrides the data stored by the first column of
+       * the pair. Also, the replacement is done at once and not
+       * incrementally for every pair. This causes for instance the
+       * pairing {<0,1>,<1,0>} two swap columns 1 and 0.
+       */
       RelationImpl replace(const std::vector<std::pair<int,int>>& pairing);
+      /**
+       * \brief Returns a new variable implementation by swapping the
+       * columns as indicated by \a pairing.
+       *
+       */
       RelationImpl swap(const std::vector<std::pair<int,int>>& pairing);
+      //@}
+      /// \name Cross product
+      //@{
+      /// Returns U_{n} \times this
+      RelationImpl timesULeft(int n) const;
+      /// Returns this \times U_{n}
+      RelationImpl timesURight(int n) const;
       //@}
       /// \name Operations
       /**

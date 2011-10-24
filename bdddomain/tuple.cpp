@@ -51,7 +51,10 @@ namespace MPG {
   vector<int> Tuple::value(void) const {
     std::vector<int> tuple(arity_,-1);
     bool first = false;
-    auto f = [&](const std::vector<std::vector<int>>& r) {
+    typedef std::vector<std::vector<std::pair<int,int>>> branch_contents;
+    auto f = [&](const branch_contents& r) {
+      assert(false && "Not implemented");
+      /*
       if (!first) {
 	for (auto i = 0; i < arity_; i++) {
 	  // there should not be ranges because this is a tuple
@@ -62,6 +65,7 @@ namespace MPG {
       } else {
 	assert(false && "Unexpected branch for a tuple");
       }
+      */
     };
     traverseSet(factory(), data_, f);
     return tuple;

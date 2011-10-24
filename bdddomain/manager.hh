@@ -6,7 +6,6 @@
 #include <boost/utility.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
-//#include <cudd/cuddInt.h>
 #include <obj/cuddObj.hh>
 #include <limits>
 
@@ -151,10 +150,8 @@ namespace MPG { namespace VarImpl {
 	//os << "\tGC time: " <<  gcTime  << " ms." << std::endl;
 	auto gcs =  Cudd_ReadGarbageCollections(factory_.getManager());
 	//os << "\tGC triggered " << gcs << " times" << std::endl;
-
 	{
-          
-          os << setiosflags(std::ios::left)
+	  os << setiosflags(std::ios::left)
              << std::setw(14) << "Memory (MB)" 
              << std::setw(14) << "GC (s.)"
              << std::setw(14) << "GC steps" 

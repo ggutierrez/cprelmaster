@@ -25,15 +25,14 @@ namespace MPG { namespace VarImpl {
         : perm_(Limits::variables) 
       {
         for (int i = 0; i < Limits::variables; i++)
-          perm_[i] = i; //factory().bddVar(i);
+          perm_[i] = i; 
       }
       /**
        * \brief Represents the change of variable at index \a oldVar by
        * variable at index \a newVar.
        */
       void set(int oldVar, int newVar) {
-        //perm_[oldVar] = factory().bddVar(newVar);
-        perm_[oldVar] = newVar;
+	perm_[oldVar] = newVar;
       }
       /**
        * \brief Represents the change of all the variables at the

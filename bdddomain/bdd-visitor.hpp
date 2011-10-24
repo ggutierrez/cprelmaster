@@ -14,10 +14,10 @@ namespace MPG {
       int lastLow_;
       int lastHigh_;
       bool done_;
-      std::vector<int>& values_;
+      std::vector<std::pair<int,int>>& values_;
       int pos_;
     public:
-      OutputBuffer(int domain, std::vector<int>& values) 
+      OutputBuffer(int domain, std::vector<std::pair<int,int>>& values) 
 	: domain_(domain), lastHigh_(-2), done_(false), values_(values), pos_(0) {
 	//values_.push_back(-5);
 	//values_.push_back(-5);
@@ -35,18 +35,23 @@ namespace MPG {
       void finish(void) {
 	if (lastHigh_ != -2) {
 	  if (done_) {
-	    values_.push_back(-5);
-	    values_.push_back(-5);
+	    values_.push_back({-5,-5});
 	  }
 	  if (lastLow_ == lastHigh_) {
+	    values_[values_.size() - 1] = {lastHigh_, lastHigh_};
+	    /*
 	    auto size = values_.size();
 	    values_[size - 2] = lastHigh_;
 	    values_[size - 1] = lastHigh_;
+	    */
 	  } else {
+	    values_[values_.size() - 1] = {lastLow_, lastHigh_};
+	    /*
 	    auto size = values_.size();
 	    values_[size - 2] = lastLow_;
 	    values_[size - 1] = lastHigh_;
-	  }
+	    */
+	    }
 	  lastHigh_ = -2;
 	}
 	done_ = true;
@@ -91,7 +96,7 @@ namespace MPG {
 	return;
       else if (r == factory.bddOne()) {
 	// we got a branch that goes to terminal 1
-	std::vector<std::vector<int>> decoded(fdvarnum);
+	std::vector<std::vector<std::pair<int,int>>> decoded(fdvarnum);
 	for (int n = fdvarnum; n--;) {
 	  /// \todo The decoding performed by this function relies on
 	  /// the order of the bits. As each bit is represented by a
@@ -141,7 +146,7 @@ namespace MPG {
 	    
 	    // print the number
 	    if (!hasDontCare) {
-	      decoded[n].push_back(pos); 
+	      decoded[n].push_back(std::make_pair(pos,pos)); 
 	    } else {
 	      // here we have to call the helper to get all the
 	      // possibilities for the dont care.
@@ -152,7 +157,7 @@ namespace MPG {
 
 	  }
 	  else {
-	    decoded[n].push_back(-2);
+	    decoded[n].push_back(std::make_pair(-2,-2));
 	  }
 	}
 

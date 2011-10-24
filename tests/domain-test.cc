@@ -12,7 +12,7 @@ int main(void) {
   std::cout << "Starting the test " << std::endl;
   {
     
-    MPG::VarImpl::RelationImpl unary(1), binary(2), ternary(3), fourthary(4);
+    MPG::VarImpl::RelationImpl unary(1), binary(2), ternary(3), fourthary(5), f(5);
     
     // fill some elements in the binary relation
     binary.add({3,1});
@@ -35,6 +35,7 @@ int main(void) {
     //std::cout << "Unique quantification yields: " << tuq << std::endl;
     //auto teq = ternary.exists({0,1});
     //std::cout << "Unique quantification yields: " << teq << std::endl;
+    /*
     std::cout << "Ternary replace: " 
               << ternary.replace({{1,0}})
               << std::endl;
@@ -42,7 +43,20 @@ int main(void) {
     std::cout << "Ternary swap: " 
               << ternary.swap({{0,1}})
               << std::endl;
+    */
+    fourthary = ternary.timesURight(2);
+    std::cout << "U times Ternary: " << (fourthary.cardinality()) << fourthary << std::endl;
+    fourthary.add({1,2,3,4,5});
+    f.add({1,2,3,4,5});
+    fourthary.intersect(f);
+    //auto n = fourthary;
+    std::cout << "After adding: " << (fourthary.cardinality()) 
+	      << fourthary << std::endl;
+    //std::cout << "The other After adding: " << (n.cardinality()) << n << std::endl;
 
+    
+    //fourthary.remove({1,2,3,4});
+    //std::cout << "After remove: " << (fourthary.cardinality()) << fourthary << std::endl;
     /*
     auto t = MPG::Tuple({2,3,1});
     for (int i : t.value()) {
