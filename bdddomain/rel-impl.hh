@@ -126,6 +126,10 @@ namespace MPG { namespace VarImpl {
       /// Returns this \times U_{n}
       RelationImpl timesURight(int n) const;
       //@}
+      /// \name Column manipulation
+      //@{
+      RelationImpl discard(int start, int end) const;
+      //@}
       /// \name Operations
       /**
        * \brief Returns the relation resulting from permuting \a this

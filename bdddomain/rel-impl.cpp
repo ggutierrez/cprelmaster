@@ -150,8 +150,68 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::replace(replacement,bdd_), arity_ + n);
     }
 
+    /*
+     * Join, follow  
+     */
+    
+    RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
+      const RelationImpl& left = *this;
+      
+      assert(left.arity() >= j && right.arity() >= j
+	     && "There are not enough columns for the join");
+
+      RelationImpl lxu = left.timesURight(right.arity() - j);
+      RelationImpl rxu = right.timesULeft(left.arity() - j);
+
+      lxu.intersect(rxu);
+      return lxu;
+    }
+
+
+    /*
+     * Column removal
+     */
+    RelationImpl RelationImpl::discard(int start, int end) const {
+      assert(start >= 0 && start <= end && start <= Limits::arity && "Invalid value for start");
+      assert(end >= 0 && end >= start && end <= Limits::arity && "Invalid value for start");
+      
+      std::vector<std::pair<int,int>> replacement(Limits::arity);
+      for (int i = 0; i < start; i++) {
+	replacement[i] = {i,i};
+      }
+      int j = 1;
+      for (int i = start; i <= end; i++, j++) {
+	replacement[i] = {i,end + j};
+      }
+      for (int i = end + 1; i < Limits::arity; i++) {
+	replacement[i] = {i,i};
+      }
+      
+      BDD replaced = VarImpl::replace(replacement,bdd_);
+     
+      std::vector<int> quantify(Limits::arity - end - 1);
+      j = 0;
+      for (int i = end + 1; i < Limits::arity; i++, j++) {
+	quantify[j] = i;
+      }
+      BDD result = VarImpl::exists(quantify,replaced);
+      return RelationImpl(result, arity_ - end - start + 1);
+    }
+
     // still for review
+    /*
+     * Column permutation
+     */
+    
+
+    RelationImpl RelationImpl::shiftLeft(int n) const {
+      if (n == 0) return RelationImpl(*this);
+      return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
+    }
+
+
     RelationImpl RelationImpl::timesU(int n, bool left) const {
+      assert(false && "Deprecated funtion");
       if (left)
 	return RelationImpl(bdd_,arity_+n);
 
@@ -176,10 +236,6 @@ namespace MPG { namespace VarImpl {
       return ret;
     }
 
-    RelationImpl RelationImpl::shiftLeft(int n) const {
-      if (n == 0) return RelationImpl(*this);
-      return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
-    }
 
     RelationImpl RelationImpl::shiftRight(int n) const {
       if (n == 0) return RelationImpl(*this);
@@ -188,18 +244,6 @@ namespace MPG { namespace VarImpl {
     }
 
 
-    RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
-      const RelationImpl& left = *this;
-
-      assert(left.arity() >= j && right.arity() >= j
-	     && "There are not enough columns for the join");
-
-      RelationImpl lxu = left.timesU(right.arity() - j,false);
-      RelationImpl rxu = right.timesU(left.arity() - j,true);
-
-      lxu.intersect(rxu);
-      return lxu;
-    }
 
     RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
       const RelationImpl& left = *this;

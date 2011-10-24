@@ -16,13 +16,13 @@ int main(void) {
     
     // fill some elements in the binary relation
     binary.add({3,1});
-    //binary.add({2,3});
-    //  binary.add({3,1});
+    binary.add({2,3});
+    binary.add({3,1});
     binary.add({3,2});
-    //binary.add({5,4});
+    binary.add({5,4});
     binary.add({1,0});
     binary.add({0,1});
-    //std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
+    std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
     //auto uq = binary.unique(0);
     //std::cout << "Unique quantification yields: " << uq << std::endl;
     
@@ -35,6 +35,13 @@ int main(void) {
     //std::cout << "Unique quantification yields: " << tuq << std::endl;
     //auto teq = ternary.exists({0,1});
     //std::cout << "Unique quantification yields: " << teq << std::endl;
+    
+    //MPG::VarImpl::RelationImpl j1 = binary.join(1, ternary);
+    //std::cout << "Join on one column (" << j1.cardinality() << "): " << j1 << std::endl;
+   
+    MPG::VarImpl::RelationImpl discard  = ternary.discard(1, 2);
+    std::cout << "Discard one column of ternarry  (" << discard.cardinality() << ")#(" << discard.arity() << "): " << discard << std::endl;
+    
     /*
     std::cout << "Ternary replace: " 
               << ternary.replace({{1,0}})
@@ -44,53 +51,16 @@ int main(void) {
               << ternary.swap({{0,1}})
               << std::endl;
     */
+    /*
     fourthary = ternary.timesURight(2);
     std::cout << "U times Ternary: " << (fourthary.cardinality()) << fourthary << std::endl;
     fourthary.add({1,2,3,4,5});
     f.add({1,2,3,4,5});
     fourthary.intersect(f);
-    //auto n = fourthary;
+    
     std::cout << "After adding: " << (fourthary.cardinality()) 
 	      << fourthary << std::endl;
-    //std::cout << "The other After adding: " << (n.cardinality()) << n << std::endl;
-
-    
-    //fourthary.remove({1,2,3,4});
-    //std::cout << "After remove: " << (fourthary.cardinality()) << fourthary << std::endl;
-    /*
-    auto t = MPG::Tuple({2,3,1});
-    for (int i : t.value()) {
-      std::cout << "Tuple has " << i << std::endl;
-    }
-    std::cout << std::endl;
     */
-    /*
-    // fill the unary relation
-
-    unary.add(MPG::make_Tuple(0));
-    */
-    //std::cout << "Unary relation: " << unary << std::endl;
-    
-    //binary.remove({2,3});
-    //binary.remove({5,5});
-    //std::cout << "Binary relation: (" << binary.cardinality() << "): " << binary << std::endl;
-    
-    //auto e0binary = binary.exists(0);
-    //std::cout << "Existentialy quant 0 in binary gives: " << e0binary << std::endl;
-
-
-    //PermDescriptor d;
-    //d.permute(0,2); d.permute(1,0); d.permute(2,1);
-
-    //RelationImpl x(r.permute(d));
-
-//    RelationImpl s = r.shiftRight(1);
-//    cout << s << endl;
-//    cout << "Shift right " <<  " Cardinality " << s.cardinality() << std::endl;
-
-//    // initial relation
-    //cout << "New relation " << x << " with cardinality " << x.cardinality() << std::endl;
-
   }
   return 0;
 }
