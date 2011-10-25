@@ -7,7 +7,9 @@ namespace MPG { namespace VarImpl {
      */
     
     BDD exists(const std::vector<int>& indices, BDD r) {
-      return r.ExistAbstract(makeCube(indices));
+      if (indices.size() > 0) 
+	return r.ExistAbstract(makeCube(indices));
+      return r;
     }
 
     BDD exists(int c, BDD r) {

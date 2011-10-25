@@ -19,7 +19,10 @@ namespace MPG { namespace VarImpl {
     }
 
     BDD makeCube(const std::vector<int>& c) {
-      std::cout << "Called container cube " << std::endl;
+      assert(c.size() > 0 && "Trying to make a cube out of an empty column vector");
+      assert(c.size() < static_cast<unsigned int>(Limits::arity) &&
+	     "trying to make a cube with more columns than in the manager");
+    
       const unsigned int size = c.size() * Limits::bitsPerInteger;
       std::vector<int> indices;
       indices.reserve(size);
@@ -33,7 +36,8 @@ namespace MPG { namespace VarImpl {
     }
 
     BDD makeCube(int c) {
-      std::cout << "Called constant cube " <<  std::endl;
+      assert(c > 0 && c < Limits::arity &&
+	     "Trying to make a cube out of an invalid index empty");
       std::vector<int> columns(1,c);
       return makeCube(columns);
     }

@@ -156,7 +156,6 @@ namespace MPG { namespace VarImpl {
     
     RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
       const RelationImpl& left = *this;
-      
       assert(left.arity() >= j && right.arity() >= j
 	     && "There are not enough columns for the join");
 
@@ -172,30 +171,41 @@ namespace MPG { namespace VarImpl {
      * Column removal
      */
     RelationImpl RelationImpl::discard(int start, int end) const {
-      assert(start >= 0 && start <= end && start <= Limits::arity && "Invalid value for start");
-      assert(end >= 0 && end >= start && end <= Limits::arity && "Invalid value for start");
-      
-      std::vector<std::pair<int,int>> replacement(Limits::arity);
-      for (int i = 0; i < start; i++) {
-	replacement[i] = {i,i};
+      assert(start >= 0 && start < end && start <= Limits::arity && "Invalid value for start");
+      assert(end > 0 && end > start && end <= Limits::arity && "Invalid value for end");
+
+      if (start == 0 && end == arity_ + 1) {
+	// the whole relation will be discarded
+	return RelationImpl(zero(),0);
       }
-      int j = 1;
-      for (int i = start; i <= end; i++, j++) {
-	replacement[i] = {i,end + j};
+
+      //std::cout << "Discarding some columns " << start << " to " << end << std::endl; 
+      									   
+      int len = end - start;
+      BDD replaced = bdd_;
+      for (int i = end; i < arity_; i++) {
+	//perm.push_back({i-len,i});
+	std::vector<std::pair<int,int>> p;
+	p.push_back({i-len,i});
+	replaced = VarImpl::swap(p,replaced);
       }
-      for (int i = end + 1; i < Limits::arity; i++) {
-	replacement[i] = {i,i};
+
+      //std::cout << "swapping ends" << std::endl; 
+
+      std::vector<int> quantify;
+      for (int i = arity_ - len; i < arity_; i++) {
+	quantify.push_back(i);
       }
-      
-      BDD replaced = VarImpl::replace(replacement,bdd_);
      
-      std::vector<int> quantify(Limits::arity - end - 1);
-      j = 0;
-      for (int i = end + 1; i < Limits::arity; i++, j++) {
-	quantify[j] = i;
+      /*
+      for (auto w : quantify) {
+	std::cout << "Quant on " << w << std::endl; 
       }
-      BDD result = VarImpl::exists(quantify,replaced);
-      return RelationImpl(result, arity_ - end - start + 1);
+      */
+      //std::cout << "Quantifies begns " << quantify.size() << std::endl; 
+      BDD quantified = VarImpl::exists(quantify,replaced);
+      //std::cout << "Quantifies end " << std::endl; 
+      return RelationImpl(quantified,arity_ - len);
     }
 
     // still for review
@@ -311,6 +321,7 @@ namespace MPG { namespace VarImpl {
     }
 
     void RelationImpl::print(std::ostream& os) const {
+      os << "[a: " << arity_ << " #: " << cardinality() << "]" << std::endl;
       // this prints the bdd with all the columns in the manager
       printSet(bdd_,Limits::arity,os);
       // this is to print only the columns that correspond to the
