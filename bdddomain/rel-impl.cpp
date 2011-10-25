@@ -166,6 +166,30 @@ namespace MPG { namespace VarImpl {
       return lxu;
     }
 
+    RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
+      const RelationImpl& left = *this;
+      
+      /// \todo handle errors on arity of the relations with exceptions
+
+      //  assert(left.arity() >= f && right.arity() >= f
+      //         && "There are not enough columns for the join");
+
+      // 1) compute the join of the relations on f columns
+      RelationImpl join = left.join(f,right);
+
+      // 2) remove the "join" columns. These columns are in the range right.arity-1
+      //    to right.arity-f
+      int leftMost = right.arity() - 1;
+      int rightMost = right.arity() - f;
+
+      assert(leftMost >= rightMost && "Unexpected result for range of join columns");
+      
+      return RelationImpl(
+			  join.discard(leftMost, rightMost + 1).bdd_,
+			  join.arity()-f
+			  );
+    }
+
 
     /*
      * Column removal
@@ -178,35 +202,28 @@ namespace MPG { namespace VarImpl {
 	// the whole relation will be discarded
 	return RelationImpl(zero(),0);
       }
-
-      //std::cout << "Discarding some columns " << start << " to " << end << std::endl; 
-      									   
+      
+      // Note that this loop is inneficient, the reason is that it
+      // does one swap at the time. I have to investigate further if
+      // it is possible to get the same effect by computing all the
+      // swapping first and then doing the operation once at the bdd.
       int len = end - start;
       BDD replaced = bdd_;
       for (int i = end; i < arity_; i++) {
-	//perm.push_back({i-len,i});
 	std::vector<std::pair<int,int>> p;
 	p.push_back({i-len,i});
 	replaced = VarImpl::swap(p,replaced);
       }
-
-      //std::cout << "swapping ends" << std::endl; 
 
       std::vector<int> quantify;
       for (int i = arity_ - len; i < arity_; i++) {
 	quantify.push_back(i);
       }
      
-      /*
-      for (auto w : quantify) {
-	std::cout << "Quant on " << w << std::endl; 
-      }
-      */
-      //std::cout << "Quantifies begns " << quantify.size() << std::endl; 
       BDD quantified = VarImpl::exists(quantify,replaced);
-      //std::cout << "Quantifies end " << std::endl; 
       return RelationImpl(quantified,arity_ - len);
     }
+
 
     // still for review
     /*
@@ -255,29 +272,6 @@ namespace MPG { namespace VarImpl {
 
 
 
-    RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
-      const RelationImpl& left = *this;
-
-      /// \todo handle errors on arity of the relations with exceptions
-
-      //  assert(left.arity() >= f && right.arity() >= f
-      //         && "There are not enough columns for the join");
-
-      // 1) compute the join of the relations on f columns
-      RelationImpl join = left.join(f,right);
-
-      // 2) remove the "join" columns. These columns are in the range right.arity-1
-      //    to right.arity-f
-      int leftMost = right.arity() - 1;
-      int rightMost = right.arity() - f;
-
-      assert(leftMost >= rightMost && "Unexpected result for range of join columns");
-
-      return RelationImpl(
-			  VarImpl::discard(join.bdd_,join.arity(), leftMost, rightMost),
-			  join.arity()-f
-			  );
-    }
 
 
     RelationImpl RelationImpl::forall(int c) const {

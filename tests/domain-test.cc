@@ -46,9 +46,10 @@ int main(void) {
     fourthary.add({1,0,5,2});
     fourthary.add({0,1,1,0});
 
+    /*
     std::cout << "Fourthary relation: "
 	      << fourthary << std::endl;
-    
+    */
     //auto tuq = ternary.unique({0,1});
     //std::cout << "Unique quantification yields: " << tuq << std::endl;
     //auto teq = ternary.exists({0,1});
@@ -111,38 +112,25 @@ int main(void) {
       discard3Expected.add({3,1});
       discard3Expected.add({5,2});
       discard3Expected.add({1,0});
-      
+      /*
       std::cout << "Discard [3..4[ from fourthary "
 		<< discard4 << std::endl;
-      
+      */
       std::cout << "###Success: " << discard3Expected.equal(discard4) << std::endl; 
     }
 
-     /*  
-    MPG::VarImpl::RelationImpl discard0 = ternary.discard(0,1);
-    std::cout << "Discard 0..0 from ternarry "
-	      << discard0 << std::endl;
-    
-    */
-    /*
-    std::cout << "Ternary replace: " 
-              << ternary.replace({{1,0}})
-              << std::endl;
+    { // join binary and ternary
+      MPG::VarImpl::RelationImpl join1bt = binary.join(1,ternary);
+      std::cout << "Join binary and ternary on 1 "  << join1bt << std::endl; 
 
-    std::cout << "Ternary swap: " 
-              << ternary.swap({{0,1}})
-              << std::endl;
-    */
-    /*
-    fourthary = ternary.timesURight(2);
-    std::cout << "U times Ternary: " << (fourthary.cardinality()) << fourthary << std::endl;
-    fourthary.add({1,2,3,4,5});
-    f.add({1,2,3,4,5});
-    fourthary.intersect(f);
+    }
+
+    { // follow binary and ternary
+      MPG::VarImpl::RelationImpl follow1bt = binary.follow(1,ternary);
+      std::cout << "Follow binary and ternary on 1 "  << follow1bt << std::endl; 
+
+    }
     
-    std::cout << "After adding: " << (fourthary.cardinality()) 
-	      << fourthary << std::endl;
-    */
   }
   return 0;
 }
