@@ -169,7 +169,9 @@ public:
    * \brief Returns the relation resulting from uniquely quantifying on all the
    * columns in \a c.
    *
-   * \param c a vector of columns: \f$ \forall_{i \in \{0,\ldots,\text{size}(c)-1\}}: 0 \leq c[i] < \text{arity}(\text{this})\f$
+   * \param c a vector of columns: \f$ \forall_{i \in
+   * \{0,\ldots,\text{size}(c)-1\}}: 0 \leq c[i] <
+   * \text{arity}(\text{this})\f$
    */
   GRelation unique(const std::vector<int>& c) const;
   /**
@@ -304,44 +306,5 @@ public:
 /// Operator to change the ouput format of ground relations
 std::ostream& operator<< (std::ostream& os, const GRelationIO& f);
 
-namespace VarImpl {
-  class RelationImplIter;
-}
-
-/**
- * \brief Iterator on the tuples of a ground relation
- * \ingroup GRelation
- */
-class GRelationIter {
-private:
-  typedef boost::shared_ptr<VarImpl::RelationImplIter> Impl;
-  /// Relation storage
-  Impl pimpl_;
-  typedef boost::shared_ptr<Tuple> TuplePtr;
-  /**
-   * \brief Stores the current tuple
-   *
-   * This temporal storage is needed because the iterator provided by the
-   * implementation is not at least forward iterator.
-   */
-  TuplePtr current_;
-  /// Indicates if there is a current element to be read
-  bool valid_;
-  /// Avoid default construction
-  GRelationIter(void);
-public:
-  /// Constructs an iterator on relation \a r
-  GRelationIter(const GRelation& r);
-  /// Copy constructor
-  GRelationIter(const GRelationIter& it);
-  /// Destructor
-  ~GRelationIter(void);
-  /// Tests whether the iterator is still valid
-  bool operator()(void) const;
-  /// Returns the current value under iteration
-  Tuple val(void) const;
-  /// Advances the iterator
-  void operator++(void);
-};
 }
 #endif

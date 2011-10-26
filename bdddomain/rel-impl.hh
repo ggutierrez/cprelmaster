@@ -186,12 +186,7 @@ namespace MPG { namespace VarImpl {
        *
        * The projection of \a this on all its columns but \a c
        */
-      RelationImpl projectBut(int c) const;
-      /// \name Iteration
-      //@{
-      /// Returns an iterator on the tuples of the relation
-      RelationImplIter tuples(void) const;
-      //@}
+      //bin/RelationImpl projectBut(int c) const;
       /// \name Output
       void print(std::ostream& os) const;
     };
@@ -308,39 +303,6 @@ namespace MPG { namespace VarImpl {
       c.complement();
       return c;
     }
-
-    /**
-     * \brief Class to iterate on tuples of a relation implementation
-     * \ingroup DomRepr
-     *
-     * \warning The tuple iteration on relations should be used with care. Very large
-     * relations can result in large amount of run time.
-     *
-     * The implementation of this iterator makes it advance on the relation after the
-     * call to the val(). It is not in any way an standard iterator.
-     */
-    class RelationImplIter {
-    private:
-      /// The BDD with the representation of the relation being iterated
-      BDD relation_;
-      /// The arity of the relation
-      int arity_;
-      /// Avoid default construction
-      RelationImplIter(void);
-      /// Removes \a t from the iterated relation
-      void remove(const Tuple& t);
-    public:
-      /// Constructor
-      RelationImplIter(BDD rel, int a);
-      /// Copy constructor
-      RelationImplIter(const RelationImplIter&);
-      /// Destructor
-      ~RelationImplIter(void);
-      /// Return a current tuple
-      Tuple val(void);
-      /// Tests whether the iterator is still valid
-      bool operator()(void) const;
-    };
 
     /**
      * \brief Output a relation implementation \a r in tuple format to \a os

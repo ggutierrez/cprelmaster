@@ -262,19 +262,25 @@ namespace MPG { namespace VarImpl {
       //printSet(bdd_,arity_,os);
     }
 
+    std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
+      r.print(os);
+      return os;
+    }
+
 
     // still for review
     /*
      * Column permutation
      */
     
-
+    
     RelationImpl RelationImpl::shiftLeft(int n) const {
+      assert(false && "Not implemented");
       if (n == 0) return RelationImpl(*this);
       return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
     }
-
-
+    
+    
     RelationImpl RelationImpl::timesU(int n, bool left) const {
       assert(false && "Deprecated funtion");
       if (left)
@@ -285,7 +291,7 @@ namespace MPG { namespace VarImpl {
       RelationImpl r = permute(d);
       return RelationImpl(r.bdd_,arity_+n);
     }
-
+   
 
 
     RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
@@ -301,18 +307,19 @@ namespace MPG { namespace VarImpl {
       return ret;
     }
 
-
+    
     RelationImpl RelationImpl::shiftRight(int n) const {
+      assert(false && "Not implemented");
       if (n == 0) return RelationImpl(*this);
       if (n == arity_) return RelationImpl(0);
       return RelationImpl(VarImpl::shiftRight(bdd_,arity_,n),arity_-n);
     }
+    
 
 
 
 
-
-
+    /*
     RelationImpl RelationImpl::projectBut(int c) const {
       RelationImpl q(exists(c));
 
@@ -329,55 +336,7 @@ namespace MPG { namespace VarImpl {
 
       return ret;
     }
+    */
 
-
-   
-    std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
-      r.print(os);
-      return os;
-    }
-
-
-    RelationImplIter RelationImpl::tuples(void) const {
-      return RelationImplIter(bdd_,arity_);
-    }
-
-    RelationImplIter::RelationImplIter(BDD rel, int a)
-      : relation_(rel), arity_(a){}
-
-    RelationImplIter::RelationImplIter(const RelationImplIter& it)
-      : relation_(it.relation_), arity_(it.arity_){}
-
-    RelationImplIter::~RelationImplIter(void) {}
-
-    bool RelationImplIter::operator ()(void) const {
-      return relation_ != zero();
-    }
-
-    Tuple RelationImplIter::val(void) {
-      const int cube_size = 1<<(Limits::bbv + Limits::ba);
-
-      int cube_[cube_size];
-      int *cube = cube_;
-      CUDD_VALUE_TYPE val;
-
-      DdGen* gen = Cudd_FirstCube(dd(),relation_.getNode(),&cube,&val);
-      assert(gen != NULL);
-      vector<int> v = decodeCube(cube,arity_);
-      Cudd_GenFree(gen);
-
-      // Prepare the output
-      Tuple out(v);
-      // Affect the state of the iterator
-      remove(out);
-
-      return out;
-
-    }
-
-    void RelationImplIter::remove(const Tuple& t) {
-      BDD i = t.getBDD();
-      relation_ &= !i;
-    }
-
-  }}
+  }
+}
