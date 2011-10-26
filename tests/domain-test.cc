@@ -118,15 +118,23 @@ int main(void) {
       */
       std::cout << "###Success: " << discard3Expected.equal(discard4) << std::endl; 
     }
-
+    {
+      // particular example with discard:
+      MPG::VarImpl::RelationImpl d(5);
+      d.add({0, 0, 1, 1, 0});
+      d.add({1, 2, 3, 0, 1});
+      //std::cout << "Input relation " <<  d << std::endl; 
+      //std::cout << "Discarding result: " << d.discard(2,4) << std::endl; 
+      
+    }
     { // join binary and ternary
       MPG::VarImpl::RelationImpl join1bt = binary.join(1,ternary);
-      std::cout << "Join binary and ternary on 1 "  << join1bt << std::endl; 
+      //std::cout << "Join binary and ternary on 1 "  << join1bt << std::endl; 
 
     }
 
     { // follow binary and ternary
-      MPG::VarImpl::RelationImpl follow1bt = binary.follow(1,ternary);
+      MPG::VarImpl::RelationImpl follow1bt = ternary.follow(2,fourthary);
       std::cout << "Follow binary and ternary on 1 "  << follow1bt << std::endl; 
 
     }

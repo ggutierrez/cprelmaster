@@ -176,20 +176,17 @@ namespace MPG { namespace VarImpl {
 
       // 1) compute the join of the relations on f columns
       RelationImpl join = left.join(f,right);
-
-      // 2) remove the "join" columns. These columns are in the range right.arity-1
-      //    to right.arity-f
-      int leftMost = right.arity() - 1;
-      int rightMost = right.arity() - f;
-
-      assert(leftMost >= rightMost && "Unexpected result for range of join columns");
       
+      //std::cout << "The join " << join << std::endl; 
+      //std::cout << "Is empty the result ? " << join.empty() << std::endl; 
+      // 2) remove the "join" columns.      
+      //std::cout << "First " << right.arity() - f << std::endl; 
+      //std::cout << "Second " << right.arity()  << std::endl;  
       return RelationImpl(
-			  join.discard(leftMost, rightMost + 1).bdd_,
+			  join.discard(right.arity() - f, right.arity()).bdd_,
 			  join.arity()-f
 			  );
     }
-
 
     /*
      * Column removal

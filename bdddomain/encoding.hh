@@ -70,7 +70,6 @@ namespace MPG { namespace VarImpl {
 
 
     // to review
-
     /**
      * \brief Returns the variables (indices) used in the bdd to encode column \a c
      * \ingroup BDDEnc
