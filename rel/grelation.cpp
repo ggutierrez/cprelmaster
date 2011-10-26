@@ -221,6 +221,13 @@ namespace MPG {
 		);
   }
 
+  Tuple GRelation::pickOneTuple(void) const {
+    /// \todo throw an exception
+    assert(!empty() && "Relation is empty, nothing to return");
+    return
+      pimpl_->pickOneTuple();
+  }
+
   GRelation create(const std::vector<Tuple>& dom) {
     std::vector<Tuple>::const_iterator c = dom.begin();
     GRelation r(c->arity());

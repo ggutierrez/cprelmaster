@@ -269,6 +269,10 @@ namespace MPG { namespace VarImpl {
       return os;
     }
 
+    Tuple RelationImpl::pickOneTuple(void) const {
+      BDD tupleRepr = VarImpl::oneTuple(arity_,bdd_);
+      return Tuple(tupleRepr,arity_);
+    }
 
     // still for review
     /*
