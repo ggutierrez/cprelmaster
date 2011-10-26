@@ -126,6 +126,11 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::swap(pairing,bdd_), arity_);
     }
 
+    RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
+      assert(false && "Use swap instead?");
+      return *this;
+    }
+
     /*
      * Cross product
      */
@@ -174,9 +179,6 @@ namespace MPG { namespace VarImpl {
       const RelationImpl& left = *this;
       
       /// \todo handle errors on arity of the relations with exceptions
-
-      //  assert(left.arity() >= f && right.arity() >= f
-      //         && "There are not enough columns for the join");
 
       // 1) compute the join of the relations on f columns
       RelationImpl join = left.join(f,right);
@@ -272,15 +274,12 @@ namespace MPG { namespace VarImpl {
     /*
      * Column permutation
      */
-    
-    
+      
     RelationImpl RelationImpl::shiftLeft(int n) const {
       assert(false && "Not implemented");
-      if (n == 0) return RelationImpl(*this);
-      return RelationImpl(VarImpl::shiftLeft(bdd_,arity_,n),arity_+n);
+      return *this;
     }
-    
-    
+      
     RelationImpl RelationImpl::timesU(int n, bool left) const {
       assert(false && "Deprecated funtion");
       if (left)
@@ -291,52 +290,10 @@ namespace MPG { namespace VarImpl {
       RelationImpl r = permute(d);
       return RelationImpl(r.bdd_,arity_+n);
     }
-   
-
-
-    RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
-      // No error detection on permDesc is done here. The reason is because under
-      // some circumstances this method is used to move columns in the representation
-      // to places that are outside of the arity of the relation. For instance,
-      // this \times U^n is implemented by doing the shift of n columns to the right.
-
-      RelationImpl ret(VarImpl::swap_columns(bdd_,permDesc),arity_);
-
-      assert(ret.cardinality() == cardinality());
-      assert(ret.arity() == arity());
-      return ret;
-    }
-
-    
+      
     RelationImpl RelationImpl::shiftRight(int n) const {
       assert(false && "Not implemented");
-      if (n == 0) return RelationImpl(*this);
-      if (n == arity_) return RelationImpl(0);
-      return RelationImpl(VarImpl::shiftRight(bdd_,arity_,n),arity_-n);
+      return *this;
     }
-    
-
-
-
-
-    /*
-    RelationImpl RelationImpl::projectBut(int c) const {
-      RelationImpl q(exists(c));
-
-      PermDescriptor d;
-      for (int i = arity_ -1; i > c; i--) {
-	d.permute(i,i-1);
-      }
-      RelationImpl perm(q.permute(d));
-
-      RelationImpl ret(perm.bdd_,arity_-1);
-
-      assert(ret.cardinality() == cardinality());
-      assert(ret.arity() == arity()-1);
-
-      return ret;
-    }
-    */
-
   }
 }

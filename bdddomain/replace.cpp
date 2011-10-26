@@ -57,7 +57,7 @@ namespace MPG { namespace VarImpl {
       // elements in pairing are columns, first we need to get those
       // columns in terms of BDD variables.
       for (const auto& i : pairing) {
-        std::cout << "Must permute " << i.first << " by " << i.second << std::endl;
+        //std::cout << "Must permute " << i.first << " by " << i.second << std::endl;
         const auto& oldVars = domainIndices(i.first);
         const auto& newVars = domainIndices(i.second);
         p.set(oldVars,newVars);
@@ -72,7 +72,7 @@ namespace MPG { namespace VarImpl {
       
       int last = 0;
       for (const auto& i : pairing) {
-        std::cout << "Must swap " << i.first << " by " << i.second << std::endl;
+        //std::cout << "Must swap " << i.first << " by " << i.second << std::endl;
         const auto& ov = domainIndices(i.first);
         const auto& nv = domainIndices(i.second);
         assert(ov.size() == nv.size() && "Unexpected size in returned vector");
@@ -81,7 +81,7 @@ namespace MPG { namespace VarImpl {
           newVars[last] = factory().bddVar(nv.at(v));
         }
       }
-      std::cout << "Last: " << last << " variables: " << bddVars << std::endl;
+      //std::cout << "Last: " << last << " variables: " << bddVars << std::endl;
       assert(static_cast<unsigned int>(last) == bddVars  && "Unexpected size for swapping");
       return r.SwapVariables(oldVars,newVars);
     }

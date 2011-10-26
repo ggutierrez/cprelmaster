@@ -5,6 +5,14 @@
 #include <obj/cuddObj.hh>
 #include <bdddomain/perm-descriptor.hh>
 
+/*
+  Note: This file contain the operation that we need in order to use a
+  BDD as a domain representation. All of the functions defined here
+  assume a minimum set of operations provided by the bdd package
+  itself but also tries to keep this assumptions at the minumum to
+  ease the integration of other bdd libraries.
+ */
+
 namespace MPG { namespace VarImpl {
     /**
      * \defgroup BDDEnc Ground relation encoding
@@ -51,7 +59,6 @@ namespace MPG { namespace VarImpl {
      * \ingroup BDDEnc
      */
     BDD unique(int c, BDD r);
-
     /**
      * \brief Unique quantification on the columns in \a c on relation \a r.
      * \ingroup BDDEnc
@@ -67,61 +74,19 @@ namespace MPG { namespace VarImpl {
      * indices in \a c of relation \a r.
      */
     BDD exists(const std::vector<int>& c, BDD r);
-
-
-    // to review
-    /**
-     * \brief Returns the variables (indices) used in the bdd to encode column \a c
-     * \ingroup BDDEnc
-     */
-    std::vector<int> bddIndices(int c);
-
-    /**
-     * \brief Returns the variables used in the bdd to encode column \a c
-     * \ingroup BDDEnc
-     */
-    std::vector<DdNode*> bddVars(int c);
-
-    /**
-     * \brief Decodes \a cube, extracted from the BDD and returns the tuple it
-     * represents.
-     * \ingroup BDDEnc
-     */
-    std::vector<int> decodeCube(int* cube, int arity);
-
-    /**
-     * \brief Returns the relation resulting from swapping \a r according to the
-     * swapping description \a swapDesc.
-     * \ingroup BDDEnc
-     * \warning The content of the description is the responsability of the caller.
-     */
-    BDD swap_columns(BDD r, const PermDescriptor& swapDesc);
-
-    /// Moves all the columns of \a r \a n columns to the left.
-    BDD shiftLeft(BDD r, int arity, int n);
-
-    /// Moves all the columns of \a r \a n columns to the right.
-    BDD shiftRight(BDD r, int arity, int n);
-
-    /**
-     * \brief Discards the columns in the range \a left .. \a right.
-     *
-     * The way this is done is by moving the columns to the left of the relation and
-     * to existentialy quantify on them.
-     */
-    BDD discard(BDD r, int arity, int left, int right);
-
-
-    BDD exists(int first, int last, BDD r);
-
     /**
      * \brief Universal quantification of column \a c on relation \a r.
      * \ingroup BDDEnc
      */
     BDD forall(int c, BDD r);
 
+    /// Moves all the columns of \a r \a n columns to the left.
+    ///BDD shiftLeft(BDD r, int arity, int n);
 
+    /// Moves all the columns of \a r \a n columns to the right.
+    //BDD shiftRight(BDD r, int arity, int n);
 
+    //BDD exists(int first, int last, BDD r);
   }
 }
 #endif
