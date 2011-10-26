@@ -42,6 +42,19 @@ namespace MPG { namespace VarImpl {
       return makeCube(columns);
     }
 
+    BDD oneTuple(int c, BDD r) {
+     
+      BDDvector vars(c * Limits::bitsPerInteger);
+      int i = 0;
+      for (int j = 0; j < c; j++) {
+	for (auto v :  bddIndices(j)) {
+	  vars[i] = factory().bddVar(v);
+	  i++;
+	}
+      }
+      return r.PickOneMinterm(vars);
+    }
+
     BDD shiftLeft(BDD r, int arity, const int n) {
       const int numberOfVars = Limits::bitsPerInteger * Limits::arity;
       assert( (n + arity) <= numberOfVars && "The shift cannot be carried out");

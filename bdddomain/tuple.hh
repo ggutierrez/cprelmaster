@@ -34,13 +34,14 @@ namespace MPG {
   class Tuple {
   private:
     friend class VarImpl::RelationImpl;
-    friend class VarImpl::RelationImplIter;
     /// Actual data container
     BDD data_;
     /// Arity of the tuple
     int arity_;
     /// Avoiding Default constructor
     Tuple(void);
+    /// Constructor from an existing representation \a t and an arity \a a
+    Tuple(BDD data, int arity);
     /**
      * \brief Returns a BDD representation for the encoding of \a p in column \a a
      *

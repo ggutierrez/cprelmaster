@@ -13,7 +13,6 @@ namespace MPG { namespace VarImpl {
      *
      * This module provides the support to represent relation domains.
      */
-    class RelationImplIter;
     /// Stores the representation of a relation using BDDs
     class RelationImpl {
     private:
@@ -186,9 +185,10 @@ namespace MPG { namespace VarImpl {
        *
        * The projection of \a this on all its columns but \a c
        */
-      //bin/RelationImpl projectBut(int c) const;
       /// \name Output
       void print(std::ostream& os) const;
+      /// Returns a tuple in the relation
+      Tuple pickOneTuple(void) const;
     };
 
     

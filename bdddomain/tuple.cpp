@@ -8,6 +8,8 @@ using std::vector;
 namespace MPG {
   using namespace VarImpl;
 
+  Tuple::Tuple(BDD data, int arity) : data_(data), arity_(arity) {}
+
   Tuple::Tuple(const std::initializer_list<int> l)
     : arity_(l.size()) {
     assert(l.size() <= static_cast<unsigned int>(Limits::arity)
@@ -50,22 +52,18 @@ namespace MPG {
 
   vector<int> Tuple::value(void) const {
     std::vector<int> tuple(arity_,-1);
-    bool first = false;
     typedef std::vector<std::vector<std::pair<int,int>>> branch_contents;
     auto f = [&](const branch_contents& r) {
-      assert(false && "Not implemented");
-      /*
-      if (!first) {
-	for (auto i = 0; i < arity_; i++) {
-	  // there should not be ranges because this is a tuple
-	  assert(r.at(i).size() == 1);
-	  tuple[i] = r.at(i).at(0);
-	}
-	first = false;
-      } else {
-	assert(false && "Unexpected branch for a tuple");
+      assert(static_cast<unsigned int>(arity_) < r.size() && "Unexpected branch length");
+      for (auto i = arity_; i--;) {
+	const auto& domainI = r.at(i);
+	assert(domainI.size() == 1 &&
+	       "A range in the representation of a tuple");
+	const auto& elem = domainI.at(0);
+	assert(elem.first == elem.second &&
+	       "A range in the representation of a tuple");
+	tuple[arity_ -1 - i] = elem.first;
       }
-      */
     };
     traverseSet(factory(), data_, f);
     return tuple;

@@ -79,14 +79,16 @@ namespace MPG { namespace VarImpl {
      * \ingroup BDDEnc
      */
     BDD forall(int c, BDD r);
-
+    /**
+     * \brief Returns one minterm of \a r for that represents a tuple with \a c columns.
+     * \ingroup BDDEnc
+     */
+    BDD oneTuple(int c, BDD r);
     /// Moves all the columns of \a r \a n columns to the left.
     ///BDD shiftLeft(BDD r, int arity, int n);
 
     /// Moves all the columns of \a r \a n columns to the right.
     //BDD shiftRight(BDD r, int arity, int n);
-
-    //BDD exists(int first, int last, BDD r);
   }
 }
 #endif
