@@ -111,6 +111,10 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::exists(c, bdd_), arity_);
     }
 
+    RelationImpl RelationImpl::forall(int c) const {
+      return RelationImpl(VarImpl::forall(c, bdd_), arity_);
+    }
+
     /*
      * Permutation
      */
@@ -221,6 +225,43 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(quantified,arity_ - len);
     }
 
+    /*
+     * Projection
+     */
+
+    RelationImpl RelationImpl::project(int p) const {
+      // p indicates the _number_ of columns on the right that will
+      // remain at the end.
+
+      // it is a mistake to project in more columns that the ones in
+      // the relation
+      assert(p <= arity_ &&
+	     "Projecting in more columns that the onse in the relation");
+
+      RelationImpl r(*this);
+      // Project on 0 columns results in the empty relation
+      if (p == 0) return RelationImpl(0);
+      // Project on all the columns of a relation is the relation itself
+      if (p == arity_) return r;
+
+      // Projecting is the same as removing all the columns that are
+      // at indices greater than p-1.  remember that p is a number of
+      // columns on the right and not a column index.
+      return discard(p, arity_);
+    }
+
+    /*
+     * Relation output
+     */
+    void RelationImpl::print(std::ostream& os) const {
+      os << "[a: " << arity_ << " #: " << cardinality() << "]" << std::endl;
+      // this prints the bdd with all the columns in the manager
+      printSet(bdd_,Limits::arity,os);
+      // this is to print only the columns that correspond to the
+      // represented relation
+      //printSet(bdd_,arity_,os);
+    }
+
 
     // still for review
     /*
@@ -271,9 +312,6 @@ namespace MPG { namespace VarImpl {
 
 
 
-    RelationImpl RelationImpl::forall(int c) const {
-      return RelationImpl(VarImpl::forall(c, bdd_), arity_);
-    }
 
     RelationImpl RelationImpl::projectBut(int c) const {
       RelationImpl q(exists(c));
@@ -292,34 +330,8 @@ namespace MPG { namespace VarImpl {
       return ret;
     }
 
-    RelationImpl RelationImpl::project(int p) const {
-      // p indicates the columns on the right that will remain at the end.
 
-      // it is a mistake to project in more columns that the ones in the relation
-      assert(p <= arity_ && "Projecting in more columns that the onse in the relation");
-
-      RelationImpl r(*this);
-      // Project on 0 columns is the empty relation
-      if (p == 0) return RelationImpl(0);
-      // Project on all the columns of a relation is the relation itself
-      if (p == arity_) return r;
-
-      // 1) existentially quantify on all the columns but the ones from 0 (right most)
-      //    to p (not including).
-      int first = p;
-      int last = arity_ - 1;
-      return RelationImpl(VarImpl::exists(first,last,r.bdd_),p);
-    }
-
-    void RelationImpl::print(std::ostream& os) const {
-      os << "[a: " << arity_ << " #: " << cardinality() << "]" << std::endl;
-      // this prints the bdd with all the columns in the manager
-      printSet(bdd_,Limits::arity,os);
-      // this is to print only the columns that correspond to the
-      // represented relation
-      //printSet(bdd_,arity_,os);
-    }
-
+   
     std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
       r.print(os);
       return os;

@@ -33,11 +33,12 @@ int main(void) {
     ternary.add({0,1,1});
     ternary.add({0,0,2});
     ternary.add({1,2,3});
+    
     /*
     std::cout << "Ternary relation: "
 	      << ternary << std::endl;
     */
-
+    
     fourthary.add({3,1,2,3});
     fourthary.add({2,3,0,1});
     fourthary.add({3,1,1,0});
@@ -46,10 +47,10 @@ int main(void) {
     fourthary.add({1,0,5,2});
     fourthary.add({0,1,1,0});
 
-    /*
+    
     std::cout << "Fourthary relation: "
 	      << fourthary << std::endl;
-    */
+    
     //auto tuq = ternary.unique({0,1});
     //std::cout << "Unique quantification yields: " << tuq << std::endl;
     //auto teq = ternary.exists({0,1});
@@ -132,13 +133,20 @@ int main(void) {
       //std::cout << "Join binary and ternary on 1 "  << join1bt << std::endl; 
 
     }
-
     { // follow binary and ternary
       MPG::VarImpl::RelationImpl follow1bt = ternary.follow(2,fourthary);
-      std::cout << "Follow binary and ternary on 1 "  << follow1bt << std::endl; 
-
+      //std::cout << "Follow binary and ternary on 1 "  << follow1bt << std::endl; 
     }
-    
+    { // project a relation
+      MPG::VarImpl::RelationImpl p1 = ternary.project(1); 
+      //std::cout << "Ternary projected on first column " << p1 << std::endl;
+     
+      MPG::VarImpl::RelationImpl p2 = ternary.project(2); 
+      //std::cout << "Ternary projected on first two columns " << p2 << std::endl;
+      
+      MPG::VarImpl::RelationImpl p3 = fourthary.project(3); 
+      //std::cout << "Fourthary projected on first three columns " << p3 << std::endl;      
+    }
   }
   return 0;
 }
