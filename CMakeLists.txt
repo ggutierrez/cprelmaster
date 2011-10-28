@@ -69,9 +69,6 @@ check_cxx_compiler_flag(-fdiagnostics-show-option FLAG_DIAGNOSTIC)
 if(FLAG_DIAGNOSTIC)
   add_definitions(-fdiagnostics-show-option)
 endif()
-
-## temporal flags for development
-add_definitions(-O0 -g)
 ##########################################################################
 # Cudd library
 ##########################################################################

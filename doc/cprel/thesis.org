@@ -19,15 +19,14 @@
 #+LATEX_HEADER: \usepackage{graphicx}
 #+LATEX_HEADER: \usepackage{longtable}
 #+LATEX_HEADER: \usepackage{lscape}
-#+LaTeX_HEADER: \usepackage{minted}
-#+LaTeX_HEADER: \usemintedstyle{emacs}
-#+LaTeX_HEADER: \definecolor{codebg}{rgb}{0.95,0.95,0.95}
-#+LaTeX_HEADER: \definecolor{codeframe}{rgb}{0.69,0.84,0.31}
-#+LaTeX_HEADER: \renewcommand{\theFancyVerbLine}{\sffamily \textcolor[rgb]{0.5,0.5,1.0}{\scriptsize \oldstylenums{\arabic{FancyVerbLine}}}}
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: \usepackage{subfig}
 #+LATEX_HEADER: \usepackage{hyperref}
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
 #+LATEX_HEADER: \newcommand{\tuple}[1]{\ensuremath{\langle t_{1},\ldots,t_{#1} \rangle}}
+#+LATEX_HEADER: \newcommand{\pair}[2]{\ensuremath{\langle #1,#2 \rangle}}
 #+LATEX_HEADER: \newcommand{\arity}[1]{\ensuremath{arity(#1)}}
 #+LATEX_HEADER: \newcommand{\compl}[1]{\ensuremath{\lnot #1}}
 #+LATEX_HEADER: \newcommand{\inter}[2]{\ensuremath{#1\cap #2}}
@@ -42,6 +41,8 @@
 #+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{\lubo(#1)}}
 #+LATEX_HEADER: \newcommand{\unko}{\ensuremath{\operatorname{unk}}}
 #+LATEX_HEADER: \newcommand{\unk}[1]{\ensuremath{\unko(#1)}}
+#+LATEX_HEADER: \newcommand{\oobo}{\ensuremath{\operatorname{oob}}}
+#+LATEX_HEADER: \newcommand{\oob}[1]{\ensuremath{\oobo(#1)}}
 #+LATEX_HEADER: \newcommand{\suffix}{\ensuremath{\operatorname{suffix}}}
 #+LATEX_HEADER: \newcommand{\concat}{\ensuremath{\operatorname{concat}}}
 #+LATEX_HEADER: \newcommand{\match}{\ensuremath{\operatorname{mathc}}}
@@ -607,8 +608,44 @@
 **** Read operations happen often than write operations
 *** Space complexty
 *** A first approach, extentional
-*** Binary decision diagrams to represent the domain
-**** They have been used for complete domain representation of set decision variables.
+** Binary decision diagrams to represent the domain
+*** Example
+    - To represent a relation as a binary decision diagram we have to
+      establish some encoding first.
+    - The reason for this encoding is that a /Bdd/ is able to
+      represent functions of the form
+      $F(x_0,x_1,\ldots,x_n)\rightarrow \{0,1\}$, where $x_i \in \{0,1\}$.
+    - An straightforward way of encoding a tuple of integers
+      $\tuple{k}$ is by translating every element of the tuple into
+      its binary representation and by /selecting/ a subset of variables
+      in the /Bdd/ to represent it.
+    - Then, assumming that we need $R$ bits to represent the maximum
+      possible element, we will need $R\times C$ /Bdd/
+      variables. Where $C$ is the number of columns that the relation
+      has. As an example consider that we want to represent a binary
+      relation with the maximum element being 3. The following table
+      shows some pairs and their encodings.
+      |-------------+-------+-------+-------+-------|
+      | Tuple       | $V_0$ | $V_1$ | $V_2$ | $V_3$ |
+      |-------------+-------+-------+-------+-------|
+      | \pair{0}{3} |     0 |     1 |     0 |     1 |
+      | \pair{3}{0} |     1 |     0 |     1 |     0 |
+      | \pair{1}{1} |     1 |     1 |     0 |     0 |
+      | \pair{1}{2} |     1 |     0 |     0 |     1 |
+      |-------------+-------+-------+-------+-------|
+    - In the encoding above we use 4 /Bdd/ variables, two per each
+      element in a pair. This is because the maximum element which is
+      3 can be represented with 2 bits.
+    - Columns $V_0$ and $V_2$ represent the first element in the pair,
+      being $V_0$ the least significant bit. In the same way $V_1$ and
+      $V_3$ represent the second element of the pair, being $V1_$ the
+      least significant.
+    - Other orders in the variable representation are possible. We
+      chose this one as is the one offering better compression during
+      our experiments.
+
+
+*** They have been used for complete domain representation of set decision variables.
 * TODO [%] System implementation
 ** TODO Propagators to be done
 *** TODO Cardinality
@@ -714,8 +751,60 @@
 ** Simple program using relation constraints
 * Study case: the package installability problem
 ** Constraint model
-** Variables
+*** Input
+    The input of the problem consists of three /ground relations/ and
+    three set of packages:
+    - Deps :: : This is the set of all the dependencies as
+                      they are read from the /KCUDF/ document that the
+                      reducer emits.
+    - Confs :: : The relation containing the conflicts.
+    - Provs :: : The relaion containing the provides.
+    - Packages :: : A set with all the packages in the system.
+    - MustI :: : A set of packages that /must/ be
+                     installed because of the request.
+    - MustU :: : A set of packages that ust be uninstalled.
+
+
+**** TODO Talk about the fact a concrete package provides itself and the dependency provides
+
+*** Variables and their domains
+    |----------+----------------------------------------------+--------------------------------------------------------+--------|
+    | Variable | Lower bound                                  | Upper bound                                            | Kind   |
+    |----------+----------------------------------------------+--------------------------------------------------------+--------|
+    | $DEPS$   | $\operatorname{Deps}\cup\operatorname{Provs}$ | $\universe{2}$                                         | RelVar |
+    | $CONFS$  | Confs                                        | $\universe{2}$                                         | RelVar |
+    | $PROVS$  | $\emptyrel{2}$                               | Provs                                                  | RelVar |
+    | $INST$   | MustI                                        | $\operatorname{Packages}\setminus\operatorname{MustU}$ | RelVar |
+    |----------+----------------------------------------------+--------------------------------------------------------+--------|    
+
 ** Constraints
+*** Ensure dependencies
+    The dependency of every installed package are ensured by the
+    dependency constraint. This constraint takes as arguments the
+    dependency variable and the installation variable. The propagation
+    it performs is:
+    - The dependencies of all installed packages are also part of the
+      installation.
+      \begin{align*}
+      \operatorname{ToConsider} &= (\glb{\operatorname{INST}}\times \universe{})\cap\glb{\operatorname{DEPS}} \\
+      \operatorname{Needed} &= \proj{\operatorname{ToConsider}}{1}\\
+      \operatorname{Needed} \subseteq \operatorname{INST}
+      \end{align*}
+      
+    - Packages that depend on non installable packages become also
+      uninstallable.
+      \begin{align*}
+      \operatorname{ToCConsider} &= (\oob{\operatorname{INST}}\times \universe{})\cap\glb{\operatorname{DEPS}} \\
+      \operatorname{UnInstallable} &= \proj{\operatorname{ToConsider}}{1}\\
+      \operatorname{UnInstallable} || \operatorname{INST}
+      \end{align*}
+      
+    #+BEGIN_SRC c++
+    dependencies(*this,deps_,inst_); 
+    #+END_SRC
+
+    
+
 ** Search heuristics
 ** Benchmarks
 ** Other approaches that solve the problem
@@ -749,7 +838,7 @@
                    find all the components of it that must participate
                    in the solving process.
 
-* Experiments
+* Experiments :noexport:
 ** TODO [%] Implementation
 *** TODO segmentation fault when iterating on the files of a directory
     This is produced on mac when using filesystem3 and the custom
@@ -1250,3 +1339,284 @@
 
 
 
+
+
+* Unique quantification
+  Consider the following binary relation:
+  |---------+---------|
+  | Col_{1} | Col_{0} |
+  |---------+---------|
+  |       3 |       1 |
+  |       3 |       2 |
+  |       0 |       1 |
+  |       1 |       0 |
+  |---------+---------|
+  From it we are interested in all the elements in the first columns
+  that are /unique/. By simple inspection we know that those elements
+  are 0 and 1. This apparently simple operation is the core of many
+  constraints and therefore it needs to be performed efficiently. This
+  section defines the semntics of this operation and its
+  implementation at the /BDD/ level.
+    
+  The operation takes as arguments a relation $R \subseteq
+  \universe{n}$ and a set of columns indices $I$. The operation then
+  abstracts the column corresponding to the indices and returnsa
+  relation for which the non abstracted part is /unique/.
+
+  It is important to signal that the operation returns a relation of
+  the same arity as the input one. For the previous case, the result is:
+  |---------+---------|
+  | Col_{1} | Col_{0} |
+  |---------+---------|
+  | 0       | -       |
+  | 1       | -       |
+  |---------+---------|
+ 
+  The presence of "-" in the last column of the table indicates that
+  all the elements of the universe set can be possible values at that
+  place. This is actually what represents the notion of quantification
+  in the operation.
+
+  The same reasoning is used when the relation has a greater
+  arity. For instance, by taking the relation:
+   |---------+---------+---------|
+   | Col_{2} | Col_{1} | Col_{0} |
+   |---------+---------+---------|
+   |       0 |       0 |       1 |
+   |       0 |       0 |       2 |
+   |       0 |       1 |       1 |
+   |       1 |       2 |       3 |
+   |---------+---------+---------|
+  and quantifying on the last column we get the relation:
+  |---------+---------+---------|
+  | Col_{2} | Col_{1} | Col_{0} |
+  |---------+---------+---------|
+  |       0 |       1 | -       |
+  |       1 |       2 | -       |
+  |---------+---------+---------|
+  and the same relation but quantifying on the two last columns will result in:
+  |---------+---------+---------|
+  | Col_{2} | Col_{1} | Col_{0} |
+  |---------+---------+---------|
+  |       1 | -       | -       |
+  |---------+---------+---------|
+
+** TODO To complete
+*** TODO Formal definition semantics
+*** TODO BDD representation
+*** Under the hood
+   
+   Suppose the following binary relation
+   \begin{align*}
+   R = \{\pair{0}{3},\pair{1}{3},\pair{2}{3},\pair{3}{3}\}
+   \end{align*}
+
+   In order to represent all the elements in the tuples we need at most
+   2 bits. Therfore, every column will be represented by two /BDD/
+   variables. The following /BDD/ contains the representation of that
+   relation:
+   #+begin_dot binrel-quant.pdf -Tpdf
+   digraph G {
+   0 [shape=box, label="0", style=filled, shape=box, height=0.3, width=0.3];
+   1 [shape=box, label="1", style=filled, shape=box, height=0.3, width=0.3];
+   11 [label="1"];
+   11 -> 0 [style=dotted];
+   11 -> 8 [style=filled];
+   8 [label="3"];
+   8 -> 0 [style=dotted];
+   8 -> 1 [style=filled];
+   }
+   #+end_dot
+
+   The actual encoding of the pairs is:
+   |-------------+-------+-------+-------+-------|
+   | Pair        | V_{0} | V_{1} | V_{2} | V_{3} |
+   |-------------+-------+-------+-------+-------|
+   | \pair{0}{3} |     0 |     1 |     0 |     1 |
+   | \pair{2}{3} |     1 |     1 |     0 |     1 |
+   | \pair{1}{3} |     0 |     1 |     1 |     1 |
+   | \pair{3}{3} |     1 |     1 |     1 |     1 |
+   |-------------+-------+-------+-------+-------|
+   Where the variables $V_{1}$ and $V_{3}$ are used to encode the
+   second term of every pair while variables $V_{0}$ and $V_{2}$ are
+   used for the first one. The fact that variables $V_{0}$ and $V_{2}$
+   are not present in the resulting /BDD/ is reflected in the encoding
+   by considering either value is possible. 
+
+   To perform the quantification we need to provide a /cube/. This is a
+   special /BDD/ that contains the variables that we want to quantify
+   on. For quantifying on the first column we use the cube:
+
+   #+begin_dot binrel-quant-cube.pdf -Tpdf
+   digraph G {
+   0 [shape=box, label="0", style=filled, shape=box, height=0.3, width=0.3];
+   1 [shape=box, label="1", style=filled, shape=box, height=0.3, width=0.3];
+   10 [label="0"];
+   10 -> 0 [style=dotted];
+   10 -> 6 [style=filled];
+   6 [label="2"];
+   6 -> 0 [style=dotted];
+   6 -> 1 [style=filled];
+   }
+   #+end_dot
+   
+   The /BDD/ resulting from the unique quantification of relation $R$
+   with respect to the variables in the cube above is /False/. This is
+   in fact the representation of the empty relation. 
+
+   Now consider the following relation:
+   \begin{align*}
+   S = \{\pair{0}{3},\pair{1}{3},\pair{2}{3},\pair{3}{3}\}
+   \end{align*}
+   
+   Representing by the /BDD/:
+   #+begin_dot binrel-quant2.pdf -Tpdf
+   digraph G {
+   0 [shape=box, label="0", style=filled, shape=box, height=0.3, width=0.3];
+   1 [shape=box, label="1", style=filled, shape=box, height=0.3, width=0.3];
+   23 [label="0"];
+   23 -> 11 [style=dotted];
+   23 -> 14 [style=filled];
+   11 [label="1"];
+   11 -> 0 [style=dotted];
+   11 -> 8 [style=filled];
+   8 [label="3"];
+   8 -> 0 [style=dotted];
+   8 -> 1 [style=filled];
+   14 [label="1"];
+   14 -> 0 [style=dotted];
+   14 -> 13 [style=filled];
+   13 [label="2"];
+   13 -> 8 [style=dotted];
+   13 -> 0 [style=filled];
+   }
+   #+end_dot 
+   
+   |--------------------+---+------------------------------------------+----------+---------|
+   | unique(r,q)        | = | xor(unique(r0,q1),unique(r1,q1))         | L(r)=0   | L(q)=0  |
+   |--------------------+---+------------------------------------------+----------+---------|
+   |--------------------+---+------------------------------------------+----------+---------|
+   | unique(r0,q1)      | = | ite(unique(FALSE,q1),unique(r01,q1))     | L(r0)=1  | L(q1)=2 |
+   | unique(FALSE,q1)   | = | FALSE                                    |          |         |
+   | unique(r01,q1)     | = | FALSE                                    | L(r01)=3 | L(q1)=2 |
+   |--------------------+---+------------------------------------------+----------+---------|
+   | unique(r1,q1)      | = | ite(unique(FALSE,q1),unique(r11,q1))     | L(r1)=1  | L(q1)=2 |
+   | unique(FALSE,q1)   | = | FALSE                                    |          |         |
+   | unique(r11,q1)     | = | xor(unique(r01,TRUE),unique(FALSE,TRUE)) | L(r11)=2 | L(q1)=2 |
+   | unique(r01,TRUE)   | = | r01                                      |          |         |
+   | unique(FALSE,TRUE) | = | FALSE                                    |          |         |
+   |--------------------+---+------------------------------------------+----------+---------|
+
+   |--------------------+---+----------------------------------+----------+---------|
+   | unique(r,q)        | = | xor(unique(r0,q1),unique(r1,q1)) | L(r)=0   | L(q)=0  |
+   |--------------------+---+----------------------------------+----------+---------|
+   |--------------------+---+----------------------------------+----------+---------|
+   | unique(r0,q1)      | = | ite(FALSE,FALSE)                 | L(r0)=1  | L(q1)=2 |
+   | unique(FALSE,q1)   | = | FALSE                            |          |         |
+   | unique(r01,q1)     | = | FALSE                            | L(r01)=3 | L(q1)=2 |
+   |--------------------+---+----------------------------------+----------+---------|
+   | unique(r1,q1)      | = | ite(FALSE,xor(r01,FALSE))        | L(r1)=1  | L(q1)=2 |
+   | unique(FALSE,q1)   | = | FALSE                            |          |         |
+   | unique(r11,q1)     | = | xor(r01,FALSE)                   | L(r11)=2 | L(q1)=2 |
+   | unique(r01,TRUE)   | = | r01                              |          |         |
+   | unique(FALSE,TRUE) | = | FALSE                            |          |         |
+   |--------------------+---+----------------------------------+----------+---------|
+
+   |---------------------------+---+---------------------------+----------+---------|
+   | unique(r,q)               | = | xor(FALSE,ite(FALSE,r01)) | L(r)=0   | L(q)=0  |
+   |---------------------------+---+---------------------------+----------+---------|
+   |---------------------------+---+---------------------------+----------+---------|
+   | unique(r0,q1)             | = | FALSE                     | L(r0)=1  | L(q1)=2 |
+   | unique(FALSE,q1)          | = | FALSE                     |          |         |
+   | unique(r01,q1)            | = | FALSE                     | L(r01)=3 | L(q1)=2 |
+   |---------------------------+---+---------------------------+----------+---------|
+   | unique(r1,q1)             | = | ite(FALSE,r01)            | L(r1)=1  | L(q1)=2 |
+   | unique(FALSE,q1)          | = | FALSE                     |          |         |
+   | unique(r11,q1)            | = | r01                       | L(r11)=2 | L(q1)=2 |
+   | unique(r01,TRUE)          | = | r01                       |          |         |
+   | unique(FALSE,TRUE)        | = | FALSE                     |          |         |
+   | xor(FALSE,ite(FALSE,r01)) | = | ite(FALSE,r01)            |          |         |
+   |---------------------------+---+---------------------------+----------+---------|
+   
+*** Why unique quantification seems to not be what I need?
+    The following relation is represented by the /BDD/ bellow it.
+    \begin{align*}
+    S = \{\pair{0}{3},\pair{1}{3},\pair{2}{3}\}
+    \end{align*}
+    
+   #+begin_dot binrel-quant2.pdf -Tpdf
+   digraph G {
+   0 [shape=box, label="0", style=filled, shape=box, height=0.3, width=0.3];
+   1 [shape=box, label="1", style=filled, shape=box, height=0.3, width=0.3];
+   23 [label="0"];
+   23 -> 11 [style=dotted];
+   23 -> 14 [style=filled];
+   11 [label="1"];
+   11 -> 0 [style=dotted];
+   11 -> 8 [style=filled];
+   8 [label="3"];
+   8 -> 0 [style=dotted];
+   8 -> 1 [style=filled];
+   14 [label="1"];
+   14 -> 0 [style=dotted];
+   14 -> 13 [style=filled];
+   13 [label="2"];
+   13 -> 8 [style=dotted];
+   13 -> 0 [style=filled];
+   }
+   #+end_dot
+
+*** My own unique quantification
+   The following is the /BDD/ representing the relation. 
+
+   #+ATTR_LaTeX: width=0.8\textwidth
+   #+begin_dot myunique0.pdf -Tpdf
+    digraph G {
+0 [shape=box, label="F", style=filled, shape=box, height=0.3, width=0.3];
+1 [shape=box, label="T", style=filled, shape=box, height=0.3, width=0.3];
+2 [label="0"]
+2 -> 3 [style=dotted];
+3 [label="1"]
+3 -> 0 [style=dotted];
+3 -> 4 [style=filled];
+4 [label="2"]
+4 -> 5 [style=dotted];
+5 [label="3"]
+5 -> 0 [style=dotted];
+5 -> 1 [style=filled];
+4 -> 0 [style=filled];
+2 -> 3 [style=filled];
+}
+   #+end_dot
+
+   #+ATTR_LaTeX: width=0.8\textwidth
+   #+begin_dot myunique1.pdf -Tpdf
+digraph G {
+0 [shape=box, label="F", style=filled, shape=box, height=0.3, width=0.3];
+1 [shape=box, label="T", style=filled, shape=box, height=0.3, width=0.3];
+2 [label="0"]
+2 -> 0 [style=dotted];
+2 -> 3 [style=filled];
+3 [label="1"]
+3 -> 4 [style=dotted];
+4 [label="2"]
+4 -> 5 [style=dotted];
+5 [label="3"]
+5 -> 0 [style=dotted];
+5 -> 1 [style=filled];
+4 -> 0 [style=filled];
+3 -> 0 [style=filled];
+}
+
+
+#+end_dot
+
+
+
+
+* Existential quantification
+  This operation takes a relation $R \subseteq \universe{n}$ and a set
+  $I$ of column indices and gives as result a relation of the same
+  arity in which the columns corresponding to the indices are
+  existentially quantified. This is, they can be any value in the
+  universe.
