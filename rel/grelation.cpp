@@ -228,6 +228,10 @@ namespace MPG {
       pimpl_->pickOneTuple();
   }
 
+  void GRelation::print(std::ostream& os) const {
+    pimpl_->print(os);
+  }
+
   GRelation create(const std::vector<Tuple>& dom) {
     std::vector<Tuple>::const_iterator c = dom.begin();
     GRelation r(c->arity());
@@ -279,7 +283,7 @@ namespace MPG {
   }
 
   std::ostream& operator<< (std::ostream& os, const GRelation& r) {
-    assert(false && "Not implemented");
+    r.print(os);
     return os;
   }
 

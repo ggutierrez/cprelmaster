@@ -258,10 +258,10 @@ namespace MPG { namespace VarImpl {
     void RelationImpl::print(std::ostream& os) const {
       os << "[a: " << arity_ << " #: " << cardinality() << "]" << std::endl;
       // this prints the bdd with all the columns in the manager
-      printSet(bdd_,Limits::arity,os);
+      //printSet(bdd_,Limits::arity,os);
       // this is to print only the columns that correspond to the
       // represented relation
-      //printSet(bdd_,arity_,os);
+      printSet(bdd_,arity_,os);
     }
 
     std::ostream& operator << (std::ostream& os, const RelationImpl& r) {

@@ -69,9 +69,9 @@ public:
   }
   /// Creates a choice by selecting a tuple from the unknown of the variable
   virtual Choice* choice(Space&) {
-    GRelationIter it(x_.unk());
-    assert(it());
-    return new RelChoice(*this,it.val());
+    //GRelationIter it(x_.unk());
+    assert(!x_.unk().empty());
+    return new RelChoice(*this,x_.unk().pickOneTuple());
   }
   virtual Choice* choice(const Space&, Gecode::Archive& e) {
     int arity;

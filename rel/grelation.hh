@@ -226,6 +226,10 @@ namespace MPG {
      */
     Tuple pickOneTuple(void) const;
     //@} 
+    /// \name Output
+    //{@
+    void print(std::ostream& os) const;
+    //@}
   };
 
     /**
