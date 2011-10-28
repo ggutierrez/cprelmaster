@@ -1,6 +1,12 @@
 #include <cprel/prop/follow.hh>
 #include <cprel/cprel.hh>
 
+// The reason for this undefne statement is because CUDD defines a
+// macro with this name and this confusses gcc and clang with the fail
+// method of the Space class that is called by the GECODE_ES_FAIL
+// macro.
+#undef fail 
+
 namespace MPG {
 
 using namespace CPRel;

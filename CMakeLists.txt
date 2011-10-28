@@ -414,22 +414,22 @@ set(CPREL_SRCS
 # propagators	
   cprel/prop/and.cpp
   cprel/prop/and.hh
-#  cprel/prop/and.hpp
-#  cprel/prop/equality.cpp
-#  cprel/prop/equality.hh
-#  cprel/prop/permutation.cpp
-#  cprel/prop/permutation.hh
-#  cprel/prop/join.hh
-#  cprel/prop/join.cpp
-#  cprel/prop/projection.cpp
-#  cprel/prop/projection.hh
+  cprel/prop/and.hpp
+  cprel/prop/equality.cpp
+  cprel/prop/equality.hh
+  cprel/prop/permutation.cpp
+  cprel/prop/permutation.hh
+  cprel/prop/join.hh
+  cprel/prop/join.cpp
+  cprel/prop/projection.cpp
+  cprel/prop/projection.hh
 #  cprel/prop/channel.cpp
 #  cprel/prop/channel.hh
 #  cprel/prop/tuple.cpp
 #  cprel/prop/tuple.hh
-#  cprel/prop/follow.hh
-#  cprel/prop/follow.cpp
-#  cprel/prop/dom.cpp
+  cprel/prop/follow.hh
+  cprel/prop/follow.cpp
+  cprel/prop/dom.cpp
 # branchers
   cprel/branch/branch.cpp
 )
