@@ -533,46 +533,54 @@ add_custom_target(dist
 ##########################################################################
 if(BUILD_EXAMPLES)
   # test for the equality propagator
-#  add_executable(eq tests/equality.cpp)
-#  target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
+  add_executable(eq tests/equality.cpp)
+  target_link_libraries(eq gecodecprel ${Gecode_LIBRARIES})
+
   # test for the and propagator
   add_executable(and tests/and.cpp)
   target_link_libraries(and gecodecprel ${Gecode_LIBRARIES})
+
   # test for the projection propagator
-#  add_executable(projection tests/projection.cpp)
-#  target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
+  add_executable(projection tests/projection.cpp)
+  target_link_libraries(projection gecodecprel ${Gecode_LIBRARIES})
+
   # test for the projection propagator
-#  add_executable(permutation tests/permutation.cpp)
-#  target_link_libraries(permutation gecodecprel ${Gecode_LIBRARIES})
+  add_executable(permutation tests/permutation.cpp)
+  target_link_libraries(permutation gecodecprel ${Gecode_LIBRARIES})
+
   # test for the join propagator
-#  add_executable(join tests/join.cpp)
-#  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+  add_executable(join tests/join.cpp)
+  target_link_libraries(join gecodecprel ${Gecode_LIBRARIES})
+
   # test for the channel propagator
 #  add_executable(channel tests/channel.cpp)
 #  target_link_libraries(channel gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+
   # Test for the follow operation
-#  add_executable(follow-test tests/follow-test.cpp)
-#  target_link_libraries(follow-test gecodecprel)
+  add_executable(follow-test tests/follow-test.cpp)
+  target_link_libraries(follow-test gecodecprel)
+
   # Test for the projection operation
-#  add_executable(proj-test tests/proj-test.cpp)
-#  target_link_libraries(proj-test gecodecprel)
+  add_executable(proj-test tests/proj-test.cpp)
+  target_link_libraries(proj-test gecodecprel)
+
   # Minimal test that declares a tuple and a relation variable and branch on
   # them to find all the possible combinations.
   add_executable(minimal tests/minimal.cpp)
   target_link_libraries(minimal gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+
   # Test for operations at the bdd level
 #  add_executable(dom tests/dom.cpp)
 #  target_link_libraries(dom gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
+  add_executable(grel-test tests/grel-test.cpp)
+  target_link_libraries(grel-test gecodecprel)
 
- # add_executable(grel-test tests/grel-test.cpp)
- # target_link_libraries(grel-test gecodecprel)
+  add_executable(swap-test tests/swap-test.cpp)
+  target_link_libraries(swap-test gecodecprel)
 
- # add_executable(swap-test tests/swap-test.cpp)
- # target_link_libraries(swap-test gecodecprel)
-
- # add_executable(join-test tests/join-test.cpp)
- # target_link_libraries(join-test gecodecprel)
+  add_executable(join-test tests/join-test.cpp)
+  target_link_libraries(join-test gecodecprel)
 endif()
 
 add_executable(domain-test tests/domain-test.cc)
