@@ -36,7 +36,7 @@ namespace MPG { namespace VarImpl {
     }
 
     BDD makeCube(int c) {
-      assert(c > 0 && c < Limits::arity &&
+      assert(c >= 0 && c < Limits::arity &&
 	     "Trying to make a cube out of an invalid index empty");
       std::vector<int> columns(1,c);
       return makeCube(columns);

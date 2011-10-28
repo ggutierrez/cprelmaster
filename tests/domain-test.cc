@@ -34,10 +34,10 @@ int main(void) {
     ternary.add({0,0,2});
     ternary.add({1,2,3});
     
-    /*
+    
     std::cout << "Ternary relation: "
 	      << ternary << std::endl;
-    */
+    
     
     fourthary.add({3,1,2,3});
     fourthary.add({2,3,0,1});
@@ -47,10 +47,10 @@ int main(void) {
     fourthary.add({1,0,5,2});
     fourthary.add({0,1,1,0});
 
-    
+    /*
     std::cout << "Fourthary relation: "
 	      << fourthary << std::endl;
-    
+    */
     //auto tuq = ternary.unique({0,1});
     //std::cout << "Unique quantification yields: " << tuq << std::endl;
     //auto teq = ternary.exists({0,1});
@@ -146,6 +146,12 @@ int main(void) {
       
       MPG::VarImpl::RelationImpl p3 = fourthary.project(3); 
       //std::cout << "Fourthary projected on first three columns " << p3 << std::endl;      
+    }
+
+    { // shift the columns of a relation to the right
+      MPG::VarImpl::RelationImpl p1 = ternary.shiftRight(1); 
+      std::cout << "Relation shifted 1 "  << p1 << std::endl; 
+
     }
   }
   return 0;

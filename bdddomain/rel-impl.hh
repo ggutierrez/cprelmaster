@@ -93,7 +93,26 @@ namespace MPG { namespace VarImpl {
       //@}
       /// \name Unique quantification
       //@{
-
+      /**
+       * \brief Returns the relation resulting from uniquely quantifying the column
+       * \a c of the represented relation.
+       */
+      RelationImpl unique(int c) const;
+      /**
+       * \brief Returns the relation resulting from uniquely quantifying the columns
+       * in \a c of the represented relation.
+       */
+      RelationImpl unique(const std::vector<int>& c) const;
+      //@}
+      /// \name Universal quantification
+      //@{
+      /**
+       * \brief Returns the relation resulting from universaly quantifying on column
+       * \a c
+       *
+       * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
+       */
+      RelationImpl forall(int c) const;
       //@}
       /// \name Column permutation
       //@{
@@ -124,6 +143,7 @@ namespace MPG { namespace VarImpl {
       RelationImpl timesULeft(int n) const;
       /// Returns this \times U_{n}
       RelationImpl timesURight(int n) const;
+      
       //@}
       /// \name Column manipulation
       //@{
@@ -158,23 +178,6 @@ namespace MPG { namespace VarImpl {
        */
       RelationImpl follow(int f, const RelationImpl& r) const;
       /**
-       * \brief Returns the relation resulting from uniquely quantifying the column
-       * \a c of the represented relation.
-       */
-      RelationImpl unique(int c) const;
-      /**
-       * \brief Returns the relation resulting from uniquely quantifying the columns
-       * in \a c of the represented relation.
-       */
-      RelationImpl unique(const std::vector<int>& c) const;
-      /**
-       * \brief Returns the relation resulting from universaly quantifying on column
-       * \a c
-       *
-       * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
-       */
-      RelationImpl forall(int c) const;
-      /**
        * \brief Returns \f$ \Pi_{\{0,\ldots,p-1\}}\text{this}\f$.
        *
        * The projection of this on the \a p rightmost columns.
@@ -187,8 +190,11 @@ namespace MPG { namespace VarImpl {
        */
       /// \name Output
       void print(std::ostream& os) const;
+      /// \name Element access
+      //@{
       /// Returns a tuple in the relation
       Tuple pickOneTuple(void) const;
+      //@}
     };
 
     

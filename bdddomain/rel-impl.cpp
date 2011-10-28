@@ -245,59 +245,78 @@ namespace MPG { namespace VarImpl {
       if (p == 0) return RelationImpl(0);
       // Project on all the columns of a relation is the relation itself
       if (p == arity_) return r;
-
+   
       // Projecting is the same as removing all the columns that are
       // at indices greater than p-1.  remember that p is a number of
       // columns on the right and not a column index.
       return discard(p, arity_);
     }
-
+   
     /*
      * Relation output
      */
     void RelationImpl::print(std::ostream& os) const {
       os << "[a: " << arity_ << " #: " << cardinality() << "]" << std::endl;
       // this prints the bdd with all the columns in the manager
-      //printSet(bdd_,Limits::arity,os);
+      printSet(bdd_,Limits::arity,os);
       // this is to print only the columns that correspond to the
       // represented relation
-      printSet(bdd_,arity_,os);
+      //printSet(bdd_,arity_,os);
     }
-
+   
     std::ostream& operator << (std::ostream& os, const RelationImpl& r) {
       r.print(os);
       return os;
     }
-
+   
     Tuple RelationImpl::pickOneTuple(void) const {
       BDD tupleRepr = VarImpl::oneTuple(arity_,bdd_);
       return Tuple(tupleRepr,arity_);
     }
-
+   
     // still for review
     /*
      * Column permutation
      */
-      
     RelationImpl RelationImpl::shiftLeft(int n) const {
       assert(false && "Not implemented");
       return *this;
     }
       
+    RelationImpl RelationImpl::shiftRight(int n) const {
+      assert(n >= 0 && "Only positive values are accepted");
+      // moving zero columns yields the same relation
+      if (n == 0) return *this;
+      // moving more columns than the arity will result in an empty
+      // relation
+      if (n >= arity_)
+	return RelationImpl(0);
+      BDD res = bdd_;
+      for (int i = n; i < arity_; i++) {
+   	std::vector<std::pair<int,int>> p;
+	p.push_back({i-n,i});
+	res = VarImpl::swap(p,res);
+      }
+      // quantify on the columns that need to disapear
+      std::vector<int> quantify;
+      for (int i = arity_-1; i >= arity_ - n; i--) {
+	quantify.push_back(i);
+      }
+      res = VarImpl::exists(quantify,res);
+      return RelationImpl(res,arity_-n);
+    }
+   
     RelationImpl RelationImpl::timesU(int n, bool left) const {
       assert(false && "Deprecated funtion");
       if (left)
-	return RelationImpl(bdd_,arity_+n);
-
+   	return RelationImpl(bdd_,arity_+n);
+   
       PermDescriptor d;
       for (int i = 0; i < arity_; i++) d.permute(i,i+n);
       RelationImpl r = permute(d);
       return RelationImpl(r.bdd_,arity_+n);
     }
       
-    RelationImpl RelationImpl::shiftRight(int n) const {
-      assert(false && "Not implemented");
-      return *this;
-    }
+   
   }
 }
