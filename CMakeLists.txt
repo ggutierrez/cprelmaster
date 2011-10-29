@@ -287,7 +287,7 @@ set(BDDDOMAIN_SRCS
   encoding.cpp encoding.hh abstract.cpp replace.cpp 
   exception.hh manager.cpp manager.hh
   bdd.hh bdd.cpp bdd-print.cpp bdd-visitor.hpp
-  perm-descriptor.hh rel-impl.cpp rel-impl.hh relations.cpp relations.hh
+  perm-descriptor.hh rel-impl.cpp rel-impl.hh 
   tuple.cpp tuple.hh
 )
 
@@ -401,9 +401,6 @@ set(CPREL_SRCS
   cprel/varimp.cpp
   cprel/varimp.hh
   cprel/view.hh
-
-# builtin ground relations
-  cprel/grel-builtin/arith.cpp
 
 # documentation
   doc/main.hh
