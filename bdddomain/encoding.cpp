@@ -5,11 +5,19 @@
 
 namespace MPG { namespace VarImpl {
 
-    using std::pair;
-    using std::vector;
+    std::vector<int> domainIndices(int c) {
+      assert(c < Limits::arity && c >= 0 && "Column out of range.");
+      std::vector<int> vars(Limits::bitsPerInteger,-1);
 
-    vector<int> bddIndices(int c) {
-      vector<int> vars;
+      for (int i = (1 << Limits::bbv); i--;) {
+	vars[i] = (i << Limits::ba) + c;
+      }
+      std::reverse(begin(vars), end(vars));
+      return vars;
+    }
+
+    std::vector<int> bddIndices(int c) {
+      std::vector<int> vars;
       vars.reserve(Limits::bitsPerInteger);
       
       for (int i = (1 << Limits::bbv); i--;) {
