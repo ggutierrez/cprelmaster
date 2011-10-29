@@ -70,6 +70,14 @@ public:
       return false;
     return true;
   }
+  /// Return the permutation as an array of pairs
+  std::vector<std::pair<int,int>> getPerm(void) const {
+    std::vector<std::pair<int,int>> p;
+    for (unsigned int i = 0; i < origin_.size(); i++) {
+      p.push_back({origin_.at(i),permute_.at(i)});
+    }
+    return p;
+  }
 };
 /**
  * \brief Iterator on a permutation descriptor.

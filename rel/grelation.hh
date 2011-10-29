@@ -113,6 +113,13 @@ namespace MPG {
      */
     GRelation permute(const std::vector<std::pair<int,int>>& desc) const;
     /**
+     * \brief Computes the permutation of \a this according to \a desc.
+     *
+     * \warning The permutation descriptor has to be valid for the relation. If it
+     * is not then a InvalidPermDescriptor exception is thrown.
+     */
+    GRelation permute(const PermDescriptor& desc) const;
+    /**
      * \brief Computes the relation resulting by shifting all the columns in \a r
      * \a n possitions to the right.
      *
@@ -125,7 +132,7 @@ namespace MPG {
      *
      * The new columns in the resulting relation are existentially quantified.
      */
-    GRelation shiftLeft(int n) const;
+    //GRelation shiftLeft(int n) const;
     /**
      * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
      *

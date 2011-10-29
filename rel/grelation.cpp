@@ -109,19 +109,24 @@ namespace MPG {
   }
 
   GRelation GRelation::permute(const std::vector<std::pair<int,int>>& desc) const {
-    typedef boost::error_info<struct tag_perm_descriptor,std::string>
-      perm_descriptor;
-    /*    if (!desc.valid(arity()))
-      throw InvalidPermDescriptor()
-	<< errno_code(errno)
-	<< perm_descriptor("Invalid permutation description used at: GRelation::permute");
-    */
     return
       GRelation(
 		Impl(new RelationImpl(pimpl_->permute(desc)))
 		);
   }
 
+  GRelation GRelation::permute(const PermDescriptor& desc) const {
+    typedef boost::error_info<struct tag_perm_descriptor,std::string>
+      perm_descriptor;
+    
+    if (!desc.valid(arity()))
+      throw InvalidPermDescriptor()
+	<< errno_code(errno)
+	<< perm_descriptor("Invalid permutation description used at: GRelation::permute");
+    
+    return permute(desc.getPerm());
+  }
+   
   GRelation GRelation::shiftRight(int n) const {
     return
       GRelation(
