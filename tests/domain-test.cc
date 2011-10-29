@@ -34,10 +34,10 @@ int main(void) {
     ternary.add({0,0,2});
     ternary.add({1,2,3});
     
-    
+    /*
     std::cout << "Ternary relation: "
 	      << ternary << std::endl;
-    
+    */
     
     fourthary.add({3,1,2,3});
     fourthary.add({2,3,0,1});
@@ -47,10 +47,10 @@ int main(void) {
     fourthary.add({1,0,5,2});
     fourthary.add({0,1,1,0});
 
-    /*
+    
     std::cout << "Fourthary relation: "
 	      << fourthary << std::endl;
-    */
+    
     //auto tuq = ternary.unique({0,1});
     //std::cout << "Unique quantification yields: " << tuq << std::endl;
     //auto teq = ternary.exists({0,1});
@@ -64,6 +64,17 @@ int main(void) {
     std::cout << "Discard [1..2[ from ternarry "
 	      << discard12 << std::endl;
     */
+    { // Permute some columns in the fourthary relation
+      MPG::VarImpl::RelationImpl p01  = fourthary.permute({{0,1}});
+      //std::cout << "Permutation of 0 1 " << p01 << std::endl; 
+      
+      MPG::VarImpl::RelationImpl p01p  = p01.permute({{0,1}});
+      //std::cout << "Permutation of 0 1 p " << p01p << std::endl; 
+      std::cout << "###Success: " << p01p.equal(fourthary)  << std::endl; 
+
+      MPG::VarImpl::RelationImpl p03  = fourthary.permute({{0,3},{1,2}});
+      std::cout << "Permutation of 0 r p " << p03 << std::endl; 
+    }
 
     {
       // discard first column of a relation
@@ -150,8 +161,15 @@ int main(void) {
 
     { // shift the columns of a relation to the right
       MPG::VarImpl::RelationImpl p1 = ternary.shiftRight(1); 
-      std::cout << "Relation shifted 1 "  << p1 << std::endl; 
+      //std::cout << "Relation shifted 1 "  << p1 << std::endl; 
 
+      MPG::VarImpl::RelationImpl p11 = p1.shiftRight(1); 
+      //std::cout << "Relation p1 shifted 1 "  << p11 << std::endl; 
+
+      MPG::VarImpl::RelationImpl p2 = ternary.shiftRight(2); 
+      //std::cout << "Relation shifted 2 "  << p2 << std::endl; 
+
+      std::cout << "###Success: " << (p11.equal(p2)) << std::endl;  
     }
   }
   return 0;
