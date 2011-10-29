@@ -9,10 +9,16 @@ namespace MPG { namespace VarImpl {
      * Constructors, destructors and assignment
      */
     RelationImpl::RelationImpl(BDD n, int a)
-      : bdd_(n), arity_(a) {}
+      : bdd_(n), arity_(a) {
+      assert(a >= 0 && a <= Limits::arity && 
+	     "Invalid arity.");
+    }
 
     RelationImpl::RelationImpl(int a)
-      : bdd_(zero()), arity_(a) {}
+      : bdd_(zero()), arity_(a) {
+      assert(a >= 0 && a <= Limits::arity && 
+	     "Invalid arity.");
+    }
 
     RelationImpl::RelationImpl(const RelationImpl &r)
       : bdd_(r.bdd_), arity_(r.arity_) {}
@@ -24,6 +30,8 @@ namespace MPG { namespace VarImpl {
     }
 
     RelationImpl RelationImpl::create_full(int a) {
+      assert(a >= 0 && a <= Limits::arity && 
+	     "Invalid arity.");
       return RelationImpl(one(),a);
     }
 
