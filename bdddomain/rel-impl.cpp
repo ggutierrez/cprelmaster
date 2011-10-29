@@ -126,9 +126,14 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::swap(pairing,bdd_), arity_);
     }
 
-    RelationImpl RelationImpl::permute(const PermDescriptor& permDesc) const {
-      assert(false && "Use swap instead?");
-      return *this;
+    RelationImpl RelationImpl::permute(const std::vector<std::pair<int,int>>& perm) const {
+      BDD result = bdd_;
+      for (const auto& p : perm) {
+	std::vector<std::pair<int,int>> x;
+	x.push_back(p);
+	result = VarImpl::swap(x,result);
+      } 
+      return RelationImpl(result,arity_);
     }
 
     /*
@@ -274,15 +279,6 @@ namespace MPG { namespace VarImpl {
       return Tuple(tupleRepr,arity_);
     }
    
-    // still for review
-    /*
-     * Column permutation
-     */
-    RelationImpl RelationImpl::shiftLeft(int n) const {
-      assert(false && "Not implemented");
-      return *this;
-    }
-      
     RelationImpl RelationImpl::shiftRight(int n) const {
       assert(n >= 0 && "Only positive values are accepted");
       // moving zero columns yields the same relation
@@ -305,18 +301,5 @@ namespace MPG { namespace VarImpl {
       res = VarImpl::exists(quantify,res);
       return RelationImpl(res,arity_-n);
     }
-   
-    RelationImpl RelationImpl::timesU(int n, bool left) const {
-      assert(false && "Deprecated funtion");
-      if (left)
-   	return RelationImpl(bdd_,arity_+n);
-   
-      PermDescriptor d;
-      for (int i = 0; i < arity_; i++) d.permute(i,i+n);
-      RelationImpl r = permute(d);
-      return RelationImpl(r.bdd_,arity_+n);
-    }
-      
-   
   }
 }

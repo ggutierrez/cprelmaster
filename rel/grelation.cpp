@@ -108,14 +108,14 @@ namespace MPG {
 		);
   }
 
-  GRelation GRelation::permute(const PermDescriptor& desc) const {
+  GRelation GRelation::permute(const std::vector<std::pair<int,int>>& desc) const {
     typedef boost::error_info<struct tag_perm_descriptor,std::string>
       perm_descriptor;
-
-    if (!desc.valid(arity()))
+    /*    if (!desc.valid(arity()))
       throw InvalidPermDescriptor()
 	<< errno_code(errno)
 	<< perm_descriptor("Invalid permutation description used at: GRelation::permute");
+    */
     return
       GRelation(
 		Impl(new RelationImpl(pimpl_->permute(desc)))
@@ -129,19 +129,12 @@ namespace MPG {
 		);
   }
 
-  GRelation GRelation::shiftLeft(int n) const {
-    /// \todo Throw an exception if there are not enough room in the manager to
-    /// perform the operation
-    return
-      GRelation(
-		Impl(new RelationImpl(pimpl_->shiftLeft(n)))
-		);
-  }
-
   GRelation GRelation::timesU(int n, bool left) const {
+    /// \todo Temporal: make two different methods that call the
+    /// varimp accordingly
     return
-      GRelation(
-		Impl(new RelationImpl(pimpl_->timesU(n, left)))
+      GRelation(left ? Impl(new RelationImpl(pimpl_->timesULeft(n)))
+		:  Impl(new RelationImpl(pimpl_->timesURight(n)))
 		);
   }
 

@@ -111,7 +111,7 @@ namespace MPG {
      * \warning The permutation descriptor has to be valid for the relation. If it
      * is not then a InvalidPermDescriptor exception is thrown.
      */
-    GRelation permute(const PermDescriptor& desc) const;
+    GRelation permute(const std::vector<std::pair<int,int>>& desc) const;
     /**
      * \brief Computes the relation resulting by shifting all the columns in \a r
      * \a n possitions to the right.

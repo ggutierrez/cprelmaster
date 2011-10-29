@@ -116,6 +116,7 @@ namespace MPG { namespace VarImpl {
       //@}
       /// \name Column permutation
       //@{
+    private:
       /**
        * \brief Returns a new relation implementation by performing
        * the specified replacement of columns indicated by \a pairing.
@@ -136,37 +137,39 @@ namespace MPG { namespace VarImpl {
        *
        */
       RelationImpl swap(const std::vector<std::pair<int,int>>& pairing);
+    public:
+      /**
+       * \brief Returns the relation resulting from permuting \a this
+       * according with \a permDesc.
+       *
+       */
+      RelationImpl permute(const std::vector<std::pair<int,int>>& perm) const;
       //@}
       /// \name Cross product
       //@{
       /// Returns U_{n} \times this
       RelationImpl timesULeft(int n) const;
       /// Returns this \times U_{n}
-      RelationImpl timesURight(int n) const;
-      
+      RelationImpl timesURight(int n) const;      
       //@}
       /// \name Column manipulation
       //@{
+      /**
+       * \brief Returns a relation which is equivalent to discard the
+       * columns in the range \a start (inclusive) to \a end
+       * (exclusive) of this relation.
+       */
       RelationImpl discard(int start, int end) const;
-      //@}
-      /// \name Operations
-      /**
-       * \brief Returns the relation resulting from permuting \a this
-       * according with \a permDesc.
+      /** 
+       * \brief Returns the relation equivalent to shift this relation
+       * \a n columns to the right.
        *
+       * This implies that the right most \a n columns are discarded.
        */
-      RelationImpl permute(const PermDescriptor& permDesc) const;
-
-      RelationImpl shiftLeft(int n) const;
       RelationImpl shiftRight(int n) const;
-      /**
-       * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
-       *
-       * As the cross product operation is not conmutative, the \a left parameter
-       * indicates whether to perform  \f$ \mathcal{U}_n \times \mathrm{this}\f$ if
-       * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}_n\f$ otherwise.
-       */
-      RelationImpl timesU(int n, bool left) const;
+      //@}
+      /// \name Relational algebra operations
+      //@{
       /**
        * \brief Performs \f$ this \bowtie_{j} r \f$
        *
@@ -183,18 +186,17 @@ namespace MPG { namespace VarImpl {
        * The projection of this on the \a p rightmost columns.
        */
       RelationImpl project(int p) const;
-      /**
-       * \brief Returns \f$\Pi_{\overline{c}}this \f$.
-       *
-       * The projection of \a this on all its columns but \a c
-       */
-      /// \name Output
+      //@}
+      /// \name Relation output
+      //@{
+      /// Outputs the contents of the relation to \a os
       void print(std::ostream& os) const;
+      //@}
       /// \name Element access
       //@{
       /// Returns a tuple in the relation
       Tuple pickOneTuple(void) const;
-      //@}
+      //@}     
     };
 
     
