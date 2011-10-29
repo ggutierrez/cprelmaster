@@ -9,10 +9,11 @@ namespace MPG {
   /**
    * \defgroup GRelation Ground relations
    *
-   * Ground relations are the basic construct of the relation domain. The term
-   * ground is used to differenciate this relation from a relation represented by
-   * a decission variable. This module offers the capability to define and operate
-   * on this kind of relations.
+   * Ground relations are the basic construct of the relation
+   * domain. The term ground is used to differenciate this relation
+   * from a relation represented by a decission variable. This module
+   * offers the capability to define and operate on this kind of
+   * relations.
    */
 
   /// Exception indicating invalid stream containing relation
@@ -36,18 +37,24 @@ namespace MPG {
    * \brief Class representing a ground relation.
    * \ingroup GRelation
    *
-   * This class provides a way to represent a relation along with operations on it.
-   * In all the documentation of this class \a this refers to the represented
-   * relation. There are two basic notions attached to a relation:
-   * - Its arity that is the number of elements that each tuple in the relation has.
-   * - Its cardinality, which is the total number of tuple the relation contains.
+   * This class provides a way to represent a relation along with
+   * operations on it.  In all the documentation of this class \a this
+   * refers to the represented relation. There are two basic notions
+   * attached to a relation:
    *
-   * \f$arity(\text{this})\f$ and \f$|\text{this}|\f$ denote resp. the arity and
-   * the cardinality of the represented relation.
+   * - Its arity that is the number of elements that each tuple in the
+   *   relation has.
+   * - Its cardinality, which is the total number of tuple the
+   *   relation contains.
    *
-   * Relations can be large but finite. The largest possible relation of arity
-   * \f$n\f$ is \f$\mathcal{U}_{n}=\mathcal{U}\times\ldots\times\mathcal{U}\f$.
-   * and \f$\mathcal{U}=\{x: 0 \leq x \leq k\} \f$ for an arbitrary large \f$k\f$.
+   * \f$arity(\text{this})\f$ and \f$|\text{this}|\f$ denote resp. the
+   * arity and the cardinality of the represented relation.
+   *
+   * Relations can be large but finite. The largest possible relation
+   * of arity \f$n\f$ is
+   * \f$\mathcal{U}_{n}=\mathcal{U}\times\ldots\times\mathcal{U}\f$.
+   * and \f$\mathcal{U}=\{x: 0 \leq x \leq k\} \f$ for an arbitrary
+   * large \f$k\f$.
    */
   class GRelation {
   private:
@@ -103,7 +110,7 @@ namespace MPG {
     /// Computes \f$ \overline{this}\f$
     GRelation complement(void) const;
     //@}
-    /// \name Relation operations
+    /// \name Column permutation
     //@{
     /**
      * \brief Computes the permutation of \a this according to \a desc.
@@ -126,21 +133,24 @@ namespace MPG {
      * The first \a n columns of \a r does not appear in the final relation.
      */
     GRelation shiftRight(int n) const;
+    //@}
+    /// \name Cross product
+    //@{
     /**
-     * \brief Computes the relation resulting by shifting all the columns in \a r
-     * \a n possitions to the left.
-     *
-     * The new columns in the resulting relation are existentially quantified.
+     * \brief Computes \f$ \mathcal{U}_n \times this\f$.
      */
-    //GRelation shiftLeft(int n) const;
+    GRelation timesULeft(int n) const;
     /**
-     * \brief Computes the cross product of \a this with \f$ \mathcal{U}_n \f$.
-     *
-     * As the cross product operation is not conmutative, the \a left parameter
-     * indicates whether to perform  \f$ \mathcal{U}_n \times \mathrm{this}\f$ if
-     * \a left is  \a true or \f$ \mathrm{this} \times \mathcal{U}_n\f$ otherwise.
+     * \brief Computes \f$ this \times \mathcal{U}_n \f$.
      */
-    GRelation timesU(int n, bool left) const;
+    GRelation timesURight(int n) const;
+    /**
+     * \brief Computes \f$ this \times r \f$
+     */
+    GRelation times(const GRelation& r) const;
+    //@}
+    /// \name Relational algebra operations
+    //@{
     /**
      * \brief Returns: \f$ \mathit{this}\;\bowtie_{j}\; r \f$.
      *
@@ -148,14 +158,24 @@ namespace MPG {
      * columns of \a this and the \a j left most columns of \a r.
      */
     GRelation join(int j,const GRelation& r) const;
-    /// Returns the relation \f$ this \times r \f$
-    GRelation times(const GRelation& r) const;
     /**
      * \brief Returns: \f$ \mathit{this}_{\smile_{f}}r \f$.
      *
      * \todo documentation
      */
-    GRelation follow(int f,const GRelation& r) const;
+    GRelation follow(int f,const GRelation& r) const;     
+    /**
+     * \brief Returns: \f$ \Pi_{p} this \f$.
+     *
+     * This is, the projection of \a this on the \a p rightmost columns.
+     *
+     * \warning Throws an exception InvalidProjection if \a p is not a valid column
+     * in the relation.
+     */
+    GRelation project(int p) const;
+    //@}
+    /// \name Quantification
+    //@{
     /**
      * \brief Returns the relation resulting from existencially quantifying on
      * column \a c
@@ -186,15 +206,16 @@ namespace MPG {
      * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
      */
     GRelation forall(int c) const;
+    //@}
+
     /**
-     * \brief Returns: \f$ \Pi_{p} this \f$.
+     * \brief Computes the relation resulting by shifting all the columns in \a r
+     * \a n possitions to the left.
      *
-     * This is, the projection of \a this on the \a p rightmost columns.
-     *
-     * \warning Throws an exception InvalidProjection if \a p is not a valid column
-     * in the relation.
+     * The new columns in the resulting relation are existentially quantified.
      */
-    GRelation project(int p) const;
+    //GRelation shiftLeft(int n) const;
+    /// Returns the relation \f$ this \times r \f$
     //@}
     /// \name Test operations
     //@{
@@ -211,7 +232,7 @@ namespace MPG {
     /// Tests whther the relation represents the universe
     bool universe(void) const;
     //@}
-    /// \name Information
+    /// \name Relation information
     //@{
     /// Returns the arity (i.e. number of columns) of the relation
     int arity(void) const;
@@ -221,7 +242,7 @@ namespace MPG {
     /// \name Constant relations
     //@{
     /// Creates the binary relation \f$ R = \{(x,y) : x = y \} \f$
-    static GRelation equalXY(void);
+    //static GRelation equalXY(void);
     //@}
     /// \name Content access
     //@{

@@ -5,6 +5,10 @@ namespace MPG {
 
   using namespace VarImpl;
 
+  /*
+   * Constructors, destructor and assignment
+   */
+  
   GRelation::GRelation(Impl impl)
     : pimpl_(impl) {}
 
@@ -30,6 +34,9 @@ namespace MPG {
 		);
   }
 
+  /*
+   * Modification
+   */ 
   void GRelation::add(const Tuple &t) {
     pimpl_->add(t);
   }
@@ -37,39 +44,6 @@ namespace MPG {
   void GRelation::add(const std::vector<Tuple>& s) {
     std::for_each(s.begin(), s.end(),
 		  [=](const Tuple& t) { pimpl_->add(t); });
-  }
-
-
-  int GRelation::arity(void) const {
-    return pimpl_->arity();
-  }
-
-  double GRelation::cardinality(void) const {
-    return pimpl_->cardinality();
-  }
-
-  bool GRelation::subsetEq(const GRelation& r) const {
-    return VarImpl::subsetEq(*pimpl_,*r.pimpl_);
-  }
-
-  bool GRelation::superset(const GRelation& r) const {
-    return VarImpl::superset(*pimpl_,*r.pimpl_);
-  }
-
-  bool GRelation::disjoint(const GRelation& r) const {
-    return VarImpl::disjoint(*pimpl_,*r.pimpl_);
-  }
-
-  bool GRelation::eq(const GRelation& r) const {
-    return *pimpl_ == *(r.pimpl_);
-  }
-
-  bool GRelation::empty(void) const {
-    return pimpl_->empty();
-  }
-
-  bool GRelation::universe(void) const {
-    return pimpl_->universe();
   }
 
   void GRelation::unionAssign(const GRelation &r) {
@@ -80,6 +54,9 @@ namespace MPG {
     pimpl_->remove(*(r.pimpl_));
   }
 
+  /*
+   * Set operations
+   */ 
   GRelation GRelation::difference(const GRelation &r) const {
     return
       GRelation(
@@ -108,6 +85,9 @@ namespace MPG {
 		);
   }
 
+  /*
+   * Column permutation
+   */ 
   GRelation GRelation::permute(const std::vector<std::pair<int,int>>& desc) const {
     return
       GRelation(
@@ -134,23 +114,35 @@ namespace MPG {
 		);
   }
 
-  GRelation GRelation::timesU(int n, bool left) const {
-    /// \todo Temporal: make two different methods that call the
-    /// varimp accordingly
+  /*
+   * Cross product
+   */ 
+  GRelation GRelation::timesULeft(int n) const {
     return
-      GRelation(left ? Impl(new RelationImpl(pimpl_->timesULeft(n)))
-		:  Impl(new RelationImpl(pimpl_->timesURight(n)))
-		);
+      GRelation(Impl(new RelationImpl(pimpl_->timesULeft(n))));
   }
 
+
+  GRelation GRelation::timesURight(int n) const {
+    return
+      GRelation(Impl(new RelationImpl(pimpl_->timesURight(n))));
+  }
+  
+  GRelation GRelation::times(const GRelation& r) const {
+    return join(0,r);
+  }
+  
+  /*
+   * Relational algebra
+   */ 
   GRelation GRelation::join(int j,const GRelation& r) const {
     typedef boost::error_info<struct tag_invalid_join,std::string>
       invalid_join;
 
     if (arity() < j || r.arity() < j)
       throw InvalidJoin()
-	<< errno_code(errno)
-	<< invalid_join("There are not enough columns for the join");
+		  << errno_code(errno)
+		  << invalid_join("There are not enough columns for the join");
 
     return
       GRelation(
@@ -172,10 +164,24 @@ namespace MPG {
 		);
   }
 
-  GRelation GRelation::times(const GRelation& r) const {
-    return join(0,r);
+  GRelation GRelation::project(int p) const {
+    typedef boost::error_info<struct tag_projection,std::string>
+      projection;
+
+    if(p <= 0 || p > arity()) {
+      throw InvalidProjection()
+        << errno_code(errno)
+        << projection("Invalid columns to project on");
+    }
+    return
+      GRelation(
+		Impl(new RelationImpl(pimpl_->project(p)))
+		);
   }
 
+  /*
+   * Quantification
+   */ 
   GRelation GRelation::exists(int c) const {
     return
       GRelation(
@@ -204,21 +210,48 @@ namespace MPG {
 		);
   }
 
-  GRelation GRelation::project(int p) const {
-    typedef boost::error_info<struct tag_projection,std::string>
-      projection;
 
-    if(p <= 0 || p > arity()) {
-      throw InvalidProjection()
-        << errno_code(errno)
-        << projection("Invalid columns to project on");
-    }
-    return
-      GRelation(
-		Impl(new RelationImpl(pimpl_->project(p)))
-		);
+  /*
+   * Test operations
+   */ 
+  bool GRelation::subsetEq(const GRelation& r) const {
+    return VarImpl::subsetEq(*pimpl_,*r.pimpl_);
   }
 
+  bool GRelation::superset(const GRelation& r) const {
+    return VarImpl::superset(*pimpl_,*r.pimpl_);
+  }
+
+  bool GRelation::disjoint(const GRelation& r) const {
+    return VarImpl::disjoint(*pimpl_,*r.pimpl_);
+  }
+
+  bool GRelation::eq(const GRelation& r) const {
+    return *pimpl_ == *(r.pimpl_);
+  }
+
+  bool GRelation::empty(void) const {
+    return pimpl_->empty();
+  }
+
+  bool GRelation::universe(void) const {
+    return pimpl_->universe();
+  }
+
+  /*
+   * Relation information
+   */ 
+  int GRelation::arity(void) const {
+    return pimpl_->arity();
+  }
+
+  double GRelation::cardinality(void) const {
+    return pimpl_->cardinality();
+  }
+
+  /*
+   * Content access
+   */ 
   Tuple GRelation::pickOneTuple(void) const {
     /// \todo throw an exception
     assert(!empty() && "Relation is empty, nothing to return");
@@ -226,10 +259,21 @@ namespace MPG {
       pimpl_->pickOneTuple();
   }
 
+  /*
+   * Relation output
+   */ 
   void GRelation::print(std::ostream& os) const {
     pimpl_->print(os);
   }
 
+  std::ostream& operator<< (std::ostream& os, const GRelation& r) {
+    r.print(os);
+    return os;
+  }
+
+  /*
+   * Non member functions
+   */ 
   GRelation create(const std::vector<Tuple>& dom) {
     std::vector<Tuple>::const_iterator c = dom.begin();
     GRelation r(c->arity());
@@ -280,10 +324,6 @@ namespace MPG {
     return r;
   }
 
-  std::ostream& operator<< (std::ostream& os, const GRelation& r) {
-    r.print(os);
-    return os;
-  }
 
   std::string GRelationIO::curr_value_start_ = "";
   std::string GRelationIO::curr_value_end_ = "";
