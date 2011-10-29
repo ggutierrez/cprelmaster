@@ -564,7 +564,7 @@ if(BUILD_EXAMPLES)
   # Minimal test that declares a tuple and a relation variable and branch on
   # them to find all the possible combinations.
   add_executable(minimal tests/minimal.cpp)
-  target_link_libraries(minimal gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+  target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
   # Test for operations at the bdd level
 #  add_executable(dom tests/dom.cpp)
