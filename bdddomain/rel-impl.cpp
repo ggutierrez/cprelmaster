@@ -8,6 +8,9 @@ using std::vector;
 
 namespace MPG { namespace VarImpl {
 
+    /*
+     * Constructors, destructors and assignment
+     */
     RelationImpl::RelationImpl(BDD n, int a)
       : bdd_(n), arity_(a) {}
 
@@ -38,6 +41,18 @@ namespace MPG { namespace VarImpl {
 
     RelationImpl::~RelationImpl(void) {}
 
+    /*
+     * Information
+     */
+    bool RelationImpl::equal(const RelationImpl& r) const {
+      if (arity_ != r.arity_) return false;
+      return bdd_ == r.bdd_;
+    }
+
+    double RelationImpl::cardinality(void) const {
+      return bdd_.CountMinterm(arity_ << Limits::bbv);
+    }
+
     int RelationImpl::arity(void) const {
       return arity_;
     }
@@ -50,6 +65,9 @@ namespace MPG { namespace VarImpl {
       return bdd_ == one();
     }
 
+    /*
+     * Modification
+     */
     void RelationImpl::add(const Tuple& t) {
       assert(arity_ == t.arity());
       BDD et = t.getBDD();
@@ -63,9 +81,6 @@ namespace MPG { namespace VarImpl {
       bdd_ &= !et;
     }
 
-    double RelationImpl::cardinality(void) const {
-      return bdd_.CountMinterm(arity_ << Limits::bbv);
-    }
 
     void RelationImpl::add(const RelationImpl& r) {
       assert(arity_ == r.arity_);
@@ -82,27 +97,13 @@ namespace MPG { namespace VarImpl {
       bdd_ &= r.bdd_;
     }
 
-    bool RelationImpl::equal(const RelationImpl& r) const {
-      if (arity_ != r.arity_) return false;
-      return bdd_ == r.bdd_;
-    }
-
     void RelationImpl::complement(void) {
       bdd_ = !bdd_;
     }
 
     /*
-     * Relational algebra operations on relations
+     * Existential quantification
      */
-
-    RelationImpl RelationImpl::unique(int c) const {
-      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
-    }
-
-    RelationImpl RelationImpl::unique(const std::vector<int>& c) const {
-      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
-    }
-
     RelationImpl RelationImpl::exists(int c) const {
       return RelationImpl(VarImpl::exists(c, bdd_), arity_);
     }
@@ -111,6 +112,20 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(VarImpl::exists(c, bdd_), arity_);
     }
 
+    /*
+     * Unique quantification
+     */
+    RelationImpl RelationImpl::unique(int c) const {
+      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+    }
+
+    RelationImpl RelationImpl::unique(const std::vector<int>& c) const {
+      return RelationImpl(VarImpl::unique(c, bdd_), arity_);
+    }
+
+    /*
+     * Universal quantification
+     */
     RelationImpl RelationImpl::forall(int c) const {
       return RelationImpl(VarImpl::forall(c, bdd_), arity_);
     }
@@ -121,21 +136,21 @@ namespace MPG { namespace VarImpl {
     RelationImpl RelationImpl::replace(const std::vector<std::pair<int,int>>& pairing) {
       return RelationImpl(VarImpl::replace(pairing,bdd_), arity_);
     }
-
+   
     RelationImpl RelationImpl::swap(const std::vector<std::pair<int,int>>& pairing) {
       return RelationImpl(VarImpl::swap(pairing,bdd_), arity_);
     }
-
+   
     RelationImpl RelationImpl::permute(const std::vector<std::pair<int,int>>& perm) const {
       BDD result = bdd_;
       for (const auto& p : perm) {
-	std::vector<std::pair<int,int>> x;
-	x.push_back(p);
-	result = VarImpl::swap(x,result);
+   	std::vector<std::pair<int,int>> x;
+   	x.push_back(p);
+   	result = VarImpl::swap(x,result);
       } 
       return RelationImpl(result,arity_);
     }
-
+   
     /*
      * Cross product
      */
@@ -165,42 +180,7 @@ namespace MPG { namespace VarImpl {
     }
 
     /*
-     * Join, follow  
-     */
-    
-    RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
-      const RelationImpl& left = *this;
-      assert(left.arity() >= j && right.arity() >= j
-	     && "There are not enough columns for the join");
-
-      RelationImpl lxu = left.timesURight(right.arity() - j);
-      RelationImpl rxu = right.timesULeft(left.arity() - j);
-
-      lxu.intersect(rxu);
-      return lxu;
-    }
-
-    RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
-      const RelationImpl& left = *this;
-      
-      /// \todo handle errors on arity of the relations with exceptions
-
-      // 1) compute the join of the relations on f columns
-      RelationImpl join = left.join(f,right);
-      
-      //std::cout << "The join " << join << std::endl; 
-      //std::cout << "Is empty the result ? " << join.empty() << std::endl; 
-      // 2) remove the "join" columns.      
-      //std::cout << "First " << right.arity() - f << std::endl; 
-      //std::cout << "Second " << right.arity()  << std::endl;  
-      return RelationImpl(
-			  join.discard(right.arity() - f, right.arity()).bdd_,
-			  join.arity()-f
-			  );
-    }
-
-    /*
-     * Column removal
+     * Column manipulation
      */
     RelationImpl RelationImpl::discard(int start, int end) const {
       assert(start >= 0 && start < end && start <= Limits::arity && "Invalid value for start");
@@ -232,6 +212,68 @@ namespace MPG { namespace VarImpl {
       return RelationImpl(quantified,arity_ - len);
     }
 
+    RelationImpl RelationImpl::shiftRight(int n) const {
+      assert(n >= 0 && "Only positive values are accepted");
+      // moving zero columns yields the same relation
+      if (n == 0) return *this;
+      // moving more columns than the arity will result in an empty
+      // relation
+      if (n >= arity_)
+	return RelationImpl(0);
+      BDD res = bdd_;
+      for (int i = n; i < arity_; i++) {
+   	std::vector<std::pair<int,int>> p;
+	p.push_back({i-n,i});
+	res = VarImpl::swap(p,res);
+      }
+      // quantify on the columns that need to disapear
+      std::vector<int> quantify;
+      for (int i = arity_-1; i >= arity_ - n; i--) {
+	quantify.push_back(i);
+      }
+      res = VarImpl::exists(quantify,res);
+      return RelationImpl(res,arity_-n);
+    }
+    
+    /*
+     * Relational algebra operations on relations
+     */
+    
+    /*
+     * Join, follow  
+     */
+    
+    RelationImpl RelationImpl::join(int j, const RelationImpl& right) const {
+      const RelationImpl& left = *this;
+      assert(left.arity() >= j && right.arity() >= j
+    	     && "There are not enough columns for the join");
+    
+      RelationImpl lxu = left.timesURight(right.arity() - j);
+      RelationImpl rxu = right.timesULeft(left.arity() - j);
+    
+      lxu.intersect(rxu);
+      return lxu;
+    }
+    
+    RelationImpl RelationImpl::follow(int f, const RelationImpl& right) const {
+      const RelationImpl& left = *this;
+      
+      /// \todo handle errors on arity of the relations with exceptions
+    
+      // 1) compute the join of the relations on f columns
+      RelationImpl join = left.join(f,right);
+      
+      //std::cout << "The join " << join << std::endl; 
+      //std::cout << "Is empty the result ? " << join.empty() << std::endl; 
+      // 2) remove the "join" columns.      
+      //std::cout << "First " << right.arity() - f << std::endl; 
+      //std::cout << "Second " << right.arity()  << std::endl;  
+      return RelationImpl(
+    			  join.discard(right.arity() - f, right.arity()).bdd_,
+    			  join.arity()-f
+    			  );
+    }
+    
     /*
      * Projection
      */
@@ -274,32 +316,13 @@ namespace MPG { namespace VarImpl {
       return os;
     }
    
+    /*
+     * Element access
+     */
     Tuple RelationImpl::pickOneTuple(void) const {
       BDD tupleRepr = VarImpl::oneTuple(arity_,bdd_);
       return Tuple(tupleRepr,arity_);
     }
    
-    RelationImpl RelationImpl::shiftRight(int n) const {
-      assert(n >= 0 && "Only positive values are accepted");
-      // moving zero columns yields the same relation
-      if (n == 0) return *this;
-      // moving more columns than the arity will result in an empty
-      // relation
-      if (n >= arity_)
-	return RelationImpl(0);
-      BDD res = bdd_;
-      for (int i = n; i < arity_; i++) {
-   	std::vector<std::pair<int,int>> p;
-	p.push_back({i-n,i});
-	res = VarImpl::swap(p,res);
-      }
-      // quantify on the columns that need to disapear
-      std::vector<int> quantify;
-      for (int i = arity_-1; i >= arity_ - n; i--) {
-	quantify.push_back(i);
-      }
-      res = VarImpl::exists(quantify,res);
-      return RelationImpl(res,arity_-n);
-    }
   }
 }
