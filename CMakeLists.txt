@@ -286,7 +286,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 set(BDDDOMAIN_SRCS
   encoding.cpp encoding.hh abstract.cpp replace.cpp 
   exception.hh manager.cpp manager.hh
-  bdd.hh bdd.cpp bdd-print.cpp bdd-visitor.hpp
+  bdd.hh bdd-print.cpp bdd-visitor.hpp
   perm-descriptor.hh rel-impl.cpp rel-impl.hh 
   tuple.cpp tuple.hh
 )

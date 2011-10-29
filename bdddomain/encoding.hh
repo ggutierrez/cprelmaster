@@ -6,11 +6,16 @@
 #include <bdddomain/perm-descriptor.hh>
 
 /*
-  Note: This file contain the operation that we need in order to use a
-  BDD as a domain representation. All of the functions defined here
+  Note: This file contain the operations that we need in order to use
+  a BDD as a domain representation. All of the functions defined here
   assume a minimum set of operations provided by the bdd package
   itself but also tries to keep this assumptions at the minumum to
   ease the integration of other bdd libraries.
+
+  All of the functions implemented here are aware of the notion of
+  "column". A column is represented by a set of BDD variables and is
+  pretty much the equivalent of a domain in the terminology of some
+  BDD libraries.
  */
 
 namespace MPG { namespace VarImpl {
@@ -19,6 +24,11 @@ namespace MPG { namespace VarImpl {
      *
      *
      */
+    /**
+     * \brief Returns the variables (indices) used in the bdd to encode column \a c
+     * \ingroup BDDEnc
+     */
+    std::vector<int> domainIndices(int c);
     /**
      * \brief Creates a cube with all the bdd variables that represent
      * column \a c 
@@ -84,11 +94,6 @@ namespace MPG { namespace VarImpl {
      * \ingroup BDDEnc
      */
     BDD oneTuple(int c, BDD r);
-    /// Moves all the columns of \a r \a n columns to the left.
-    ///BDD shiftLeft(BDD r, int arity, int n);
-
-    /// Moves all the columns of \a r \a n columns to the right.
-    //BDD shiftRight(BDD r, int arity, int n);
   }
 }
 #endif

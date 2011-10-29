@@ -2,14 +2,10 @@
 #define __CPREL_BDDDOMAIN_BDD_HH__
 
 #include <bdddomain/manager.hh>
+#include <bdddomain/encoding.hh>
 #include <cudd/cudd.h>
 
 namespace MPG { namespace VarImpl {
-    /**
-     * \brief Returns the variables (indices) used in the bdd to encode column \a c
-     * \ingroup BDDEnc
-     */
-    std::vector<int> domainIndices(int c);
     /**
      * \brief returns the \a then node of \a r
      *
