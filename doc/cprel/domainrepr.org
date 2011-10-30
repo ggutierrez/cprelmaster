@@ -1,0 +1,217 @@
+#+TITLE:     Constraint Programming on Relations: theory, practice and implementation.
+#+AUTHOR:    Gustavo Gutierrez
+#+EMAIL:     gustavo.ggutierrez@gmail.com
+#+DATE:      2011-10-29 Sat
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:4 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   skip:nil d:nil pri:nil tags:not-in-toc
+#+OPTIONS:   TeX:t LaTeX:t toc:t todo:t
+#+LaTeX_CLASS: report
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME: 
+#+XSLT:
+
+#+LATEX_HEADER: \usepackage{amsmath}
+
+#+LATEX_HEADER: \newcommand{\incl}[2]{\ensuremath{\operatorname{include}(#1,#2)}}
+#+LATEX_HEADER: \newcommand{\excl}[2]{\ensuremath{\operatorname{exclude}(#1,#2)}}
+#+LATEX_HEADER: \newcommand{\glb}[1]{\ensuremath{\operatorname{glb}(#1)}}
+#+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{\operatorname{lub}(#1)}}
+#+LATEX_HEADER: \newcommand{\compl}[1]{\ensuremath{\overline{#1}}}
+
+#+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
+#+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
+
+
+* The relation constraint domain
+** TODO Domain definition
+*** TODO Define concepts:
+    - Tuple
+    - Universe
+*** TODO Define operations on relations:
+    the following operations on relations because they are used
+    further in the document.
+    - Intersection
+    - Complement
+*** TODO Define operations on variables
+    - Inclusion of a relation
+    - Exclusion of a relation
+** Domain representation using /BDDs/
+   This section describes how the domain of a relation decision
+   variable is represented by using /Binary Decision Diagrams/ (BDDs).
+*** Required /BDD/  operations
+    The domain representation for the relation constraint system
+    relies on that a set of operations are provided by a /BDD/
+    implementation. We tried to keep the number of operations at the
+    minimum to facilitate the use of several libraries.
+    
+    The main development uses /CUDD/ as the underlying /BDD/ library
+    but it only requires the following operations from it:
+    - The basic operations defined in the /BDD/ literature:
+      - create and retrieve variables at/from given possitions
+      - access to the /then/ and /else/ branches of a node
+      - logic operations (e.g, and, not)
+      - create /cubes/
+      - get one minterm inside a /BDD/.
+    - Operations:
+      - Permutation
+      - Existential and universal quantification
+   
+*** Relation representation
+    The representation for ground relations and the operations we need
+    on them are implemented on top of this /API/. The implementation
+    also uses software engineering patterns that abstract the way this
+    representation is done. With this is even possible to use a
+    complete different representation that does not uses /BDDs/.
+
+    A /BDD/ will represent the function $R(Enc(t)) \rightarrow
+    \{0,1\}$, where $t$ is a tuple and $Enc$ is a function that
+    encodes the elements of it in binary form. The reason for $Enc$ is
+    that a /BDD/ can only represent functions of the form
+    $R(\{0,1\}^{m})\rightarrow \{0,1\}$.
+
+    There are several possibilities for $Enc$. For instance:
+    \begin{align*}
+    Enc&(\langle t_0,t_1,\ldots,t_{n-1} \rangle) = \\
+    &\langle e_{0,1},e_{0,2},\ldots,e_{0,i-1}, e_{1,1},e_{1,2},\ldots, e_{1,i-1},\ldots,
+    e_{n-1,1},e_{n-1,2},\ldots,e_{n-1,i-1}\rangle
+    \end{align*}
+
+    In this case we use $i$ bits to encode every element of the tuple
+    in its binary form. Then, $e_{n-1,i-1}$ reffers to the last bit of
+    the encoding of the last element of the tuple. The parameter $i$
+    must be choosen carefully to avoid any kind of overflow. In
+    practice, this parameter can be the number of bits used to
+    represent an integer. With this, we ensure that any machine
+    integer can be represented as part of a relation.
+
+    When the /BDD/ is seen as a graph, this encode will produce a path
+    in it that goes from the root to terminal /true/. In this path,
+    the first $i$ variables represent the the first column, the next
+    $i$ the second and so on. A consequence of this encoding is that
+    the complexity of the operations on a relation will be in terms of
+    the size of the representation and not in terms of the tuples it
+    contains.
+
+*** General /BDD/ desgin
+     It is important to know the generalities of a /BDD/ library in
+     order to understand the points of interaction with the constraint
+     system. A common technique is to allow sharing of information
+     across /BDDs/. For this, all the /BDDs/ are represented in the
+     same memory space and there is an entity, called /manager/, in
+     charge of it.
+
+     The /manager/ has several responsibilities, for instance,
+     variable permutation and the garbage collection of the auxiliar
+     data structures.
+
+     The other entity in the design is a /BDD/ itself. This entity
+     provides the common operations on /BDDs/. For instance,
+     conjunction, complement, etc.
+
+     As all the relations will be stored by the same manager we need to take into account the maximum arity 
+     
+** Constraints
+   This chapter describes the constraints of the relation domain.   
+*** Set-like constraints
+    From its mathematical definition, a relation is a set of
+    tuples. As such, it is possible to define constraints on relation
+    decision variables that enforce propoerties related with set
+    semantics. In this seciton we present these constraints. 
+
+    All of the constraint in this section are defined on relations of
+    the same arity. This is a direct consequence of the fact that we
+    are dealing with set semantics.
+
+**** TODO Equality
+     This constraint enforces the equality of two relations $A$ and
+     $B$. Both relations must have the same arity for the constraint
+     to be well defined. It enforces that a tuple can be in a relation
+     if and only if it is in the other:
+     
+     \begin{align*}
+     A=B \equiv \forall t : t \in A \iff t \in B
+     \end{align*}
+
+     To enforce the semantics of this constraint the following
+     progation rules are applied:
+     
+     - $\incl{A}{\glb{B}}$
+     - $\incl{B}{\glb{A}}$
+     - $\excl{A}{\overline{\lub{A}\cap \lub{B}}}$
+     - $\excl{B}{\overline{\lub{A}\cap \lub{B}}}$
+     
+     The entailment condition for this constraint is:
+**** TODO Complement
+     The complement constraint ensures that a relation $A$ has as
+     complement relation $B$. This is only define for relations of the
+     same arity and is defined as:
+     \begin{align*}
+     A = \compl{B} \equiv \forall t : t \in A \iff t \notin B
+     \end{align*}
+
+     The propagation rules and entailment condition for this
+     constraint are ommited as they can be easily deduced. Actually
+     they are orthogonal to the ones of the equality constraint.
+     
+**** TODO Intersection
+**** TODO Other constraints
+     It is possible to define other constraints based on the ones we
+     presented. For instance, other set properties like /union/ can be
+     derived. Moreover, because of the equivalence between set theory
+     and bool algebra, we can define more of them. The following table
+     presents constraints that are constructed in terms of the ones
+     presented before.
+     
+     - $A \cup B =  C  \equiv \compl{A} \cap \compl{B} = \compl{C}$
+     - $A \subseteq B \equiv A \cap \compl{B} = \emptyrel{n}$
+     - $A || B \equiv A \cap B = \emptyrel{n}$
+     - $A \implies B \iff C \equiv A \cap \compl{B} = \compl{C}$
+       
+     For some of the definitions above we use the symbol $\emptyrel{}$
+     to denote the empty relation. To be strict on this definition, we
+     use the subindex $n$ to denote that it is the empty relation of
+     that arity. The constraints we have defined in this section
+     assume that all the relations have the same arity. Therfore, $n$
+     is the arity of any of the involved relations.
+
+*** Relational algebra
+
+**** TODO Permutation
+**** TODO Projection
+**** TODO Join
+**** TODO Follow
+**** TODO Follow-all
+
+*** Channel
+    A fundamental aspect of constraint programming in its practical
+    usage is the ability to impose constraints on variables from
+    different domains. This is for instance the case when an integer
+    decision variable is constrained to be the cardinality of a set
+    variable. These kind of constraints are usually called /channel
+    constraints/.
+
+    It is straighforward to see that a set variable and a relation
+    variable of arity one represent the same. This is, we can see a
+    set as a unary relation. This leads us to the first channel
+    constraint.
+
+**** TODO Channel betwen unary relation and set variables
+
+     In a similar way to set and integer decision variables, we can
+     constrain an integer variable to be the cardinality of a
+     relation.
+
+**** TODO Channel between integer variable and cardinality of a relation
+
+**** TODO The tuple constraint system as a more natural way for channeling
+
+
+
+
+   
