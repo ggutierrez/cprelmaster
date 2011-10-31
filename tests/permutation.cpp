@@ -43,7 +43,7 @@ public:
     auto dr = domR();
     r = CPRelVar(*this,dr.first,dr.second);
 
-    std::cout << "RelationR " << r.lub() << std::endl;
+    //std::cout << "RelationR " << r.lub() << std::endl;
 
     auto ds = domS();
     s = CPRelVar(*this,ds.first,ds.second);
@@ -51,26 +51,16 @@ public:
 
     PermDescriptor d;
     d.permute(1,2);
-    d.permute(2,1);
-
-    std::cout << "RelationS " << s.lub() << std::endl;
-    std::cout << "Relation----S " << s.lub().permute(d) << std::endl;
+    
+    //std::cout << "RelationS " << s.lub() << std::endl;
+    //std::cout << "Relation----S " << s.lub().permute(d) << std::endl;
     
     permutation(*this,s,r,d);
     branch(*this,r);
   }
-  void print(std::ostream& os, const char* varName, CPRelVar v) const {
-    os << "<tr><td><b>" << varName << "</b></td>"
-       << "<td>" << v.glb() << "</td>"
-       << "<td>" << v.unk() << "</td>"
-       << "<td>" << (v.assigned()? "Yes" : "NO") << "</td>";
-  }
   void print(std::ostream& os) const {
-    os << "<table border=\"1\">"
-       << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>ASG?</th></tr>";
-    print(os,"R",r);
-    print(os,"S",s);
-    os << "</table>" << std::endl;
+    std::cout << "Relation R " << r << std::endl; 
+    std::cout << "Relation S " << s << std::endl;  
   }
   PermutationTest(bool share, PermutationTest& sp)
     : Gecode::Space(share,sp) {
@@ -84,17 +74,31 @@ public:
 
 int main(int, char**) {
   // Setup the way tuples are printed
-//  std::cout << TupleIO("<td>","</td>"," ");
+  //  std::cout << TupleIO("<td>","</td>"," ");
   // Setup the way relations are printed
-//  std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
-
+  //  std::cout << GRelationIO("<table>","</table>","<tr>","</tr>");
+  
   PermutationTest* g = new PermutationTest();
 
+  Gecode::DFS<PermutationTest> e(g);
+  delete g;
+  
+  int solutionsFound = 0;
+  std::cout << "### Search will start" << std::endl;
+  while (Gecode::Space* s = e.next()) {
+    static_cast<PermutationTest*>(s)->print(std::cout);
+    solutionsFound++;
+    std::cout << "**** End solution ****" << std::endl; 
+    delete s;
+  }
+  std::cout << "### search ends, Total solutions: " << solutionsFound << std::endl; 
+
+  /* 
   Gist::Print<PermutationTest> p("PermutationTest");
   Gist::Options o;
   o.inspect.click(&p);
   Gist::dfs(g,o);
   delete g;
-
+  */
   return 0;
 }

@@ -136,8 +136,8 @@ operator <<(std::basic_ostream<Char,Traits>& os, const CPRelVar& R) {
     GRelation unk(R.unk());
     s << ", unk:{" << unk << "}#" << unk.cardinality();
     /// The oob
-    GRelation oob(R.oob());
-    s << ", oob:{" << oob << "}#" << oob.cardinality();
+    //GRelation oob(R.oob());
+    //s << ", oob:{" << oob << "}#" << oob.cardinality();
   }
   return os << s.str();
 }

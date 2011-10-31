@@ -48,21 +48,9 @@ public:
     branch(*this,r);
   }
   
-  void printHtml(std::ostream& os, const char* varName, CPRelVar v) const {
-    os << "<tr><td><b>" << varName << "</b></td>";
-    os << "<td>" << v.glb() << "</td><td>"
-    << v.unk() << "</td><td>" << v.oob() << "</td><td>"
-    << (v.assigned()? "Yes" : "NO") << "</td></tr>";
-  }
-  
   void print(std::ostream& os) const {
-    os << "<b>Space</b>" << std::endl;
-    os << "<table border=\"1\">"
-    << "<tr><th>Var</th><th>GLB</th><th>UNK</th><th>OOB</th><th>ASG?</th></tr>";
-    
-    printHtml(os,"Left",r);
-    printHtml(os,"Right",q);
-    os << "</table>" << std::endl;
+    std::cout << "Relation R " << r << std::endl; 
+    std::cout << "Relation Q " << q << std::endl; 
   }
   
   ProjectionTest(bool share, ProjectionTest& s)
@@ -77,21 +65,26 @@ public:
 
 int main(int, char**) {
   ProjectionTest* g = new ProjectionTest();
-  /*
-   Gecode::DFS<ProjectionTest> e(g);
-   delete g;
-   std::cout << "Search will start" << std::endl;
-   while (Gecode::Space* s = e.next()) {
-   static_cast<ProjectionTest*>(s)->print(std::cout);
-   delete s;
-   }
-   */
+
+  Gecode::DFS<ProjectionTest> e(g);
+  delete g;
   
+  int solutionsFound = 0;
+  std::cout << "### Search will start" << std::endl;
+  while (Gecode::Space* s = e.next()) {
+    static_cast<ProjectionTest*>(s)->print(std::cout);
+    solutionsFound++;
+    std::cout << "**** End solution ****" << std::endl; 
+    delete s;
+  }
+  std::cout << "### search ends, Total solutions: " << solutionsFound << std::endl; 
+
+  /*
   Gist::Print<ProjectionTest> p("Print solution");
   Gist::Options o;
   o.inspect.click(&p);
   Gist::dfs(g,o);
   delete g;
-  
+  */
   return 0;
 }

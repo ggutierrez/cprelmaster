@@ -111,7 +111,7 @@ namespace MPG { namespace CPRel { namespace Prop {
 	    b_.lub().timesULeft(a_.arity()-p_).intersect(a_.lub());
 	  GECODE_ME_CHECK(a_.exclude(home,maxIntersection.complement()));
 
-	  // prune the lower bound of a by unique quantification
+	  // prune the lower bound of A by unique quantification
 
 	  GRelation lubA = a_.lub();
 	  std::vector<int> q;

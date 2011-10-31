@@ -24,14 +24,24 @@
 #+LATEX_HEADER: \newcommand{\lub}[1]{\ensuremath{\operatorname{lub}(#1)}}
 #+LATEX_HEADER: \newcommand{\compl}[1]{\ensuremath{\overline{#1}}}
 
+#+LATEX_HEADER: \newcommand{\pair}[2]{\ensuremath{\langle #1, #2 \rangle}}
+
 #+LATEX_HEADER: \newcommand{\universe}[1]{\ensuremath{\mathcal{U}_{#1}}}
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
 
+#+LATEX_HEADER: \newcommand{\perm}[2]{\ensuremath{#1\leftrightarrow_{\operatorname{#2}}}} 
+#+LATEX_HEADER: \newcommand{\proj}[2]{\ensuremath{\prod_{#2} #1}} 
+#+LATEX_HEADER: \newcommand{\suffix}[2]{\ensuremath{\operatorname{suffix}(#1,#2)}}
+#+LATEX_HEADER: \newcommand{\prefix}[2]{\ensuremath{\operatorname{prefix}(#1,#2)}}
+#+LATEX_HEADER: \newcommand{\arity}[1]{\ensuremath{\operatorname{arity}(#1)}}
+ 
 
 * The relation constraint domain
 ** TODO Domain definition
 *** TODO Define concepts:
-    - Tuple
+    - Tuple, arity, prefix and suffix operations. Suffix is used in the
+      definition of the projection constraint.
+    - Permutation of a tuple (used in the permutation constraint definition)
     - Universe
 *** TODO Define operations on relations:
     the following operations on relations because they are used
@@ -183,7 +193,74 @@
 *** Relational algebra
 
 **** TODO Permutation
+     This constraint is an extension of the equality constraint
+     presented in the previous section. It takes two relations $A$ and
+     $B$ of the same arity and a description
+     $\operatorname{desc}$. With these arguments it enforces that
+     relation $A$ is equal to the relation $B$ permuted according to
+     $\operatorname{desc}$.
+     
+     $\operatorname{desc}$ is a set of the form
+     $\{\pair{a_{0}}{b_0},\ldots,\pair{a_{i}}{b_{i}}\}$, and indicates
+     that column $a_{i}$ is permuted with column $b_{i}$. This is a
+     constant argument, that is defined when the constraint is
+     imposed.
+
+     The semantics of this constraint can be expressed as:
+     \begin{align*}
+     A = \perm{B}{desc} \equiv \forall t : t \in A \iff \perm{t}{desc} \in B
+     \end{align*}
+     
+     In this definition we state that a tuple is in $A$ if and only if
+     the permutation of that tuple is in $B$. As you can see from its
+     definition, this constraint is very similar to the equality
+     constraint presented above. The propagation rules and the
+     entailment condition are also similar.
+
+     
 **** TODO Projection
+     This is the first constraint that is defined on relations of
+     different arities. It takes as arguments two relations: $A
+     \subseteq \universe{n}$ and $B \subseteq \universe{m}$. Apart
+     from these relations it takes $c$, the number of columns on the
+     right of $A$ that will be projected.
+
+     \begin{align*}
+     \proj{A}{c} = B \equiv \forall t : t \in A \iff t'\in B \land t' \suffix{t'}{t} \land \arity{t'} = c
+     \end{align*}
+     
+     The relation between the arity of the relation can be obtained by
+     considering that:
+     - Projecting a relations of $n$ columns on $c$ of them will give
+       as result a relation of c columns. This of course assumes $n
+       \leq c$.
+     - As the result has to be equal to $B4, a relation of $m$
+       columns, the only way for this to be semmantically defined is
+       $m = n - a$.
+
+     At first sight the use of $c$ can be seen as a limitation, after
+     all a relation can be projected on any columns. This is not the
+     case, because by using the Permutation constraint it is possible
+     to put any set of columns at the right part of the relation. The
+     reason for taking only the number of columns on the right is
+     because it makes both the use of the constraint and its
+     implementation simpler.
+
+     The propagation rules for this constraint are as follows:
+     - $\proj{\glb{A}{c} \subseteq B$
+     - $\proj{\lub{A}}{c} \supseteq B$
+     - $\lub{A} \subseteq (\universe{\arity{A}-c}\times \lub{B}) \cap \lub{A}$
+     
+     In the rules before we still miss the pruning that can be done
+     when a tuple known in $B$ can be supported by one and only one
+     tuple in $A$. In this case, we need to include that support in
+     $A$. For this we use unique quantification:
+     \begin{align*}
+       &\operatorname{Uq} = \{u : \exists !_{\overline{\{0,\ldots,c-1\}} u \in \lub{A}\} \cap \lub{A} \\
+       &\include{A}{\operatorname{Uq} \cap (\glb{B} \times (\arity{A}-c))}
+     \end{align*}
+     
+
 **** TODO Join
 **** TODO Follow
 **** TODO Follow-all
@@ -210,8 +287,10 @@
 **** TODO Channel between integer variable and cardinality of a relation
 
 **** TODO The tuple constraint system as a more natural way for channeling
+* Applications
+** Package management
+** Music composition
 
 
 
-
-   
+    
