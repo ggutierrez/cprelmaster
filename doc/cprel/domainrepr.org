@@ -30,7 +30,7 @@
 #+LATEX_HEADER: \newcommand{\emptyrel}[1]{\ensuremath{\emptyset_{#1}}}
 
 #+LATEX_HEADER: \newcommand{\perm}[2]{\ensuremath{#1\leftrightarrow_{\operatorname{#2}}}} 
-#+LATEX_HEADER: \newcommand{\proj}[2]{\ensuremath{\prod_{#2} #1}} 
+#+LATEX_HEADER: \newcommand{\proj}[2]{\ensuremath{\operatorname{Proj}_{#2}(#1)}} 
 #+LATEX_HEADER: \newcommand{\suffix}[2]{\ensuremath{\operatorname{suffix}(#1,#2)}}
 #+LATEX_HEADER: \newcommand{\prefix}[2]{\ensuremath{\operatorname{prefix}(#1,#2)}}
 #+LATEX_HEADER: \newcommand{\arity}[1]{\ensuremath{\operatorname{arity}(#1)}}
@@ -178,10 +178,11 @@
      presents constraints that are constructed in terms of the ones
      presented before.
      
-     - $A \cup B =  C  \equiv \compl{A} \cap \compl{B} = \compl{C}$
-     - $A \subseteq B \equiv A \cap \compl{B} = \emptyrel{n}$
-     - $A || B \equiv A \cap B = \emptyrel{n}$
-     - $A \implies B \iff C \equiv A \cap \compl{B} = \compl{C}$
+     | *Constraint*                  | *Equivalence*                        |
+     | A \subseteq B                 | A \cap \compl{B} = \emptyrel{n}      |
+     | A \cup B =  C                 | \compl{A} \cap \compl{B} = \compl{C} |
+     | \operatorname{disjoint}(A, B) | A \cap B = \emptyrel{n}              |
+     | A \implies B \equiv C         | A \cap \compl{B} = \compl{C}         |
        
      For some of the definitions above we use the symbol $\emptyrel{}$
      to denote the empty relation. To be strict on this definition, we
@@ -224,9 +225,10 @@
      \subseteq \universe{n}$ and $B \subseteq \universe{m}$. Apart
      from these relations it takes $c$, the number of columns on the
      right of $A$ that will be projected.
-
      \begin{align*}
-     \proj{A}{c} = B \equiv \forall t : t \in A \iff t'\in B \land t' \suffix{t'}{t} \land \arity{t'} = c
+     \proj{A}{c} = B \equiv & \\
+     &\forall t : t \in A \iff t'\in B \; \land \\
+     & \suffix{t'}{t} \; \land \; \arity{t'} = c
      \end{align*}
      
      The relation between the arity of the relation can be obtained by
@@ -247,7 +249,7 @@
      implementation simpler.
 
      The propagation rules for this constraint are as follows:
-     - $\proj{\glb{A}{c} \subseteq B$
+     - $\proj{\glb{A}}{c} \subseteq B$
      - $\proj{\lub{A}}{c} \supseteq B$
      - $\lub{A} \subseteq (\universe{\arity{A}-c}\times \lub{B}) \cap \lub{A}$
      
