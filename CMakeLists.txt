@@ -155,13 +155,13 @@ endforeach()
 add_library(util ${UTIL_SRCS_})
 
 add_library(st ${ST_SRCS})
-add_library(mpr ${MTR_SRCS})
+add_library(mtr ${MTR_SRCS})
 add_library(epd ${EPD_SRCS})
 
-target_link_libraries(mpr util)
+target_link_libraries(mtr util)
 target_link_libraries(epd util)
 target_link_libraries(st util)
-target_link_libraries(cudd util st mpr epd)
+target_link_libraries(cudd util st mtr epd)
 target_link_libraries(cuddobj cudd)
 ## NOTE about warnings:
 ## When CUDF is compiled by gcc there are a lot of warnings signaling
@@ -221,7 +221,7 @@ set_source_files_properties(
     ${CUDD_SRCS_} ${UTIL_SRCS_} ${ST_SRCS} ${MTR_SRCS} ${EPD_SRCS}
     PROPERTIES COMPILE_FLAGS ${CUDD_SPECIFIC_FLAGS}
 )
-set(CUDD_LIBS cuddobj cudd util st mpr epd)
+set(CUDD_LIBS cuddobj cudd util st mtr epd)
 ##########################################################################
 # Installation of CUDD
 ##########################################################################
@@ -513,7 +513,7 @@ MACRO(TODAY RESULT)
    set(${RESULT} 000000)
  endif()
 ENDMACRO()
-
+ 
 TODAY(TIME_SUFFIX)
 set(FILE_SUFFIX "${PROJECT_VERSION}-${TIME_SUFFIX}")
 set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${FILE_SUFFIX})
