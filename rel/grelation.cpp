@@ -24,6 +24,10 @@ namespace MPG {
     return *this;
   }
 
+  void GRelation::become(const GRelation& other) {
+    pimpl_ = Impl(new RelationImpl(*(other.pimpl_)));
+  }
+
   GRelation::~GRelation(void) {}
 
   GRelation GRelation::create_full(int a) {
