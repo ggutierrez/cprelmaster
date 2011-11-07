@@ -288,11 +288,11 @@ bdd_free(f)
 bdd_t *f;
 {
     if (f == NULL) {
-	fail("bdd_free: trying to free a NULL bdd_t");
+	cudd_fail("bdd_free: trying to free a NULL bdd_t");
     }
 
     if (f->free == TRUE) {
-	fail("bdd_free: trying to free a freed bdd_t");
+	cudd_fail("bdd_free: trying to free a freed bdd_t");
     }
 
     Cudd_RecursiveDeref((DdManager *)f->mgr,f->node);
@@ -564,12 +564,12 @@ array_t *quantifying_vars;	/* of bdd_t* */
     int nvars, i;
 
     if (f == NULL) {
-	fail ("bdd_cproject: invalid BDD");
+      cudd_fail ("bdd_cproject: invalid BDD");
     }
 
     nvars = array_n(quantifying_vars);
     if (nvars <= 0) {
-	fail("bdd_cproject: no projection variables");
+	cudd_fail("bdd_cproject: no projection variables");
     }
     dd = f->mgr;
 
@@ -1611,9 +1611,9 @@ bdd_t *f;
     struct DdManager *manager;
 
     if (f == NULL) {
-	fail("bdd_is_cube: invalid BDD");
+      cudd_fail("bdd_is_cube: invalid BDD");
     }
-    if (f->free) fail ("Freed BDD passed to bdd_is_cube");
+    if (f->free) cudd_fail ("Freed BDD passed to bdd_is_cube");
     manager = (DdManager *) f->mgr;
     return((boolean)cuddCheckCube(manager,f->node));
 
@@ -1714,12 +1714,12 @@ array_t **cube;	/* of bdd_literal */
 
     gen->cube = array_alloc(bdd_literal, manager->size);
     if (gen->cube == NULL) {
-	fail("Bdd Package: Out of memory in bdd_first_cube");
+      cudd_fail("Bdd Package: Out of memory in bdd_first_cube");
     }
 
     gen->ddGen = Cudd_FirstCube(manager,fn->node,&icube,&value);
     if (gen->ddGen == NULL) {
-	fail("Cudd Package: Out of memory in bdd_first_cube");
+	cudd_fail("Cudd Package: Out of memory in bdd_first_cube");
     }
 
     if (!Cudd_IsGenEmpty(gen->ddGen)) {
@@ -1801,7 +1801,7 @@ bdd_node **node;	/* return */
 
     gen->ddGen = Cudd_FirstNode(manager,fn->node,node);
     if (gen->ddGen == NULL) {
-	fail("Cudd Package: Out of memory in bdd_first_node");
+	cudd_fail("Cudd Package: Out of memory in bdd_first_node");
     }
 
     return(gen);

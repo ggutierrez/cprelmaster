@@ -155,7 +155,7 @@ extern int memcmp(), strcmp();
 #endif
 
 
-#define fail(why) {\
+#define cudd_fail(why) {\
     (void) fprintf(stderr, "Fatal error: file %s, line %d\n%s\n",\
 	__FILE__, __LINE__, why);\
     (void) fflush(stdout);\
