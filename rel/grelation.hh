@@ -74,6 +74,8 @@ namespace MPG {
     GRelation(const GRelation& r);
     /// Assignment
     GRelation& operator=(GRelation& right);
+    void become(const GRelation& other);
+
     /// Destructor
     ~GRelation(void);
     /// Constructs the relation \f$R=\mathcal{U}_{a}\f$
