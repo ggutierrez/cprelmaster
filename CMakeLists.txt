@@ -450,8 +450,7 @@ set(CPTUPLE_SRCS
 )
 #add_library(gecodecptuple ${CPTUPLE_SRCS})
 #target_link_libraries(gecodecptuple bdddomain ${Gecode_LIBRARIES})
-
-##########################################################################
+#########################################################################
 # Installation                                                           #
 ##########################################################################
 install(TARGETS gecodecprel

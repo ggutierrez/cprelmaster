@@ -8,7 +8,8 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-#if defined(_IBMR2)
+//#if defined(_IBMR2)
+#if 0
 #define etext _etext
 #define edata _edata
 #define end _end
@@ -21,7 +22,8 @@ extern int end, etext, edata;
 void
 util_print_cpu_stats(FILE *fp)
 {
-#ifdef BSD
+//#ifdef BSD
+#if 0
     struct rusage rusage;
     struct rlimit rlp;
     long text, data, vm_limit, vm_soft_limit;
