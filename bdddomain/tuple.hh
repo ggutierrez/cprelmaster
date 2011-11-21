@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include <initializer_list>
+#include <utility>
+#include <type_traits>
 #include <bdddomain/manager.hh>
 
 namespace MPG {
@@ -72,7 +74,10 @@ namespace MPG {
      * of the tuple is the size of the vector.
      */
     template <typename C>
-    Tuple(const C& c);
+    Tuple(const C& c,  
+          typename std::enable_if<
+            std::is_integral< typename C::iterator::value_type>::value
+            >::type* = 0 );
     /**
      * \brief Construct a tuple with all the elements present in \a l. The arity
      * of the tuple is the size of the list.
@@ -110,7 +115,10 @@ namespace MPG {
   }
 
   template <typename C>
-  Tuple::Tuple(const C& c)
+  Tuple::Tuple(const C& c,
+          typename std::enable_if<
+            std::is_integral< typename C::iterator::value_type>::value
+            >::type*) 
     : data_(encode(c)), arity_(c.size()) {
     assert(c.size() <= static_cast<unsigned int>(VarImpl::Limits::arity)
 	   && "The manager was not configured to support this arity");
