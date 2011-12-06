@@ -6,6 +6,7 @@
 #include <bdddomain/tuple.hh>
 #include <bdddomain/exception.hh>
 #include <bdddomain/perm-descriptor.hh>
+#include <bdddomain/bdd.hh>
 
 namespace MPG { namespace VarImpl {
     /**
@@ -196,9 +197,50 @@ namespace MPG { namespace VarImpl {
       //@{
       /// Returns a tuple in the relation
       Tuple pickOneTuple(void) const;
+      /**
+       * \brief Visits all the tuples of the relation and applies \a f.
+       *
+       * The functor must take as argument an std::vector<int> as a
+       * constant reference. The size of the vector is the maximum
+       * number of columns used at the manager to represent relations,
+       * this is: Limits::arity.
+       *
+       * The vector has to be reversed for the values to reflect the
+       * corresponding column indices.
+       */
+      template <typename Functor>
+      void visit(Functor& fc) const;
       //@}     
     };
+    
+    namespace detail {
+      typedef std::vector<std::vector<std::pair<int,int>>> branch;
+      template <typename Functor>
+      void flat(const branch& tuple, int i, std::vector<int>& val, Functor& fc) {
+        if (static_cast<unsigned int>(i) >= val.size()) {
+          fc(val);
+        return;
+        }
+        
+        for (const auto& j : tuple.at(i)) {
+          for (int e = j.first; e <= j.second; e++) {
+            //int original = val.at(i);
+            val[i] = e;
+            flat(tuple,i+1,val,fc);
+            //val[i] = original;
+          }
+        }
+      }
+    }
 
+    template <typename Functor>
+    void RelationImpl::visit(Functor& fc) const {
+      auto predicate = [=](const detail::branch& tuple) {
+        std::vector<int> val(tuple.size(),-2);
+        detail::flat(tuple,0,val,fc);
+      };
+      traverseSet(VarImpl::factory(),bdd_,predicate);
+    }
     
     /**
      * \brief Tests whether two relations are the same.

@@ -579,6 +579,9 @@ endif()
 add_executable(domain-test tests/domain-test.cc)
 target_link_libraries(domain-test bdddomain)
 
+add_executable(domain-visit tests/visitor.cpp)
+target_link_libraries(domain-visit bdddomain)
+
 # test for the follow propagator
 #add_executable(follow tests/follow.cpp)
 #target_link_libraries(follow gecodecprel ${Gecode_LIBRARIES})

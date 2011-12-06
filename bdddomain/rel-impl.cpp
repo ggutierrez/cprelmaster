@@ -1,7 +1,7 @@
 #include <iostream>
 #include <bdddomain/encoding.hh>
 #include <bdddomain/rel-impl.hh>
-#include <bdddomain/bdd.hh>
+
 
 namespace MPG { namespace VarImpl {
 
@@ -85,7 +85,6 @@ namespace MPG { namespace VarImpl {
       BDD et = t.getBDD();
       bdd_ &= !et;
     }
-
 
     void RelationImpl::add(const RelationImpl& r) {
       assert(arity_ == r.arity_);
