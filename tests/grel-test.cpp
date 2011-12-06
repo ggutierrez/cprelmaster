@@ -8,6 +8,13 @@ using std::cout;
 using std::endl;
 using std::vector;
 
+void visitor(const vector<int>& tuple) {
+  for (int i = tuple.size(); i--;) {
+    cout << tuple.at(i) << "--";
+  }
+  cout << endl;
+}
+
 int main(void) {
   using namespace MPG;
 
@@ -25,6 +32,7 @@ int main(void) {
   GRelation fall_a = a.forall(0);
   cout << "Result relation: " << fall_a << endl;
 
+  b.visit(&visitor);
 //  GRelation exp(2);
 //  exp.add({{1,9},{1,7},{2,9},{2,7},{3,9},{3,7}});
 //  cout << "Expected relation: " << exp << endl;

@@ -263,6 +263,13 @@ namespace MPG {
       pimpl_->pickOneTuple();
   }
 
+  void GRelation::visit(GRelation::Functor f) {
+    auto predicate = [=](const std::vector<int>& tuple) {
+      (*f)(tuple);
+    };
+    pimpl_->visit(predicate);
+  }
+
   /*
    * Relation output
    */ 

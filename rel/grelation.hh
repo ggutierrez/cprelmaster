@@ -255,6 +255,10 @@ namespace MPG {
      * the relation.
      */
     Tuple pickOneTuple(void) const;
+    /// type definition for the functor that has to be passed to the visit methos
+    typedef void (*Functor)(const std::vector<int>&);
+    /// Visit every tuple in a relation and applies functor f on it. 
+    void visit(Functor f);
     //@} 
     /// \name Output
     //{@

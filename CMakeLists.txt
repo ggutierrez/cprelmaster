@@ -566,9 +566,6 @@ if(BUILD_EXAMPLES)
 #  add_executable(dom tests/dom.cpp)
 #  target_link_libraries(dom gecodecprel gecodecptuple ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
-  add_executable(grel-test tests/grel-test.cpp)
-  target_link_libraries(grel-test gecodecprel)
-
   add_executable(swap-test tests/swap-test.cpp)
   target_link_libraries(swap-test gecodecprel)
 
@@ -581,6 +578,10 @@ target_link_libraries(domain-test bdddomain)
 
 add_executable(domain-visit tests/visitor.cpp)
 target_link_libraries(domain-visit bdddomain)
+
+add_executable(grel-test tests/grel-test.cpp)
+target_link_libraries(grel-test gecodecprel)
+
 
 # test for the follow propagator
 #add_executable(follow tests/follow.cpp)

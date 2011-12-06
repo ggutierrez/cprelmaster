@@ -36,7 +36,7 @@ void printAll(RelationImpl r, Functor& fc) {
 */
 int main(void) {
   RelationImpl  ternary(3);
-  
+   
   ternary.add({0,0,1});
   ternary.add({0,1,1});
   ternary.add({0,0,2});
