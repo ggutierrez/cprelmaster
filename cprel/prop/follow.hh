@@ -155,8 +155,8 @@ public:
       GECODE_ME_CHECK(a_.include(home,singles));
 
       // pruning the upper bound of A
-      GRelation y = c_.oob().follow(b_.arity() - f_, TransformB(b_.glb()));
-      GECODE_ME_CHECK(a_.exclude(home,y));
+      /*GRelation y = c_.oob().follow(b_.arity() - f_, TransformB(b_.glb()));
+      GECODE_ME_CHECK(a_.exclude(home,y));*/
     }
 
     // 3) Pruning B from A and C
@@ -169,9 +169,9 @@ public:
       GECODE_ME_CHECK(b_.include(home,singles));
 
       // pruning the upper bound of B
-      GRelation y = transformC(c_.oob()).follow(a_.arity() - f_, a_.glb());
+      /*GRelation y = transformC(c_.oob()).follow(a_.arity() - f_, a_.glb());
       GRelation b_out = TransformB(y);
-      GECODE_ME_CHECK(b_.exclude(home,b_out));
+      GECODE_ME_CHECK(b_.exclude(home,b_out));*/
     }
 
     // Propagator subsumption
