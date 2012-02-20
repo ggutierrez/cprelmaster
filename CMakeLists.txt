@@ -127,17 +127,17 @@ add_subdirectory(bdddomain)
 ##########################################################################
 # JINC
 ##########################################################################
-if (BUILD_JINC)
-  include(ExternalProject)
-  ExternalProject_Add(JINC_INSTALL
-    URL http://www.jossowski.de/projects/jinc/download/assets/jinc_2010-05-29_114104.tgz
-    BUILD_IN_SOURCE Yes
-    PATCH_COMMAND patch < ${CMAKE_SOURCE_DIR}/jinc.patch
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND make lib
-    INSTALL_COMMAND ""
-    )
-endif()
+#if (BUILD_JINC)
+#  include(ExternalProject)
+#  ExternalProject_Add(JINC_INSTALL
+#    URL http://www.jossowski.de/projects/jinc/download/assets/jinc_2010-05-29_114104.tgz
+#    BUILD_IN_SOURCE Yes
+#    PATCH_COMMAND patch < ${CMAKE_SOURCE_DIR}/jinc.patch
+#    CONFIGURE_COMMAND ""
+#    BUILD_COMMAND make lib
+#    INSTALL_COMMAND ""
+#    )
+#endif()
 ##########################################################################
 # Gecode
 ##########################################################################
@@ -196,49 +196,7 @@ include_directories(${Gecode_INCLUDE_DIRS})
 ##########################################################################
 # Relation constraint system
 ##########################################################################
-set(CPREL_SRCS
-  cprel/complement-view.hh
-  cprel/const-view.hh
-  cprel/cprel.hh
-  cprel/var.hh
-  cprel/varimp.cpp
-  cprel/varimp.hh
-  cprel/view.hh
-
-# documentation
-  doc/main.hh
-
-# propagators	
-  cprel/prop/and.cpp
-  cprel/prop/and.hh
-  cprel/prop/and.hpp
-  cprel/prop/equality.cpp
-  cprel/prop/equality.hh
-  cprel/prop/permutation.cpp
-  cprel/prop/permutation.hh
-  cprel/prop/join.hh
-  cprel/prop/join.cpp
-  cprel/prop/projection.cpp
-  cprel/prop/projection.hh
-#  cprel/prop/channel.cpp
-#  cprel/prop/channel.hh
-#  cprel/prop/tuple.cpp
-#  cprel/prop/tuple.hh
-  cprel/prop/follow.hh
-  cprel/prop/follow.cpp
-  cprel/prop/dom.cpp
-# branchers
-  cprel/branch/branch.cpp
-)
-add_library(gecodecprel ${CPREL_SRCS})
-target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
-
-if(UNIT_TEST)
-  set(PROPAGATOR_TESTS
-    cprel/prop/tests/and.cpp)
-  list(APPEND TEST_SOURCES ${PROPAGATOR_TESTS})
-  list(APPEND TEST_LIBRARIES gecodecprel)
-endif()
+add_subdirectory(cprel)
 ##########################################################################
 # Tuple constraint system
 ##########################################################################
@@ -254,19 +212,7 @@ set(CPTUPLE_SRCS
 )
 #add_library(gecodecptuple ${CPTUPLE_SRCS})
 #target_link_libraries(gecodecptuple bdddomain ${Gecode_LIBRARIES})
-#########################################################################
-# Installation                                                           #
-##########################################################################
-install(TARGETS gecodecprel
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-install(DIRECTORY cprel/ DESTINATION include/cprel
-        FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
-#install(TARGETS gecodecptuple
-#  LIBRARY DESTINATION lib
-#  ARCHIVE DESTINATION lib)
-#install(DIRECTORY cptuple/ DESTINATION include/cptuple
-#        FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
+
 ##########################################################################
 # Uninstall
 ##########################################################################
