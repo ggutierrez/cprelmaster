@@ -289,19 +289,13 @@ set(BDDDOMAIN_SRCS
   bdd.hh bdd-print.cpp bdd-visitor.hpp
   perm-descriptor.hh rel-impl.cpp rel-impl.hh 
   tuple.cpp tuple.hh
+  grelation.cpp grelation.hh 
 )
 
 set(BDDDOMAIN_SRCS_)
 foreach(file ${BDDDOMAIN_SRCS})
   list(APPEND BDDDOMAIN_SRCS_ "bdddomain/${file}")
 endforeach()
-
-## This files are added to this module because it is shared by cprel and cptuple
-## and because so far, creating another module just for this does not make to much
-## sense.
-
-list(APPEND BDDDOMAIN_SRCS_ rel/grelation.cpp)
-list(APPEND BDDDOMAIN_SRCS_ rel/grelation.hh)
 
 add_library(bdddomain ${BDDDOMAIN_SRCS_})
 target_link_libraries(bdddomain ${CUDD_LIBS})
