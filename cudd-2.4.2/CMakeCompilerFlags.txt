@@ -1,0 +1,53 @@
+## NOTE about warnings:
+## When CUDF is compiled by gcc there are a lot of warnings signaling
+## unused parameters. As they can hide other important warnings of this project
+## they will be disabled during the building of CUDD specific targets.
+
+include(CheckCCompilerFlag)
+set(CUDD_SPECIFIC_FLAGS)
+
+check_c_compiler_flag(-Wno-unused-parameter FLAG_DIS_UNUSED)
+if(FLAG_DIS_UNUSED)
+ set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -Wno-unused-parameter")
+endif()
+
+check_c_compiler_flag(-Wno-uninitialized FLAG_DIS_UNINITIALIZED)
+if(FLAG_DIS_UNINITIALIZED)
+ set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -Wno-uninitialized")
+endif()
+
+check_c_compiler_flag(-Wno-sign-compare FLAG_DIS_SIGN)
+if(FLAG_DIS_SIGN)
+  set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -Wno-sign-compare")
+endif()
+
+## Building options extracted from original CUDD Makefile
+if(SIZEOF_VOID_P MATCHES "8")
+  set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8")
+
+  check_c_compiler_flag("-mtune=native" FLAG_TUNE_NATIVE)
+  if(FLAG_TUNE_NATIVE)
+    set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -mtune=native")
+  else()
+    message(WARNING "CUDD compilation option not supported!")
+  endif()
+
+elseif(SIZEOF_VOID_P MATCHES "4")
+  set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -DHAVE_IEEE_754 -DBSD")
+
+  check_c_compiler_flag("-mtune=pentium4" FLAG_TUNE_PIV)
+  if(FLAG_TUNE_PIV)
+    set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -mtune=pentium4")
+  else()
+    message(WARNING "CUDD compilation option not supported!")
+  endif()
+
+  check_c_compiler_flag(-malign-double FLAG_ALIGN_DOUBLE)
+  if(FLAG_ALIGN_DOUBLE)
+    set(CUDD_SPECIFIC_FLAGS "${CUDD_SPECIFIC_FLAGS} -malign-double")
+  else()
+    message(WARNING "CUDD compilation option not supported!")
+  endif()
+else()
+  message(SEND_ERROR "Unable to determine the flags to build cudd")
+endif()

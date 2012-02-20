@@ -1,4 +1,4 @@
-#include <bdddomain/unique.h>
+#include <cudd/unique.h>
 
 #ifdef __cplusplus
 extern "C" {
