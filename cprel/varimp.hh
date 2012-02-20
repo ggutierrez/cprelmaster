@@ -2,7 +2,7 @@
 #define __CPREL_CPREL_VARIMP_HH__
 
 #include <gecode/kernel.hh>
-#include <rel/grelation.hh>
+#include <bdddomain/grelation.hh>
 
 using Gecode::Advisor;
 using Gecode::Delta;

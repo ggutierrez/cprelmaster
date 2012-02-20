@@ -282,39 +282,7 @@ endif()
 # Domain representation using BDDs
 ##########################################################################
 include_directories(${CMAKE_SOURCE_DIR})
-
-set(BDDDOMAIN_SRCS
-  encoding.cpp encoding.hh abstract.cpp replace.cpp 
-  exception.hh manager.cpp manager.hh
-  bdd.hh bdd-print.cpp bdd-visitor.hpp
-  perm-descriptor.hh rel-impl.cpp rel-impl.hh 
-  tuple.cpp tuple.hh
-  grelation.cpp grelation.hh 
-)
-
-set(BDDDOMAIN_SRCS_)
-foreach(file ${BDDDOMAIN_SRCS})
-  list(APPEND BDDDOMAIN_SRCS_ "bdddomain/${file}")
-endforeach()
-
-add_library(bdddomain ${BDDDOMAIN_SRCS_})
-target_link_libraries(bdddomain ${CUDD_LIBS})
-
-if(UNIT_TEST)
-  list(APPEND TEST_SOURCES bdddomain/tests/bddrel.cpp)
-  list(APPEND TEST_LIBRARIES bdddomain)
-endif()
-##########################################################################
-# BDDDomain Installation
-##########################################################################
-install(TARGETS bdddomain
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
-  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
-install(DIRECTORY rel/ DESTINATION include/rel
-  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
-
+add_subdirectory(bdddomain)
 ##########################################################################
 # JINC
 ##########################################################################

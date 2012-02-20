@@ -8,7 +8,7 @@
 #include <gecode/kernel.hh>
 #include <gecode/set.hh> // for channel constraint
 //#include <cptuple/cptuple.hh> // for the dom constraint
-#include <rel/grelation.hh>
+#include <bdddomain/grelation.hh>
 
 using Gecode::Exception;
 using Gecode::VarArgArray;

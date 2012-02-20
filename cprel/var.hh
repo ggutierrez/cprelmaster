@@ -2,7 +2,7 @@
 #define __CPREL_CPREL_VAR_HH__
 
 #include <gecode/kernel.hh>
-#include <rel/grelation.hh>
+#include <bdddomain/grelation.hh>
 #include <cprel/varimp.hh>
 
 /**

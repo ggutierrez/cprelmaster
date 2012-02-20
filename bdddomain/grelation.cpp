@@ -1,4 +1,4 @@
-#include <rel/grelation.hh>
+#include <bdddomain/grelation.hh>
 #include <bdddomain/rel-impl.hh>
 
 namespace MPG {
