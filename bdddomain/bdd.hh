@@ -3,7 +3,9 @@
 
 #include <bdddomain/manager.hh>
 #include <bdddomain/encoding.hh>
-#include <cudd/cudd.h>
+
+// Inclusion of the main header of CUDD
+#include <cudd.h>
 
 namespace MPG { namespace VarImpl {
     /**
@@ -15,7 +17,9 @@ namespace MPG { namespace VarImpl {
       DdNode * d = r.getNode();
       DdNode *res = Cudd_T(d);
       res = Cudd_NotCond(res, Cudd_IsComplement(d));
-      return BDD(factoryPtr(),res);
+      return BDD(
+                 factoryPtr(),
+                 res);
     }
     /**
      * \brief returns the \a else node of \a r

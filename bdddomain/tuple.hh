@@ -24,7 +24,6 @@ namespace MPG {
       purpose.
     */
     class RelationImpl;
-    class RelationImplIter;
   }
   /**
    * \brief Class to abstract a tuple in a relation
