@@ -23,5 +23,3 @@ install(TARGETS bdddomain
   ARCHIVE DESTINATION lib)
 install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
-install(DIRECTORY rel/ DESTINATION include/rel
-  FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
