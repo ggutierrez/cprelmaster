@@ -50,12 +50,6 @@ namespace MPG { namespace VarImpl {
        */
       const int arity = 1 << ba;
       /**
-       * \brief Maximum number that can be represented by the current
-       * configuration of the manager.
-       * \ingroup DomRepr
-       */
-      //const unsigned int maxValue = INT_MAX - 1; //(1L << bitsPerInteger) - 1;
-      /**
        * \brief Number of variables in the manager for the current setup
        * \ingroup DomRepr
        */
