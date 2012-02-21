@@ -1,75 +1,16 @@
+add_subdirectory(cudd)
+add_subdirectory(mtr)
+add_subdirectory(st)
+add_subdirectory(util)
+add_subdirectory(obj)
+add_subdirectory(epd)
 
-set(CUDD_SRCS cudd/cuddAddAbs.c cudd/cuddAddApply.c cudd/cuddAddFind.c
-    cudd/cuddAddInv.c cudd/cuddAddIte.c cudd/cuddAddNeg.c
-    cudd/cuddAddWalsh.c cudd/cuddAndAbs.c cudd/cuddAnneal.c
-    cudd/cuddApa.c cudd/cuddAPI.c cudd/cuddApprox.c cudd/cuddBddAbs.c
-    cudd/cuddBddCorr.c cudd/cuddBddIte.c cudd/cuddBridge.c
-    cudd/cuddCache.c cudd/cuddCheck.c cudd/cuddClip.c cudd/cuddCof.c
-    cudd/cuddCompose.c cudd/cuddDecomp.c cudd/cuddEssent.c
-    cudd/cuddExact.c cudd/cuddExport.c cudd/cuddGenCof.c
-    cudd/cuddGenetic.c cudd/cuddGroup.c cudd/cuddHarwell.c
-    cudd/cuddInit.c cudd/cuddInteract.c cudd/cuddLCache.c
-    cudd/cuddLevelQ.c cudd/cuddLinear.c cudd/cuddLiteral.c
-    cudd/cuddMatMult.c cudd/cuddPriority.c cudd/cuddRead.c
-    cudd/cuddRef.c cudd/cuddReorder.c cudd/cuddSat.c cudd/cuddSign.c
-    cudd/cuddSolve.c cudd/cuddSplit.c cudd/cuddSubsetHB.c
-    cudd/cuddSubsetSP.c cudd/cuddSymmetry.c cudd/cuddTable.c
-    cudd/cuddUtil.c cudd/cuddWindow.c cudd/cuddZddCount.c
-    cudd/cuddZddFuncs.c cudd/cuddZddGroup.c cudd/cuddZddIsop.c
-    cudd/cuddZddLin.c cudd/cuddZddMisc.c cudd/cuddZddPort.c
-    cudd/cuddZddReord.c cudd/cuddZddSetop.c cudd/cuddZddSymm.c
-    cudd/cuddZddUtil.c
-# Added to cudd 
-    cudd/unique.c cudd/unique.h     
-# Headers: 
-    cudd/cudd.h cudd/cuddInt.h
- )
 
-set(MTR_SRCS
-  mtr/mtrBasic.c
-  mtr/mtrGroup.c
-#Headers:
-  mtr/mtr.h
-)
-
-set(ST_SRCS
-  st/st.c
-#Headers:
-  st/st.h
-)
-
-set(EPD_SRCS
-  epd/epd.c
-#Headers:
-  epd/epd.h
-)
-
-set(UTIL_SRCS
- util/cpu_time.c util/cpu_stats.c util/getopt.c util/safe_mem.c
- util/strsav.c util/texpand.c util/ptime.c util/prtime.c
- util/pipefork.c util/pathsearch.c util/stub.c util/tmpfile.c util/datalimit.c
-#Headers
-  util/util.h
-)
-
-set(CUDDOBJ_SRCS
-  obj/cuddObj.hh
-  obj/cuddObj.cc
-)
-  
-add_library(cuddobj ${CUDDOBJ_SRCS})
-add_library(cudd ${CUDD_SRCS})
-
-add_library(util ${UTIL_SRCS})
-add_library(st ${ST_SRCS})
-add_library(mtr ${MTR_SRCS})
-add_library(epd ${EPD_SRCS})
-
-target_link_libraries(mtr util)
-target_link_libraries(epd util)
-target_link_libraries(st util)
-target_link_libraries(cudd util st mtr epd)
-target_link_libraries(cuddobj cudd)
+#target_link_libraries(mtr util)
+#target_link_libraries(epd util)
+#target_link_libraries(st util)
+#target_link_libraries(cudd util st mtr epd)
+#target_link_libraries(cuddobj cudd)
 
 include(CMakeCompilerFlags.txt)
 
