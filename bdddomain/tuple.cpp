@@ -8,17 +8,23 @@ using std::vector;
 namespace MPG {
   using namespace VarImpl;
 
-  Tuple::Tuple(BDD data, int arity) : data_(data), arity_(arity) {}
+  Tuple::Tuple(BDD data, int arity) : data_(data), arity_(arity) {
+    assert(Limits::checkSafeArity(arity) && 
+           "The manager was not configured to support this arity");
+  }
 
   Tuple::Tuple(const std::initializer_list<int> l)
     : arity_(l.size()) {
-    assert(l.size() <= static_cast<unsigned int>(Limits::arity)
-	   && "The manager was not configured to support this arity");
+    assert(Limits::checkSafeArity(l.size()) && 
+           "The manager was not configured to support this arity");
     data_ = encode(l);
   }
 
   Tuple::Tuple(const Tuple& t)
-    : data_(t.data_), arity_(t.arity_) {}
+    : data_(t.data_), arity_(t.arity_) {
+    // t is a constructed object so the checks on it were already
+    // performed.
+  }
 
   Tuple::~Tuple(void) {}
 
@@ -32,8 +38,11 @@ namespace MPG {
   }
 
   BDD Tuple::encode(int p, int a) {
-    assert(static_cast<unsigned int>(p) <= Limits::maxValue &&
-	   "The manager was not configured to support this value");
+    assert(Limits::checkSafeValue(p) &&
+           "The manager was not configured to support this value");
+    assert(Limits::checkSafeArity(a) && 
+           "The manager was not configured to support this arity");
+
     BDD f = one();
     for (int i = Limits::bitsPerInteger; i--;) {
       BDD v = factory().bddVar((i << Limits::ba)+a);
@@ -54,7 +63,9 @@ namespace MPG {
     std::vector<int> tuple(arity_,-1);
     typedef std::vector<std::vector<std::pair<int,int>>> branch_contents;
     auto f = [&](const branch_contents& r) {
+      
       assert(static_cast<unsigned int>(arity_) < r.size() && "Unexpected branch length");
+      
       for (auto i = arity_; i--;) {
 	const auto& domainI = r.at(i);
 	assert(domainI.size() == 1 &&

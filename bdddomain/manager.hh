@@ -7,11 +7,21 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/static_assert.hpp>
 #include <obj/cuddObj.hh>
-#include <limits>
+#include <climits>
 
 namespace MPG { namespace VarImpl {
 
     namespace Limits {
+      /**
+       * \brief Maximum integer that can be part of a tuple in the system
+       *
+       * This limit must be the same as the one supported by Gecode
+       * IntVar, otherwise the compatibility between domains can be
+       * seriously affected.
+       */
+      const int max = INT_MAX - 1;
+      /// Minumum allowed integer in a tuple
+      const int min = 0;
       /**
        * \brief Number of bits to represent an element inside a relation
        * tuple.
@@ -45,22 +55,26 @@ namespace MPG { namespace VarImpl {
        * configuration of the manager.
        * \ingroup DomRepr
        */
-      const unsigned int maxValue = (1L << bitsPerInteger) - 1;
+      //const unsigned int maxValue = INT_MAX - 1; //(1L << bitsPerInteger) - 1;
       /**
        * \brief Number of variables in the manager for the current setup
        * \ingroup DomRepr
        */
       const int variables = bitsPerInteger * arity;
       /**
-       * \brief Ensures that the library is compiled on an architecture in which the
-       * bits in an integer fits in the bdd representation. This is because most of the
-       * operations on tuples or anything that has a bdd representation behind use the
-       * int type to input and output values.
-       * \ingroup DomRepr
+       * \brief Ensures that bitsPerInteger is enough to store an int type.
        */
-
-      //  BOOST_STATIC_ASSERT(std::numeric_limits<int>::digits <= bitsPerInteger
-      //                      && "The BDD configuration is wrong for this built");
+      static_assert((sizeof(int) * 8 == bitsPerInteger) ,
+                    "Bits per integer configuration is not enough to store an int.");
+   
+      /// Checks if \a v is a valid value with the consfiguration of the manager.
+      inline bool checkSafeValue(int v) {
+        return v >= min && v <= max;
+      }
+      /// Checks if \a v is a valid arity with the current configuration of the manager.
+      inline bool checkSafeArity(int a) {
+        return a >= 0 && a <= arity;
+      }
     }
 
     class BddManager;
