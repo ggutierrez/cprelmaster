@@ -50,20 +50,6 @@ find_package(BoostOrExternal)
 include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(bdddomain)
 ##########################################################################
-# JINC
-##########################################################################
-#if (BUILD_JINC)
-#  include(ExternalProject)
-#  ExternalProject_Add(JINC_INSTALL
-#    URL http://www.jossowski.de/projects/jinc/download/assets/jinc_2010-05-29_114104.tgz
-#    BUILD_IN_SOURCE Yes
-#    PATCH_COMMAND patch < ${CMAKE_SOURCE_DIR}/jinc.patch
-#    CONFIGURE_COMMAND ""
-#    BUILD_COMMAND make lib
-#    INSTALL_COMMAND ""
-#    )
-#endif()
-##########################################################################
 # Gecode
 ##########################################################################
 find_package(GecodeOrExternal)
