@@ -3,9 +3,8 @@
 
 #include <iostream>
 #include <iomanip>
+#include <memory>
 #include <boost/utility.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/static_assert.hpp>
 #include <obj/cuddObj.hh>
 #include <climits>
 
@@ -78,7 +77,7 @@ namespace MPG { namespace VarImpl {
     }
 
     class BddManager;
-    typedef boost::shared_ptr<BddManager> PManager;
+    typedef std::shared_ptr<BddManager> PManager;
     /**
        \brief Class to interact with the underlying bdd library.
        \ingroup DomRepr
