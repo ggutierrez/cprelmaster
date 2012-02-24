@@ -35,17 +35,17 @@ namespace MPG {
       void finish(void) {
 	if (lastHigh_ != -2) {
 	  if (done_) {
-	    values_.push_back({-5,-5});
+	    values_.push_back(std::make_pair(-5,-5));
 	  }
 	  if (lastLow_ == lastHigh_) {
-	    values_[values_.size() - 1] = {lastHigh_, lastHigh_};
+	    values_[values_.size() - 1] = std::make_pair(lastHigh_, lastHigh_);
 	    /*
 	    auto size = values_.size();
 	    values_[size - 2] = lastHigh_;
 	    values_[size - 1] = lastHigh_;
 	    */
 	  } else {
-	    values_[values_.size() - 1] = {lastLow_, lastHigh_};
+	    values_[values_.size() - 1] = std::make_pair(lastLow_, lastHigh_);
 	    /*
 	    auto size = values_.size();
 	    values_[size - 2] = lastLow_;

@@ -1,13 +1,21 @@
 #ifndef __CPREL_CPREL_PERM_DESCRIPTOR_HH__
 #define __CPREL_CPREL_PERM_DESCRIPTOR_HH__
 
+#include <cassert>
 #include <bdddomain/exception.hh>
 #include <set>
 
 namespace MPG {
 
 /// Exception indicating invalid permutation description
-struct InvalidPermDescriptor : virtual ExceptionBase {};
+struct InvalidPermDescriptor : public Exception {
+  /// Initialize with location \a l
+  InvalidPermDescriptor(const char* l);
+};
+
+inline
+InvalidPermDescriptor::InvalidPermDescriptor(const char* l)
+: Exception(l,"The descriptor of the permutation is invalid.") {}
 
 class DescIterator;
 /**

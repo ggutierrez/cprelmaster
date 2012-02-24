@@ -91,7 +91,7 @@ namespace MPG {
 	// The header of the relation
         os << std::endl;
         
-        os << setiosflags(std::ios::left);
+        os << std::setiosflags(std::ios::left);
 	for (auto i = columns; i--;)
 	  os << "C-" << i << std::setw(7) << " " ;
         os << std::endl;
