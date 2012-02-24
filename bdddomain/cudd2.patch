@@ -1,12 +1,12 @@
-diff -rupN cudd-2.4.2-orig/Makefile cudd-2.4.2-modified/Makefile
---- cudd-2.4.2-orig/Makefile	2009-02-22 02:54:12.000000000 +0100
-+++ cudd-2.4.2-modified/Makefile	2012-02-22 16:26:11.000000000 +0100
+diff -rupN cudd-2.4.2-original/Makefile cudd-2.4.2-modified/Makefile
+--- cudd-2.4.2-original/Makefile	2009-02-22 02:54:12.000000000 +0100
++++ cudd-2.4.2-modified/Makefile	2012-02-24 21:19:11.000000000 +0100
 @@ -7,7 +7,7 @@
  # be overridden from the command line.
  
  # C++ compiler
 -CPP	= g++
-+CPP	= /opt-clang/bin/clang++
++CPP	= /opt-clang/bin/clang++ -stdlib=libc++
  #CPP	= icpc
  #CPP	= ecpc
  #CPP	= CC
@@ -42,9 +42,21 @@ diff -rupN cudd-2.4.2-orig/Makefile cudd-2.4.2-modified/Makefile
  # Gcc 4.2.4 or higher on x86_64 (32-bit compilation)
  #XCFLAGS	= -m32 -mtune=native -malign-double -DHAVE_IEEE_754 -DBSD
  # Icc on i686 (older versions may not support -xHost).
-diff -rupN cudd-2.4.2-orig/util/cpu_stats.c cudd-2.4.2-modified/util/cpu_stats.c
---- cudd-2.4.2-orig/util/cpu_stats.c	2009-02-17 21:52:03.000000000 +0100
-+++ cudd-2.4.2-modified/util/cpu_stats.c	2012-02-22 16:19:51.000000000 +0100
+diff -rupN cudd-2.4.2-original/obj/Makefile cudd-2.4.2-modified/obj/Makefile
+--- cudd-2.4.2-original/obj/Makefile	2001-03-19 08:35:09.000000000 +0100
++++ cudd-2.4.2-modified/obj/Makefile	2012-02-24 21:20:09.000000000 +0100
+@@ -4,7 +4,7 @@
+ #---------------------------------------------------------------------------
+ .SUFFIXES: .o .cc .u
+ 
+-CPP	= g++
++CPP	= /opt-clang/bin/clang++ -stdlib=libc++
+ RANLIB	= ranlib
+ # Define EXE as .exe for MS-DOS and derivatives.
+ PURE	=
+diff -rupN cudd-2.4.2-original/util/cpu_stats.c cudd-2.4.2-modified/util/cpu_stats.c
+--- cudd-2.4.2-original/util/cpu_stats.c	2009-02-17 21:52:03.000000000 +0100
++++ cudd-2.4.2-modified/util/cpu_stats.c	2012-02-24 21:19:11.000000000 +0100
 @@ -21,69 +21,5 @@ extern int end, etext, edata;
  void
  util_print_cpu_stats(FILE *fp)

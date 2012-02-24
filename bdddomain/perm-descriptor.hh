@@ -1,6 +1,7 @@
 #ifndef __CPREL_CPREL_PERM_DESCRIPTOR_HH__
 #define __CPREL_CPREL_PERM_DESCRIPTOR_HH__
 
+#include <vector>
 #include <cassert>
 #include <bdddomain/exception.hh>
 #include <set>
@@ -79,10 +80,10 @@ public:
     return true;
   }
   /// Return the permutation as an array of pairs
-  std::vector<std::pair<int,int>> getPerm(void) const {
-    std::vector<std::pair<int,int>> p;
+  std::vector<std::pair<int,int> > getPerm(void) const {
+    std::vector<std::pair<int,int> > p;
     for (unsigned int i = 0; i < origin_.size(); i++) {
-      p.push_back({origin_.at(i),permute_.at(i)});
+      p.push_back(std::make_pair(origin_.at(i), permute_.at(i)));
     }
     return p;
   }

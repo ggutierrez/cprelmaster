@@ -52,12 +52,12 @@ namespace MPG { namespace VarImpl {
      * that will be replaced by the column on the second element. This
      * operation will replace the contents of the column.
      */
-    BDD replace(const std::vector<std::pair<int,int>>& pairing, const BDD& r);
+    BDD replace(const std::vector<std::pair<int,int> >& pairing, const BDD& r);
     /**
      * \brief Returns a bdd with the swapping of the columns in \a r
      * represented by \a pairing
      */
-    BDD swap(const std::vector<std::pair<int,int>>& pairing, const BDD& r);
+    BDD swap(const std::vector<std::pair<int,int> >& pairing, const BDD& r);
     /**
      * \brief Unique quantification of \a r with respect to \a c
      *

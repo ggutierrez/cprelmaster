@@ -131,20 +131,20 @@ namespace MPG { namespace VarImpl {
        * incrementally for every pair. This causes for instance the
        * pairing {<0,1>,<1,0>} two swap columns 1 and 0.
        */
-      RelationImpl replace(const std::vector<std::pair<int,int>>& pairing);
+      RelationImpl replace(const std::vector<std::pair<int,int> >& pairing);
       /**
        * \brief Returns a new variable implementation by swapping the
        * columns as indicated by \a pairing.
        *
        */
-      RelationImpl swap(const std::vector<std::pair<int,int>>& pairing);
+      RelationImpl swap(const std::vector<std::pair<int,int> >& pairing);
     public:
       /**
        * \brief Returns the relation resulting from permuting \a this
        * according with \a permDesc.
        *
        */
-      RelationImpl permute(const std::vector<std::pair<int,int>>& perm) const;
+      RelationImpl permute(const std::vector<std::pair<int,int> >& perm) const;
       //@}
       /// \name Cross product
       //@{
@@ -213,10 +213,10 @@ namespace MPG { namespace VarImpl {
     };
     
     namespace detail {
-      typedef std::vector<std::vector<std::pair<int,int>>> branch;
+      typedef std::vector<std::vector<std::pair<int,int> > > branch;
       template <typename Functor>
       void flat(const branch& tuple, int i, std::vector<int>& val, int arity, Functor& fc) {
-        if (static_cast<unsigned int>(i) >= arity) {
+        if (i >= arity) {
           fc(val);
         return;
         }
