@@ -4,7 +4,6 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
-#include <boost/utility.hpp>
 #include <obj/cuddObj.hh>
 #include <climits>
 
@@ -88,7 +87,7 @@ namespace MPG { namespace VarImpl {
        bdd objects. There is one global object for all the constraint
        system and no assumption on thread safety can be made on it.
      */
-    class BddManager : private boost::noncopyable {
+    class BddManager {
     private:
       /// Only one single instance of this class is allowed at run time
       static PManager _instance;
@@ -98,34 +97,40 @@ namespace MPG { namespace VarImpl {
       //@{
       /// Constructor that initializes the BDD manager of CUDD
       BddManager (void)
-	: factory_(Limits::bitsPerInteger * Limits::arity,
-		   0,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS,0)
+	      : factory_(Limits::bitsPerInteger * Limits::arity
+                  , 0
+                  ,CUDD_UNIQUE_SLOTS,CUDD_CACHE_SLOTS
+                  ,0)
       {
-	/// \todo: The existence of shiftLeft needs that the manager is initialized
-	/// with the number of variables. Fix that method in order to permute only existent vars
+      	 /// \todo: The existence of shiftLeft needs that the manager is initialized
+	       /// with the number of variables. Fix that method in order to permute only existent vars
       }
       /// Creates an instace of this object
       static void create() {
-	_instance.reset( new BddManager, &deleter );
+	       _instance.reset( new BddManager, &deleter );
       }
       /// Destructor that releases the BDD manager of CUDD
       ~BddManager (void) {
-	std::cout << "Destroyed BDD manager: " << references() << std::endl;
-	//std::cout << "Manager stats" << std::endl;
-	stats(std::cout);
+        std::cout << "Destroyed BDD manager: " << references() << std::endl;
+	      //std::cout << "Manager stats" << std::endl;
+	      stats(std::cout);
       }
       //@}
       /// Method called by the managed pointer when destructed
       static void deleter(BddManager *ptr) {
-	delete ptr;
+        delete ptr;
       }
       int references(void) {
-	return Cudd_CheckZeroRef(factory_.getManager());
+    	 return Cudd_CheckZeroRef(factory_.getManager());
       }
     public:
+      // It does not make sens to copy the manager or to construct it from another one.
+      // therefore we declared the copy constructor and the assignment as deleted.
+      BddManager& operator = (const BddManager&) = delete;
+      BddManager(const BddManager&) = delete; 
       /// Returns an instance of the manager
       static PManager instance(void) {
-	if (_instance.get() != NULL)
+        if (_instance.get() != NULL)
 	  return _instance;
 	create();
 	return _instance;
@@ -146,7 +151,7 @@ namespace MPG { namespace VarImpl {
       }
       /// Returns the constant \c false
       BDD zero(void) {
-	return factory_.bddZero();
+	     return factory_.bddZero();
       }
       /// Prints manager statistics to \a os
       void stats(std::ostream& os) const {
@@ -158,7 +163,7 @@ namespace MPG { namespace VarImpl {
 	auto gcs =  Cudd_ReadGarbageCollections(factory_.getManager());
 	//os << "\tGC triggered " << gcs << " times" << std::endl;
 	{
-	  os << setiosflags(std::ios::left)
+	  os << std::setiosflags(std::ios::left)
              << std::setw(14) << "Memory (MB)" 
              << std::setw(14) << "GC (s.)"
              << std::setw(14) << "GC steps" 
