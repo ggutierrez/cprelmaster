@@ -20,7 +20,7 @@ endif()
 
 # If we did not find Gecode or a compatible version installed then
 # offer to install one
-if(NOT GECODE_CPREL_SUPPORT OR NOT GECODE_CPTUPLE_SUPPORT)
+if(NOT GECODE_CPREL_SUPPORT)
   message(STATUS "No compatible version of gecode was found.")
   message(STATUS "  To build the gecode you need please execute make GECODE_INSTALL.")
   message(STATUS "  and reconfigure with option -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX}")
@@ -31,7 +31,7 @@ if(NOT GECODE_CPREL_SUPPORT OR NOT GECODE_CPTUPLE_SUPPORT)
   list(APPEND CONFIGURE_OPTIONS "CFLAGS=-DGECODE_HAS_VAR_DISPOSE")
 
   set(VIS_INPUTS "${CMAKE_SOURCE_DIR}/cprel/cprel.vis")
-  set(VIS_INPUTS "${VIS_INPUTS} ${CMAKE_SOURCE_DIR}/cptuple/cptuple.vis")
+#  set(VIS_INPUTS "${VIS_INPUTS} ${CMAKE_SOURCE_DIR}/cptuple/cptuple.vis")
 
   list(APPEND VIS_INPUTS ${EXTRA_VIS})
  
@@ -42,12 +42,14 @@ if(NOT GECODE_CPREL_SUPPORT OR NOT GECODE_CPTUPLE_SUPPORT)
   list(APPEND CONFIGURE_OPTIONS "--disable-examples")
   list(APPEND CONFIGURE_OPTIONS "--prefix=${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(GECODE_INSTALL
-    SVN_REPOSITORY https://svn.gecode.org/svn/gecode/tags/release-3.6.0
-    SVN_USERNAME anonymous
-    SVN_PASSWORD user@gmail.com
+#    SVN_REPOSITORY https://svn.gecode.org/svn/gecode/tags/release-3.6.0
+#    SVN_USERNAME anonymous
+#    SVN_PASSWORD user@gmail.com
+    URL http://www.gecode.org/download/gecode-3.7.1.tar.gz
     CONFIGURE_COMMAND ./configure CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j${JOBS} INSTALL_COMMAND make install
+    BUILD_COMMAND make -j 2
+    INSTALL_COMMAND make install
   )
 endif()
 
