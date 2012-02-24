@@ -1,6 +1,7 @@
 #ifndef __CPREL_CPREL_GRELATION_HH__
 #define __CPREL_CPREL_GRELATION_HH__
 
+#include <exception>
 #include <boost/shared_ptr.hpp>
 #include <bdddomain/tuple.hh>
 #include <bdddomain/perm-descriptor.hh>
@@ -17,15 +18,51 @@ namespace MPG {
    */
 
   /// Exception indicating invalid stream containing relation
-  struct InvalidRelationSource : virtual ExceptionBase {};
+  struct InvalidRelationSource : public Exception {
+    /// Initialize with location \a l
+    InvalidRelationSource(const char* l);
+  };
+  inline
+  InvalidRelationSource::InvalidRelationSource(const char* l)
+  : Exception(l,"The source relation is invalid") {}
+
   /// Exception indicating invalid arity according to configuration
-  struct InvalidAritySource : virtual ExceptionBase {};
+  struct InvalidAritySource : public Exception {
+    /// Initialize with location \a l
+    InvalidAritySource(const char* l);
+  };
+  inline
+  InvalidAritySource::InvalidAritySource(const char* l)
+  : Exception(l,"The arity of the source relation is invalid") {}
+  
   /// Exception indicating invalid projection
-  struct InvalidProjection : virtual ExceptionBase {};
+  struct InvalidProjection : public Exception {
+    /// Initialize with location \a l
+    InvalidProjection(const char* l);
+  };
+
+  inline
+  InvalidProjection::InvalidProjection(const char* l)
+  : Exception(l,"The projection is invalid") {}
+
   /// Exception indicating invalid join
-  struct InvalidJoin: virtual ExceptionBase {};
-  /// Exception indicating invalid follow
-  struct InvalidFollow: virtual ExceptionBase {};
+  struct InvalidJoin : public Exception {
+    /// Initialize with location \a l
+    InvalidJoin(const char* l);
+  };
+  inline
+  InvalidJoin::InvalidJoin(const char* l)
+  : Exception(l,"The join is invalid") {}
+ 
+  /// Exception indicating invalid join
+  struct InvalidFollow : public Exception {
+    /// Initialize with location \a l
+    InvalidFollow(const char* l);
+  };
+  inline
+  InvalidFollow::InvalidFollow(const char* l)
+  : Exception(l,"The follow is invalid") {}
+ 
 
   namespace VarImpl {
     class RelationImpl;

@@ -2,11 +2,19 @@
 #define __CPREL_BDDDOMAIN_EXCEPTION_HH__
 
 #include <exception>
-#include <boost/exception/all.hpp>
+
+// The implementation of this file was taken from the gecode sources.
 
 namespace MPG {
-/// Exception base class
-struct ExceptionBase : virtual std::exception, virtual boost::exception {};
-typedef boost::error_info<struct tag_errno_code,int> errno_code;
+  class Exception : public std::exception {
+  private:
+    static const int li_max = 127;
+    char li[li_max+1];
+  public:
+    /// Initialize with location \a l and information \a i
+    Exception(const char* l, const char* i) throw ();
+    /// Return information
+    virtual const char* what(void) const throw();
+  };
 }
 #endif
