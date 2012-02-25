@@ -279,9 +279,10 @@ namespace MPG {
   /*
    * Non member functions
    */ 
-  GRelation create(const std::vector<Tuple>& dom) {
+  GRelation create(int arity, const std::vector<Tuple>& dom) {
     std::vector<Tuple>::const_iterator c = dom.begin();
-    GRelation r(c->arity());
+    GRelation r(arity);
+    /// \todo use range loop
     for (; c != dom.end(); ++c) r.add(*c);
     return r;
   }
