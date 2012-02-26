@@ -12,14 +12,14 @@ namespace MPG {
     assert(Limits::checkSafeArity(arity) && 
            "The manager was not configured to support this arity");
   }
-
+  /*
   Tuple::Tuple(const std::initializer_list<int> l)
     : arity_(l.size()) {
     assert(Limits::checkSafeArity(l.size()) && 
            "The manager was not configured to support this arity");
     data_ = encode(l);
   }
-
+  */
   Tuple::Tuple(const Tuple& t)
     : data_(t.data_), arity_(t.arity_) {
     // t is a constructed object so the checks on it were already

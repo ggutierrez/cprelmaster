@@ -1,3 +1,4 @@
+#include <sstream>
 #include <bdddomain/grelation.hh>
 #include <bdddomain/rel-impl.hh>
 
@@ -104,10 +105,7 @@ namespace MPG {
       perm_descriptor;
     
     if (!desc.valid(arity()))
-      throw InvalidPermDescriptor()
-	<< errno_code(errno)
-	<< perm_descriptor("Invalid permutation description used at: GRelation::permute");
-    
+      throw InvalidPermDescriptor("GRelation::permute");
     return permute(desc.getPerm());
   }
    
@@ -144,9 +142,7 @@ namespace MPG {
       invalid_join;
 
     if (arity() < j || r.arity() < j)
-      throw InvalidJoin()
-		  << errno_code(errno)
-		  << invalid_join("There are not enough columns for the join");
+      throw InvalidJoin("There are not enough columns for the join");
 
     return
       GRelation(
@@ -173,14 +169,12 @@ namespace MPG {
       projection;
 
     if(p <= 0 || p > arity()) {
-      throw InvalidProjection()
-        << errno_code(errno)
-        << projection("Invalid columns to project on");
+      throw InvalidProjection("Invalid columns to project on");
     }
     return
       GRelation(
-		Impl(new RelationImpl(pimpl_->project(p)))
-		);
+        Impl(new RelationImpl(pimpl_->project(p)))
+		  );
   }
 
   /*
@@ -301,9 +295,7 @@ namespace MPG {
       invalid_source;
 
     if (arity > Limits::arity)
-      throw InvalidAritySource()
-        << errno_code(errno)
-        << invalid_source("Invalid arity to read the relation");
+      throw InvalidAritySource("Invalid arity to read the relation");
     /*
       if (!is.good() || is.fail()) {
       throw InvalidRelationSource()

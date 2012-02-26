@@ -10,7 +10,7 @@ namespace MPG { namespace VarImpl {
       std::vector<int> vars(Limits::bitsPerInteger,-1);
 
       for (int i = (1 << Limits::bbv); i--;) {
-	vars[i] = (i << Limits::ba) + c;
+        vars[i] = (i << Limits::ba) + c;
       }
       std::reverse(begin(vars), end(vars));
       return vars;
@@ -36,7 +36,7 @@ namespace MPG { namespace VarImpl {
       indices.reserve(size);
       std::for_each(begin(c), end(c),
 		    [&indices](int e) {
-		      const auto& i = bddIndices(e);
+          const auto& i = bddIndices(e);
 		      std::copy(begin(i), end(i), std::back_inserter(indices));
 		    });
       assert(size == indices.size());
@@ -55,10 +55,10 @@ namespace MPG { namespace VarImpl {
       BDDvector vars(c * Limits::bitsPerInteger);
       int i = 0;
       for (int j = 0; j < c; j++) {
-	for (auto v :  bddIndices(j)) {
-	  vars[i] = factory().bddVar(v);
-	  i++;
-	}
+        for (auto v :  bddIndices(j)) {
+          vars[i] = factory().bddVar(v);
+          i++;
+        }
       }
       return r.PickOneMinterm(vars);
     }

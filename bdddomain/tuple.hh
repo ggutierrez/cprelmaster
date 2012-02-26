@@ -4,7 +4,7 @@
 #include <cassert>
 #include <vector>
 #include <iostream>
-#include <initializer_list>
+//#include <initializer_list>
 #include <utility>
 #include <type_traits>
 #include <bdddomain/manager.hh>
@@ -24,7 +24,6 @@ namespace MPG {
       purpose.
     */
     class RelationImpl;
-    class RelationImplIter;
   }
   /**
    * \brief Class to abstract a tuple in a relation
@@ -85,7 +84,7 @@ namespace MPG {
      * The constructor is not explicit to encourage conversion from initializer
      * lists to tuples.
      */
-    Tuple(std::initializer_list<int> l);
+    //Tuple(std::initializer_list<int> l);
     //template <typename C>
     //Tuple(const C& c);
     /// Copy constructor

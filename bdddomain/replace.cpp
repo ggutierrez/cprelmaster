@@ -52,7 +52,7 @@ namespace MPG { namespace VarImpl {
       };
     };
     
-    BDD replace(const std::vector<std::pair<int,int>>& pairing, const BDD& r) {
+    BDD replace(const std::vector<std::pair<int,int> >& pairing, const BDD& r) {
       BDDPairing p;
       // elements in pairing are columns, first we need to get those
       // columns in terms of BDD variables.
@@ -82,7 +82,7 @@ namespace MPG { namespace VarImpl {
         }
       }
       //std::cout << "Last: " << last << " variables: " << bddVars << std::endl;
-      assert(static_cast<unsigned int>(last) == bddVars  && "Unexpected size for swapping");
+      assert(last == bddVars  && "Unexpected size for swapping");
       return r.SwapVariables(oldVars,newVars);
     }
   }

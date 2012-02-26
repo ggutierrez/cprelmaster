@@ -18,17 +18,6 @@ find_package(Compiler)
 ##########################################################################
 find_package(System)
 ##########################################################################
-# Cudd library
-##########################################################################
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cudd-2.4.2/mtr")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cudd-2.4.2/epd")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cudd-2.4.2/st")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cudd-2.4.2/util")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cudd-2.4.2/cudd")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cudd-2.4.2/obj")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/cudd-2.4.2")
-add_subdirectory(cudd-2.4.2)
-##########################################################################
 # Boost
 ##########################################################################
 set(BOOST_COMPONENTS)

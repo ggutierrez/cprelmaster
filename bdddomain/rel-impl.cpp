@@ -170,14 +170,14 @@ namespace MPG { namespace VarImpl {
       
       std::vector<std::pair<int,int>> replacement(Limits::arity);
       for (int i = 0; i < arity_; i++) {
-	replacement[i] = {i,i+n};
+	replacement[i] = std::make_pair(i,i+n);
       }
       for (int i = arity_; i < Limits::arity - n; i++) {
-	replacement[i] = {i,i};
+	replacement[i] = std::make_pair(i,i);
       }
       int j = 0;
       for (int i = Limits::arity - n; i < Limits::arity; i++, j++) {
-	replacement[i] = {i, j};
+	replacement[i] = std::make_pair(i, j);
       }
       
       return RelationImpl(VarImpl::replace(replacement,bdd_), arity_ + n);

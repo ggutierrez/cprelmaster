@@ -12,16 +12,25 @@ if (NOT KNOWN_TO_WORK)
   message(WARNING "The compiler being used has not been tested.")
 endif()
 
-# the compiler should implement part of the C++11 standard
+# We need to check the existance of some flags in the compiler.
 include(CheckCXXCompilerFlag)
 
+# the compiler should implement part of the C++11 standard
 check_cxx_compiler_flag("-std=c++0x" C0X_SUPPORT)
 if(C0X_SUPPORT)
 #  message(STATUS "CXX has c++0x support")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 else()
-  message(FATAL_ERROR "c++0x capable compiler is needed to build this project at this time")
+  message(WARNING "c++0x capable compiler is needed to build this project at this time")
 endif()
+
+check_cxx_compiler_flag("-stdlib=libc++" LIBCXX_SUPPORT)
+if(LIBCXX_SUPPORT)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+else()
+  message(WARNING "Not using libc++")
+endif()
+
 
 check_cxx_compiler_flag(-Wall FLAG_WALL)
 if(FLAG_WALL)
