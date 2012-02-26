@@ -74,14 +74,11 @@ namespace MPG { namespace VarImpl {
      * Modification
      */
     void RelationImpl::add(const Tuple& t) {
-      assert(arity_ == t.arity());
       BDD et = t.getBDD();
       bdd_ |= et;
-
     }
 
     void RelationImpl::remove(const Tuple& t) {
-      assert(arity_ == t.arity());
       BDD et = t.getBDD();
       bdd_ &= !et;
     }
@@ -325,7 +322,7 @@ namespace MPG { namespace VarImpl {
      */
     Tuple RelationImpl::pickOneTuple(void) const {
       BDD tupleRepr = VarImpl::oneTuple(arity_,bdd_);
-      return Tuple(tupleRepr,arity_);
+      return Tuple(tupleRepr);
     }
    
   }

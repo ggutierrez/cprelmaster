@@ -304,13 +304,13 @@ namespace MPG {
   };
 
     /**
-     * \brief Creates a relation with the elements contained in \a dom.
+     * \brief Creates a relation of arity \a arity with the elements contained in \a dom.
      * \ingroup GRelation
      *
-     * The arity of the created relation corresponds to the number of elements of the
-     * provided tuples. All the tuples are assumed to be of the same arity.
+     * \warn It is responsability of the callee to ensure that the tuples are of the same arity.
+     * That condition is not checked.
      */
-    GRelation create(const std::vector<Tuple>& dom);
+    GRelation create(int arity, const std::vector<Tuple>& dom);
 
     /**
      * \brief Creates a full relation of arity \a a.

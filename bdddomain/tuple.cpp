@@ -8,36 +8,21 @@ using std::vector;
 namespace MPG {
   using namespace VarImpl;
 
-  Tuple::Tuple(BDD data, int arity) : data_(data), arity_(arity) {
-    assert(Limits::checkSafeArity(arity) && 
-           "The manager was not configured to support this arity");
-  }
-  /*
-  Tuple::Tuple(const std::initializer_list<int> l)
-    : arity_(l.size()) {
-    assert(Limits::checkSafeArity(l.size()) && 
-           "The manager was not configured to support this arity");
-    data_ = encode(l);
-  }
-  */
+  Tuple::Tuple(BDD data) : data_(data) {}
+
   Tuple::Tuple(const Tuple& t)
-    : data_(t.data_), arity_(t.arity_) {
+    : data_(t.data_) {
     // t is a constructed object so the checks on it were already
     // performed.
   }
 
   Tuple::~Tuple(void) {}
 
-  Tuple& Tuple::operator = (const Tuple&) {
-    assert(false && "This method has not been implemented");
-    return *this;
-  }
-
   bool Tuple::operator == (const Tuple& t) const {
-    return arity_ == t.arity_ ? (data_ == t.data_) : false;
+    return data_ == t.data_;
   }
 
-  BDD Tuple::encode(int p, int a) {
+  BDD Tuple::encodeElement(int p, int a) {
     assert(Limits::checkSafeValue(p) &&
            "The manager was not configured to support this value");
     assert(Limits::checkSafeArity(a) && 
@@ -59,50 +44,36 @@ namespace MPG {
     return data_;
   }
 
-  vector<int> Tuple::value(void) const {
-    std::vector<int> tuple(arity_,-1);
-    typedef std::vector<std::vector<std::pair<int,int>>> branch_contents;
+  vector<int> Tuple::value(int arity) const {
+    std::vector<int> tuple(arity,-1);
+    typedef std::vector<std::vector<std::pair<int,int> > > branch_contents;
     auto f = [&](const branch_contents& r) {
       
-      assert(static_cast<unsigned int>(arity_) < r.size() && "Unexpected branch length");
+      assert(static_cast<unsigned int>(arity) < r.size() && "Unexpected branch length");
       
-      for (auto i = arity_; i--;) {
-	const auto& domainI = r.at(i);
-	assert(domainI.size() == 1 &&
-	       "A range in the representation of a tuple");
-	const auto& elem = domainI.at(0);
-	assert(elem.first == elem.second &&
-	       "A range in the representation of a tuple");
-	tuple[arity_ -1 - i] = elem.first;
+      for (auto i = arity; i--;) {
+        const auto& domainI = r.at(i);
+        assert(domainI.size() == 1 &&
+               "A range in the representation of a tuple");
+        const auto& elem = domainI.at(0);
+        assert(elem.first == elem.second &&
+               "A range in the representation of a tuple");
+        tuple[arity -1 - i] = elem.first;
       }
     };
     traverseSet(factory(), data_, f);
     return tuple;
   }
 
-  std::string TupleIO::curr_value_separator_ = ",";
-  std::string TupleIO::curr_start_ = "[";
-  std::string TupleIO::curr_end_ = "]";
-
-  std::ostream& operator<< (std::ostream& os, const TupleIO& f) {
-    TupleIO::curr_value_separator_ = f.value_separator_;
-    TupleIO::curr_start_ = f.start_;
-    TupleIO::curr_end_ = f.end_;
-    return os;
-  }
-
-  std::ostream& operator << (std::ostream& os, const Tuple& t) {
-    os << TupleIO::curr_start_;
-    const auto& v = t.value();
+  void Tuple::output(std::ostream &os, int arity, char sep, char op, char cl) const {
+    const auto& v = value(arity);
+    os << op;
     for (auto e = begin(v); e != end(v);) {
       os << *e;
       ++e;
       if (e != end(v))
-	os << TupleIO::curr_value_separator_;
+        os << sep;
     }
-    os << TupleIO::curr_end_;
-    return os;
-
+    os << cl;
   }
-
 }
