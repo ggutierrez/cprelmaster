@@ -1,3 +1,5 @@
+# The following variables are exported:
+# REPR_HDRS : the header files that need to be included when using this library
 ##########################################################################
 # Find Cudd library
 ##########################################################################
@@ -66,13 +68,31 @@ set(BDDDOMAIN_SRCS
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain cudd mtr epd st util obj)
 
+add_subdirectory(tests)
+
 ##########################################################################
 # BDDDomain Installation
 ##########################################################################
 install(TARGETS bdddomain
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
-install(DIRECTORY bdddomain/ DESTINATION include/bdddomain
+  install(DIRECTORY . DESTINATION include/bdddomain
   FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
 
-add_subdirectory(tests)
+##########################################################################
+# Cudd Installation
+##########################################################################
+install(FILES 
+  ${source_dir}/cudd/libcudd.a
+  ${source_dir}/obj/libobj.a
+  ${source_dir}/util/libutil.a
+  ${source_dir}/epd/libepd.a
+  ${source_dir}/st/libst.a
+  ${source_dir}/mtr/libmtr.a
+  DESTINATION lib)
+
+file(GLOB_RECURSE CUDD_INSTALL_HDRS FOLLOW_SYNLINKS ${source_dir}/include/*.h)
+foreach(file ${CUDD_INSTALL_HDRS})
+  get_filename_component(CUDD_INCLUDE ${file} REALPATH)
+  install(FILES ${CUDD_INCLUDE} DESTINATION include)
+endforeach()
