@@ -1,8 +1,8 @@
 #ifndef __CPREL_CPREL_GRELATION_HH__
 #define __CPREL_CPREL_GRELATION_HH__
 
-#include <exception>
 #include <boost/shared_ptr.hpp>
+#include <bdddomain/exception.hh>
 #include <bdddomain/tuple.hh>
 #include <bdddomain/perm-descriptor.hh>
 
@@ -98,13 +98,13 @@ namespace MPG {
     friend class GRelationIter;
     typedef boost::shared_ptr<VarImpl::RelationImpl> Impl;
     Impl pimpl_; ///> Relation storage
-    /// Avoid default construction
-    GRelation(void);
     /// Constructor taking an implementation
     explicit GRelation(Impl impl);
   public:
     /// \name Constructors, destructors and assignement
     //@{
+    /// Avoid default construction
+    GRelation(void) = delete;
     /// Constructor for an empty relation of arity \a a
     explicit GRelation(int a);
     /// Copy constructor

@@ -58,12 +58,12 @@ set(BDDDOMAIN_SRCS
  manager.cpp manager.hh
  encoding.cpp encoding.hh
  abstract.cpp replace.cpp 
- exception.hh
+ exception.hh exception.cpp
  bdd.hh bdd-print.cpp bdd-visitor.hpp
  perm-descriptor.hh rel-impl.cpp rel-impl.hh 
  tuple.cpp tuple.hh
  grelation.cpp grelation.hh 
- )
+)
 
 add_library(bdddomain ${BDDDOMAIN_SRCS})
 target_link_libraries(bdddomain cudd mtr epd st util obj)
@@ -96,3 +96,7 @@ foreach(file ${CUDD_INSTALL_HDRS})
   get_filename_component(CUDD_INCLUDE ${file} REALPATH)
   install(FILES ${CUDD_INCLUDE} DESTINATION include)
 endforeach()
+
+install(FILES 
+  ${source_dir}/obj/cuddObj.hh
+  DESTINATION include/obj)
