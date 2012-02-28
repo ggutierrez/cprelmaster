@@ -18,7 +18,7 @@ namespace MPG {
    */
 
   /// Exception indicating invalid stream containing relation
-  struct InvalidRelationSource : public Exception {
+   struct InvalidRelationSource : public Exception {
     /// Initialize with location \a l
     InvalidRelationSource(const char* l);
   };
@@ -53,7 +53,7 @@ namespace MPG {
   inline
   InvalidJoin::InvalidJoin(const char* l)
   : Exception(l,"The join is invalid") {}
- 
+
   /// Exception indicating invalid join
   struct InvalidFollow : public Exception {
     /// Initialize with location \a l
@@ -62,12 +62,12 @@ namespace MPG {
   inline
   InvalidFollow::InvalidFollow(const char* l)
   : Exception(l,"The follow is invalid") {}
- 
 
   namespace VarImpl {
+    // Forward declaration of the implementation for PIMPL
     class RelationImpl;
   }
-
+  // Forward declaration of the iterator class for the friend relation
   class GRelationIter;
 
   /**
@@ -93,8 +93,8 @@ namespace MPG {
    * and \f$\mathcal{U}=\{x: 0 \leq x \leq k\} \f$ for an arbitrary
    * large \f$k\f$.
    */
-  class GRelation {
-  private:
+   class GRelation {
+   private:
     friend class GRelationIter;
     typedef boost::shared_ptr<VarImpl::RelationImpl> Impl;
     Impl pimpl_; ///> Relation storage
@@ -111,8 +111,8 @@ namespace MPG {
     GRelation(const GRelation& r);
     /// Assignment
     GRelation& operator=(GRelation& right);
+    /// \todo: see if this is really necessary
     void become(const GRelation& other);
-
     /// Destructor
     ~GRelation(void);
     /// Constructs the relation \f$R=\mathcal{U}_{a}\f$
@@ -124,30 +124,35 @@ namespace MPG {
      * \brief Adds tuple \a t to the relation. If \f$ t \in this \f$ the relation
      * remains unchanged.
      */
-    void add(const Tuple& t);
+     void add(const Tuple& t);
     /**
-     * \brief Adds the tuples contained in \a s to the relation.
+     * \brief Adds the tuples iterated by s to the relation.
      */
-    void add(const std::vector<Tuple>& s);
+     template <typename C>
+     void add(const C& c) {
+      for (const Tuple& t : c) {
+        add(t);
+      } 
+     }
     /**
      * \brief Union of relations: \f$ this = this \cup r \f$.
      */
-    void unionAssign(const GRelation& r);
+     void unionAssign(const GRelation& r);
     /**
      * \brief Difference of relations: \f$ this = this \setminus r \f$.
      */
-    void differenceAssign(const GRelation& r);
+     void differenceAssign(const GRelation& r);
     //@}
     /// \name Set operations
     //@{
     /// Computes \f$ this \setminus r \f$
-    GRelation difference(const GRelation& r) const;
+     GRelation difference(const GRelation& r) const;
     /// Computes \f$ this \cap r \f$
-    GRelation intersect(const GRelation& r) const;
+     GRelation intersect(const GRelation& r) const;
     /// Computes \f$ this \cup r \f$
-    GRelation Union(const GRelation& r) const;
+     GRelation Union(const GRelation& r) const;
     /// Computes \f$ \overline{this}\f$
-    GRelation complement(void) const;
+     GRelation complement(void) const;
     //@}
     /// \name Column permutation
     //@{
@@ -157,36 +162,36 @@ namespace MPG {
      * \warning The permutation descriptor has to be valid for the relation. If it
      * is not then a InvalidPermDescriptor exception is thrown.
      */
-    GRelation permute(const std::vector<std::pair<int,int>>& desc) const;
+     GRelation permute(const std::vector<std::pair<int,int>>& desc) const;
     /**
      * \brief Computes the permutation of \a this according to \a desc.
      *
      * \warning The permutation descriptor has to be valid for the relation. If it
      * is not then a InvalidPermDescriptor exception is thrown.
      */
-    GRelation permute(const PermDescriptor& desc) const;
+     GRelation permute(const PermDescriptor& desc) const;
     /**
      * \brief Computes the relation resulting by shifting all the columns in \a r
      * \a n possitions to the right.
      *
      * The first \a n columns of \a r does not appear in the final relation.
      */
-    GRelation shiftRight(int n) const;
+     GRelation shiftRight(int n) const;
     //@}
     /// \name Cross product
     //@{
     /**
      * \brief Computes \f$ \mathcal{U}_n \times this\f$.
      */
-    GRelation timesULeft(int n) const;
+     GRelation timesULeft(int n) const;
     /**
      * \brief Computes \f$ this \times \mathcal{U}_n \f$.
      */
-    GRelation timesURight(int n) const;
+     GRelation timesURight(int n) const;
     /**
      * \brief Computes \f$ this \times r \f$
      */
-    GRelation times(const GRelation& r) const;
+     GRelation times(const GRelation& r) const;
     //@}
     /// \name Relational algebra operations
     //@{
@@ -196,13 +201,13 @@ namespace MPG {
      * This is, the result of joining the two relations on the \a j right most
      * columns of \a this and the \a j left most columns of \a r.
      */
-    GRelation join(int j,const GRelation& r) const;
+     GRelation join(int j,const GRelation& r) const;
     /**
      * \brief Returns: \f$ \mathit{this}_{\smile_{f}}r \f$.
      *
      * \todo documentation
      */
-    GRelation follow(int f,const GRelation& r) const;     
+     GRelation follow(int f,const GRelation& r) const;     
     /**
      * \brief Returns: \f$ \Pi_{p} this \f$.
      *
@@ -211,7 +216,7 @@ namespace MPG {
      * \warning Throws an exception InvalidProjection if \a p is not a valid column
      * in the relation.
      */
-    GRelation project(int p) const;
+     GRelation project(int p) const;
     //@}
     /// \name Quantification
     //@{
@@ -221,14 +226,14 @@ namespace MPG {
      *
      * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
      */
-    GRelation exists(int c) const;
+     GRelation exists(int c) const;
     /**
      * \brief Returns the relation resulting from uniquely quantifying on column
      * \a c
      *
      * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
      */
-    GRelation unique(int c) const;
+     GRelation unique(int c) const;
     /**
      * \brief Returns the relation resulting from uniquely quantifying on all the
      * columns in \a c.
@@ -237,14 +242,14 @@ namespace MPG {
      * \{0,\ldots,\text{size}(c)-1\}}: 0 \leq c[i] <
      * \text{arity}(\text{this})\f$
      */
-    GRelation unique(const std::vector<int>& c) const;
+     GRelation unique(const std::vector<int>& c) const;
     /**
      * \brief Returns the relation resulting from universaly quantifying on column
      * \a c
      *
      * \param c a column: \f$ 0 \leq c < \text{arity}(\text{this})\f$
      */
-    GRelation forall(int c) const;
+     GRelation forall(int c) const;
     //@}
 
     /**
@@ -259,24 +264,24 @@ namespace MPG {
     /// \name Test operations
     //@{
     /// Tests \f$ this \subseteq r \f$
-    bool subsetEq(const GRelation& r) const;
+     bool subsetEq(const GRelation& r) const;
     /// Tests \f$ this \supset r \f$
-    bool superset(const GRelation& r) const;
+     bool superset(const GRelation& r) const;
     /// Tests \f$ this \cap r = \emptyset \f$
-    bool disjoint(const GRelation& r) const;
+     bool disjoint(const GRelation& r) const;
     /// Tests whether this represents the same relation as \a r
-    bool eq(const GRelation& r) const;
+     bool eq(const GRelation& r) const;
     /// Tests whther the relation is empty
-    bool empty(void) const;
+     bool empty(void) const;
     /// Tests whther the relation represents the universe
-    bool universe(void) const;
+     bool universe(void) const;
     //@}
     /// \name Relation information
     //@{
     /// Returns the arity (i.e. number of columns) of the relation
-    int arity(void) const;
+     int arity(void) const;
     /// Returns the cardinality (i.e. number of tuples) of the relation
-    double cardinality(void) const;
+     double cardinality(void) const;
     //@}
     /// \name Constant relations
     //@{
@@ -291,17 +296,17 @@ namespace MPG {
      * The only guarantee on the returned tuple is that it belongs to
      * the relation.
      */
-    Tuple pickOneTuple(void) const;
+     Tuple pickOneTuple(void) const;
     /// type definition for the functor that has to be passed to the visit methos
-    typedef void (*Functor)(const std::vector<int>&);
+     typedef void (*Functor)(const std::vector<int>&);
     /// Visit every tuple in a relation and applies functor f on it. 
-    void visit(Functor f);
+     void visit(Functor f);
     //@} 
     /// \name Output
     //{@
-    void print(std::ostream& os) const;
+     void print(std::ostream& os) const;
     //@}
-  };
+   };
 
     /**
      * \brief Creates a relation of arity \a arity with the elements contained in \a dom.
@@ -310,13 +315,13 @@ namespace MPG {
      * \warn It is responsability of the callee to ensure that the tuples are of the same arity.
      * That condition is not checked.
      */
-    GRelation create(int arity, const std::vector<Tuple>& dom);
+     GRelation create(int arity, const std::vector<Tuple>& dom);
 
     /**
      * \brief Creates a full relation of arity \a a.
      * \ingroup GRelation
      */
-    GRelation create_full(int a);
+     GRelation create_full(int a);
 
     /**
      * \brief Creates a relation of arity \a arity from the contents read from \a is.
@@ -338,7 +343,7 @@ namespace MPG {
      GRelation ub = read(input,3);
      * \endcode
      */
-    GRelation read(std::istream& is, int arity);
+     GRelation read(std::istream& is, int arity);
 
     /**
      * \brief Outputs relation \a r to \a os
@@ -347,15 +352,15 @@ namespace MPG {
      * \todo The implementation of this function relies on an iterator on the tuples
      * of \a r. I should offer a better way to print the domain in a compressed way
      */
-    std::ostream& operator<< (std::ostream& os, const GRelation& r);
+     std::ostream& operator<< (std::ostream& os, const GRelation& r);
 
     /**
      * \brief Iostream printing
      *
      * Basic properties the influence ground relation output.
      */
-    class GRelationIO {
-    private:
+     class GRelationIO {
+     private:
       /// String output when starting the printing
       std::string start_;
       /// String output at the end
@@ -380,8 +385,8 @@ namespace MPG {
     public:
       /// Constructor
       GRelationIO(const char* relStart, const char* relEnd, const char* valStart,
-		  const char* valEnd)
-	: start_(relStart), end_(relEnd), value_start_(valStart), value_end_(valEnd) {}
+                  const char* valEnd)
+      : start_(relStart), end_(relEnd), value_start_(valStart), value_end_(valEnd) {}
       friend std::ostream& operator<< (std::ostream& os, const GRelation& r);
       friend std::ostream& operator<< (std::ostream& os, const GRelationIO& r);
     };

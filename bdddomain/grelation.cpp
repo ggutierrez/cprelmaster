@@ -46,11 +46,6 @@ namespace MPG {
     pimpl_->add(t);
   }
 
-  void GRelation::add(const std::vector<Tuple>& s) {
-    std::for_each(s.begin(), s.end(),
-		  [=](const Tuple& t) { pimpl_->add(t); });
-  }
-
   void GRelation::unionAssign(const GRelation &r) {
     pimpl_->add(*(r.pimpl_));
   }
