@@ -36,15 +36,11 @@ add_library(gecodecprel ${CPREL_SRCS})
 target_link_libraries(gecodecprel bdddomain ${Gecode_LIBRARIES})
 
 #########################################################################
-# Installation                                                           #
-##########################################################################
+# Installation                                                           
+#########################################################################
+# The library is installed in the same place where gecode libraries were found
 install(TARGETS gecodecprel
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-install(DIRECTORY cprel/ DESTINATION include/cprel
+  LIBRARY DESTINATION ${GECODE_LIBS_HOME}
+  ARCHIVE DESTINATION ${GECODE_LIBS_HOME})
+install(DIRECTORY . DESTINATION ${GECODE_INCLUDE_DIR}/cprel
         FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")
-#install(TARGETS gecodecptuple
-#  LIBRARY DESTINATION lib
-#  ARCHIVE DESTINATION lib)
-#install(DIRECTORY cptuple/ DESTINATION include/cptuple
-#        FILES_MATCHING PATTERN "*.hh" PATTERN "*.hpp")

@@ -4,6 +4,8 @@
 # GECODE_FOUND : boolean indicating wether gecode was found or not.
 # GECODE_VERSION : version of gecode that was found
 # GECODE_CPREL_SUPPORT : boolean indicating if gecode has support for cprel
+# GECODE_LIBS_HOME : Directory where gecode libraries were found
+# GECODE_INCLUDE_DIR : Girectory where gecode headers were found
 
 
 # Look for the header file
@@ -20,6 +22,7 @@ endif()
 
 if(GECODE_INCLUDE_DIR AND GECODE_LIBRARY AND GECODE_SUPPORT_LIBRARY)
   set(GECODE_FOUND Yes)
+  get_filename_component(GECODE_LIBS_HOME ${GECODE_LIBRARY} PATH)
 endif()
 
 if(GECODE_FOUND)
