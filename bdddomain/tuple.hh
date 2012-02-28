@@ -134,10 +134,7 @@ namespace MPG {
      * \a c can be any container in which we can iterate with a random access iterator.
      */
     template <typename C>
-     Tuple(const C& c,  
-           typename std::enable_if<
-           std::is_integral< typename C::iterator::value_type>::value
-           >::type* = 0 );
+    Tuple(const C& c);
     /// Equality test
      bool operator == (const Tuple& t) const;
     /// Destructor
@@ -161,6 +158,11 @@ namespace MPG {
 
   template <typename C>
    BDD Tuple::encode(const C& c) const {
+    /*
+    // todo: this check has to be made on the iterated type
+    static_assert(Traits::validTupleElement<C>::value,
+                  "Invalid type for a tuple element");
+    */
     BDD f = VarImpl::one();
     int col = c.size()-1;
     int i = 0;
@@ -172,10 +174,7 @@ namespace MPG {
   }
 
   template <typename C>
-  Tuple::Tuple(const C& c,
-               typename std::enable_if<
-               std::is_integral< typename C::iterator::value_type>::value
-               >::type*) 
+  Tuple::Tuple(const C& c) 
   : data_(encode(c)) {
     assert(c.size() <= static_cast<unsigned int>(VarImpl::Limits::arity) &&
            "The manager was not configured to support this arity");

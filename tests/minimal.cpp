@@ -16,7 +16,8 @@ public:
   MinimalTest(void)  {
     GRelation lb(2);// lb.add(make_Tuple(0,0));
     GRelation ub(2);
-    ub.add({{1,3}, {4,5}, {8,2}, {6,5}});
+    vector<Tuple> ubData = {{1,3}, {4,5}, {8,2}, {6,5}};
+    ub.add(ubData);
 
     r = CPRelVar(*this,lb,ub);
     //    std::cerr << "Relation: " << r << std::endl;
