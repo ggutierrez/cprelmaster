@@ -14,7 +14,7 @@ namespace MPG {
    *
    * Tuples are the abstraction for the elements of relations.
    */
-  namespace VarImpl {
+   namespace VarImpl {
     /*
       These forward declarations are needed because of the friend relation between
       RelationImpl and RelationImplIter with the Tuple class. I do not like declaring
@@ -22,27 +22,42 @@ namespace MPG {
       would be better to provide a conversion operator from Tuple to DdNode for this
       purpose.
     */
-    class RelationImpl;
-  }
+      class RelationImpl;
+    }
   /**
    * \brief Traits for valid tuple elements.
    */   
-  namespace Traits {
+   namespace Traits {
     /*
       The only valid elements in tuples are integers. This trait is used
       during the instantiation of the makeTuple function to check that
       property.
     */
     template <typename T>
-    struct validTupleElement {
-      static const bool value = false;
-    };
-
+      struct validTupleElement {
+        static const bool value = false;
+      };
+    /// validTupleElement specialization for int
     template <>
-    struct validTupleElement<int> {
-      static const bool value = true;
-    };
-  }
+      struct validTupleElement<int> {
+        static const bool value = true;
+      };
+    /// validTupleElement specialization for bool  
+    template <>
+      struct validTupleElement<bool> {
+        static const bool value = true;
+      };
+    /// validTupleElement specialization for char
+    template <>
+      struct validTupleElement<char> {
+        static const bool value = true;
+      };
+    /// validTupleElement specialization for unsigned int  
+    template <>
+      struct validTupleElement<unsigned int> {
+        static const bool value = true;
+      };
+    }
   /**
    * \brief Class to abstract a tuple in a relation
    * \ingroup TupleGroup
@@ -51,8 +66,8 @@ namespace MPG {
    * arity of the tuple internally. The only state stored is the BDD in which the tuple
    * is represented. This is the reason for the arity as an argument in some operations.
    */
-  class Tuple {
-  private:
+   class Tuple {
+   private:
     friend class VarImpl::RelationImpl;
     /// Actual data container
     BDD data_;
@@ -64,7 +79,7 @@ namespace MPG {
      * \warning Throws and exception of type RepresentationOverflow if \a p cannot
      * be represented with the current manager setup.
      */
-    static BDD encodeElement(int p, int a);
+     static BDD encodeElement(int p, int a);
     /**
      * \brief Returns a BDD representing \a this
      *
@@ -72,7 +87,7 @@ namespace MPG {
      * counting of the returned BDD. For instance, to call Cudd_Ref before using
      * it and Cudd_RecursiveDeref when not needed anymore.
      */
-    BDD getBDD(void) const;
+     BDD getBDD(void) const;
     /**
      * \brief Returns a Bdd that represents all the elements in collection \a c.
      *
@@ -81,8 +96,8 @@ namespace MPG {
      * \a end iterators.
      */ 
     template <typename C>
-    BDD encode(const C& c) const;
-  public:
+     BDD encode(const C& c) const;
+   public:
     /// Avoiding Default constructor
     Tuple(void) = delete;
     /// Avoid assignement
@@ -95,7 +110,7 @@ namespace MPG {
       static_assert(true,"Cannot create an empty tuple");
       return MPG::VarImpl::zero();
     }
-
+    /// Tuple construction
     template <typename First, typename ...Rest>
     BDD makeTuple(First f, Rest ...rest) {
       static_assert(Traits::validTupleElement<First>::value,
@@ -112,28 +127,28 @@ namespace MPG {
     /// Constructs a tuple from the list of arguments \a t
     template <typename First, typename ...Rest>
     Tuple(First f, Rest ...rest)
-    : data_(makeTuple(f,rest.../*,sizeof...(rest)+1*/)) {}
+    : data_(makeTuple(f,rest...)) {}
     /**
      * \brief Construct a tuple with all the elements present in \a c.
      *
      * \a c can be any container in which we can iterate with a random access iterator.
      */
     template <typename C>
-    Tuple(const C& c,  
-          typename std::enable_if<
-            std::is_integral< typename C::iterator::value_type>::value
-            >::type* = 0 );
+     Tuple(const C& c,  
+           typename std::enable_if<
+           std::is_integral< typename C::iterator::value_type>::value
+           >::type* = 0 );
     /// Equality test
-    bool operator == (const Tuple& t) const;
+     bool operator == (const Tuple& t) const;
     /// Destructor
-    ~Tuple(void);
+     ~Tuple(void);
     /**
      * \brief Returns a vector with all the elements in the represented tuple.
      *
      * As a tuple has no arity for space reasons then this method has to take it.
      * It is the callee responsibility to ensure the arity is accurate.
      */
-    std::vector<int> value(int arity) const;
+     std::vector<int> value(int arity) const;
     /**
      * \brief Ouput the represented tuple in \a os.
      *
@@ -141,11 +156,11 @@ namespace MPG {
      * The way in which the elements are printed in the tuple can be changed by specifying different
      * values for the spearator \a sep and for the opening \a op and closing \a cl characters.
      */
-    void output(std::ostream& os, int arity, char sep = ',', char op = '[', char cl = ']') const;
-  };
+     void output(std::ostream& os, int arity, char sep = ',', char op = '[', char cl = ']') const;
+   };
 
   template <typename C>
-  BDD Tuple::encode(const C& c) const {
+   BDD Tuple::encode(const C& c) const {
     BDD f = VarImpl::one();
     int col = c.size()-1;
     int i = 0;
@@ -158,10 +173,10 @@ namespace MPG {
 
   template <typename C>
   Tuple::Tuple(const C& c,
-          typename std::enable_if<
-            std::is_integral< typename C::iterator::value_type>::value
-            >::type*) 
-    : data_(encode(c)) {
+               typename std::enable_if<
+               std::is_integral< typename C::iterator::value_type>::value
+               >::type*) 
+  : data_(encode(c)) {
     assert(c.size() <= static_cast<unsigned int>(VarImpl::Limits::arity) &&
            "The manager was not configured to support this arity");
   }
