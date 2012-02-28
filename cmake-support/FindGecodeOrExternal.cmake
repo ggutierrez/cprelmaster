@@ -5,16 +5,13 @@ find_package(Gecode)
 if(GECODE_FOUND)
   message(STATUS "Found Gecode version: ${GECODE_VERSION}")
   message(STATUS "Using gecode version: ${GECODE_VERSION}")
-  set(MIN_GECODE_REQUIRED 3.6.0)
+  set(MIN_GECODE_REQUIRED 3.7.2)
   if((${GECODE_VERSION} VERSION_EQUAL ${MIN_GECODE_REQUIRED}) OR
       (${GECODE_VERSION} VERSION_GREATER ${MIN_GECODE_REQUIRED}))
     message(STATUS "  Gecode library version is OK")
   endif()
   if(GECODE_CPREL_SUPPORT)
     message(STATUS  "  Gecode was built with support for the CPRel type of variable.")
-  endif()
-  if(GECODE_CPTUPLE_SUPPORT)
-    message(STATUS  "  Gecode was built with support for the CPTuple type of variable.")
   endif()
 endif()
 
@@ -45,10 +42,10 @@ if(NOT GECODE_CPREL_SUPPORT)
 #    SVN_REPOSITORY https://svn.gecode.org/svn/gecode/tags/release-3.6.0
 #    SVN_USERNAME anonymous
 #    SVN_PASSWORD user@gmail.com
-    URL http://www.gecode.org/download/gecode-3.7.1.tar.gz
+    URL http://www.gecode.org/download/gecode-3.7.2.tar.gz
     CONFIGURE_COMMAND ./configure CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${CONFIGURE_OPTIONS}
     BUILD_IN_SOURCE Yes
-    BUILD_COMMAND make -j 2
+    BUILD_COMMAND make
     INSTALL_COMMAND make install
   )
 endif()

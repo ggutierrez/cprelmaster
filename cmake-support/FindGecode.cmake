@@ -1,4 +1,11 @@
-#Works under the assumption than when gecode is installed at least the kernel component exists
+#Works under the assumption than when gecode is installed at least the kernel
+#  component exists
+# Exports:
+# GECODE_FOUND : boolean indicating wether gecode was found or not.
+# GECODE_VERSION : version of gecode that was found
+# GECODE_CPREL_SUPPORT : boolean indicating if gecode has support for cprel
+
+
 # Look for the header file
 find_path(GECODE_INCLUDE_DIR NAMES gecode/kernel.hh)
 find_file(GECODE_CONFIG gecode/support/config.hpp)
