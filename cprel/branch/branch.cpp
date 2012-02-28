@@ -13,8 +13,8 @@ namespace MPG { namespace CPRel { namespace Branch {
  * \brief Simple and naive brancher based on tuple inclusion and exclusion.
  * \ingroup RelBranch
  */
-class NaiveBranch : public Gecode::Brancher {
-protected:
+ class NaiveBranch : public Gecode::Brancher {
+ protected:
   /// Relation to branch on
   CPRelView x_;
   /// Simple, tuple-based relation choice
@@ -22,34 +22,35 @@ protected:
   public:
     /// Tuple to branch on
     Tuple t_;
+    /// Arity of the tuple
+    int arity_;
     /// Constructor
-    RelChoice(const NaiveBranch& b, const Tuple& t)
-      : Choice(b,2), t_(t) {}
+    RelChoice(const NaiveBranch& b, const Tuple& t, int arity)
+    : Choice(b,2), t_(t), arity_(arity) {}
     /// Returns the size of the object
     virtual size_t size(void) const {
       return sizeof(*this);
     }
     virtual void archive(Gecode::Archive& e) const {
       Choice::archive(e);
-      std::vector<int> t(t_.value());
+      std::vector<int> t(t_.value(arity_));
       // first the arity of the tuple and then the tuple itself
-      e << t_.arity();
-      for (int i = 0; i < t_.arity(); i++) {
+      e << arity_;
+      for (int i = 0; i < arity_; i++)
         e << t[i];
-      }
     }
   };
 public:
   /// Constructor for a brancher on variable \a x
   NaiveBranch(Home home, CPRelView x)
-    : Brancher(home), x_(x) {}
+  : Brancher(home), x_(x) {}
   /// Brancher posting
   static void post(Home home, CPRelView x) {
     (void) new (home) NaiveBranch(home,x);
   }
   /// Constructor for clonning
   NaiveBranch(Space& home, bool share, NaiveBranch& b)
-    : Brancher(home,share,b) {
+  : Brancher(home,share,b) {
     x_.update(home,share,b.x_);
   }
   /// Brancher copying
@@ -71,7 +72,7 @@ public:
   virtual Choice* choice(Space&) {
     //GRelationIter it(x_.unk());
     assert(!x_.unk().empty());
-    return new RelChoice(*this,x_.unk().pickOneTuple());
+    return new RelChoice(*this,x_.unk().pickOneTuple(),x_.arity());
   }
   virtual Choice* choice(const Space&, Gecode::Archive& e) {
     int arity;
@@ -83,13 +84,13 @@ public:
       t[i] = v;
     }
     Tuple x(t);
-    return new RelChoice(*this,x);
+    return new RelChoice(*this,x,arity);
   }
 
   /// Commit choice
   virtual ExecStatus commit(Space& home, const Choice& c, unsigned int a) {
     const RelChoice& ch = static_cast<const RelChoice&>(c);
-    GRelation r(ch.t_.arity());
+    GRelation r(ch.arity_);
     r.add(ch.t_);
     if (a == 0) {
 //      std::cout << "-> Brancher adding: " << r << std::endl;
@@ -109,7 +110,7 @@ public:
  * Branches on \a R by selecting a tuple in it and creating a choice point that
  * includes and excludes that tuple.
  */
-void branch(Home home, CPRelVar R) {
+ void branch(Home home, CPRelVar R) {
   using namespace CPRel::Branch;
   if (home.failed()) return;
   NaiveBranch::post(home,R);
