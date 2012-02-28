@@ -6,6 +6,7 @@
 #include <iostream>
 #include <utility>
 #include <type_traits>
+#include <iterator>
 #include <bdddomain/manager.hh>
 
 namespace MPG {
@@ -134,7 +135,15 @@ namespace MPG {
      * \a c can be any container in which we can iterate with a random access iterator.
      */
     template <typename C>
-    Tuple(const C& c);
+    Tuple(const C& c,
+          typename 
+          std::enable_if<
+            Traits::validTupleElement<typename C::value_type>::value
+          >::type* = 0
+          ) : data_(encode(c)) {
+      assert(VarImpl::Limits::checkSafeArity(c.size()) &&
+             "The manager was not configured to support this arity");
+    }
     /// Equality test
      bool operator == (const Tuple& t) const;
     /// Destructor
@@ -172,12 +181,13 @@ namespace MPG {
     }
     return f;
   }
-
+/*
   template <typename C>
   Tuple::Tuple(const C& c) 
   : data_(encode(c)) {
-    assert(c.size() <= static_cast<unsigned int>(VarImpl::Limits::arity) &&
+    assert(VarImpl::Limits::checkSafeArity(c.size()) &&
            "The manager was not configured to support this arity");
   }
+  */
 }
 #endif

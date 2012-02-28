@@ -18,5 +18,9 @@ int main(void) {
   MPG::Tuple u({5,6,7});
   u.output(cout,3);
   cout << endl;
+  /// A unary tuple
+  MPG::Tuple unary(2);
+  unary.output(cout,1);
+  cout << endl;
   return 0;
 }

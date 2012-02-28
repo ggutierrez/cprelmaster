@@ -4,8 +4,10 @@
 # GECODE_FOUND : boolean indicating wether gecode was found or not.
 # GECODE_VERSION : version of gecode that was found
 # GECODE_CPREL_SUPPORT : boolean indicating if gecode has support for cprel
+# Gecode_LIBRARIES : The gecode libraries
 # GECODE_LIBS_HOME : Directory where gecode libraries were found
 # GECODE_INCLUDE_DIR : Girectory where gecode headers were found
+
 
 
 # Look for the header file
