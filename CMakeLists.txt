@@ -41,27 +41,15 @@ add_subdirectory(bdddomain)
 ##########################################################################
 # Gecode
 ##########################################################################
-find_package(GecodeOrExternal)
+  find_package(GecodeOrExternal)
 ##########################################################################
 # Relation constraint system
 ##########################################################################
-add_subdirectory(cprel)
-##########################################################################
-# Tuple constraint system
-##########################################################################
-set(CPTUPLE_SRCS
-  cptuple/cptuple.hh
-  cptuple/var.hh
-  cptuple/varimp.cpp
-  cptuple/varimp.hh
-  cptuple/view.hh
 
-# branchers
-  cptuple/branch/branch.cpp
-)
-#add_library(gecodecptuple ${CPTUPLE_SRCS})
-#target_link_libraries(gecodecptuple bdddomain ${Gecode_LIBRARIES})
-
+if(GECODE_CPREL_SUPPORT)
+  message(STATUS "Adding cprel sources")  
+  add_subdirectory(cprel)
+endif()
 ##########################################################################
 # Uninstall
 ##########################################################################
