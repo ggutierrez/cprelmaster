@@ -33,3 +33,6 @@ endforeach()
 add_executable(minimal minimal.cpp)
 target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
+add_executable(cardinality cardinality.cpp)
+target_link_libraries(cardinality gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+

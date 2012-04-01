@@ -6,6 +6,7 @@
 #include <climits>
 
 #include <gecode/kernel.hh>
+#include <gecode/int.hh> // for cardinality constraint
 #include <gecode/set.hh> // for channel constraint
 //#include <cptuple/cptuple.hh> // for the dom constraint
 #include <rel/grelation.hh>
@@ -296,6 +297,16 @@ namespace MPG {
    * is not 1.
    */
   void channel(Gecode::Space& home, CPRelVar R, Gecode::SetVar S);
+  /**
+   * \brief Posts: \f$ |A| = B \f$
+   * \ingroup SetProp
+   *
+   * @param A a relation decision variable: \f$A\subseteq\mathcal{U}_{n}\f$
+   * @param B an integer decision variable: \f$[0..k]\f$
+   *
+   * \see MPG::CPRel::Prop::Cardinality
+   */
+  void cardinality(Gecode::Space& home, CPRelVar A, Gecode::IntVar B);
   /**
    * \brief Posts the constraint: \f$ t \in R\f$
    * \ingroup ChannelProp
