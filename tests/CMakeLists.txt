@@ -36,3 +36,6 @@ target_link_libraries(minimal gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES}
 add_executable(cardinality cardinality.cpp)
 target_link_libraries(cardinality gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
+add_executable(gcp gcp.cpp)
+target_link_libraries(gcp gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+
