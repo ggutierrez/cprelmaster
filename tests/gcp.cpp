@@ -35,8 +35,8 @@ public:
     // initialize the color mapping to contain every possible combination of colors.
     colorLeft = CPRelVar(*this,GRelation(4),colors.times(graph.times(colors)));
 
-    PermDescriptor p;
-    p.permute(3,1);
+    std::vector<std::pair<int,int> >p;
+    p.push_back({3,1});
     colorRight = CPRelVar(*this,GRelation(4),GRelation::create_full(4));
     permutation(*this,colorLeft,colorRight,p);
     

@@ -235,7 +235,7 @@ namespace MPG {
    * @see PermDescriptor
    */
   void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B,
-		   const PermDescriptor& desc);
+		   std::vector<std::pair<int,int> > desc);
   /**
    * \brief Posts the constraint: \f$ \Pi_{p} A = B \f$.
    * \ingroup RelProp

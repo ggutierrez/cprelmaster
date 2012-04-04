@@ -1,5 +1,4 @@
 #include <cprel/prop/permutation.hh>
-#include <bdddomain/perm-descriptor.hh>
 
 // The reason for this undefne statement is because CUDD defines a
 // macro with this name and this confusses gcc and clang with the fail
@@ -12,7 +11,7 @@ namespace MPG {
   using namespace CPRel;
   using namespace CPRel::Prop;
   
-  void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, const PermDescriptor& desc) {
+  void permutation(Gecode::Space& home, CPRelVar A, CPRelVar B, std::vector<std::pair<int,int> > desc) {
     if (home.failed()) return;
 
     if (A.arity() != B.arity())
@@ -39,8 +38,8 @@ namespace MPG {
     return ES_OK;
     }
     */
-    if (!desc.valid(A.arity()))
-      throw InvalidPermutation("permutation constraint (invalid especification)");
+    //if (!desc.valid(A.arity()))
+    //  throw InvalidPermutation("permutation constraint (invalid especification)");
 
     CPRelView left(A);
     CPRelView right(B);
