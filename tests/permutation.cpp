@@ -49,8 +49,8 @@ public:
     s = CPRelVar(*this,ds.first,ds.second);
 
 
-    PermDescriptor d;
-    d.permute(1,2);
+    std::vector<std::pair<int,int> > d;
+    d.push_back({1,2});
     
     //std::cout << "RelationS " << s.lub() << std::endl;
     //std::cout << "Relation----S " << s.lub().permute(d) << std::endl;
