@@ -5,6 +5,7 @@ set(EXAMPLES
   projection
   permutation
   join
+  join2
 )
 
 foreach(input ${EXAMPLES})
@@ -23,6 +24,7 @@ set(OPERATIONS
   domain
   visitor
   grel
+  permute
 )
 
 foreach(input ${OPERATIONS})
@@ -38,4 +40,7 @@ target_link_libraries(cardinality gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRAR
 
 add_executable(gcp gcp.cpp)
 target_link_libraries(gcp gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(unique-test unique-test.cpp)
+target_link_libraries(unique-test gecodecprel ${Gecode_LIBRARIES} ${Boost_LIBRARIES})
 
