@@ -5,24 +5,6 @@
 using namespace std;
 using namespace MPG;
 
-/**
- * \brief Given a relation \a r and a set of columns \a u, return the
- * subrelation that is unique by only taking into account columns in
- * u.
- *
- */
-GRelation unique(const GRelation& r, std::vector<int> u) {
-  // the size of u has to be at most the arity of r
-  set<int> columnsToQuantify;
-  for (int i = 0; i < r.arity(); i++)
-    columnsToQuantify.insert(i);
-  for (int i : u) 
-    columnsToQuantify.erase(i);
-  vector<int> q(begin(columnsToQuantify),
-                end(columnsToQuantify));
-  GRelation s = r.unique(q);
-  return s.intersect(r);
-}
 
 int main(void) {
   cout << "something" << endl;

@@ -1,3 +1,5 @@
+#include <set>
+#include <vector>
 #include <rel/grelation.hh>
 #include <bdddomain/rel-impl.hh>
 
@@ -333,6 +335,19 @@ namespace MPG {
       tuple_values.clear();
     }
     return r;
+  }
+
+  
+  GRelation unique(const GRelation& r, std::vector<int> u) {
+    std::set<int> columnsToQuantify;
+    for (int i = 0; i < r.arity(); i++)
+      columnsToQuantify.insert(i);
+    for (int i : u) 
+      columnsToQuantify.erase(i);
+    std::vector<int> q(begin(columnsToQuantify),
+                       end(columnsToQuantify));
+    GRelation s = r.unique(q);
+    return s.intersect(r);
   }
 
 

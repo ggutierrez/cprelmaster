@@ -301,9 +301,21 @@ namespace MPG {
      GRelation ub = read(input,3);
      * \endcode
      */
-    GRelation read(std::istream& is, int arity);
+  GRelation read(std::istream& is, int arity);
 
-    /**
+  /**
+   * \brief Given a relation \a r and a set of columns \a u, return the
+   * subrelation that is unique by only taking into account columns in
+   * u.
+   *
+   * This non member function uses unique quantification and
+   * internally selects the right columns to quantify on and
+   * intersects the results with the input relation. It is a more
+   * natural way of finding a subrelation which is unique.
+   */
+  GRelation unique(const GRelation& r, std::vector<int> u);
+
+  /**
      * \brief Outputs relation \a r to \a os
      * \ingroup GRelation
      *
