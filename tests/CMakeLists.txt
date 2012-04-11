@@ -18,6 +18,7 @@ endforeach()
 
 set(OPERATIONS 
   follow
+  followall
   proj
   swap
   join
