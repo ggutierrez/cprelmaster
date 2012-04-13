@@ -93,8 +93,6 @@ public:
    // the constraints
    follow(*this,r,1,s,resultF);
    intersect(*this,resultF,t,resultFALL);
-   subset(*this,resultFALL,resultF);
-
    complement(*this,s,complS);
    complement(*this,t,complT);
    follow(*this,r,1,complS,complT);
@@ -103,10 +101,6 @@ public:
   void print(std::ostream& os) const {
     os << "R" << r << endl;
     os << "S" << s << endl;
-    //os << "T" << t << endl;
-    
-    //GRelation f = r.glb().follow(1,s.glb());
-    //GRelation result = t.glb().intersect(f);
     os << "Result " << resultFALL << endl;
  }
   FollowTest(bool share, FollowTest& sp)
