@@ -83,16 +83,30 @@ public:
     pair<GRelation,GRelation> dt = domT();
     t = CPRelVar(*this,dt.first,dt.second);
 
+    int n = r.arity();
+    int m = s.arity();
+    int k = t.arity();
     int j = 2;
     int arityJoin = r.arity() + s.arity() - j;
     int arityFollow = arityJoin - j;
     
     joinResult = CPRelVar(*this, GRelation(arityJoin), GRelation::create_full(arityJoin));
-    //join(*this,r,j,s,joinResult);    
+    join(*this,r,j,s,joinResult);    
 
     followAllResult = CPRelVar(*this,GRelation(arityFollow),GRelation::create_full(arityFollow));
-    follow(*this,r,j,s,followAllResult);
+    followAll(*this,r,j,s,followAllResult);
 
+    CPRelVar u(*this,GRelation(j),GRelation::create_full(j));
+    CPRelVar times(*this,GRelation(arityJoin),GRelation::create_full(arityJoin));
+    join(*this,followAllResult,0,u,times);
+
+    CPRelVar permJoinResult(*this,GRelation(arityJoin),GRelation::create_full(arityJoin));
+    permutation(*this,joinResult,permJoinResult,permJoin(n,m,j,k));
+
+    CPRelVar permT(*this,GRelation(k),GRelation::create_full(k));
+    permutation(*this,t,permT,permC(n,m,j,k));
+    
+    branch(*this,t);
     //restrJoinAll(*this,r,j,s,t);
   }
   void print(std::ostream& os) const {
@@ -101,8 +115,8 @@ public:
     os << "S: " << s << endl;
     os << "T: " << t << endl;
 
-    os << "JoinResult: " << joinResult << endl;
-    os << "followAllResult: " << followAllResult << endl;
+    //os << "JoinResult: " << joinResult << endl;
+    //os << "followAllResult: " << followAllResult << endl;
     
 
   }
