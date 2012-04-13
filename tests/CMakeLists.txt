@@ -6,6 +6,8 @@ set(EXAMPLES
   permutation
   join
   join2
+  join3
+  followAll
 )
 
 foreach(input ${EXAMPLES})
