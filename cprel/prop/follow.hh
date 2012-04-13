@@ -64,48 +64,41 @@ public:
     return Gecode::PropCost::binary(Gecode::PropCost::LO);
   }
   /**
-   * \brief Returns the upper bound of b_ permuted in a way that the follow part
-   * is at the right.
+   * \brief Return a relation with the parts of \a b_ swapped.
+   *
+   * \a b_ has two parts: the follow part on the left and the other on
+   * the right. This method swap them.
    */
-  GRelation PBLub(void) const {
-    PermDescriptor d;
-    for (int i = 0; i < f_; i++) d.permute(i,f_+i);
-    for (int i = f_; i < b_.arity(); i++) d.permute(i,f_-i);
-    return b_.lub().permute(d);
-  }
-  GRelation TransformB(GRelation r) const {
-    PermDescriptor d;
-    for (int i = 0; i < f_; i++) d.permute(i,f_+i);
-    for (int i = f_; i < b_.arity(); i++) d.permute(i,f_-i);
-    return r.permute(d);
+  GRelation swapB(const GRelation& r) const {
+    GRelation followPart = r.shiftRight(r.arity()-f_);
+    GRelation yPart = r.project(r.arity()-f_);
+    GRelation x = yPart.timesURight(f_);
+    GRelation y = followPart.timesULeft(r.arity()-f_);
+    return x.intersect(y);
   }
   /**
-   * \brief Returns the lower bound of c_ permuted in a way that the part comming
-   * from B is at the left.
+   * \brief Transforms \a r into a relation that has the follow part
+   * on the left and the other on the right.
    */
-  GRelation PCGlb(void) const {
-    PermDescriptor d;
-    int columns_a = a_.arity() - f_;
-    int i = 0;
-    for (; i < columns_a - 1; i++)  d.permute(i,a_.arity() - f_ + i);
-
-    int columns_b = b_.arity() - f_;
-    for (; i < columns_b + columns_a; i++) d.permute(i,i + columns_b - columns_a);
-
-    return c_.glb().permute(d);
+  GRelation TransformB(const GRelation& r) const {
+    GRelation followPart = r.project(f_);
+    GRelation yPart = r.shiftRight(f_);
+    GRelation x = followPart.timesURight(r.arity()-f_);
+    GRelation y = yPart.timesULeft(f_);
+    return x.intersect(y);
+  }
+  /**
+   * \brief Returns \a r in a way that the part comming from B is at
+   * the left.
+   */
+  GRelation swapC(const GRelation& r) const {
+    GRelation xPart = r.shiftRight(b_.arity()-f_);
+    GRelation yPart = r.project(b_.arity()-f_);
+    GRelation y = yPart.timesURight(a_.arity()-f_);
+    GRelation x = xPart.timesULeft(b_.arity()-f_);
+    return y.intersect(x);
   }
 
-  GRelation transformC(GRelation r) const {
-    PermDescriptor d;
-    int columns_a = a_.arity() - f_;
-    int i = 0;
-    for (; i < columns_a - 1; i++)  d.permute(i,a_.arity() - f_ + i);
-
-    int columns_b = b_.arity() - f_;
-    for (; i < columns_b + columns_a; i++) d.permute(i,i + columns_b - columns_a);
-
-    return r.permute(d);
-  }
   /**
    * \brief Main propagation algorithm.
    *
@@ -144,37 +137,44 @@ public:
       // C can have atmost the join of what is possible in A and B
       GRelation max_possile_c = a_.lub().follow(f_,b_.lub());
       GECODE_ME_CHECK(c_.exclude(home,max_possile_c.complement()));
-    }
-
+      }
+    
     // 2) pruning A from B and C
     {
       // pruning the lower bound of A
-      GRelation x = c_.glb().follow(b_.arity() - f_,PBLub()).intersect(a_.lub());
+      GRelation x = c_.glb().follow(b_.arity() - f_,swapB(b_.lub())).intersect(a_.lub());
       std::vector<int> uq(f_,-1);
       for (int i = 0; i < f_; i++) uq[i] = i;
       GRelation singles = x.unique(uq).intersect(x);
       GECODE_ME_CHECK(a_.include(home,singles));
-
+      
+      /*
       // pruning the upper bound of A
       GRelation y = c_.oob().follow(b_.arity() - f_, TransformB(b_.glb()));
       GECODE_ME_CHECK(a_.exclude(home,y));
+      */
     }
-
+  
     // 3) Pruning B from A and C
     {
       // pruning the lower bound of B
-      GRelation x = TransformB(PCGlb().follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
+      //GRelation x = TransformB(PCGlb().follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
+      GRelation x = TransformB(swapC(c_.glb()).follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
       std::vector<int> uq(f_,-1);
       for (int i = 0; i < f_; i++) uq[i] = i;
       GRelation singles = x.unique(uq).intersect(x);
       GECODE_ME_CHECK(b_.include(home,singles));
-
+     
+      
       // pruning the upper bound of B
-      GRelation y = transformC(c_.oob()).follow(a_.arity() - f_, a_.glb());
-      GRelation b_out = TransformB(y);
-      GECODE_ME_CHECK(b_.exclude(home,b_out));
+      /*
+        GRelation y = swapC(c_.oob()).follow(a_.arity() - f_, a_.glb());
+        GRelation b_out = TransformB(y);
+        std::cout << "will fail: " << b_out.intersect(b_.glb()) << std::endl;
+        //GECODE_ME_CHECK(b_.exclude(home,b_out));
+        */
     }
-
+    
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {
       /// \todo is it possible to get another subsumption condition??
