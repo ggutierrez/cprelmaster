@@ -9,6 +9,7 @@ set(EXAMPLES
   join3
   followAll
   restrFall
+  functional
 )
 
 foreach(input ${EXAMPLES})

@@ -309,6 +309,7 @@ namespace MPG {
    * \see MPG::CPRel::Prop::Cardinality
    */
   void cardinality(Gecode::Space& home, CPRelVar A, Gecode::IntVar B);
+  void function(Gecode::Space& home, CPRelVar A);
   /**
    * \brief Posts the constraint: \f$ t \in R\f$
    * \ingroup ChannelProp
