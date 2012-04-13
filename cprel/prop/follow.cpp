@@ -31,9 +31,9 @@ void follow(Gecode::Space& home, CPRelVar A, int f, CPRelVar B, CPRelVar C) {
   GECODE_ES_FAIL((Follow<CPRelView,CPRelView,CPRelView>::post(home,a,f,b,c)));
 }
 
-void divide(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C) {
+void followAll(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C) {
   if (home.failed()) return;
-
+  
   /// \todo Change the type of the exception to match the constraint being posted.
   typedef boost::error_info<struct tag_invalid_follow,std::string>
       invalid_follow;

@@ -260,6 +260,7 @@ namespace MPG {
    * @see MPG::CPRel::Prop::Join
    */
   void join(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
+  void restrJoinAll(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C);
   /**
    * \brief Posts the constraint: \f$ A_{\smile_{f}}B = C \f$
    * \ingroup RelProp
@@ -285,7 +286,7 @@ namespace MPG {
    *
    * @see MPG::CPRel::Prop::Follow
    */
-  void divide(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C);
+  void followAll(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C);
   /**
    * \brief Posts the constraint: \f$ R = S\f$
    * \ingroup ChannelProp
