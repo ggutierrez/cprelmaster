@@ -8,6 +8,7 @@ set(EXAMPLES
   join2
   join3
   followAll
+  restrFall
 )
 
 foreach(input ${EXAMPLES})

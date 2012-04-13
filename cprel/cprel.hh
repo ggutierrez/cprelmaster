@@ -287,6 +287,7 @@ namespace MPG {
    * @see MPG::CPRel::Prop::Follow
    */
   void followAll(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C);
+  void restrFollowAll(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C);
   /**
    * \brief Posts the constraint: \f$ R = S\f$
    * \ingroup ChannelProp

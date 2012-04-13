@@ -417,6 +417,7 @@ set(CPREL_SRCS
   cprel/prop/permutation.hh
   cprel/prop/join.hh
   cprel/prop/join.cpp
+  cprel/prop/join-all.cpp
   cprel/prop/projection.cpp
   cprel/prop/projection.hh
 #  cprel/prop/channel.cpp

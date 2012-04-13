@@ -56,5 +56,31 @@ void followAll(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C) {
   GECODE_ES_FAIL((Follow<CPRelView,CView,CView>::post(home,a,d,cb,cc)));
 }
 
+void restrFollowAll(Gecode::Space& home, CPRelVar A, int d, CPRelVar B, CPRelVar C) {
+  if (home.failed()) return;
+  
+  /// \todo Change the type of the exception to match the constraint being posted.
+  typedef boost::error_info<struct tag_invalid_follow,std::string>
+      invalid_follow;
+
+  if (d > A.arity() ||
+      d > B.arity() ||
+      C.arity() != (A.arity()+B.arity()-(2*d)))
+    throw InvalidFollow()
+      << errno_code(errno)
+      << invalid_follow("Invalid arity of the variables.");
+
+  // create a temporal variable for the result of the followAll
+  int arity = C.arity();
+  CPRelVar resultFall(home,GRelation(arity),GRelation::create_full(arity));
+  followAll(home,A,d,B,resultFall);
+
+  // create a temporal variable for the result of follow
+  CPRelVar resultFollow(home,GRelation(arity),GRelation::create_full(arity));
+  follow(home,A,d,B,resultFollow);
+  
+  intersect(home,resultFall,resultFollow,C);
+}
+
 
 }
