@@ -413,6 +413,8 @@ set(CPREL_SRCS
   cprel/prop/equality.hh
   cprel/prop/cardinality.cpp
   cprel/prop/cardinality.hh
+  cprel/prop/functional.cpp
+  cprel/prop/functional.hh
   cprel/prop/permutation.cpp
   cprel/prop/permutation.hh
   cprel/prop/join.hh

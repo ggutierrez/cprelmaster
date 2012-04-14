@@ -1,5 +1,7 @@
 #include <gecode/search.hh>
 #include <cprel/cprel.hh>
+#include <vector>
+#include <algorithm>
 
 using namespace Gecode;
 using std::pair;
@@ -215,6 +217,9 @@ public:
 	os << "permT: " << permT << endl;
 	
 
+    os << "PermT: " << permT << endl;
+
+
     //os << "JoinResult: " << joinResult << endl;
     //os << "followAllResult: " << followAllResult << endl;
     
@@ -238,6 +243,19 @@ public:
 };
 
 int main(int, char**) {
+  /*
+  char   A[]     = { '3', '2', '1', '0' };
+  size_t ORDER[] = { 3, 0, 1, 2 };
+
+  vector<char>   vA(A, A + sizeof(A) / sizeof(*A));
+  vector<size_t> vOrder(ORDER, ORDER + sizeof(ORDER) / sizeof(*ORDER));
+
+  REORDER(vA, vOrder);
+
+  for (auto& a : vA)
+    cout << a << endl;
+  */
+  
   JoinTest* g = new JoinTest();
   DFS<JoinTest> e(g);
 
@@ -247,5 +265,6 @@ int main(int, char**) {
     delete s;
   }
   delete g;
+  
   return 0;
 }
