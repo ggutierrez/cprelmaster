@@ -11,23 +11,18 @@ using namespace MPG::CPRel;
 
 
 //put the joined part on the right
-std::vector<std::pair<int,int>> putJoinedPartOnRight(int j, int m) 
-{
-  
+std::vector<std::pair<int,int>> putJoinedPartOnRight(int j, int m)  {
   std::vector<std::pair<int,int>> result;
-  if (j >= m - j)
-	{
-		for (int i = 0; i < m - j  ; i++)
-	    	result.push_back(std::make_pair(i,i + j));
-	  
-	}
-	else //if(j < m - j )
-	{
-		cout << "m -j " << m - j << endl;
-		cout << "m : " << m << " and j : " << j << endl;
-		for (int i = 0; i <= j - 1 ; i++)
-	    	result.push_back(std::make_pair(i,i + m - j ));
-	}
+  if (j >= m - j) {
+    for (int i = 0; i < m - j  ; i++)
+      result.push_back(std::make_pair(i,i + j));
+  }
+  else {
+    cout << "m -j " << m - j << endl;
+    cout << "m : " << m << " and j : " << j << endl;
+    for (int i = 0; i <= j - 1 ; i++)
+      result.push_back(std::make_pair(i,i + m - j ));
+  }
   
   return result;
 }
@@ -35,57 +30,34 @@ std::vector<std::pair<int,int>> putJoinedPartOnRight(int j, int m)
 //create the permutation description needed to reorder one columns if j!= m - j
 //indexStart is the number of the column that will be reorder
 //indexEnd is the number of the column to which the column indexStart will go
-std::vector<std::pair<int,int>> permJoinReorderOne(int indexStart, int indexEnd) 
-{
-	
+std::vector<std::pair<int,int>> permJoinReorderOne(int indexStart, int indexEnd)  {
   std::vector<std::pair<int,int>> result;
-
-cout << "reorder one" << endl;
- 
-cout << "indexStart : " << indexStart << "indexStart + indexEnd - 1 : " <<  indexEnd - 1 << endl;
-
   for (int i = indexStart; i < indexEnd ; i++)
     result.push_back(std::make_pair(i,i+1));
-  
   return result;
 }
 
-
 //create the permutation description needed to reorder columns if j!= m - j
-std::vector<std::pair<int,int>> permJoinReorder(int j, int m) 
-{
-
+std::vector<std::pair<int,int>> permJoinReorder(int j, int m)  {
   std::vector<std::pair<int,int>> result;
   std::vector<std::pair<int,int>> temp;  
 
   //if the joined part is smaller
-  if(j < m - j)
-	{
-		for(int i = m - j - 1 ; i >= j ; i--)
-		{
-			cout << "i " << i << endl; 
-			cout << "i + j " << i + j << endl; 
-			temp = permJoinReorderOne(i,i+j);
-			copy (temp.begin(),temp.end(),back_inserter(result));
-		}
-	}
-	//if the joined part is bigger
-	else if(j > m - j)
-	{
-		cout << "j > m - j" << endl ;
-		for(int i = m - j - 1 ; i >= 0 ; i--)
-		{
-			cout << " m - j - 1 : " << m - j - 1 << endl ;
-			cout << "permJoinReorderOne(i,i + j - 1); with : i : " << i << "and i + j - 1 : "  << i + j - 1 << endl ;
-			temp = permJoinReorderOne(i,i + j - 1);
-			copy (temp.begin(),temp.end(),back_inserter(result));
-		}
-		
-	}
-
+  if(j < m - j) {
+    for(int i = m - j - 1 ; i >= j ; i--) {
+      temp = permJoinReorderOne(i,i+j);
+      copy (temp.begin(),temp.end(),back_inserter(result));
+    }
+  }
+  //if the joined part is bigger
+  else if(j > m - j) {
+    for(int i = m - j - 1 ; i >= 0 ; i--) {
+      temp = permJoinReorderOne(i,i + j - 1);
+      copy (temp.begin(),temp.end(),back_inserter(result));
+    }
+  }
   return result;
 }
-
 
 std::vector<std::pair<int,int>> permJoin(int m, int j) {
   // | n-j | j | m-j |
@@ -96,44 +68,21 @@ std::vector<std::pair<int,int>> permJoin(int m, int j) {
   
   //first we put the joined column on the right
   result = putJoinedPartOnRight(j,m);
-
-cout << "before reorder part " << endl ;
-
-for(auto i = result.begin() ; i!=result.end() ; ++i)
-	std::cout << i->first << "|" << i->second << std::endl;
-
+  /*
+  for(auto i = result.begin() ; i!=result.end() ; ++i)
+    std::cout << i->first << "|" << i->second << std::endl;
+  */
   //now we adapat if needed
-  if (j!=m)
-	{
-		temp = permJoinReorder(j,m);
-		copy (temp.begin(),temp.end(),back_inserter(result));
-	}
-	
-	cout << " after reorder part" << endl;
-	
-	for(auto i = result.begin() ; i!=result.end() ; ++i)
-		std::cout << i->first << "|" << i->second << std::endl;
-		
+  if (j!=m) {
+    temp = permJoinReorder(j,m);
+    copy (temp.begin(),temp.end(),back_inserter(result));
+  }
+  /*
+  for(auto i = result.begin() ; i!=result.end() ; ++i)
+    std::cout << i->first << "|" << i->second << std::endl;
+  */
   return result;
 }
-  
-// Find the permutation for the result of the join
-/*std::vector<std::pair<int,int>> permC(int n, int m, int j, int k) {
-  // | n-j | m-j | j |
-  // ->
-  // | n-j | j | m-j |
-  std::vector<std::pair<int,int>> result;
-  
-  for (int i = 0; i < j; i++)
-    result.push_back(std::make_pair(i,i+m-j));
-  int s = 0;
-  for (int i = j; i < m; i++)  {
-    result.push_back(std::make_pair(i,s));
-    s++;
-  }
-  return result;
-}*/
-
 
 pair<GRelation,GRelation> domR(void) {
   GRelation gr(3);
@@ -200,7 +149,7 @@ public:
     permT = CPRelVar(*this,GRelation(k),GRelation::create_full(k));
     permutation(*this,t,permT,permJoin(m,j));
     
-	intersect(*this,times,permJoinResult,permT);
+    intersect(*this,times,permJoinResult,permT);
     //branch(*this,t);
     //restrJoinAll(*this,r,j,s,t);
   }
@@ -210,16 +159,16 @@ public:
     os << "R: " << r << endl;
     os << "S: " << s << endl;
     os << "joinResult: " << joinResult << endl;
-	os << "permJoinResult: " << permJoinResult << endl;
-	os << "followAllResult: " << followAllResult.assigned() << endl;
-	os << "times: " << times.assigned() << endl;
+    os << "permJoinResult: " << permJoinResult << endl;
+    os << "followAllResult: " << followAllResult.assigned() << endl;
+    os << "times: " << times.assigned() << endl;
     os << "T: " << t << endl;
-	os << "permT: " << permT << endl;
-	
-
+    os << "permT: " << permT << endl;
+    
+    
     os << "PermT: " << permT << endl;
-
-
+    
+    
     //os << "JoinResult: " << joinResult << endl;
     //os << "followAllResult: " << followAllResult << endl;
     
@@ -230,11 +179,11 @@ public:
     r.update(*this, share, sp.r);
     t.update(*this, share, sp.t);
     s.update(*this, share, sp.s);
-	permT.update(*this, share, sp.permT);
-	permJoinResult.update(*this, share, sp.permJoinResult);
-	joinResult.update(*this, share, sp.joinResult);
-	followAllResult.update(*this, share, sp.followAllResult);
-	times.update(*this, share, sp.times);
+    permT.update(*this, share, sp.permT);
+    permJoinResult.update(*this, share, sp.permJoinResult);
+    joinResult.update(*this, share, sp.joinResult);
+    followAllResult.update(*this, share, sp.followAllResult);
+    times.update(*this, share, sp.times);
     
   }
   virtual Space* copy(bool share) {
@@ -243,19 +192,6 @@ public:
 };
 
 int main(int, char**) {
-  /*
-  char   A[]     = { '3', '2', '1', '0' };
-  size_t ORDER[] = { 3, 0, 1, 2 };
-
-  vector<char>   vA(A, A + sizeof(A) / sizeof(*A));
-  vector<size_t> vOrder(ORDER, ORDER + sizeof(ORDER) / sizeof(*ORDER));
-
-  REORDER(vA, vOrder);
-
-  for (auto& a : vA)
-    cout << a << endl;
-  */
-  
   JoinTest* g = new JoinTest();
   DFS<JoinTest> e(g);
 
