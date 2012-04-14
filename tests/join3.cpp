@@ -9,7 +9,6 @@ using std::make_pair;
 using namespace MPG;
 using namespace MPG::CPRel;
 
-using std::vector;
 
 template< class T >
 std::vector<std::pair<int,int>> reorder(vector<T> &v, vector<size_t> const &order )  {   
@@ -90,7 +89,6 @@ std::vector<std::pair<int,int>> pJ(int n, int m, int j, int k) {
     a.first = vA.size() - 1 - a.first;
     a.second = vA.size() - 1 - a.second;
   }
-
   return p;
 }
 
@@ -123,7 +121,7 @@ pair<GRelation,GRelation> domT(void) {
 class JoinTest : public Gecode::Space {
 protected:
   CPRelVar r,s,t;
-  CPRelVar joinResult, followAllResult, permT;
+  CPRelVar joinResult, followAllResult, permT, permJoinResult, times;
 public:
   JoinTest(void)  {
 
@@ -150,7 +148,7 @@ public:
     followAll(*this,r,j,s,followAllResult);
 
     CPRelVar u(*this,GRelation::create_full(j),GRelation::create_full(j));
-    CPRelVar times(*this,GRelation(arityJoin),GRelation::create_full(arityJoin));
+    times = CPRelVar(*this,GRelation(arityJoin),GRelation::create_full(arityJoin));
     join(*this,followAllResult,0,u,times);
 
     CPRelVar permJoinResult(*this,GRelation(arityJoin),GRelation::create_full(arityJoin));
@@ -168,10 +166,17 @@ public:
     //restrJoinAll(*this,r,j,s,t);
   }
   void print(std::ostream& os) const {
+	
     os << "Print method called" << std::endl;
-    //os << "R: " << r << endl;
-    //os << "S: " << s << endl;
+    os << "R: " << r << endl;
+    os << "S: " << s << endl;
+    os << "joinResult: " << joinResult << endl;
+	os << "permJoinResult: " << permJoinResult << endl;
+	os << "followAllResult: " << followAllResult.assigned() << endl;
+	os << "times: " << times.assigned() << endl;
     os << "T: " << t << endl;
+	os << "permT: " << permT << endl;
+	
 
     os << "PermT: " << permT << endl;
 
@@ -186,11 +191,12 @@ public:
     r.update(*this, share, sp.r);
     t.update(*this, share, sp.t);
     s.update(*this, share, sp.s);
-
-    permT.update(*this, share, sp.permT);
-
-    joinResult.update(*this, share, sp.joinResult);
-    followAllResult.update(*this, share, sp.followAllResult);
+	permT.update(*this, share, sp.permT);
+	permJoinResult.update(*this, share, sp.permJoinResult);
+	joinResult.update(*this, share, sp.joinResult);
+	followAllResult.update(*this, share, sp.followAllResult);
+	times.update(*this, share, sp.times);
+    
   }
   virtual Space* copy(bool share) {
     return new JoinTest(share,*this);
