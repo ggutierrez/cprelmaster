@@ -8,6 +8,7 @@ set(EXAMPLES
   join2
   join3
   join4
+  joinAll
   followAll
   restrFall
   functional

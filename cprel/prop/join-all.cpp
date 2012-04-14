@@ -4,80 +4,119 @@
 
 namespace MPG {
   using namespace CPRel;
+  using std::vector;
+  using std::pair;
   
-  // Find the permutation for the result of the join
-  std::vector<std::pair<int,int>> permJoin(int n, int m, int j, int k) {
-    // | n-j | j | m-j |
-    // ->
-    // | n-j | m-j | j |
-    std::vector<std::pair<int,int>> result;
-    
-    for (int i = 0; i < m-j; i++)
-      result.push_back(std::make_pair(i,i+j));
-    int s = 0;
-    for (int i = m-j; i < m; i++)  {
-      result.push_back(std::make_pair(i,s));
-      s++;
+  //put the joined part on the right
+  vector<pair<int,int>> putJoinedPartOnRight(int j, int m)  {
+    vector<pair<int,int>> result;
+    if (j >= m - j) {
+      for (int i = 0; i < m - j  ; i++)
+        result.push_back(std::make_pair(i,i + j));
+    }
+    else {
+      for (int i = 0; i <= j - 1 ; i++)
+        result.push_back(std::make_pair(i,i + m - j ));
     }
     return result;
   }
   
-  // Find the permutation for the result of the join
-  std::vector<std::pair<int,int>> permC(int n, int m, int j, int k) {
-    // | n-j | m-j | j |
-    // ->
-    // | n-j | j | m-j |
-    std::vector<std::pair<int,int>> result;
+  //create the permutation description needed to reorder one columns if j!= m - j
+  //indexStart is the number of the column that will be reorder
+  //indexEnd is the number of the column to which the column indexStart will go
+  std::vector<pair<int,int>> permJoinReorderOne(int indexStart, int indexEnd)  {
+  vector<pair<int,int>> result;
+  for (int i = indexStart; i < indexEnd ; i++)
+    result.push_back(std::make_pair(i,i+1));
+  return result;
+}
+
+  //create the permutation description needed to reorder columns if j!= m - j
+  vector<pair<int,int>> permJoinReorder(int j, int m)  {
+    vector<pair<int,int>> result;
+    vector<pair<int,int>> temp;  
     
-    for (int i = 0; i < j; i++)
-      result.push_back(std::make_pair(i,i+m-j));
-    int s = 0;
-    for (int i = j; i < m; i++)  {
-      result.push_back(std::make_pair(i,s));
-      s++;
+    //if the joined part is smaller
+    if(j < m - j) {
+      for(int i = m - j - 1 ; i >= j ; i--) {
+        temp = permJoinReorderOne(i,i+j);
+        copy (temp.begin(),temp.end(),back_inserter(result));
+      }
+    }
+    //if the joined part is bigger
+    else if(j > m - j) {
+      for(int i = m - j - 1 ; i >= 0 ; i--) {
+        temp = permJoinReorderOne(i,i + j - 1);
+        copy (temp.begin(),temp.end(),back_inserter(result));
+      }
     }
     return result;
   }
+  
+  vector<pair<int,int>> permJoin(int m, int j) {
+    // | n-j | j | m-j |
+    // ->
+    // | n-j | m-j | j |
+    vector<pair<int,int>> result; 
+    vector<pair<int,int>> temp;
+    
+    //first we put the joined column on the right
+    result = putJoinedPartOnRight(j,m);
+    /*
+      for(auto i = result.begin() ; i!=result.end() ; ++i)
+      cout << i->first << "|" << i->second << endl;
+    */
+    //now we adapat if needed
+    if (j!=m) {
+      temp = permJoinReorder(j,m);
+      copy (temp.begin(),temp.end(),back_inserter(result));
+    }
+    /*
+      for(auto i = result.begin() ; i!=result.end() ; ++i)
+      cout << i->first << "|" << i->second << endl;
+    */
+    return result;
+  }
 
-
-  void restrJoinAll(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C) {
+  
+  void joinAll(Gecode::Space& home, CPRelVar A, int j, CPRelVar B, CPRelVar C) {
     if (home.failed()) return;
     
     /// \todo Change the type of the exception to match the constraint being posted.
     typedef boost::error_info<struct tag_invalid_follow,std::string>
-      invalid_restrJoinAll;
+      invalid_joinAll;
 
-    int arityJoin = A.arity() + B.arity() - j;
+    int n = A.arity();
+    int m = B.arity();
+    int k = C.arity();
+
+    int arityJoin = n + m - j;
     int arityFollow = arityJoin - j;
+
     if (j > A.arity() ||
         j > B.arity() ||
         C.arity() != arityJoin)
       throw InvalidFollow()
         << errno_code(errno)
-        << invalid_restrJoinAll("Invalid arity of the variables.");
+        << invalid_joinAll("Invalid arity of the variables.");
 
-
-    
-    CPRelVar joinResult(home,GRelation(arityJoin),GRelation::create_full(arityJoin));
+    // put the constraint in terms of other constraints existent in the system
+    CPRelVar joinResult(home, GRelation(arityJoin), GRelation::create_full(arityJoin));
     join(home,A,j,B,joinResult);    
 
-    equal(home,C,joinResult);
-    /*
     CPRelVar followAllResult(home,GRelation(arityFollow),GRelation::create_full(arityFollow));
     followAll(home,A,j,B,followAllResult);
     
+    CPRelVar u(home,GRelation::create_full(j),GRelation::create_full(j));
+    CPRelVar times(home,GRelation(arityJoin),GRelation::create_full(arityJoin));
+    join(home,followAllResult,0,u,times);
+    
     CPRelVar permJoinResult(home,GRelation(arityJoin),GRelation::create_full(arityJoin));
-    auto pj = permJoin(A.arity(), B.arity(), j, C.arity());
-    permutation(home,joinResult,permJoinResult,pj);
+    permutation(home,joinResult,permJoinResult,permJoin(m,j));
 
-    CPRelVar Cp(home,GRelation(C.arity()),GRelation::create_full(C.arity()));
-    auto pc = permC(A.arity(), B.arity(), j, C.arity());
-    permutation(home,C,Cp,pc);
-
-    CPRelVar universeJ(home,GRelation::create_full(j),GRelation::create_full(j));
-    CPRelVar crossp(home,GRelation(arityFollow + j),GRelation::create_full(arityFollow + j));
-    join(home,followAllResult,0,universeJ,crossp);
-    intersect(home,crossp,permJoinResult,Cp);
-    */
+    CPRelVar permC(home,GRelation(k),GRelation::create_full(k));
+    permutation(home,C,permC,permJoin(m,j));
+    
+    intersect(home,times,permJoinResult,permC);
   }
 }
