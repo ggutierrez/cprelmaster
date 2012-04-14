@@ -11,67 +11,88 @@ using namespace MPG::CPRel;
 
 using std::vector;
 
-template <typename Ta, typename Tb>
-void mySwap(Ta& a, Tb& b, int posa, int posb) {
-  cout << "swapping " << a << " -- " << b << endl;
-  std::swap(a,b);
-}
-
-void REORDER(vector<char>& vA, vector<size_t>& vOrder)  
-{   
-  assert(vA.size() == vOrder.size());
-
-  // for all elements to put in place
-  for( int i = 0; i < vA.size() - 1; ++i ) { 
-    // while the element i is not yet in place 
-    while( i != vOrder[i] )
-      {
-        // swap it with the element at its final place
-        int alt = vOrder[i];
-        /*
-          std::swap( vA[i], vA[alt] );
-          std::swap( vOrder[i], vOrder[alt] );
-        */
-        mySwap( vA[i], vA[alt], i, alt );
-        mySwap( vOrder[i], vOrder[alt], i, alt );
+template< class T >
+std::vector<std::pair<int,int>> reorder(vector<T> &v, vector<size_t> const &order )  {   
+  std::vector<std::pair<int,int>> swaps;
+  for ( int s = 1, d; s < order.size(); ++ s ) {
+    for ( d = order[s]; d < s; d = order[d] ) ;
+    if ( d == s ) 
+      while ( d = order[d], d != s ) {
+        std::swap( v[s], v[d]);
+        swaps.push_back(std::make_pair(s,d));
       }
   }
+  return swaps;
 }
 
-
-std::vector<std::pair<int,int>> permJoin(int n, int m, int j, int k) {
-  // | n-j | j | m-j |
-  // ->
-  // | n-j | m-j | j |
-  std::vector<std::pair<int,int>> result;
+std::vector<std::pair<int,int>> pJ(int n, int m, int j, int k) {
+  // prepare a vector with the original columns
+  std::vector<int> vA(k,-1);
+  for (int i = 0; i < vA.size(); i++)
+    vA[i] = i;
   
-  for (int i = 0; i < m-j; i++)
-    result.push_back(std::make_pair(i,i+j));
-  int s = 0;
-  for (int i = m-j; i < m; i++)  {
-    result.push_back(std::make_pair(i,s));
+  std::vector<size_t> xPrime, J, yPrime;
+  size_t s = 0;
+  for (size_t i = 0; i < n-j; i++) {
+    xPrime.push_back(s);
     s++;
   }
-  return result;
-}
-  
-// Find the permutation for the result of the join
-std::vector<std::pair<int,int>> permC(int n, int m, int j, int k) {
-  // | n-j | m-j | j |
-  // ->
-  // | n-j | j | m-j |
-  std::vector<std::pair<int,int>> result;
-  
-  for (int i = 0; i < j; i++)
-    result.push_back(std::make_pair(i,i+m-j));
-  int s = 0;
-  for (int i = j; i < m; i++)  {
-    result.push_back(std::make_pair(i,s));
+  for (size_t i = 0; i < j; i++) {
+    J.push_back(s);
     s++;
   }
-  return result;
-}
+  for (size_t i = 0; i < m-j; i++) {
+    yPrime.push_back(s);
+    s++;
+  }
 
+  cout << "xprime: ";
+  for (auto& i : xPrime)
+    cout << " " << i;
+  cout << endl;
+
+
+  cout << "yprime: ";
+  for (auto& i : yPrime)
+    cout << " " << i;
+  cout << endl;
+
+  cout << "j: ";
+  for (auto& i : J)
+    cout << " " << i;
+  cout << endl;
+      
+  std::vector<size_t> order;
+  std::copy(xPrime.begin(), xPrime.end(), std::back_inserter(order));
+  std::copy(yPrime.begin(), yPrime.end(), std::back_inserter(order));
+  std::copy(J.begin(), J.end(), std::back_inserter(order));
+
+  cout << "The vector" << endl;
+  for (const auto& i : vA)
+    cout << " " << i;
+  cout << endl;
+  
+  cout << "The order" << endl;
+  for (const auto& i : order)
+    cout << " " << i;
+  cout << endl;
+  
+  // find the permutations
+  auto p = reorder(vA, order);
+
+  // the swaps
+  for (const auto& a : p) {
+    cout << a.first << " -=- " << a.second << endl;
+  }
+
+  // convert into right index based
+  for (auto& a : p) {
+    a.first = vA.size() - 1 - a.first;
+    a.second = vA.size() - 1 - a.second;
+  }
+
+  return p;
+}
 
 pair<GRelation,GRelation> domR(void) {
   GRelation gr(3);
@@ -133,12 +154,16 @@ public:
     join(*this,followAllResult,0,u,times);
 
     CPRelVar permJoinResult(*this,GRelation(arityJoin),GRelation::create_full(arityJoin));
-    permutation(*this,joinResult,permJoinResult,permJoin(n,m,j,k));
+    permutation(*this,joinResult,permJoinResult,pJ(n,m,j,k));
 
     permT = CPRelVar(*this,GRelation(k),GRelation::create_full(k));
+    auto permDescT = pJ(n,m,j,k);
+    for (auto& a : permDescT)
+      cout << a.first << " <--> " << a.second  << endl;
+    
     //permutation(*this,t,permT,permC(n,m,j,k));
-    //permutation(*this,t,permT,{{3,0},{3,2},{0,1},{2,1},{1,2},{1,0}});
-    permutation(*this,t,permT,{{3,0},{3,2},{0,1},{2,1},{1,2},{1,0}});
+    //permutation(*this,t,permT,permDescT);
+    permutation(*this,t,permT,{{0,2},{0,1}});
     //branch(*this,t);
     //restrJoinAll(*this,r,j,s,t);
   }
@@ -172,20 +197,40 @@ public:
   }
 };
 
+
 int main(int, char**) {
   /*
-  char   A[]     = { '3', '2', '1', '0' };
-  size_t ORDER[] = { 3, 0, 1, 2 };
+  char   A[]     = { '1', '2', '3', '7' };
+  size_t ORDER[] = { 0, 2, 3, 1 };
 
   vector<char>   vA(A, A + sizeof(A) / sizeof(*A));
   vector<size_t> vOrder(ORDER, ORDER + sizeof(ORDER) / sizeof(*ORDER));
+  */
+  int   A[]     = { 0, 1, 2, 3 };
+  size_t ORDER[] = { 0, 2, 3, 1 };
 
-  REORDER(vA, vOrder);
+  vector<int>   vA(A, A + sizeof(A) / sizeof(*A));
+  vector<size_t> vOrder(ORDER, ORDER + sizeof(ORDER) / sizeof(*ORDER));
 
-  for (auto& a : vA)
-    cout << a << endl;
+  auto p = reorder(vA, vOrder);
+  /*
+  // convert into right index based
+  for (auto& a : p) {
+    a.first = vA.size() - 1 - a.first;
+    a.second = vA.size() - 1 - a.second;
+  }
   */
   
+  for (auto& a : p)
+    cout << a.first << " <> " << a.second  << endl;
+
+
+  auto jo = pJ(3,3,2,4);
+  /*  
+  for (auto& a : jo)
+    cout << a.first << " <--> " << a.second  << endl;
+  */
+  /*  
   JoinTest* g = new JoinTest();
   DFS<JoinTest> e(g);
 
@@ -195,6 +240,6 @@ int main(int, char**) {
     delete s;
   }
   delete g;
-  
+  */
   return 0;
 }
