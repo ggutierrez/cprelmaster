@@ -60,10 +60,13 @@ public:
     GECODE_ME_CHECK(rel_.exclude(home,toRemove));
 
     // subsumes when the upper bound is a function
-    if (unique(rel_.lub(),{1}).cardinality() == rel_.lub().cardinality()) {
+    /*if (unique(rel_.lub(),{1}).cardinality() == rel_.lub().cardinality()) {
       return home.ES_SUBSUMED(*this);
-    }
+    }*/
     
+		if (rel_.assigned()) {
+	      return home.ES_SUBSUMED(*this);
+	}
     return Gecode::ES_FIX;
   }
 };
