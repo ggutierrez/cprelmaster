@@ -70,6 +70,9 @@ public:
    * the right. This method swap them.
    */
   GRelation swapB(const GRelation& r) const {
+	//if arity of B is equal to f, no need to swap
+	if(b_.arity() == f_)
+		return r;
     GRelation followPart = r.shiftRight(r.arity()-f_);
     GRelation yPart = r.project(r.arity()-f_);
     GRelation x = yPart.timesURight(f_);
@@ -81,6 +84,9 @@ public:
    * on the left and the other on the right.
    */
   GRelation TransformB(const GRelation& r) const {
+	//if arity of B is equal to f, no need to swap
+	if(b_.arity() == f_)
+		return r;
     GRelation followPart = r.project(f_);
     GRelation yPart = r.shiftRight(f_);
     GRelation x = followPart.timesURight(r.arity()-f_);
@@ -92,6 +98,9 @@ public:
    * the left.
    */
   GRelation swapC(const GRelation& r) const {
+	//if arity of B is equal to f, no need to swap
+	if(b_.arity() == f_)
+		return r;
     GRelation xPart = r.shiftRight(b_.arity()-f_);
     GRelation yPart = r.project(b_.arity()-f_);
     GRelation y = yPart.timesURight(a_.arity()-f_);
@@ -139,41 +148,50 @@ public:
       GECODE_ME_CHECK(c_.exclude(home,max_possile_c.complement()));
       }
     
-    // 2) pruning A from B and C
-    {
-      // pruning the lower bound of A
-      GRelation x = c_.glb().follow(b_.arity() - f_,swapB(b_.lub())).intersect(a_.lub());
-      std::vector<int> uq(f_,-1);
-      for (int i = 0; i < f_; i++) uq[i] = i;
-      GRelation singles = x.unique(uq).intersect(x);
-      GECODE_ME_CHECK(a_.include(home,singles));
-      
-      /*
-      // pruning the upper bound of A
-      GRelation y = c_.oob().follow(b_.arity() - f_, TransformB(b_.glb()));
-      GECODE_ME_CHECK(a_.exclude(home,y));
-      */
-    }
-  
-    // 3) Pruning B from A and C
-    {
-      // pruning the lower bound of B
-      //GRelation x = TransformB(PCGlb().follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
-      GRelation x = TransformB(swapC(c_.glb()).follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
-      std::vector<int> uq(f_,-1);
-      for (int i = 0; i < f_; i++) uq[i] = i;
-      GRelation singles = x.unique(uq).intersect(x);
-      GECODE_ME_CHECK(b_.include(home,singles));
-     
-      
-      // pruning the upper bound of B
-      /*
-        GRelation y = swapC(c_.oob()).follow(a_.arity() - f_, a_.glb());
-        GRelation b_out = TransformB(y);
-        std::cout << "will fail: " << b_out.intersect(b_.glb()) << std::endl;
-        //GECODE_ME_CHECK(b_.exclude(home,b_out));
-        */
-    }
+    //2) pruning A from B and C
+     {
+     		// pruning the lower bound of A
+             GRelation x = c_.glb().follow(b_.arity() - f_,swapB(b_.lub())).intersect(a_.lub());
+			if(a_.arity() == f_) ////if arity of A is equal to f, no need to quantify on f columns of A
+				GECODE_ME_CHECK(a_.include(home,x));
+			else
+			{
+             std::vector<int> uq(f_,-1);
+             for (int i = 0; i < f_; i++) uq[i] = i;
+             GRelation singles = x.unique(uq).intersect(x);
+             GECODE_ME_CHECK(a_.include(home,singles));
+            }
+             /*
+             // pruning the upper bound of A
+             GRelation y = c_.oob().follow(b_.arity() - f_, TransformB(b_.glb()));
+             GECODE_ME_CHECK(a_.exclude(home,y));
+             */
+           }
+         
+           // 3) Pruning B from A and C
+           {
+             // pruning the lower bound of B
+             //GRelation x = TransformB(PCGlb().follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
+             GRelation x = TransformB(swapC(c_.glb()).follow(a_.arity() - f_,a_.lub())).intersect(b_.lub());
+			if(b_.arity() == f_) ////if arity of B is equal to f, no need to quantify on f columns of B
+				GECODE_ME_CHECK(b_.include(home,x));
+			else
+			{
+             std::vector<int> uq(f_,-1);
+             for (int i = 0; i < f_; i++) uq[i] = i;
+             GRelation singles = x.unique(uq).intersect(x);
+             GECODE_ME_CHECK(b_.include(home,singles));
+			}
+            
+             
+             // pruning the upper bound of B
+             /*
+               GRelation y = swapC(c_.oob()).follow(a_.arity() - f_, a_.glb());
+               GRelation b_out = TransformB(y);
+               std::cout << "will fail: " << b_out.intersect(b_.glb()) << std::endl;
+               //GECODE_ME_CHECK(b_.exclude(home,b_out));
+               */
+           }
     
     // Propagator subsumption
     if (a_.assigned() && b_.assigned() && c_.assigned()) {

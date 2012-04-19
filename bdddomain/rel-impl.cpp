@@ -266,6 +266,18 @@ namespace MPG { namespace VarImpl {
     
       // 1) compute the join of the relations on f columns
       RelationImpl join = left.join(f,right);
+
+      //if the arities are all equal to f, we get the empty relation
+	  if(left.arity() == right.arity() && right.arity() == f)
+		return RelationImpl(0);
+		
+	  //if arity of right == f, we join and then remove the joined columns
+		if(right.arity() == f)
+			return join.shiftRight(f);
+			
+      //if arity of left == f, we join and then remove the joined columns
+		if(left.arity() == f)
+			return join.project(right.arity() - f);		
       
       //std::cout << "The join " << join << std::endl; 
       //std::cout << "Is empty the result ? " << join.empty() << std::endl; 
